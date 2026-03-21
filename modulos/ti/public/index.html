@@ -181,11 +181,14 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
+
+
+
 <nav>
-    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+    <button class="nav-btn active" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
     <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
     <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
-    <button class="nav-btn active" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
     <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
     <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
     <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
@@ -207,7 +210,7 @@
     <div class="page-sub" id="pageSub">Carregando dados do setor de tecnologia...</div>
 
     <!-- ══ 1. CARD PROJETOS ══ -->
-    <a href="/projetos.html" class="hcard c-purple" id="cardProjetos">
+    <a href="/ti/projetos.html" class="hcard c-purple" id="cardProjetos">
         <div class="hcard-top">
             <div class="hcard-top-left">
                 <div class="hcard-icon">📋</div>
@@ -247,7 +250,7 @@
     </a>
 
     <!-- ══ 2. CARD GESTÃO DE ATIVOS (NOVO) ══ -->
-    <a href="/controle-equipamentos.html" class="hcard c-yellow" id="cardGestaoAtivos">
+    <a href="/ti/controle-equipamentos.html" class="hcard c-yellow" id="cardGestaoAtivos">
         <div class="hcard-top">
             <div class="hcard-top-left">
                 <div class="hcard-icon">📦</div>
@@ -266,7 +269,7 @@
     </a>
 
     <!-- ══ 3. CARD ATIVOS (legado) ══ -->
-    <a href="/ativos.html" class="hcard c-ti" id="cardAtivos">
+    <a href="/ti/ativos.html" class="hcard c-ti" id="cardAtivos">
         <div class="hcard-top">
             <div class="hcard-top-left">
                 <div class="hcard-icon">🖥️</div>
@@ -295,7 +298,7 @@
     </a>
 
     <!-- ══ 4. CARD MIGRAÇÃO ══ -->
-    <a href="/migracao.html" class="hcard c-orange" id="cardMigracao">
+    <a href="/ti/migracao.html" class="hcard c-orange" id="cardMigracao">
         <div class="hcard-top">
             <div class="hcard-top-left">
                 <div class="hcard-icon">🔄</div>
@@ -324,7 +327,7 @@
     </a>
 
     <!-- ══ 5. CARD CHAMADOS ══ -->
-    <a href="/chamados.html" class="hcard c-green" id="cardChamados">
+    <a href="/ti/chamados.html" class="hcard c-green" id="cardChamados">
         <div class="hcard-top">
             <div class="hcard-top-left">
                 <div class="hcard-icon">📞</div>
@@ -351,7 +354,7 @@
     </a>
 
     <!-- ══ 6. CARD PIX TEF ══ -->
-    <a href="/pix.html" class="hcard c-green" id="cardPix">
+    <a href="/ti/pix.html" class="hcard c-green" id="cardPix">
         <div class="hcard-top">
             <div class="hcard-top-left">
                 <div class="hcard-icon">💳</div>
@@ -380,7 +383,7 @@
     </a>
 
     <!-- ══ 7. CARD LINKS ══ -->
-    <a href="/linkexterno.html" class="hcard c-purple" id="cardLinks">
+    <a href="/ti/linkexterno.html" class="hcard c-purple" id="cardLinks">
         <div class="hcard-top">
             <div class="hcard-top-left">
                 <div class="hcard-icon">🔗</div>
@@ -495,7 +498,7 @@ function setAno(ano, btnEl) {
 // ── Card Projetos ──────────────────────────────────────────
 async function carregarProjetos() {
     try {
-        const r = await fetch('/projetos/dados');
+        const r = await fetch('/ti/api/projetos/dados');
         const d = await r.json();
         if (!d.ok || !d.projetos?.length) {
             $('projMetrics').innerHTML='<div class="sem-dados">Clique em Sincronizar para carregar os projetos</div>';
@@ -571,7 +574,7 @@ async function carregarProjetos() {
 async function carregarGestaoAtivos() {
     const box=$('gaConteudo');
     try {
-        const r=await fetch('/controle-equipamentos',{credentials:'include'});
+        const r=await fetch('/ti/api/controle-equipamentos',{credentials:'include'});
         if (r.status===401) { box.innerHTML='<div class="sem-dados">Faça login para ver os dados</div>'; return; }
         const d=await r.json();
         if (!d.ok||!d.equipamentos) { box.innerHTML='<div class="sem-dados">Sincronize a Gestão de Ativos para ver dados</div>'; return; }
@@ -584,7 +587,7 @@ async function carregarGestaoAtivos() {
         const semComod=lista.filter(i=>i.assinouComodato!=='Sim').length;
         const valorTotal=stats.valorTotalFormatado||'—';
         let valorRestituido='—';
-        try { const rh=await fetch('/controle-equipamentos/historico-stats',{credentials:'include'}); if(rh.ok){const dh=await rh.json(); if(dh.ok) valorRestituido=dh.totalRestituidoFormatado||'—';} } catch{}
+        try { const rh=await fetch('/ti/api/ti/api/controle-equipamentos/historico-stats',{credentials:'include'}); if(rh.ok){const dh=await rh.json(); if(dh.ok) valorRestituido=dh.totalRestituidoFormatado||'—';} } catch{}
         const pctCad=total?Math.round((comEquip/total)*100):0;
         const corBarra=pctCad>=80?'linear-gradient(90deg,var(--green),#4ade80)':pctCad>=50?'linear-gradient(90deg,var(--yellow),#fbbf24)':'linear-gradient(90deg,var(--orange),#fb923c)';
         const porTipo=stats.porTipo||[];
@@ -616,7 +619,7 @@ async function carregarGestaoAtivos() {
 // ── Card Ativos (legado) ───────────────────────────────────
 async function carregarAtivos() {
     try {
-        const r = await fetch('/ativos/');
+        const r = await fetch('/ti/api/ativos/');
         const d = await r.json();
         if (!d.ok) { $('ativosAbas').innerHTML='<div class="sem-dados" style="grid-column:1/-1">Sincronize os ativos para ver dados</div>'; return; }
         const nAtivos=(d.ativos||[]).length, nDist=(d.distratados||[]).length,
@@ -686,7 +689,7 @@ function renderChamados(ano) {
 // ── Card Pix TEF ───────────────────────────────────────────
 async function carregarPix() {
     try {
-        const s=await fetch('/pix/stats').then(r=>r.json());
+        const s=await fetch('/ti/api/pix/stats').then(r=>r.json());
         if (!s.ok) { $('pixMetrics').innerHTML='<div class="sem-dados">Sincronize o Pix TEF para ver dados</div>'; return; }
         miniCards('pixMetrics', [
             { val:s.total,      lbl:'Total Lojas', cor:'var(--ti)',     cls:'ti' },
@@ -708,7 +711,7 @@ async function carregarPix() {
 // SUBSTITUA a função carregarLinks() no seu index.html por esta:
 async function carregarLinks() {
     try {
-const r = await fetch('/links/
+const r = await fetch('/ti/api/links/');
         // Trata sessão expirada — retorna HTML em vez de JSON
         if (r.status === 401 || r.redirected) {
             $('linksMetrics').innerHTML = '<div class="sem-dados">Sessão expirada — faça login</div>';
@@ -793,8 +796,8 @@ const r = await fetch('/links/
 async function carregar() {
     setStatus('syncing','Carregando dashboard...');
     const [rMig,rCham]=await Promise.allSettled([
-        fetch('/migracao/lojas-sw/stats').then(r=>r.json()),
-        fetch('/ti/chamados/dados').then(r=>r.json()),
+        fetch('/ti/api/migracao/lojas-sw/stats').then(r=>r.json()),
+        fetch('/ti/api/chamados/dados').then(r=>r.json()),
     ]);
     setStatus('ready','✓ Dashboard carregado');
     renderMigracao(rMig.status==='fulfilled'?rMig.value:null);
@@ -819,8 +822,8 @@ async function sincronizar() {
     setStatus('syncing','🔄 Buscando dados...');
     try {
         const [rA,rC]=await Promise.allSettled([
-            fetch('/ativos/sincronizar',{method:'POST'}).then(r=>r.json()),
-            fetch('/ti/chamados/sincronizar',{method:'POST'}).then(r=>r.json()),
+            fetch('/ti/api/ti/api/ativos/sincronizar',{method:'POST'}).then(r=>r.json()),
+            fetch('/ti/api/chamados/sincronizar',{method:'POST'}).then(r=>r.json()),
         ]);
         const ta=rA.status==='fulfilled'&&rA.value?.ok?rA.value.totais:null;
         const tc=rC.status==='fulfilled'&&rC.value?.ok?rC.value.totalTI:null;

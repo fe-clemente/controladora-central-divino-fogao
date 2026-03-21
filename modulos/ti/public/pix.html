@@ -313,16 +313,16 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
-    <nav>
-        <button class="nav-btn" onclick="location.href='/index.html'">📊 Dashboard</button>
-<button class="nav-btn" onclick="location.href='/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
-        <button class="nav-btn" onclick="location.href='/ativos.html'">🖥️ Ativos</button>
-        <button class="nav-btn" onclick="location.href='/migracao.html'">🔄 Migração</button>
-        <button class="nav-btn" onclick="location.href='/projetos.html'">📋 Projetos</button>
-        <button class="nav-btn" onclick="location.href='/chamados.html'">📞 Chamados</button>
-        <button class="nav-btn active" onclick="location.href='/pix.html'">💳 Pix TEF</button>
-        <button class="nav-btn" onclick="location.href='/linkexterno.html'">🔗 Links</button>
-    </nav>
+<nav>
+    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+    <button class="nav-btn active" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+</nav>
 </header>
 
 <div id="statusBar">
@@ -570,7 +570,7 @@ function setBar(idPct, idBar, v, t) {
 /* ── Carregar ────────────────────────────────────────────── */
 function carregar() {
     setStatus('syncing','Carregando...');
-    fetch('/pix/dados').then(r=>r.json()).then(d => {
+   fetch('/pix/dados').then(r=>r.json()).then(d => {
         if (!d.ok) {
             setStatus('error','⚠️ '+(d.erro||'Erro'));
             $('tblBody').innerHTML = `<tr><td colspan="9"><div class="empty">
@@ -579,12 +579,13 @@ function carregar() {
             </div></td></tr>`;
             return;
         }
-        LOJAS    = d.lojas || [];
+        LOJAS = d.lojas || [];
         FILTRADOS = LOJAS;
         renderTudo(d.stats || {});
         setStatus('ready', `✓ ${LOJAS.length} lojas carregadas`);
-        if (d.sincronizadoEm)
+        if (d.sincronizadoEm) {
             $('lastSync').textContent = 'Sync: '+new Date(d.sincronizadoEm).toLocaleString('pt-BR');
+        }
     }).catch(e => setStatus('error','❌ '+e.message));
 }
 
@@ -803,8 +804,8 @@ function sincronizar() {
     const btn = $('btnSync');
     btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
     setStatus('syncing','Lendo planilha Pix TEF...');
-    fetch('/pix/sincronizar',{method:'POST'}).then(r=>r.json()).then(d=>{
-        btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
+fetch('/ti/api/pix/dados').then(r=>r.json()).then(d => {
+            btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
         if(d.ok){
             toast(`✅ ${d.total} lojas · ${d.stats?.concluidos||0} concluídas`);
             carregar();
