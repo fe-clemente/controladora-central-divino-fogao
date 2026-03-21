@@ -144,21 +144,29 @@ modulos.forEach(mod => {
     });
 });
 
+// ─── Carrega rotas dos módulos ANTES de registrar rotas locais ───
+// FIX: declarar as variáveis aqui para uso nas rotas apenasLocal abaixo
+const tiRoutes          = require('./modulos/ti/routes');
+const treinamentoRoutes = require('./modulos/treinamento/routes');
+
 // ─── Rotas de sync liberadas para localhost (ANTES do exigirLogin) ───
-const tiRoutes = require('./modulos/ti/routes');
 app.post('/ti/api/pix/sincronizar',              apenasLocal, (req, res, next) => { req.url = '/api/pix/sincronizar';              tiRoutes(req, res, next); });
 app.post('/ti/api/chamados/sincronizar',          apenasLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar';          tiRoutes(req, res, next); });
 app.post('/ti/api/chamados/sincronizar/completo', apenasLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar/completo'; tiRoutes(req, res, next); });
 
+// ─── Rotas de sync do treinamento liberadas para localhost ───────
 app.post('/treinamento/sults/sincronizar',        apenasLocal, (req, res, next) => { req.url = '/sults/sincronizar';        treinamentoRoutes(req, res, next); });
 app.post('/treinamento/chamados/sincronizar',     apenasLocal, (req, res, next) => { req.url = '/chamados/sincronizar';     treinamentoRoutes(req, res, next); });
 app.post('/treinamento/turnover/sincronizar',     apenasLocal, (req, res, next) => { req.url = '/turnover/sincronizar';     treinamentoRoutes(req, res, next); });
 app.post('/treinamento/universidade/sincronizar', apenasLocal, (req, res, next) => { req.url = '/universidade/sincronizar'; treinamentoRoutes(req, res, next); });
 
 // ─── Rotas e APIs de cada módulo ─────────────────────────────
+// FIX: usa as variáveis já carregadas acima para ti e treinamento
+const rotasModulos = { ti: tiRoutes, treinamento: treinamentoRoutes };
+
 for (const mod of modulos) {
     try {
-        const routes = mod === 'ti' ? tiRoutes : require(`./modulos/${mod}/routes`);
+        const routes = rotasModulos[mod] || require(`./modulos/${mod}/routes`);
         app.use(`/${mod}`, exigirLogin, exigirModulo(mod), routes);
         console.log(`  ✅ Módulo ${mod} carregado`);
     } catch (e) {

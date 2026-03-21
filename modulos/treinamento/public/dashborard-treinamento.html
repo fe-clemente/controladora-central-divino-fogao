@@ -902,7 +902,7 @@ function renderDash(d, ano){
 
     
     // Cards Universidade (Tabela Dinâmica 10)
-    fetchAPI+('/universidade/dados').then(function(r){ return r.json(); }).then(function(u){
+    fetch(API+'/universidade/dados').then(function(r){ return r.json(); }).then(function(u){
         var t = (u.totais) || {};
         var cardAndamento = '<div class="stat-card" style="border-top:3px solid var(--accent);cursor:pointer" onclick="window.location.href=\'/universidade\'">'+
             '<div class="stat-label" style="color:var(--accent)">⚙️ Andamento (Univ.)</div>'+
