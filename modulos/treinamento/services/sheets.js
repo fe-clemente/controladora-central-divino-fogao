@@ -1,7 +1,7 @@
-const { google } = require('googleapis');
+﻿const { google } = require('googleapis');
 
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
-const KEY_FILE       = process.env.KEY_FILE;
+const KEY_FILE       = process.env.GOOGLE_KEY_FILE;
 
 // ─── ABAS ─────────────────────────────────────────────────────────────────────
 const ABA_CADASTRAL = 'Cadastral 2026';  // busca, cadastro, lembretes, avaliações

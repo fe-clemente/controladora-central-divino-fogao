@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // ─── EMAIL FIXO — sempre recebe uma cópia de tudo ─────────────────────────────
-from: '"Divino Fogão Treinamentos" <fernando.clemente@divinofogao.com.br>',
+const EMAIL_FIXO = process.env.SMTP_USER || 'fernando.clemente@divinofogao.com.br';
 
 // ─── SANITIZA EMAIL ───────────────────────────────────────────────────────────
 function sanitizarEmail(email) {

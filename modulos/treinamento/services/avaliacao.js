@@ -2,7 +2,7 @@
  * services/avaliacao.js
  *
  * Responsável por:
- *  - Gerar tokens seguros para links de avaliação
+ *  - Gerar tokens seguros para links de avaliação (persistidos em disco)
  *  - Expor o Express Router com as rotas:
  *      GET  /avaliacao/dados?token=xxx     → retorna dados do funcionário
  *      POST /avaliacao/registrar           → salva nota + dataFim + envia email resultado
@@ -10,39 +10,82 @@
 
 const { Router } = require('express');
 const crypto     = require('crypto');
+const fs         = require('fs');
+const path       = require('path');
 
 const { getFuncionarioPorRowIndex, preencherAvaliacao } = require('./sheets');
 const { enviarEmailResultadoAvaliacao }                 = require('./email');
 
-// ─── STORE DE TOKENS ─────────────────────────────────────────────────────────
-// Mapa em memória: token → { rowIndex, criadoEm }
-// Tokens expiram em 30 dias. Em produção, substitua por Redis ou banco.
-const tokenStore = new Map();
+// ─── ARQUIVO DE PERSISTÊNCIA ──────────────────────────────────────────────────
+const TOKEN_FILE     = path.join(__dirname, '..', 'data', 'tokens.json');
 const TRINTA_DIAS_MS = 30 * 24 * 60 * 60 * 1000;
 
-// ─── GERA TOKEN E LINK ───────────────────────────────────────────────────────
-function gerarLinkAvaliacao(rowIndex, baseUrl) {
-    const token = crypto.randomBytes(24).toString('hex');
-    tokenStore.set(token, {
-        rowIndex,
-        criadoEm: Date.now(),
-    });
-    return `${baseUrl}/avaliacao.html?token=${token}`;
+// Garante que a pasta data/ existe
+const dataDir = path.dirname(TOKEN_FILE);
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+
+// ─── LOAD / SAVE ──────────────────────────────────────────────────────────────
+function carregarTokens() {
+    try {
+        if (fs.existsSync(TOKEN_FILE)) {
+            const raw = fs.readFileSync(TOKEN_FILE, 'utf8');
+            return new Map(Object.entries(JSON.parse(raw)));
+        }
+    } catch (e) {
+        console.error('⚠️  Erro ao carregar tokens.json:', e.message);
+    }
+    return new Map();
 }
 
-// ─── VALIDA TOKEN ────────────────────────────────────────────────────────────
+function salvarTokens(store) {
+    try {
+        const obj = Object.fromEntries(store);
+        fs.writeFileSync(TOKEN_FILE, JSON.stringify(obj, null, 2), 'utf8');
+    } catch (e) {
+        console.error('⚠️  Erro ao salvar tokens.json:', e.message);
+    }
+}
+
+// Mapa em memória sincronizado com disco
+const tokenStore = carregarTokens();
+
+// Limpa tokens expirados do arquivo ao iniciar
+(function limparExpirados() {
+    let removidos = 0;
+    for (const [token, entry] of tokenStore) {
+        if (Date.now() - entry.criadoEm > TRINTA_DIAS_MS) {
+            tokenStore.delete(token);
+            removidos++;
+        }
+    }
+    if (removidos > 0) {
+        salvarTokens(tokenStore);
+        console.log(`🧹 ${removidos} token(s) expirado(s) removido(s)`);
+    }
+})();
+
+// ─── GERA TOKEN E LINK ────────────────────────────────────────────────────────
+function gerarLinkAvaliacao(rowIndex, baseUrl) {
+    const token = crypto.randomBytes(24).toString('hex');
+    tokenStore.set(token, { rowIndex, criadoEm: Date.now() });
+    salvarTokens(tokenStore);
+    return `${baseUrl}/avaliacao?token=${token}`;
+}
+
+// ─── VALIDA TOKEN ─────────────────────────────────────────────────────────────
 function validarToken(token) {
     if (!token) return null;
     const entry = tokenStore.get(token);
     if (!entry) return null;
     if (Date.now() - entry.criadoEm > TRINTA_DIAS_MS) {
         tokenStore.delete(token);
+        salvarTokens(tokenStore);
         return null;
     }
     return entry;
 }
 
-// ─── ROUTER ──────────────────────────────────────────────────────────────────
+// ─── ROUTER ───────────────────────────────────────────────────────────────────
 const router = Router();
 
 /**
@@ -74,7 +117,7 @@ router.get('/dados', async (req, res) => {
  * Ações:
  *  1. Valida token
  *  2. Salva nota na col AH e dataFim na col P da planilha
- *  3. Envia email de resultado para fernando.clemente@hotmail.com
+ *  3. Envia email de resultado
  */
 router.post('/registrar', async (req, res) => {
     const { token, nota, dataFim, observacoes } = req.body;
@@ -100,13 +143,13 @@ router.post('/registrar', async (req, res) => {
     }
 
     try {
-        // 1. Atualiza colunas AH (nota) e P (dataFim) na planilha
-        await preencherAvaliacao(entry.rowIndex, notaNum, dataFim);
+        // 1. Atualiza colunas AH (nota), Z (SIM), P (dataFim) na planilha
+        await preencherAvaliacao(entry.rowIndex, notaNum, dataFim, observacoes);
 
         // 2. Busca dados completos do funcionário para o email
         const funcionario = await getFuncionarioPorRowIndex(entry.rowIndex);
 
-        // 3. Envia email de resultado para o RH (não bloqueia se falhar)
+        // 3. Envia email de resultado (não bloqueia se falhar)
         enviarEmailResultadoAvaliacao(funcionario, notaNum, dataFim, observacoes)
             .then(() => console.log(`✅ Email resultado enviado — ${funcionario.nome} nota ${notaNum}`))
             .catch(err => console.error('⚠️  Falha no email resultado:', err.message));

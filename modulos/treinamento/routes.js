@@ -1,9 +1,9 @@
-// modulos/treinamento/routes.js
-// Todas as rotas ficam sob o prefixo /treinamento (montado pelo servidor principal)
+﻿// modulos/treinamento/routes.js
 'use strict';
 
 const express = require('express');
 const path    = require('path');
+const https   = require('https');
 const router  = express.Router();
 
 const PUBLIC = path.join(__dirname, 'public');
@@ -13,8 +13,10 @@ const sultsCache        = require('./services/sultsCache');
 const chamadosCache     = require('./services/chamadosCache');
 const turnoverCache     = require('./services/turnoverCache');
 const universidadeCache = require('./services/universidadeCache');
-const { gravarSultsNaPlanilha } = require('./services/gravarSultsPlanilha');
+const { gravarSultsNaPlanilha }  = require('./services/gravarSultsPlanilha');
 const { enviarWhatsAppLembrete } = require('./services/whatsapp');
+const { enviarEmailLembrete }    = require('./services/email');
+const { router: avaliacaoRouter, gerarLinkAvaliacao } = require('./services/avaliacao');
 
 const {
   getSheetsData,
@@ -44,17 +46,8 @@ chamadosCache.inicializar().catch(e => console.error('CHAMADOS init falhou:', e.
 universidadeCache.inicializar().catch(e => console.error('Universidade init falhou:', e.message));
 turnoverCache.inicializar().catch(e => console.error('TURNOVER init falhou:', e.message));
 
-// ─── Arquivos estáticos do módulo ────────────────────────────────────────────
+// ─── Arquivos estáticos do módulo ─────────────────────────────────────────────
 router.use(express.static(PUBLIC, { index: false, extensions: false }));
-
-// ─── Helpers de token ────────────────────────────────────────────────────────
-function gerarToken(rowIndex) {
-  return Buffer.from(String(rowIndex)).toString('base64');
-}
-function lerToken(token) {
-  try { return parseInt(Buffer.from(token, 'base64').toString('utf8')); }
-  catch { return NaN; }
-}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // PÁGINAS HTML
@@ -84,15 +77,13 @@ router.get('/cache/progresso', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
-  // Mantém conexão SSE aberta — o cliente fecha quando terminar
   req.on('close', () => {});
 });
 
 router.post('/recarregar-cache', async (req, res) => {
   try {
     const rows = await getSheetsData();
-    const total = rows.filter(r => r[2]).length;
-    res.json({ sucesso: true, total });
+    res.json({ sucesso: true, total: rows.filter(r => r[2]).length });
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
@@ -123,38 +114,11 @@ router.get('/dashboard/perfil-desenvolvimento', async (req, res) => {
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // AVALIAÇÃO
+// ATENÇÃO: rotas específicas ANTES do router.use('/avaliacao') para não serem
+// interceptadas pelo avaliacaoRouter (que exige token/sessão)
 // ═══════════════════════════════════════════════════════════════════════════════
-router.get('/avaliacao/dados', async (req, res) => {
-  try {
-    const { token } = req.query;
-    if (!token) return res.status(400).json({ erro: 'Token inválido' });
-    const rowIndex = lerToken(token);
-    if (isNaN(rowIndex)) return res.status(400).json({ erro: 'Token corrompido' });
-    const rows = await getSheetsData();
-    const row  = rows[rowIndex];
-    if (!row || !row[2]) return res.status(404).json({ erro: 'Colaborador não encontrado' });
-    res.json({
-      rowIndex,
-      nome: row[2] || '', loja: row[1] || '', funcao: row[5] || '',
-      turno: row[6] || '', cpf: row[3] || '', email: row[12] || '',
-      telefone: row[13] || '', inicioTrein: row[14] || '', fimTrein: row[15] || '',
-      modelo: row[23] || '', avaliacaoOk: row[25] || '', notaAtual: row[33] || '',
-    });
-  } catch (e) { res.status(500).json({ erro: e.message }); }
-});
 
-router.post('/avaliacao/registrar', async (req, res) => {
-  try {
-    const { token, nota, dataFim, observacoes } = req.body;
-    if (!token) return res.status(400).json({ erro: 'Token inválido' });
-    if (nota === undefined || nota === null) return res.status(400).json({ erro: 'Nota obrigatória' });
-    const rowIndex = lerToken(token);
-    if (isNaN(rowIndex)) return res.status(400).json({ erro: 'Token corrompido' });
-    await preencherAvaliacao(rowIndex, nota, dataFim || null, observacoes || null);
-    res.json({ sucesso: true });
-  } catch (e) { res.status(500).json({ erro: e.message }); }
-});
-
+// Rota legada — grava avaliação sem token (uso interno/admin)
 router.post('/avaliacao/gravar', async (req, res) => {
   try {
     const { rowIndex, nota, dataFim } = req.body;
@@ -173,6 +137,9 @@ router.post('/avaliacao/responder', async (req, res) => {
     res.json({ sucesso: true });
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
+
+// avaliacaoRouter (token/sessão) — DEPOIS das rotas específicas acima
+router.use('/avaliacao', avaliacaoRouter);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // CADASTRO
@@ -292,11 +259,36 @@ router.post('/enviar-lembrete', async (req, res) => {
   try {
     const f = req.body;
     if (f.rowIndex === undefined) return res.status(400).json({ erro: 'rowIndex obrigatório' });
+
     const erros = [];
+
+    // Gera link de avaliação com token seguro (crypto) — sobrevive a reinicializações
+    const baseUrl       = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
+    const linkAvaliacao = gerarLinkAvaliacao(f.rowIndex, baseUrl);
+    console.log(`🔗 Link de avaliação gerado: ${linkAvaliacao}`);
+
+    // ── WhatsApp (ignora erro se serviço offline)
     if (f.telefone) {
       try { await enviarWhatsAppLembrete({ ...f, diffDias: f.diffDias ?? 0 }); }
       catch (e) { erros.push('WhatsApp: ' + e.message); }
     }
+
+    // ── Email com link de avaliação
+  if (f.email) {
+      try {
+        await enviarEmailLembrete(f, linkAvaliacao);
+        console.log(`✅ Email lembrete enviado → ${f.email}`);
+        await marcarEmailAvaliacaoEnviado(f.rowIndex);  // ← linha adicionada
+      } catch (e) {
+        console.error('❌ Email falhou:', e.message);
+        erros.push('Email: ' + e.message);
+      }
+    
+    } else {
+      console.warn(`⚠️ Sem email para ${f.nome}`);
+      erros.push('Email: campo vazio na planilha');
+    }
+
     await marcarLembreteEnviado(f.rowIndex);
     res.json({ sucesso: true, erros: erros.length ? erros : undefined });
   } catch (e) { res.status(500).json({ erro: e.message }); }
@@ -336,11 +328,11 @@ router.get('/valores/detalhes', async (req, res) => {
   try {
     const { mes, ano, pago, aprovado, loja } = req.query;
     let dados = await getValoresData();
-    if (mes)     dados = dados.filter(r => String(r.mesTreinamento) === String(mes));
-    if (ano)     dados = dados.filter(r => String(r.anoTreinamento) === String(ano));
-    if (loja)    dados = dados.filter(r => r.loja === loja);
-    if (pago)    dados = dados.filter(r => String(r.pago).toUpperCase() === pago.toUpperCase());
-    if (aprovado)dados = dados.filter(r => String(r.aprovado).toUpperCase() === aprovado.toUpperCase());
+    if (mes)      dados = dados.filter(r => String(r.mesTreinamento) === String(mes));
+    if (ano)      dados = dados.filter(r => String(r.anoTreinamento) === String(ano));
+    if (loja)     dados = dados.filter(r => r.loja === loja);
+    if (pago)     dados = dados.filter(r => String(r.pago).toUpperCase() === pago.toUpperCase());
+    if (aprovado) dados = dados.filter(r => String(r.aprovado).toUpperCase() === aprovado.toUpperCase());
     res.json({ total: dados.length, dados });
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
@@ -384,7 +376,7 @@ router.get('/turnover/registros', async (req, res) => {
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
-router.get('/turnover/status', (req, res) => res.json(turnoverCache.getStatus()));
+router.get('/turnover/status',  (req, res) => res.json(turnoverCache.getStatus()));
 
 router.get('/turnover/resumo', (req, res) => {
   const dados = turnoverCache.getDados();
@@ -451,29 +443,38 @@ router.put('/chamados/:id/concluir', async (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 // SULTS
 // ═══════════════════════════════════════════════════════════════════════════════
-router.get('/sults/dados', (req, res) => {
-  const dados = sultsCache.getDados();
-  if (!dados) return res.status(503).json({ erro: 'Dados ainda carregando...' });
-  res.json(dados);
+router.get('/sults/dados', async (req, res) => {
+  try {
+    let dados = sultsCache.getDados();
+    if (!dados) dados = await sultsCache.sincronizarEAtualizar('auto');
+    if (!dados) return res.status(503).json({ erro: 'Dados indisponíveis' });
+    res.json(dados);
+  } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
-router.get('/sults/resumo', (req, res) => {
-  const dados = sultsCache.getDados();
-  if (!dados) return res.status(503).json({ erro: 'Dados ainda carregando...' });
-  res.json({
-    totalUnidades: dados.totalUnidades,
-    totalFuncionarios: dados.totalFuncionarios,
-    totalImplantacao: dados.totalUnidadesImplantacao,
-    sincronizadoEm: dados.sincronizadoEm,
-  });
+router.get('/sults/resumo', async (req, res) => {
+  try {
+    let dados = sultsCache.getDados();
+    if (!dados) dados = await sultsCache.sincronizarEAtualizar('auto');
+    if (!dados) return res.status(503).json({ erro: 'Dados indisponíveis' });
+    res.json({
+      totalUnidades:    dados.totalUnidades,
+      totalFuncionarios: dados.totalFuncionarios,
+      totalImplantacao:  dados.totalUnidadesImplantacao,
+      sincronizadoEm:    dados.sincronizadoEm,
+    });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
-router.get('/sults/unidade/:id', (req, res) => {
-  const dados = sultsCache.getDados();
-  if (!dados) return res.status(503).json({ erro: 'Dados ainda carregando...' });
-  const unidade = dados.unidades.find(u => String(u.id) === String(req.params.id));
-  if (!unidade) return res.status(404).json({ erro: 'Unidade não encontrada' });
-  res.json(unidade);
+router.get('/sults/unidade/:id', async (req, res) => {
+  try {
+    let dados = sultsCache.getDados();
+    if (!dados) dados = await sultsCache.sincronizarEAtualizar('auto');
+    if (!dados) return res.status(503).json({ erro: 'Dados indisponíveis' });
+    const unidade = dados.unidades?.find(u => String(u.id) === String(req.params.id));
+    if (!unidade) return res.status(404).json({ erro: 'Unidade não encontrada' });
+    res.json(unidade);
+  } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
 router.get('/sults/status', (req, res) => res.json(sultsCache.getStatus()));
@@ -512,26 +513,59 @@ router.post('/universidade/sincronizar', async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// IA
+// IA — Gemini direto via GEMINI_API_KEY
+// FIX: não depende mais do tiDashboardService
 // ═══════════════════════════════════════════════════════════════════════════════
+async function chamarGeminiDireto(prompt) {
+  const GEMINI_KEY = process.env.GEMINI_API_KEY;
+  if (!GEMINI_KEY) throw new Error('GEMINI_API_KEY não configurada no .env');
+
+  const body = JSON.stringify({
+    contents: [{ parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
+  });
+
+  return new Promise((resolve, reject) => {
+    const req = https.request({
+      hostname: 'generativelanguage.googleapis.com',
+      path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(data);
+          if (json.error) return reject(new Error(json.error.message || 'Erro Gemini'));
+          resolve(json?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sem resposta.');
+        } catch (e) { reject(new Error('Resposta inválida da API Gemini')); }
+      });
+    });
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
+
 router.post('/ia/analisar', async (req, res) => {
   try {
     const { pergunta, ano } = req.body;
     if (!pergunta) return res.status(400).json({ erro: 'pergunta obrigatória' });
-    // Tenta usar o serviço de IA do módulo TI se disponível
-    try {
-      const tiDash = require('../ti/services/tiDashboardService');
-      if (tiDash && tiDash.chamarGemini) {
-        const rows = await getSheetsData();
-        const anoFiltro = String(ano || new Date().getFullYear());
-        const totalGeral = rows.filter(r => r[2]).length;
-        const contexto = `Você é assistente de T&D da Central de Treinamentos do Divino Fogão.\nBase total: ${totalGeral} registros | Ano: ${anoFiltro}\nResponda em português, direto e preciso.`;
-        const resposta = await tiDash.chamarGemini(`${contexto}\n\nPergunta: ${pergunta}`);
-        return res.json({ resposta });
-      }
-    } catch (_) {}
-    res.status(503).json({ erro: 'Serviço de IA não disponível neste módulo.', resposta: '⚠️ IA indisponível no momento.' });
-  } catch (e) { res.status(500).json({ erro: e.message, resposta: '❌ Erro: ' + e.message }); }
+
+    const rows = await getSheetsData();
+    const anoFiltro  = String(ano || new Date().getFullYear());
+    const totalGeral = rows.filter(r => r[2]).length;
+
+    const contexto = `Você é assistente de T&D da Central de Treinamentos do Divino Fogão.
+Base total: ${totalGeral} registros | Ano: ${anoFiltro}
+Responda em português, de forma direta e precisa.`;
+
+    const resposta = await chamarGeminiDireto(`${contexto}\n\nPergunta: ${pergunta}`);
+    res.json({ resposta });
+  } catch (e) {
+    res.status(500).json({ erro: e.message, resposta: '❌ Erro: ' + e.message });
+  }
 });
 
 router.post('/ia', async (req, res) => {
@@ -543,12 +577,19 @@ router.post('/ia/turnover', async (req, res) => {
   try {
     const { pergunta } = req.body;
     if (!pergunta) return res.status(400).json({ erro: 'pergunta obrigatória' });
+
     const cache = turnoverCache.getDados();
-    const ctx = cache
-      ? `Turnover ${cache.ano}: ${cache.pctTurnover}% | Ativos: ${cache.totalAtivos} | Desligados: ${cache.desligadosAno}`
+    const ctx   = cache
+      ? `Turnover ${cache.ano}: ${cache.pctTurnover}% | Ativos: ${cache.totalAtivos} | Desligados: ${cache.desligadosAno} | Total: ${cache.totalGeral}`
       : 'Dados de turnover não disponíveis.';
-    res.status(503).json({ erro: 'IA não configurada', resposta: `📊 ${ctx}\n\n⚠️ IA indisponível.` });
-  } catch (e) { res.status(500).json({ erro: e.message, resposta: '❌ Erro: ' + e.message }); }
+
+    const resposta = await chamarGeminiDireto(
+      `Você é assistente de RH do Divino Fogão. Responda em português, direto.\n\n${ctx}\n\nPergunta: ${pergunta}`
+    );
+    res.json({ resposta });
+  } catch (e) {
+    res.status(500).json({ erro: e.message, resposta: '❌ Erro: ' + e.message });
+  }
 });
 
 // ─── Health ──────────────────────────────────────────────────────────────────
@@ -571,6 +612,10 @@ router.get('/health', (req, res) => res.json({
     'GET  /treinamento/valores/dashboard',
     'POST /treinamento/ia/analisar',
     'POST /treinamento/enviar-lembrete',
+    'GET  /treinamento/avaliacao/dados',
+    'POST /treinamento/avaliacao/registrar',
+    'POST /treinamento/avaliacao/gravar',
+    'POST /treinamento/avaliacao/responder',
   ],
 }));
 
