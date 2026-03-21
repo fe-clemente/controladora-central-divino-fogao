@@ -181,19 +181,16 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
-
-
-
-<nav>
-    <button class="nav-btn active" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
-    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
-    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
-    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
-    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
-</nav>
+    <nav>
+        <button class="nav-btn active" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+        <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+        <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+        <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+        <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+        <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+        <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+    </nav>
 </header>
 
 <div id="statusBar">
@@ -236,8 +233,6 @@
             </div>
             <div class="hcard-prog-sub" id="proj-prog-sub"></div>
         </div>
-
-        <!-- Lista expansível de projetos -->
         <div style="margin-top:10px">
             <button onclick="event.preventDefault();const b=$('projListaBox');const a=$('projArrow');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'▼':'▲'"
                 style="background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;color:var(--muted);display:flex;align-items:center;gap:5px;padding:0;width:100%">
@@ -249,7 +244,7 @@
         </div>
     </a>
 
-    <!-- ══ 2. CARD GESTÃO DE ATIVOS (NOVO) ══ -->
+    <!-- ══ 2. CARD GESTÃO DE ATIVOS ══ -->
     <a href="/ti/controle-equipamentos.html" class="hcard c-yellow" id="cardGestaoAtivos">
         <div class="hcard-top">
             <div class="hcard-top-left">
@@ -447,6 +442,14 @@
 </div>
 
 <script>
+// ── Utilitários globais (DEVEM vir antes de qualquer uso) ──────────────────────
+const $ = id => document.getElementById(id);
+const set = (id, v) => { const el=$(id); if(el) el.textContent=(v??'—'); };
+const pct = (v,t) => (!t?0:Math.min(100,+((v/t)*100).toFixed(1)));
+const toast = (msg, ms=2500) => { const el=$('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),ms); };
+const setStatus = (cls, msg) => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
+
+// ── Estado global ──────────────────────────────────────────────────────────────
 const G = { cham: { todos: null, anoSel: 'todos' } };
 window._tiDados = {};
 
@@ -461,12 +464,7 @@ const TIPO_CFG = {
     link:        { icon:'🔗',  label:'Links' },
 };
 
-const toast = (msg, ms=2500) => { const el=$('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),ms); };
-const setStatus = (cls, msg) => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
-const $ = id => document.getElementById(id);
-const set = (id, v) => { const el=$(id); if(el) el.textContent=(v??'—'); };
-const pct = (v,t) => (!t?0:Math.min(100,+((v/t)*100).toFixed(1)));
-
+// ── Helpers de UI ──────────────────────────────────────────────────────────────
 function miniCards(containerId, cards) {
     const el=$(containerId); if(!el) return;
     el.innerHTML = cards.map(c=>`<div class="hm ${c.cls||''}"><div class="hm-val" style="color:${c.cor||'var(--text)'}">${c.val??'—'}</div><div class="hm-lbl">${c.lbl}</div></div>`).join('');
@@ -488,6 +486,7 @@ function buildYearTabs(anos) {
         c.insertBefore(btn,c.lastElementChild);
     });
 }
+
 function setAno(ano, btnEl) {
     G.cham.anoSel=ano;
     $('chamYearTabs').querySelectorAll('.yt').forEach(b=>b.classList.remove('active'));
@@ -495,7 +494,7 @@ function setAno(ano, btnEl) {
     renderChamados(ano);
 }
 
-// ── Card Projetos ──────────────────────────────────────────
+// ── Card Projetos ──────────────────────────────────────────────────────────────
 async function carregarProjetos() {
     try {
         const r = await fetch('/ti/api/projetos/dados');
@@ -506,9 +505,6 @@ async function carregarProjetos() {
         }
         const lista = d.projetos || [];
         const total = lista.length;
-
-        // Usa os campos reais do projetosService: pctConcluido, atraso, pendentes, emValidacao
-        const totalTarefas  = lista.reduce((s,p) => s + (p.totalTarefas  || 0), 0);
         const totalConc     = lista.reduce((s,p) => s + (p.concluidas    || 0), 0);
         const totalAtraso   = lista.reduce((s,p) => s + (p.atraso        || 0), 0);
         const totalPend     = lista.reduce((s,p) => s + (p.pendentes     || 0), 0);
@@ -518,20 +514,18 @@ async function carregarProjetos() {
         const progMedio     = total ? Math.round(lista.reduce((s,p) => s + (p.pctConcluido||0), 0) / total) : 0;
 
         miniCards('projMetrics', [
-            { val:total,         lbl:'Projetos',      cor:'var(--ti2)',   cls:'purple' },
-            { val:projConc100,   lbl:'100% Concluídos', cor:'var(--green)', cls:'green' },
-            { val:totalConc,     lbl:'Tarefas Concluídas', cor:'var(--green)', cls:'green' },
-            { val:totalValid,    lbl:'Em Validação',  cor:'#1d4ed8',      cls:'ti'    },
-            { val:totalPend,     lbl:'Pendentes',     cor:'var(--yellow)', cls:'yellow'},
-            { val:totalAtraso,   lbl:'Em Atraso',     cor:'#dc2626',      cls:'red'   },
+            { val:total,         lbl:'Projetos',           cor:'var(--ti2)',    cls:'purple' },
+            { val:projConc100,   lbl:'100% Concluídos',    cor:'var(--green)',  cls:'green'  },
+            { val:totalConc,     lbl:'Tarefas Concluídas', cor:'var(--green)',  cls:'green'  },
+            { val:totalValid,    lbl:'Em Validação',       cor:'#1d4ed8',       cls:'ti'     },
+            { val:totalPend,     lbl:'Pendentes',          cor:'var(--yellow)', cls:'yellow' },
+            { val:totalAtraso,   lbl:'Em Atraso',          cor:'#dc2626',       cls:'red'    },
         ]);
 
         const bar=$('proj-bar'); if(bar) bar.style.width=progMedio+'%';
-        $('proj-pct').textContent=progMedio+'%';
-        $('proj-prog-sub').textContent=
-            `${projConc100} de ${total} projetos a 100% · ${projComAtraso} com atraso · progresso médio ${progMedio}%`;
+        set('proj-pct', progMedio+'%');
+        set('proj-prog-sub', `${projConc100} de ${total} projetos a 100% · ${projComAtraso} com atraso · progresso médio ${progMedio}%`);
 
-        // Mini-cards dos projetos abaixo da barra
         const pctCor = p => p>=100?'var(--green)':p>=70?'#2563eb':p>=40?'var(--yellow)':'var(--red)';
         const projHtml = lista.map(p => {
             const cor = pctCor(p.pctConcluido||0);
@@ -565,12 +559,14 @@ async function carregarProjetos() {
         if (container) {
             container.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">${projHtml}</div>`;
         }
-
-        window._tiDados.projetos=lista;
-    } catch(e) { $('projMetrics').innerHTML='<div class="sem-dados">Dados não disponíveis</div>'; }
+        window._tiDados.projetos = lista;
+    } catch(e) {
+        $('projMetrics').innerHTML='<div class="sem-dados">Dados não disponíveis</div>';
+    }
 }
 
-// ── Card Gestão Ativos (novo) ──────────────────────────────
+// ── Card Gestão Ativos ─────────────────────────────────────────────────────────
+// BUG CORRIGIDO: removido "const const" — era sintaxe inválida que quebrava todo o JS da página
 async function carregarGestaoAtivos() {
     const box=$('gaConteudo');
     try {
@@ -587,7 +583,10 @@ async function carregarGestaoAtivos() {
         const semComod=lista.filter(i=>i.assinouComodato!=='Sim').length;
         const valorTotal=stats.valorTotalFormatado||'—';
         let valorRestituido='—';
-        try { const rh=await fetch('/ti/api/ti/api/controle-equipamentos/historico-stats',{credentials:'include'}); if(rh.ok){const dh=await rh.json(); if(dh.ok) valorRestituido=dh.totalRestituidoFormatado||'—';} } catch{}
+        try {
+            const rh=await fetch('/ti/api/controle-equipamentos/historico-stats',{credentials:'include'});
+            if(rh.ok){ const dh=await rh.json(); if(dh.ok) valorRestituido=dh.totalRestituidoFormatado||'—'; }
+        } catch(_) {}
         const pctCad=total?Math.round((comEquip/total)*100):0;
         const corBarra=pctCad>=80?'linear-gradient(90deg,var(--green),#4ade80)':pctCad>=50?'linear-gradient(90deg,var(--yellow),#fbbf24)':'linear-gradient(90deg,var(--orange),#fb923c)';
         const porTipo=stats.porTipo||[];
@@ -616,7 +615,7 @@ async function carregarGestaoAtivos() {
     } catch(e) { box.innerHTML=`<div class="sem-dados">Erro: ${e.message}</div>`; }
 }
 
-// ── Card Ativos (legado) ───────────────────────────────────
+// ── Card Ativos (legado) ───────────────────────────────────────────────────────
 async function carregarAtivos() {
     try {
         const r = await fetch('/ti/api/ativos/');
@@ -631,48 +630,50 @@ async function carregarAtivos() {
             <div class="aba-card c-desligados"><div class="aba-card-icon">🔴</div><div class="aba-card-info"><span class="aba-card-val">${nDesl}</span><span class="aba-card-lbl">Desligados</span></div></div>
             <div class="aba-card c-ti-aba"><div class="aba-card-icon">🖥️</div><div class="aba-card-info"><span class="aba-card-val">${nTI}</span><span class="aba-card-lbl">T.I</span></div></div>`;
         const p=pct(tiBom,nTI||1);
-        $('ativ-pct-ok').textContent=p+'%'; $('ativ-bar-ok').style.width=p+'%';
-        $('ativ-prog-sub').textContent=`${tiBom} equipamentos T.I em bom/novo estado de ${nTI} cadastrados`;
+        set('ativ-pct-ok', p+'%');
+        $('ativ-bar-ok').style.width=p+'%';
+        set('ativ-prog-sub', `${tiBom} equipamentos T.I em bom/novo estado de ${nTI} cadastrados`);
         const total=nAtivos+nDist+nDesl+nTI;
-        $('pageSub').textContent=`${total} registros · ${nAtivos} ativos · ${nTI} T.I · ${nDist} distratados · ${nDesl} desligados`;
+        set('pageSub', `${total} registros · ${nAtivos} ativos · ${nTI} T.I · ${nDist} distratados · ${nDesl} desligados`);
         window._tiDados.ativos=d.ativos||[]; window._tiDados.distratados=d.distratados||[];
         window._tiDados.desligados=d.desligados||[]; window._tiDados.ti=d.ti||[];
         window._tiDados.statsTI=d.statsTI||{};
     } catch(e) { $('ativosAbas').innerHTML=`<div class="sem-dados" style="grid-column:1/-1">Erro: ${e.message}</div>`; }
 }
 
-// ── Card Migração ──────────────────────────────────────────
+// ── Card Migração ──────────────────────────────────────────────────────────────
 function renderMigracao(s) {
     if (!s||!s.ok) { $('migMetrics').innerHTML='<div class="sem-dados">Sincronize a migração para ver dados</div>'; return; }
     miniCards('migMetrics', [
-        { val:s.sultsTotal,       lbl:'Total SULTS',           cor:'var(--ti)',     cls:'ti' },
-        { val:s.sultsAtivas,      lbl:'Ativas',                cor:'var(--ti)' },
+        { val:s.sultsTotal,       lbl:'Total SULTS',           cor:'var(--ti)',     cls:'ti'     },
+        { val:s.sultsAtivas,      lbl:'Ativas',                cor:'var(--ti)'                  },
         { val:s.sultsImplantacao, lbl:'Inauguração\nPendente', cor:'var(--orange)', cls:'orange' },
-        { val:s.comSW,            lbl:'Lojas no SW',            cor:'var(--green)',  cls:'green' },
+        { val:s.comSW,            lbl:'Lojas no SW',            cor:'var(--green)',  cls:'green'  },
         { val:s.outrosSW,         lbl:'Outras\nSoftHouses',     cor:'var(--orange)', cls:'orange' },
-        { val:s.semInfo,          lbl:'Sem Info\nde Sistema',   cor:'var(--muted)',  cls:'muted' },
+        { val:s.semInfo,          lbl:'Sem Info\nde Sistema',   cor:'var(--muted)',  cls:'muted'  },
     ]);
     const p=s.pctMigrado||0;
-    set('mig-pct',p+'%'); const bar=$('mig-bar'); if(bar) bar.style.width=p+'%';
-    set('mig-prog-sub',`${s.comSW||0} lojas já no SW de ${s.sultsTotal||0} unidades no SULTS`);
+    set('mig-pct', p+'%');
+    const bar=$('mig-bar'); if(bar) bar.style.width=p+'%';
+    set('mig-prog-sub', `${s.comSW||0} lojas já no SW de ${s.sultsTotal||0} unidades no SULTS`);
     window._tiDados.migracao=s;
 }
 
-// ── Card Chamados ──────────────────────────────────────────
+// ── Card Chamados ──────────────────────────────────────────────────────────────
 function renderChamados(ano) {
     ano=ano||G.cham.anoSel||'todos';
     const d=G.cham.todos;
-    if (!d||!d.ok) { $('chamMetrics').innerHTML=''; $('chamSemDados').style.display=''; $('chamGraficos').style.display='none'; return; }
+if (!d || (!d.chamados && !d.ok)) { $('chamMetrics').innerHTML=''; $('chamSemDados').style.display=''; $('chamGraficos').style.display='none'; return; }
     $('chamSemDados').style.display='none';
     const chamados=d.chamados||[];
     const lista=ano==='todos'?chamados:chamados.filter(c=>c.dataCriacao&&new Date(c.dataCriacao).getFullYear()===parseInt(ano));
     const total=lista.length, abertos=lista.filter(c=>!c.fechado).length, fechados=lista.filter(c=>c.fechado).length;
     const txRes=total?Math.round(fechados/total*100):0;
     miniCards('chamMetrics', [
-        { val:total,      lbl:ano==='todos'?'Total Geral':'Total '+ano, cor:'var(--green)', cls:'ti' },
-        { val:abertos,    lbl:'Abertos',       cor:'var(--red)',    cls:'red' },
-        { val:fechados,   lbl:'Concluídos',    cor:'var(--green)', cls:'green' },
-        { val:txRes+'%',  lbl:'Taxa Resolução', cor:txRes>=70?'var(--green)':'var(--yellow)' },
+        { val:total,      lbl:ano==='todos'?'Total Geral':'Total '+ano, cor:'var(--green)', cls:'ti'     },
+        { val:abertos,    lbl:'Abertos',                                cor:'var(--red)',   cls:'red'    },
+        { val:fechados,   lbl:'Concluídos',                             cor:'var(--green)', cls:'green'  },
+        { val:txRes+'%',  lbl:'Taxa Resolução', cor:txRes>=70?'var(--green)':'var(--yellow)'             },
     ]);
     const tipoMap={}, respMap={};
     lista.forEach(c=>{ const t=c.tipo||'—'; tipoMap[t]=(tipoMap[t]||0)+1; const r=c.responsavel||'—'; respMap[r]=(respMap[r]||0)+1; });
@@ -686,75 +687,58 @@ function renderChamados(ano) {
     window._tiDados.chamados=chamados;
 }
 
-// ── Card Pix TEF ───────────────────────────────────────────
+// ── Card Pix TEF ───────────────────────────────────────────────────────────────
 async function carregarPix() {
     try {
         const s=await fetch('/ti/api/pix/stats').then(r=>r.json());
         if (!s.ok) { $('pixMetrics').innerHTML='<div class="sem-dados">Sincronize o Pix TEF para ver dados</div>'; return; }
         miniCards('pixMetrics', [
-            { val:s.total,      lbl:'Total Lojas', cor:'var(--ti)',     cls:'ti' },
-            { val:s.concluidos, lbl:'Concluídas',  cor:'var(--green)', cls:'green' },
-            { val:s.pendentes,  lbl:'Pendentes',   cor:'var(--muted)', cls:'muted' },
-            { val:s.impedidos,  lbl:'Impedidas',   cor:'#dc2626',      cls:'red' },
-            { val:s.aguardar,   lbl:'Aguardar',    cor:'var(--yellow)',cls:'yellow' },
+            { val:s.total,      lbl:'Total Lojas', cor:'var(--ti)',     cls:'ti'     },
+            { val:s.concluidos, lbl:'Concluídas',  cor:'var(--green)',  cls:'green'  },
+            { val:s.pendentes,  lbl:'Pendentes',   cor:'var(--muted)',  cls:'muted'  },
+            { val:s.impedidos,  lbl:'Impedidas',   cor:'#dc2626',       cls:'red'    },
+            { val:s.aguardar,   lbl:'Aguardar',    cor:'var(--yellow)', cls:'yellow' },
         ]);
         const p=s.pctConcluido||0;
-        $('pix-pct').textContent=p+'%'; const bar=$('pix-bar'); if(bar) bar.style.width=p+'%';
-        $('pix-prog-sub').textContent=`${s.concluidos||0} de ${s.total||0} lojas com Pix TEF implantado`;
+        set('pix-pct', p+'%');
+        const bar=$('pix-bar'); if(bar) bar.style.width=p+'%';
+        set('pix-prog-sub', `${s.concluidos||0} de ${s.total||0} lojas com Pix TEF implantado`);
         window._tiDados.pix=s;
     } catch(e) { $('pixMetrics').innerHTML='<div class="sem-dados">Dados não disponíveis</div>'; }
 }
 
-// ── Card Links ─────────────────────────────────────────────
-// ── Card Links ─────────────────────────────────────────────
-// ── Card Links — VERSÃO FINAL ──────────────────────────────
-// SUBSTITUA a função carregarLinks() no seu index.html por esta:
+// ── Card Links ─────────────────────────────────────────────────────────────────
 async function carregarLinks() {
     try {
-const r = await fetch('/ti/api/links/');
-        // Trata sessão expirada — retorna HTML em vez de JSON
+        const r = await fetch('/ti/api/links/');
         if (r.status === 401 || r.redirected) {
             $('linksMetrics').innerHTML = '<div class="sem-dados">Sessão expirada — faça login</div>';
             return;
         }
-
-        // Garante que é JSON antes de fazer .json()
         const ct = r.headers.get('content-type') || '';
         if (!ct.includes('application/json')) {
             $('linksMetrics').innerHTML = '<div class="sem-dados">Erro de autenticação — faça login</div>';
             return;
         }
-
         const d = await r.json();
-
         if (!d.ok || !d.links?.length) {
             $('linksMetrics').innerHTML = '<div class="sem-dados">Sem links cadastrados</div>';
             return;
         }
-
-        // Conta por tipo — usa fallback genérico se tipo não estiver no TIPO_CFG
         const contagem = {};
-        d.links.forEach(l => {
-            const t = (l.tipo || 'link').toLowerCase();
-            contagem[t] = (contagem[t] || 0) + 1;
-        });
-
+        d.links.forEach(l => { const t=(l.tipo||'link').toLowerCase(); contagem[t]=(contagem[t]||0)+1; });
         const total  = d.links.length;
         const grupos = Object.keys(d.grupos || {}).length;
         const sorted = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
-
-        // TIPO_CFG com fallback para tipos customizados
         const TIPO_CFG_LOCAL = {
-            sistema:      { icon: '⚙️',  label: 'Sistemas'      },
-            planilha:     { icon: '📊',  label: 'Planilhas'     },
-            manual:       { icon: '📘',  label: 'Manuais'       },
-            apresentacao: { icon: '📑',  label: 'Apresentações' },
-            formulario:   { icon: '📋',  label: 'Formulários'   },
-            drive:        { icon: '📁',  label: 'Drive'         },
-            link:         { icon: '🔗',  label: 'Links'         },
+            sistema:      { icon:'⚙️',  label:'Sistemas'      },
+            planilha:     { icon:'📊',  label:'Planilhas'     },
+            manual:       { icon:'📘',  label:'Manuais'       },
+            apresentacao: { icon:'📑',  label:'Apresentações' },
+            formulario:   { icon:'📋',  label:'Formulários'   },
+            drive:        { icon:'📁',  label:'Drive'         },
+            link:         { icon:'🔗',  label:'Links'         },
         };
-
-        // Pill TOTAL em destaque (roxo) + pills por tipo
         const pillTotal = `
             <div class="link-tipo-pill" style="border-color:rgba(124,58,237,.35);background:var(--ti2-pale)">
                 <span class="link-tipo-icon">🔗</span>
@@ -763,9 +747,8 @@ const r = await fetch('/ti/api/links/');
                     <span class="link-tipo-label">TOTAL</span>
                 </div>
             </div>`;
-
         const pillsTipo = sorted.map(([tipo, qtd]) => {
-            const cfg = TIPO_CFG_LOCAL[tipo] || { icon: '🏷️', label: tipo.charAt(0).toUpperCase() + tipo.slice(1) };
+            const cfg = TIPO_CFG_LOCAL[tipo] || { icon:'🏷️', label: tipo.charAt(0).toUpperCase()+tipo.slice(1) };
             return `<div class="link-tipo-pill">
                 <span class="link-tipo-icon">${cfg.icon}</span>
                 <div class="link-tipo-info">
@@ -774,7 +757,6 @@ const r = await fetch('/ti/api/links/');
                 </div>
             </div>`;
         }).join('');
-
         $('linksMetrics').innerHTML = `
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
                 <span style="font-size:12px;font-weight:700;color:var(--muted)">
@@ -783,16 +765,14 @@ const r = await fetch('/ti/api/links/');
                 <span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">${sorted.length} tipos</span>
             </div>
             <div class="links-tipos-grid">${pillTotal}${pillsTipo}</div>`;
-
-        // Salva nos dados globais para a IA
         window._tiDados.links = d.links;
-
-    } catch (e) {
+    } catch(e) {
         console.error('[links]', e.message);
         $('linksMetrics').innerHTML = '<div class="sem-dados">Dados não disponíveis</div>';
     }
 }
-// ── Carregar tudo ──────────────────────────────────────────
+
+// ── Carregar tudo em paralelo ──────────────────────────────────────────────────
 async function carregar() {
     setStatus('syncing','Carregando dashboard...');
     const [rMig,rCham]=await Promise.allSettled([
@@ -806,23 +786,27 @@ async function carregar() {
     if (cham&&cham.ok&&cham.chamados) {
         const anos=[...new Set((cham.chamados||[]).filter(c=>c.dataCriacao).map(c=>new Date(c.dataCriacao).getFullYear()))].filter(Boolean).sort();
         buildYearTabs(anos);
-        if (cham.sincronizadoEm) $('lastSync').textContent='Sync: '+new Date(cham.sincronizadoEm).toLocaleString('pt-BR');
+        if (cham.sincronizadoEm) set('lastSync','Sync: '+new Date(cham.sincronizadoEm).toLocaleString('pt-BR'));
     }
     renderChamados('todos');
-    carregarProjetos();
-    carregarGestaoAtivos();
-    carregarAtivos();
-    carregarPix();
-    carregarLinks();
+    // Carrega os 5 cards restantes em paralelo — nenhum bloqueia o outro
+    Promise.allSettled([
+        carregarProjetos(),
+        carregarGestaoAtivos(),
+        carregarAtivos(),
+        carregarPix(),
+        carregarLinks(),
+    ]);
 }
 
+// ── Sincronizar ────────────────────────────────────────────────────────────────
 async function sincronizar() {
     const btn=$('btnSync');
     btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
     setStatus('syncing','🔄 Buscando dados...');
     try {
         const [rA,rC]=await Promise.allSettled([
-            fetch('/ti/api/ti/api/ativos/sincronizar',{method:'POST'}).then(r=>r.json()),
+            fetch('/ti/api/ativos/sincronizar',{method:'POST'}).then(r=>r.json()),
             fetch('/ti/api/chamados/sincronizar',{method:'POST'}).then(r=>r.json()),
         ]);
         const ta=rA.status==='fulfilled'&&rA.value?.ok?rA.value.totais:null;
@@ -833,7 +817,7 @@ async function sincronizar() {
     btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
 }
 
-// ── IA ─────────────────────────────────────────────────────
+// ── IA ─────────────────────────────────────────────────────────────────────────
 var _iaTiAberto = false;
 
 function toggleIATi() {

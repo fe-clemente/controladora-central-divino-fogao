@@ -96,6 +96,14 @@ function exigirLogin(req, res, next) {
         : res.redirect('/login');
 }
 
+// ─── Middleware localhost — permite sync sem login ────────────
+const apenasLocal = (req, res, next) => {
+    const ip = req.ip || req.connection.remoteAddress || '';
+    const isLocal = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+    if (isLocal) return next();
+    return res.status(401).json({ ok: false, erro: 'Sessão expirada. Faça login.' });
+};
+
 // ─── Páginas globais ─────────────────────────────────────────
 app.get('/',           exigirLogin, (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/index.html', exigirLogin, (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
@@ -122,14 +130,20 @@ modulos.forEach(mod => {
     });
 });
 
+// ─── Rotas de sync liberadas para localhost (ANTES do exigirLogin) ───
+const tiRoutes = require('./modulos/ti/routes');
+app.post('/ti/api/pix/sincronizar',              apenasLocal, (req, res, next) => { req.url = '/api/pix/sincronizar';              tiRoutes(req, res, next); });
+app.post('/ti/api/chamados/sincronizar',          apenasLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar';          tiRoutes(req, res, next); });
+app.post('/ti/api/chamados/sincronizar/completo', apenasLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar/completo'; tiRoutes(req, res, next); });
+
 // ─── Rotas e APIs de cada módulo ─────────────────────────────
 for (const mod of modulos) {
     try {
-        const routes = require(`./modulos/${mod}/routes`);
+        const routes = mod === 'ti' ? tiRoutes : require(`./modulos/${mod}/routes`);
         app.use(`/${mod}`, exigirLogin, exigirModulo(mod), routes);
         console.log(`  ✅ Módulo ${mod} carregado`);
     } catch (e) {
-        console.error(`  ❌ Módulo ${mod} ERRO:`, e);  // ← substitui a linha do warn
+        console.error(`  ❌ Módulo ${mod} ERRO:`, e);
     }
 }
 
@@ -166,3 +180,4 @@ const server = app.listen(PORT, () => {
 
 server.timeout = 120000;
 server.keepAliveTimeout = 120000;
+
