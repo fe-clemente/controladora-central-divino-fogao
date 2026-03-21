@@ -467,7 +467,7 @@ router.get('/lojas-sw/stats', (req, res) => {
 });
 
 // POST /migracao/sincronizar
-router.post('/ti/sincronizar', async (req, res) => {
+router.post('/sincronizar', async (req, res) => {
     try {
         const d = await sincronizar();
         res.json({

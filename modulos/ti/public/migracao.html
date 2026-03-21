@@ -570,7 +570,7 @@ function setBar(idPct, idBar, v, t) {
 /* ── Carregar ─────────────────────────────────────────────── */
 function carregar() {
     setStatus('syncing','Carregando...');
-    fetch('/migracao/dados').then(r=>r.json()).then(d => {
+    fetch('/ti/api/migracao/dados').then(r=>r.json()).then(d => {
         if (!d.ok) {
             setStatus('error','⚠️ '+(d.erro||'Erro'));
             document.getElementById('bodyLojas').innerHTML =
@@ -735,7 +735,7 @@ function renderLojas() {
 /* ── Toggle Em Andamento (check) ─────────────────────────── */
 function toggleAndamento(codigo, marcado) {
     const status = marcado ? 'Em Andamento' : '';
-    fetch(`/migracao/status/${encodeURIComponent(codigo)}`, {
+    fetch(`/ti/api/migracao/status/${encodeURIComponent(codigo)}`, {
         method:  'PATCH',
         headers: {'Content-Type':'application/json'},
         body:    JSON.stringify({ status }),
@@ -780,7 +780,7 @@ function salvarObs() {
 
     btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Salvando...';
 
-    fetch('/migracao/observacao', {
+    fetch('/ti/api/migracao/observacao', {
         method:  'POST',
         headers: {'Content-Type':'application/json'},
         body:    JSON.stringify({
@@ -879,7 +879,7 @@ function sincronizar() {
     const btn = document.getElementById('btnSync');
     btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
     setStatus('syncing','🔄 Buscando dados...');
-    fetch('/migracao/sincronizar',{method:'POST'}).then(r=>r.json()).then(d=>{
+    fetch('/ti/api/migracao/sincronizar',{method:'POST'}).then(r=>r.json()).then(d=>{
         btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
         if (d.ok) {
             toast(`✅ ${d.totalSults} SULTS · ${d.totalLojasSW} planilha · SW: ${d.stats?.comSW||0}`);
