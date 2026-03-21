@@ -37,7 +37,6 @@
         main{max-width:1300px;margin:0 auto;padding:28px 24px;}
         .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
         .page-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
-
         .aba-switcher{display:flex;gap:6px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:50px;padding:6px 8px;box-shadow:var(--shadow);width:fit-content;margin-bottom:24px;flex-wrap:wrap;}
         .aba-btn{display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:40px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--muted);background:transparent;white-space:nowrap;}
         .aba-btn:hover{color:var(--text);background:var(--bg3);}
@@ -49,7 +48,6 @@
         .aba-btn.active-ativos .aba-badge,.aba-btn.active-distratados .aba-badge,
         .aba-btn.active-desligados .aba-badge,.aba-btn.active-ti .aba-badge
         {background:rgba(255,255,255,.25);border-color:transparent;color:#fff;}
-
         .painel{display:none;}.painel.active{display:block;}
         .metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:20px;}
         .mc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:15px 18px;box-shadow:var(--shadow);}
@@ -80,12 +78,10 @@
         .btn-sm{padding:6px 12px;font-size:12px;}
         .btn:disabled{opacity:.5;cursor:not-allowed;}
         .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-        .spinner.dark{border:2px solid var(--border);border-top-color:var(--ti);}
         @keyframes spin{to{transform:rotate(360deg)}}
         .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
         .table-head{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
         .tbl-title{font-size:13px;font-weight:800;}
-        .tbl-count{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
         .tbl-scroll{overflow-x:auto;}
         table{width:100%;border-collapse:collapse;min-width:700px;}
         thead th{padding:9px 13px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
@@ -109,7 +105,7 @@
         .pagination{display:flex;align-items:center;justify-content:center;gap:5px;padding:12px;flex-wrap:wrap;border-top:1px solid var(--border);}
         .pagination button{background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;color:var(--muted);padding:5px 11px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;transition:all .15s;}
         .pagination button.active,.pagination button:hover{background:var(--ti);color:#fff;border-color:var(--ti);}
-        .pagination button:disabled{opacity:.4;cursor:not-allowed;}
+        .pagination button:disabled{opacity:.4;cursor:not-allowed;pointer-events:none;}
         .pg-info{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
         .modal-overlay.open{display:flex;}
@@ -142,8 +138,6 @@
         .toast.show{display:block;animation:fadeUp .3s ease;}
         @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         .valor-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-pale);border:1.5px solid rgba(22,163,74,.2);border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800;color:var(--green);}
-
-        /* ── IA WIDGET ── */
         #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
         #iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--ti),#075985);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(3,105,161,.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .25s;color:#fff;position:relative;}
         #iaToggle:hover{transform:scale(1.08);}
@@ -182,16 +176,16 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
-<nav>
-    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
-    <button class="nav-btn active" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
-    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
-    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
-    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
-</nav>
+    <nav>
+        <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+        <button class="nav-btn active" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+        <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+        <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+        <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+        <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+        <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+    </nav>
 </header>
 
 <div id="statusBar">
@@ -252,7 +246,7 @@
                 <button class="btn btn-green btn-sm" onclick="abrirInsert('ativos')">➕ Novo Registro</button>
             </div>
             <div class="tbl-scroll">
-                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Modelo</th><th>Valor</th><th>Assinatura</th><th>Etiqueta</th><th>Obs</th></tr></thead>
+                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Modelo</th><th>Nº Linha</th><th>Valor</th><th>Assinatura</th><th>Etiqueta</th><th>Obs</th></tr></thead>
                 <tbody id="a-body"></tbody></table>
             </div>
             <div class="pagination" id="a-pag"></div>
@@ -314,7 +308,7 @@
                 <button class="btn btn-green btn-sm" onclick="abrirInsert('desligados')">➕ Novo Registro</button>
             </div>
             <div class="tbl-scroll">
-                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Nº Linha</th><th>Modelo</th><th>Valor</th><th>Assinatura</th><th>Distrato</th><th>Obs</th></tr></thead>
+                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Nº Linha</th><th>Modelo</th><th>Valor</th><th>Assinatura</th><th>Distrato</th></tr></thead>
                 <tbody id="des-body"></tbody></table>
             </div>
             <div class="pagination" id="des-pag"></div>
@@ -406,6 +400,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ══ Estado global ══════════════════════════════════════════
 const D = {
     ativos:[], distratados:[], desligados:[], ti:[],
     f:{ ativos:[], distratados:[], desligados:[], ti:[] },
@@ -444,6 +439,10 @@ const valorDisplay = v => v>0
     ? `<span class="td-valor">R$ ${v.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>`
     : `<span class="td-zero">—</span>`;
 
+// ══ Paginação — funções globais para evitar quebra em onclick ══
+window._pagHandlers = {};
+function _irPag(aba, np) { D.pag[aba]=np; renderTabela(aba); }
+
 function setAba(aba) {
     abaAtual = aba;
     ['ativos','distratados','desligados','ti'].forEach(k => {
@@ -467,14 +466,10 @@ function carregar() {
     fetch('/ti/api/ativos/').then(r=>r.json()).then(raw => {
         if (!raw.ok) { setStatus('error','⚠️ '+(raw.erro||'Erro')); return; }
         D.raw = raw;
-        D.ativos=raw.ativos||[];
-        D.distratados=raw.distratados||[];
-        D.desligados=raw.desligados||[];
-        D.ti=raw.ti||[];
-        D.f.ativos=D.ativos;
-        D.f.distratados=D.distratados;
-        D.f.desligados=D.desligados;
-        D.f.ti=D.ti;
+        D.ativos=raw.ativos||[]; D.distratados=raw.distratados||[];
+        D.desligados=raw.desligados||[]; D.ti=raw.ti||[];
+        D.f.ativos=D.ativos; D.f.distratados=D.distratados;
+        D.f.desligados=D.desligados; D.f.ti=D.ti;
         renderTudo(raw);
         setStatus('ready',`✓ ${D.ativos.length} ativos · ${D.distratados.length} distratados · ${D.desligados.length} desligados · ${D.ti.length} T.I`);
         if (raw.sincronizadoEm) $('lastSync').textContent='Sync: '+new Date(raw.sincronizadoEm).toLocaleString('pt-BR');
@@ -569,10 +564,14 @@ function limparFiltro(aba) {
 
 function renderTabela(aba) {
     const p=PREFIX[aba], lista=D.f[aba];
-    const total=Math.ceil(lista.length/PER), pag=D.pag[aba];
+    const totalPag=Math.ceil(lista.length/PER), pag=D.pag[aba];
     const page=lista.slice((pag-1)*PER,pag*PER);
     $(`${p}-count`).textContent=`${lista.length} item${lista.length!==1?'s':''}`;
-    if(!lista.length){$(`${p}-body`).innerHTML='<tr><td colspan="9"><div class="empty"><p>Nenhum item encontrado</p></div></td></tr>';$(`${p}-pag`).innerHTML='';return;}
+    if(!lista.length){
+        $(`${p}-body`).innerHTML='<tr><td colspan="9"><div class="empty"><p>Nenhum item encontrado</p></div></td></tr>';
+        $(`${p}-pag`).innerHTML='';
+        return;
+    }
     if(aba==='ti'){
         $('ti-body').innerHTML=page.map(i=>{
             const enc=encodeURIComponent(JSON.stringify(i));
@@ -585,38 +584,77 @@ function renderTabela(aba) {
                 <td>${estadoBadge(i.estado)}</td>
                 <td class="mono">${fmtData(i.dtCompra)}</td>
                 <td>${valorDisplay(i.valor)}</td>
-                <td style="color:var(--muted);font-size:11px" title="${i.obs}">${i.obs||'—'}</td>
+                <td style="color:var(--muted);font-size:11px" title="${i.obs||''}">${i.obs||'—'}</td>
             </tr>`;
         }).join('');
-    } else {
-        $(`${p}-body`).innerHTML=page.map(i=>{
+    } else if(aba==='ativos'){
+        $('a-body').innerHTML=page.map(i=>{
             const enc=encodeURIComponent(JSON.stringify(i));
-            let extra='';
-            if(aba==='ativos')      extra=`<td class="mono">${i.assinatura||'—'}</td><td style="font-size:11px;color:var(--muted)">${i.etiqueta||'—'}</td><td style="font-size:11px;color:var(--muted)" title="${i.obs}">${i.obs||'—'}</td>`;
-            if(aba==='distratados') extra=`<td class="mono">${i.numLinha||'—'}</td><td class="mono">${i.assinatura||'—'}</td><td class="mono">${i.distrato||'—'}</td><td style="font-size:11px;color:var(--muted)" title="${i.obs}">${i.obs||'—'}</td>`;
-            if(aba==='desligados')  extra=`<td class="mono">${i.numLinha||'—'}</td><td class="mono">${i.assinatura||'—'}</td><td class="mono">${i.distrato||'—'}</td><td style="font-size:11px;color:var(--muted)" title="${i.obs}">${i.obs||'—'}</td>`;
-            return `<tr onclick="abrirDetalhe('${aba}','${enc}')">
+            return `<tr onclick="abrirDetalhe('ativos','${enc}')">
                 <td class="td-nome" title="${i.comodatario}">${i.comodatario||'—'}</td>
                 <td>${aparelhoBadge(i.aparelho)}</td>
-                <td style="font-size:11px;color:var(--muted)" title="${i.modelo}">${i.modelo||'—'}</td>
+                <td style="font-size:11px;color:var(--muted)">${i.modelo||'—'}</td>
+                <td class="mono">${i.numLinha||'—'}</td>
                 <td>${valorDisplay(i.valor)}</td>
-                ${extra}
+                <td class="mono">${i.assinatura||'—'}</td>
+                <td style="font-size:11px;color:var(--muted)">${i.etiqueta||'—'}</td>
+                <td style="font-size:11px;color:var(--muted)" title="${i.obs||''}">${i.obs||'—'}</td>
+            </tr>`;
+        }).join('');
+    } else if(aba==='distratados'){
+        $('d-body').innerHTML=page.map(i=>{
+            const enc=encodeURIComponent(JSON.stringify(i));
+            return `<tr onclick="abrirDetalhe('distratados','${enc}')">
+                <td class="td-nome" title="${i.comodatario}">${i.comodatario||'—'}</td>
+                <td>${aparelhoBadge(i.aparelho)}</td>
+                <td style="font-size:11px;color:var(--muted)">${i.modelo||'—'}</td>
+                <td class="mono">${i.numLinha||'—'}</td>
+                <td>${valorDisplay(i.valor)}</td>
+                <td class="mono">${i.assinatura||'—'}</td>
+                <td class="mono">${i.distrato||'—'}</td>
+                <td style="font-size:11px;color:var(--muted)" title="${i.obs||''}">${i.obs||'—'}</td>
+            </tr>`;
+        }).join('');
+    } else if(aba==='desligados'){
+        $('des-body').innerHTML=page.map(i=>{
+            const enc=encodeURIComponent(JSON.stringify(i));
+            return `<tr onclick="abrirDetalhe('desligados','${enc}')">
+                <td class="td-nome" title="${i.comodatario}">${i.comodatario||'—'}</td>
+                <td>${aparelhoBadge(i.aparelho)}</td>
+                <td class="mono">${i.numLinha||'—'}</td>
+                <td style="font-size:11px;color:var(--muted)">${i.modelo||'—'}</td>
+                <td>${valorDisplay(i.valor)}</td>
+                <td class="mono">${i.assinatura||'—'}</td>
+                <td class="mono">${i.distrato||'—'}</td>
             </tr>`;
         }).join('');
     }
-    renderPag(`${p}-pag`,total,pag,np=>{D.pag[aba]=np;renderTabela(aba);});
+    renderPag(`${p}-pag`, totalPag, pag, aba);
 }
 
-function renderPag(id,total,atual,cb){
+// ── Paginação corrigida — usa data-aba/data-pg para evitar problemas com closures ──
+function renderPag(id, total, atual, aba) {
     if(total<=1){$(id).innerHTML='';return;}
-    let h=`<button ${atual===1?'disabled':''} onclick="(${cb})(${atual-1})">‹</button>`;
+    let h='';
+    h+=`<button ${atual===1?'disabled':''} data-aba="${aba}" data-pg="${atual-1}" class="pg-nav">‹</button>`;
     for(let i=1;i<=total;i++){
-        if(total>7&&Math.abs(i-atual)>2&&i!==1&&i!==total){if(i===atual-3||i===atual+3)h+=`<span class="pg-info">…</span>`;continue;}
-        h+=`<button class="${i===atual?'active':''}" onclick="(${cb})(${i})">${i}</button>`;
+        if(total>7&&Math.abs(i-atual)>2&&i!==1&&i!==total){
+            if(i===atual-3||i===atual+3) h+=`<span class="pg-info">…</span>`;
+            continue;
+        }
+        h+=`<button class="${i===atual?'active':''}" data-aba="${aba}" data-pg="${i}" class="pg-nav">${i}</button>`;
     }
-    h+=`<button ${atual===total?'disabled':''} onclick="(${cb})(${atual+1})">›</button>`;
+    h+=`<button ${atual===total?'disabled':''} data-aba="${aba}" data-pg="${atual+1}" class="pg-nav">›</button>`;
     h+=`<span class="pg-info">Pág. ${atual}/${total}</span>`;
     $(id).innerHTML=h;
+    // Vincula eventos diretamente — sem inline onclick
+    $(id).querySelectorAll('button[data-pg]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            if(btn.disabled) return;
+            D.pag[btn.dataset.aba]=parseInt(btn.dataset.pg);
+            renderTabela(btn.dataset.aba);
+        });
+    });
 }
 
 function renderBarras(id,items,kL,kV,cores){
@@ -631,10 +669,13 @@ function renderBarras(id,items,kL,kV,cores){
         </div>`).join('');
 }
 
+// ══ Modal detalhe / editar ═════════════════════════════════
 function abrirDetalhe(aba, enc) {
     const i = JSON.parse(decodeURIComponent(enc));
     let titulo, detalhes, formEditar;
-    if (aba === 'ti') {
+    const aopts = ['NOTEBOOK','CELULAR','TABLET','OUTROS'].map(s=>`<option value="${s}"${i.aparelho===s?' selected':''}>${s}</option>`).join('');
+
+    if (aba==='ti') {
         titulo = `🖥️ ${i.equipamento||'Equipamento'} — #${i.numero||''}`;
         detalhes = `<div class="df-grid">
             <div class="df"><div class="dfl">Nº</div><div class="dfv mono">${i.numero||'—'}</div></div>
@@ -647,9 +688,11 @@ function abrirDetalhe(aba, enc) {
             <div class="df"><div class="dfl">Valor</div><div class="dfv" style="color:var(--green);font-weight:800">${i.valorFormatado||'—'}</div></div>
             ${i.obs?`<div class="df full"><div class="dfl">Obs</div><div class="dfv">${i.obs}</div></div>`:''}
         </div>`;
-        formEditar = `<div class="form-section edit">
-            <div class="form-section-title">✏️ Editar</div>
+        formEditar = `<div class="form-section edit"><div class="form-section-title">✏️ Editar</div>
             <div class="form-grid">
+                <div class="form-group"><label>Equipamento</label><input type="text" class="form-control" id="e-equipamento" value="${i.equipamento||''}"></div>
+                <div class="form-group"><label>Marca</label><input type="text" class="form-control" id="e-marca" value="${i.marca||''}"></div>
+                <div class="form-group"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
                 <div class="form-group"><label>Local</label><input type="text" class="form-control" id="e-local" value="${i.local||''}"></div>
                 <div class="form-group"><label>Estado</label>
                     <select class="form-control" id="e-estado">${['Novo','Bom','Regular','Usado','Ruim','Defeito'].map(s=>`<option value="${s}"${i.estado===s?' selected':''}>${s}</option>`).join('')}</select></div>
@@ -664,84 +707,91 @@ function abrirDetalhe(aba, enc) {
         detalhes = `<div class="df-grid">
             <div class="df"><div class="dfl">Comodatário</div><div class="dfv">${i.comodatario||'—'}</div></div>
             <div class="df"><div class="dfl">Aparelho</div><div class="dfv">${aparelhoBadge(i.aparelho)}</div></div>
-            <div class="df full"><div class="dfl">Modelo</div><div class="dfv">${i.modelo||'—'}</div></div>
+            <div class="df"><div class="dfl">Modelo</div><div class="dfv">${i.modelo||'—'}</div></div>
+            <div class="df"><div class="dfl">Nº Linha</div><div class="dfv">${i.numLinha||'—'}</div></div>
             <div class="df"><div class="dfl">Valor</div><div class="dfv" style="color:var(--green);font-weight:800">${i.valorFormatado||'—'}</div></div>
             <div class="df"><div class="dfl">Assinatura</div><div class="dfv">${i.assinatura||'—'}</div></div>
-            ${aba!=='ativos'?`<div class="df"><div class="dfl">Distrato</div><div class="dfv">${i.distrato||'—'}</div></div>`:''}
             ${aba==='ativos'?`<div class="df"><div class="dfl">Etiqueta</div><div class="dfv">${i.etiqueta||'—'}</div></div>`:''}
-            ${aba==='desligados'?`<div class="df"><div class="dfl">Nº Linha</div><div class="dfv">${i.numLinha||'—'}</div></div>`:''}
+            ${aba!=='ativos'?`<div class="df"><div class="dfl">Distrato</div><div class="dfv">${i.distrato||'—'}</div></div>`:''}
             ${i.obs?`<div class="df full"><div class="dfl">Obs</div><div class="dfv">${i.obs}</div></div>`:''}
         </div>`;
-        let camposEditar = '';
-        const aopts = ['NOTEBOOK','CELULAR','TABLET','OUTROS'].map(s=>`<option value="${s}"${i.aparelho===s?' selected':''}>${s}</option>`).join('');
-        if (aba==='ativos') {
-            camposEditar=`<div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+        let camposEditar='';
+        if(aba==='ativos'){
+            camposEditar=`
+                <div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+                <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
                 <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
                 <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
                 <div class="form-group"><label>Etiqueta</label><input type="text" class="form-control" id="e-etiqueta" value="${i.etiqueta||''}"></div>
                 <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
                 <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>`;
-        } else if (aba==='distratados') {
-            camposEditar=`<div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
-                <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
-                <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
-                <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="e-distrato" value="${i.distrato||''}"></div>
-                <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
-                <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>`;
-        } else {
-            camposEditar=`<div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+        } else if(aba==='distratados'){
+            camposEditar=`
+                <div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
                 <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
                 <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
                 <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
                 <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="e-distrato" value="${i.distrato||''}"></div>
                 <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
                 <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>`;
+        } else {
+            camposEditar=`
+                <div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+                <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
+                <div class="form-group"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
+                <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
+                <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
+                <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="e-distrato" value="${i.distrato||''}"></div>`;
         }
-        formEditar = `<div class="form-section edit">
-            <div class="form-section-title">✏️ Editar</div>
+        formEditar=`<div class="form-section edit"><div class="form-section-title">✏️ Editar</div>
             <div class="form-grid">${camposEditar}</div>
             <button class="btn btn-ti" id="btnSalvar" onclick="salvar('${aba}',${i.rowIndex})">💾 Salvar</button>
         </div>`;
     }
-    $('modalTitulo').textContent = titulo;
-    $('modalBody').innerHTML = detalhes + formEditar;
+    $('modalTitulo').textContent=titulo;
+    $('modalBody').innerHTML=detalhes+formEditar;
     $('modalOverlay').classList.add('open');
 }
 
+// ══ Modal insert ═══════════════════════════════════════════
 function abrirInsert(aba) {
     const TITULOS = { ativos:'➕ Novo Comodato — Ativos', distratados:'➕ Novo Registro — Distratados', desligados:'➕ Novo Registro — Desligados', ti:'➕ Novo Equipamento — T.I' };
-    $('modalTitulo').textContent = TITULOS[aba]||'Novo Registro';
-    const aopts = ['NOTEBOOK','CELULAR','TABLET','OUTROS'].map(s=>`<option value="${s}">${s}</option>`).join('');
-    const eopts = ['Novo','Bom','Regular','Usado','Ruim','Defeito'].map(s=>`<option value="${s}">${s}</option>`).join('');
-    let campos = '';
-    if (aba==='ativos') {
-        campos=`<div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
+    $('modalTitulo').textContent=TITULOS[aba]||'Novo Registro';
+    const aopts=['NOTEBOOK','CELULAR','TABLET','OUTROS'].map(s=>`<option value="${s}">${s}</option>`).join('');
+    const eopts=['Novo','Bom','Regular','Usado','Ruim','Defeito'].map(s=>`<option value="${s}">${s}</option>`).join('');
+    let campos='';
+    if(aba==='ativos'){
+        campos=`
+            <div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
             <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha" placeholder="Nº da linha"></div>
             <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
             <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo" placeholder="Marca, modelo, S/N…"></div>
             <div class="form-group"><label>Assinatura (data)</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
             <div class="form-group"><label>Etiqueta / Verificação</label><input type="text" class="form-control" id="n-etiqueta" placeholder="Código etiqueta"></div>
             <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
-    } else if (aba==='distratados') {
-        campos=`<div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
+    } else if(aba==='distratados'){
+        campos=`
+            <div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
             <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
-            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
-            <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo"></div>
-            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha"></div>
-            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
-            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="n-distrato" placeholder="dd/mm/aaaa"></div>
-            <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
-    } else if (aba==='desligados') {
-        campos=`<div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
-            <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
-            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha"></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha" placeholder="Nº da linha"></div>
             <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo"></div>
             <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
             <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
             <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="n-distrato" placeholder="dd/mm/aaaa"></div>
             <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
+    } else if(aba==='desligados'){
+        campos=`
+            <div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha" placeholder="Nº da linha"></div>
+            <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo"></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
+            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="n-distrato" placeholder="dd/mm/aaaa"></div>`;
     } else {
-        campos=`<div class="form-group"><label>Nº Equipamento</label><input type="text" class="form-control" id="n-numero" placeholder="Ex: 001"></div>
+        campos=`
+            <div class="form-group"><label>Nº Equipamento</label><input type="text" class="form-control" id="n-numero" placeholder="Ex: 001"></div>
             <div class="form-group"><label>Equipamento *</label><input type="text" class="form-control" id="n-equipamento" placeholder="Notebook, Monitor…"></div>
             <div class="form-group"><label>Marca</label><input type="text" class="form-control" id="n-marca" placeholder="Dell, Lenovo…"></div>
             <div class="form-group"><label>Modelo</label><input type="text" class="form-control" id="n-modelo"></div>
@@ -751,7 +801,7 @@ function abrirInsert(aba) {
             <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
             <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
     }
-    $('modalBody').innerHTML = `<div class="form-section insert">
+    $('modalBody').innerHTML=`<div class="form-section insert">
         <div class="form-section-title">📝 Preencha os campos</div>
         <div class="form-grid">${campos}</div>
         <button class="btn btn-green" id="btnInserir" onclick="confirmarInsert('${aba}')">✅ Inserir na Planilha</button>
@@ -762,7 +812,7 @@ function abrirInsert(aba) {
 async function salvar(aba, rowIndex) {
     const btn=$('btnSalvar'); btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Salvando...';
     const body={};
-    ['local','estado','dtCompra','valor','obs','aparelho','modelo','assinatura','etiqueta','distrato','numLinha'].forEach(k=>{const el=$('e-'+k);if(el)body[k]=el.value.trim();});
+    ['local','estado','dtCompra','valor','obs','aparelho','modelo','assinatura','etiqueta','distrato','numLinha','equipamento','marca'].forEach(k=>{const el=$('e-'+k);if(el)body[k]=el.value.trim();});
     try {
         const r=await fetch(`/ti/api/ativos/${rowIndex}?aba=${aba}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
         const d=await r.json();
@@ -808,8 +858,8 @@ function exportCSV(){
         h='Nº,Equipamento,Marca,Modelo,Local,Estado,Dt.Compra,Valor,Obs';
         rows=lista.map(i=>[i.numero,i.equipamento,i.marca,i.modelo,i.local,i.estado,fmtData(i.dtCompra),i.valorFormatado,i.obs].map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
     } else {
-        h='Comodatário,Aparelho,Modelo,Valor,Assinatura,Extra,Obs';
-        rows=lista.map(i=>[i.comodatario,i.aparelho,i.modelo,i.valorFormatado,i.assinatura,i.distrato||i.etiqueta||i.numLinha||'',i.obs].map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
+        h='Comodatário,Aparelho,Modelo,NºLinha,Valor,Assinatura,Extra,Obs';
+        rows=lista.map(i=>[i.comodatario,i.aparelho,i.modelo,i.numLinha||'',i.valorFormatado,i.assinatura,i.distrato||i.etiqueta||'',i.obs].map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
     }
     const el=document.createElement('a');
     el.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(h+'\n'+rows.join('\n'));
@@ -819,93 +869,46 @@ function exportCSV(){
 }
 
 // ══ IA ══════════════════════════════════════════════════════
-var _iaAberto = false;
-
-function toggleIA() {
-    _iaAberto = !_iaAberto;
-    const jan=$('iaJanela'), tog=$('iaToggle');
-    if (_iaAberto) {
-        jan.classList.add('aberto'); tog.classList.add('aberto');
-        tog.innerHTML='✕<div class="ia-unread" id="iaUnread"></div>';
-    } else {
-        jan.classList.remove('aberto'); tog.classList.remove('aberto');
-        tog.innerHTML='🤖<div class="ia-unread" id="iaUnread">1</div>';
-        setTimeout(()=>{const u=$('iaUnread');if(u)u.style.display='flex';},100);
-    }
+var _iaAberto=false;
+function toggleIA(){
+    _iaAberto=!_iaAberto;
+    const jan=$('iaJanela'),tog=$('iaToggle');
+    if(_iaAberto){jan.classList.add('aberto');tog.classList.add('aberto');tog.innerHTML='✕<div class="ia-unread" id="iaUnread"></div>';}
+    else{jan.classList.remove('aberto');tog.classList.remove('aberto');tog.innerHTML='🤖<div class="ia-unread" id="iaUnread">1</div>';setTimeout(()=>{const u=$('iaUnread');if(u)u.style.display='flex';},100);}
 }
-
-function montarContextoIA() {
-    const sa=D.raw?.statsAtivos||{}, sd=D.raw?.statsDistratados||{},
-          sde=D.raw?.statsDesligados||{}, sti=D.raw?.statsTI||{};
+function montarContextoIA(){
+    const sa=D.raw?.statsAtivos||{},sd=D.raw?.statsDistratados||{},sde=D.raw?.statsDesligados||{},sti=D.raw?.statsTI||{};
     const amostraAtivos=(D.ativos||[]).slice(0,20).map(i=>`  • ${i.comodatario||'—'} | ${i.aparelho||'—'} | ${i.modelo||'—'} | ${i.valorFormatado||'—'}`).join('\n');
     const amostraTI=(D.ti||[]).slice(0,20).map(i=>`  • #${i.numero||'—'} ${i.equipamento||'—'} | ${i.marca||'—'} ${i.modelo||'—'} | ${i.local||'—'} | ${i.estado||'—'} | ${i.valorFormatado||'—'}`).join('\n');
-    return `=== ATIVOS T.I. — DIVINO FOGÃO ===
-
---- COMODATOS ATIVOS ---
-Total: ${D.ativos.length}
-Valor total: ${sa.valorTotalFormatado||'—'}
-Notebooks: ${D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length}
-Celulares: ${D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('celular')).length}
-
---- DISTRATADOS ---
-Total: ${D.distratados.length}
-Valor total: ${sd.valorTotalFormatado||'—'}
-
---- DESLIGADOS ---
-Total: ${D.desligados.length}
-Valor total: ${sde.valorTotalFormatado||'—'}
-
---- INVENTÁRIO T.I ---
-Total: ${D.ti.length}
-Em bom estado: ${sti.emBomEstado||0}
-Locais: ${(sti.porLocal||[]).length}
-Valor total: ${sti.valorTotalFormatado||'—'}
-
---- AMOSTRA ATIVOS ---
-${amostraAtivos||'  Sem dados'}
-
---- AMOSTRA T.I ---
-${amostraTI||'  Sem dados'}`.trim();
+    return `=== ATIVOS T.I. — DIVINO FOGÃO ===\n\n--- COMODATOS ATIVOS ---\nTotal: ${D.ativos.length}\nValor total: ${sa.valorTotalFormatado||'—'}\n\n--- DISTRATADOS ---\nTotal: ${D.distratados.length}\nValor total: ${sd.valorTotalFormatado||'—'}\n\n--- DESLIGADOS ---\nTotal: ${D.desligados.length}\n\n--- INVENTÁRIO T.I ---\nTotal: ${D.ti.length}\nBom estado: ${sti.emBomEstado||0}\nValor total: ${sti.valorTotalFormatado||'—'}\n\n--- AMOSTRA ATIVOS ---\n${amostraAtivos||'  Sem dados'}\n\n--- AMOSTRA T.I ---\n${amostraTI||'  Sem dados'}`.trim();
 }
-
-async function perguntarIA(fixa) {
+async function perguntarIA(fixa){
     const inp=$('inputIA');
-    const q = fixa || (inp?inp.value.trim():'');
-    if (!q) return;
-    if (inp) inp.value='';
-    if (!_iaAberto) toggleIA();
-
+    const q=fixa||(inp?inp.value.trim():'');
+    if(!q)return;
+    if(inp)inp.value='';
+    if(!_iaAberto)toggleIA();
     const box=$('iaMsgs');
-    const mu=document.createElement('div'); mu.className='ia-msg user'; mu.textContent=q; box.appendChild(mu);
-    const ma=document.createElement('div'); ma.className='ia-msg ai carregando';
-    ma.innerHTML='<span style="opacity:.6">⏳ Analisando ativos...</span>';
-    box.appendChild(ma); box.scrollTop=box.scrollHeight;
-
-    const btn=$('btnIA'); if(btn) btn.disabled=true;
-
-    try {
+    const mu=document.createElement('div');mu.className='ia-msg user';mu.textContent=q;box.appendChild(mu);
+    const ma=document.createElement('div');ma.className='ia-msg ai carregando';ma.innerHTML='<span style="opacity:.6">⏳ Analisando ativos...</span>';
+    box.appendChild(ma);box.scrollTop=box.scrollHeight;
+    const btn=$('btnIA');if(btn)btn.disabled=true;
+    try{
         const resp=await fetch('/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q,contexto:montarContextoIA()})});
-        if(!resp.ok) throw new Error('HTTP '+resp.status);
+        if(!resp.ok)throw new Error('HTTP '+resp.status);
         const json=await resp.json();
         const txt=json.resposta||json.erro||'Sem resposta.';
         ma.className='ia-msg ai';
-        ma.innerHTML=txt
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--ti)">■</span> ')
-            .replace(/\n/g,'<br>');
-    } catch(e) {
-        ma.className='ia-msg ai';
-        ma.textContent='❌ Erro: '+e.message;
-    }
-    if(btn) btn.disabled=false;
+        ma.innerHTML=txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^(▸|•|→|-) /gm,'<span style="color:var(--ti)">■</span> ').replace(/\n/g,'<br>');
+    }catch(e){ma.className='ia-msg ai';ma.textContent='❌ Erro: '+e.message;}
+    if(btn)btn.disabled=false;
     box.scrollTop=box.scrollHeight;
 }
 
-document.addEventListener('DOMContentLoaded', ()=>{
+document.addEventListener('DOMContentLoaded',()=>{
     const inp=$('inputIA');
-    if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') perguntarIA(); });
-    setTimeout(()=>{ if(!_iaAberto){const u=$('iaUnread');if(u){u.style.display='flex';u.textContent='1';}} },3000);
+    if(inp)inp.addEventListener('keydown',e=>{if(e.key==='Enter')perguntarIA();});
+    setTimeout(()=>{if(!_iaAberto){const u=$('iaUnread');if(u){u.style.display='flex';u.textContent='1';}}},3000);
 });
 
 carregar();

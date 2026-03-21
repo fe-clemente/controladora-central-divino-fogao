@@ -1,4 +1,4 @@
-// services/ativosService.js
+// modulos/ti/services/ativosService.js
 'use strict';
 
 const express    = require('express');
@@ -19,7 +19,7 @@ const ABAS = {
             aparelho:    1,  // B = APARELHO
             modelo:      2,  // C = MODELO
             // D = NOVO (não lido)
-            // E = Nº linha (não lido)
+            numLinha:    4,  // E = Nº Linha
             valor:       5,  // F = VALOR
             assinatura:  6,  // G = ASSINATURA
             etiqueta:    7,  // H = VERIFICAÇÃO COM ETIQUETA
@@ -46,12 +46,12 @@ const ABAS = {
         colunas: {
             comodatario: 0,  // A = COMODATÁRIO
             aparelho:    1,  // B = APARELHO
-            numLinha:    2,  // C = NUmero da linha
+            numLinha:    2,  // C = Nº Linha
             modelo:      3,  // D = MODELO
             valor:       4,  // E = VALOR
             assinatura:  5,  // F = ASSINATURA
             distrato:    6,  // G = DISTRATO
-            obs:         7,  // H = Observação
+            // H = Observação (não mapeada na planilha)
         },
     },
     ti: {
@@ -75,7 +75,7 @@ const ABAS = {
 const CACHE_DIR  = path.join(__dirname, '../cache');
 const CACHE_FILE = path.join(CACHE_DIR, 'ativos_cache.json');
 
-let _mem = null;  // cache em memória
+let _mem = null;
 
 function lerCache() {
     if (_mem) return _mem;
@@ -141,11 +141,12 @@ function parseAtivos(rows) {
             comodatario:    comodatario || '—',
             aparelho:       aparelho    || '—',
             modelo:         get(row, c.modelo)     || '—',
+            numLinha:       get(row, c.numLinha)   || '',
             valor,
             valorFormatado: fmtValor(valor),
-            assinatura:     get(row, c.assinatura) || '',  // G
-            etiqueta:       get(row, c.etiqueta)   || '',  // H
-            obs:            get(row, c.obs)        || '',  // I
+            assinatura:     get(row, c.assinatura) || '',
+            etiqueta:       get(row, c.etiqueta)   || '',
+            obs:            get(row, c.obs)        || '',
         };
     }).filter(Boolean);
 }
@@ -165,12 +166,12 @@ function parseDistratados(rows) {
             comodatario:    comodatario || '—',
             aparelho:       aparelho    || '—',
             modelo:         get(row, c.modelo)    || '—',
-            numLinha:       get(row, c.numLinha)  || '',  // D
+            numLinha:       get(row, c.numLinha)  || '',
             valor,
             valorFormatado: fmtValor(valor),
-            assinatura:     get(row, c.assinatura)|| '',  // F
-            distrato:       get(row, c.distrato)  || '',  // G
-            obs:            get(row, c.obs)       || '',  // H
+            assinatura:     get(row, c.assinatura)|| '',
+            distrato:       get(row, c.distrato)  || '',
+            obs:            get(row, c.obs)       || '',
         };
     }).filter(Boolean);
 }
@@ -195,7 +196,7 @@ function parseDesligados(rows) {
             valorFormatado: fmtValor(valor),
             assinatura:     get(row, c.assinatura)|| '',
             distrato:       get(row, c.distrato)  || '',
-            obs:            get(row, c.obs)       || '',
+            obs:            '',  // sem coluna obs na planilha
         };
     }).filter(Boolean);
 }
@@ -276,7 +277,7 @@ function statsTI(lista) {
     };
 }
 
-// ─── Sincronizar (lê as 4 abas e salva cache) ────────────────────────────────
+// ─── Sincronizar ──────────────────────────────────────────────────────────────
 async function sincronizar() {
     console.log('[ativos] Sincronizando...');
     const sheets = await getSheets();
@@ -320,11 +321,8 @@ async function sincronizar() {
 }
 
 // ─── Inserir nova linha ────────────────────────────────────────────────────────
-// Busca a última linha com dados e insere logo após
 async function inserirLinha(nomeAba, valores) {
     const sheets = await getSheets();
-
-    // Descobre última linha com dados
     const r = await sheets.spreadsheets.values.get({
         spreadsheetId: SHEET_ID,
         range: `'${nomeAba}'`,
@@ -349,13 +347,17 @@ async function atualizarLinha(nomeAba, rowIndex, body) {
     let mapa = {};
 
     if (nomeAba === ABAS.ti.nome) {
-        mapa = { local: 'E', estado: 'F', dtCompra: 'G', valor: 'H', obs: 'I' };
+        // A=Nº B=Equip C=Marca D=Modelo E=Local F=Estado G=DtCompra H=Valor I=Obs
+        mapa = { equipamento:'B', marca:'C', modelo:'D', local:'E', estado:'F', dtCompra:'G', valor:'H', obs:'I' };
     } else if (nomeAba === ABAS.ativos.nome) {
-        mapa = { aparelho: 'B', modelo: 'C', valor: 'F', assinatura: 'G', etiqueta: 'H', obs: 'I' };  // correto
+        // A=Comod B=Aparelho C=Modelo D=Novo E=NºLinha F=Valor G=Assinatura H=Etiqueta I=Obs
+        mapa = { aparelho:'B', modelo:'C', numLinha:'E', valor:'F', assinatura:'G', etiqueta:'H', obs:'I' };
     } else if (nomeAba === ABAS.distratados.nome) {
-        mapa = { aparelho: 'B', modelo: 'C', numLinha: 'D', valor: 'E', assinatura: 'F', distrato: 'G', obs: 'H' };
+        // A=Comod B=Aparelho C=Modelo D=NºLinha E=Valor F=Assinatura G=Distrato H=Obs
+        mapa = { aparelho:'B', modelo:'C', numLinha:'D', valor:'E', assinatura:'F', distrato:'G', obs:'H' };
     } else if (nomeAba === ABAS.desligados.nome) {
-        mapa = { aparelho: 'B', numLinha: 'C', modelo: 'D', valor: 'E', assinatura: 'F', distrato: 'G', obs: 'H' };
+        // A=Comod B=Aparelho C=NºLinha D=Modelo E=Valor F=Assinatura G=Distrato
+        mapa = { aparelho:'B', numLinha:'C', modelo:'D', valor:'E', assinatura:'F', distrato:'G' };
     }
 
     const data = Object.entries(mapa)
@@ -376,7 +378,7 @@ async function atualizarLinha(nomeAba, rowIndex, body) {
 // ROTAS
 // ══════════════════════════════════════════════════════════════════════════════
 
-// GET /ativos — retorna tudo do cache
+// GET /ti/api/ativos
 router.get('/', (req, res) => {
     try {
         const c = lerCache();
@@ -392,14 +394,13 @@ router.get('/', (req, res) => {
             ti:               c.ti               || [],
             statsTI:          c.statsTI          || {},
             sincronizadoEm:   c.sincronizadoEm,
-            // retrocompat
             totalAtivos: (c.ativos||[]).length,
             valorTotal:  (c.statsAtivos?.valorTotal||0) + (c.statsTI?.valorTotal||0),
         });
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-// POST /ativos/sincronizar
+// POST /ti/api/ativos/sincronizar
 router.post('/sincronizar', async (req, res) => {
     try {
         const d = await sincronizar();
@@ -418,7 +419,7 @@ router.post('/sincronizar', async (req, res) => {
     }
 });
 
-// POST /ativos/inserir?aba=ativos|distratados|desligados|ti
+// POST /ti/api/ativos/inserir?aba=ativos|distratados|desligados|ti
 router.post('/inserir', async (req, res) => {
     try {
         const aba  = req.query.aba || 'ativos';
@@ -427,65 +428,63 @@ router.post('/inserir', async (req, res) => {
 
         if (aba === 'ativos') {
             nomeAba = ABAS.ativos.nome;
-            // A=Comodatário B=Aparelho C=Modelo D=vazio E=vazio F=Valor G=Assinatura H=Etiqueta I=Obs
+            // A=Comod B=Aparelho C=Modelo D=Novo(vazio) E=NºLinha F=Valor G=Assinatura H=Etiqueta I=Obs
             valores = [
                 body.comodatario || '',  // A
                 body.aparelho    || '',  // B
                 body.modelo      || '',  // C
-                '',                      // D = vazio
-                '',                      // E = vazio (Nº linha — preenchido manualmente na planilha)
+                '',                      // D = NOVO (vazio)
+                body.numLinha    || '',  // E = Nº Linha
                 body.valor       || '',  // F = VALOR
                 body.assinatura  || '',  // G = ASSINATURA
                 body.etiqueta    || '',  // H = VERIFICAÇÃO COM ETIQUETA
-                body.obs         || '',  // I = OBSERVACAO
+                body.obs         || '',  // I = OBSERVAÇÃO
             ];
         } else if (aba === 'distratados') {
             nomeAba = ABAS.distratados.nome;
-            // A=Comodatário B=Aparelho C=Modelo D=NºLinha E=Valor F=Assinatura G=Distrato H=Obs
+            // A=Comod B=Aparelho C=Modelo D=NºLinha E=Valor F=Assinatura G=Distrato H=Obs
             valores = [
                 body.comodatario || '',  // A
                 body.aparelho    || '',  // B
                 body.modelo      || '',  // C
-                body.numLinha    || '',  // D = Nº Linha
-                body.valor       || '',  // E = VALOR
-                body.assinatura  || '',  // F = ASSINATURA
-                body.distrato    || '',  // G = DISTRATO
-                body.obs         || '',  // H = OBSERVACAO
+                body.numLinha    || '',  // D
+                body.valor       || '',  // E
+                body.assinatura  || '',  // F
+                body.distrato    || '',  // G
+                body.obs         || '',  // H
             ];
         } else if (aba === 'desligados') {
             nomeAba = ABAS.desligados.nome;
-            // A B C D E F G H
+            // A=Comod B=Aparelho C=NºLinha D=Modelo E=Valor F=Assinatura G=Distrato
             valores = [
-                body.comodatario || '',
-                body.aparelho    || '',
-                body.numLinha    || '',
-                body.modelo      || '',
-                body.valor       || '',
-                body.assinatura  || '',
-                body.distrato    || '',
-                body.obs         || '',
+                body.comodatario || '',  // A
+                body.aparelho    || '',  // B
+                body.numLinha    || '',  // C
+                body.modelo      || '',  // D
+                body.valor       || '',  // E
+                body.assinatura  || '',  // F
+                body.distrato    || '',  // G
             ];
         } else if (aba === 'ti') {
             nomeAba = ABAS.ti.nome;
-            // A B C D E F G H I
+            // A=Nº B=Equip C=Marca D=Modelo E=Local F=Estado G=DtCompra H=Valor I=Obs
             valores = [
-                body.numero      || '',
-                body.equipamento || '',
-                body.marca       || '',
-                body.modelo      || '',
-                body.local       || '',
-                body.estado      || '',
-                body.dtCompra    || '',
-                body.valor       || '',
-                body.obs         || '',
+                body.numero      || '',  // A
+                body.equipamento || '',  // B
+                body.marca       || '',  // C
+                body.modelo      || '',  // D
+                body.local       || '',  // E
+                body.estado      || '',  // F
+                body.dtCompra    || '',  // G
+                body.valor       || '',  // H
+                body.obs         || '',  // I
             ];
         } else {
             return res.status(400).json({ ok: false, erro: 'Aba inválida: ' + aba });
         }
 
         const linha = await inserirLinha(nomeAba, valores);
-        // Invalida cache para forçar re-leitura no próximo sincronizar
-        _mem = null;
+        _mem = null; // invalida cache
         res.json({ ok: true, linha, aba: nomeAba });
     } catch (e) {
         console.error('[ativos] inserir erro:', e.message);
@@ -493,7 +492,7 @@ router.post('/inserir', async (req, res) => {
     }
 });
 
-// PATCH /ativos/:rowIndex?aba=ativos|distratados|desligados|ti
+// PATCH /ti/api/ativos/:rowIndex?aba=ativos|distratados|desligados|ti
 router.patch('/:rowIndex', async (req, res) => {
     try {
         const row     = parseInt(req.params.rowIndex);
@@ -502,7 +501,6 @@ router.patch('/:rowIndex', async (req, res) => {
 
         await atualizarLinha(nomeAba, row, req.body);
 
-        // Atualiza cache em memória
         const c = lerCache();
         if (c && c[abaKey]) {
             const idx = c[abaKey].findIndex(i => i.rowIndex === row);

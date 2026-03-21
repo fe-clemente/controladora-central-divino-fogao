@@ -520,19 +520,27 @@ function renderTabela(aba) {
             ${extra}
         </tr>`;
     }).join('');
-    renderPag(`${p}-pag`,total,pag,np=>{D.pag[aba]=np;renderTabela(aba);});
+    renderPag(`${p}-pag`,total,pag,aba);
 }
 
-function renderPag(id,total,atual,cb){
+function renderPag(id,total,atual,aba){
     if(total<=1){$(id).innerHTML='';return;}
-    let h=`<button ${atual===1?'disabled':''} onclick="(${cb})(${atual-1})">‹</button>`;
+    let h='';
+    h+=`<button ${atual===1?'disabled':''} data-aba="${aba}" data-pg="${atual-1}">‹</button>`;
     for(let i=1;i<=total;i++){
         if(total>7&&Math.abs(i-atual)>2&&i!==1&&i!==total){if(i===atual-3||i===atual+3)h+=`<span class="pg-info">…</span>`;continue;}
-        h+=`<button class="${i===atual?'active':''}" onclick="(${cb})(${i})">${i}</button>`;
+        h+=`<button class="${i===atual?'active':''}" data-aba="${aba}" data-pg="${i}">${i}</button>`;
     }
-    h+=`<button ${atual===total?'disabled':''} onclick="(${cb})(${atual+1})">›</button>`;
+    h+=`<button ${atual===total?'disabled':''} data-aba="${aba}" data-pg="${atual+1}">›</button>`;
     h+=`<span class="pg-info">Pág. ${atual}/${total}</span>`;
     $(id).innerHTML=h;
+    $(id).querySelectorAll('button[data-pg]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            if(btn.disabled) return;
+            D.pag[btn.dataset.aba]=parseInt(btn.dataset.pg);
+            renderTabela(btn.dataset.aba);
+        });
+    });
 }
 
 function renderBarras(id,items,kL,kV,cores){
