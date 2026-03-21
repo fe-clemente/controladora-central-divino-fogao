@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ativos T.I. — Divino Fogão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:#c8102e;--red-pale:#fff0f2;
+            --bg:#f5f3ef;--bg2:#ffffff;--bg3:#faf8f5;
+            --border:#e8e2d9;--text:#1e1a16;--muted:#8a7f74;
+            --green:#16a34a;--green-pale:#f0fdf4;
+            --yellow:#d97706;--yellow-pale:#fffbeb;
+            --orange:#ea580c;--orange-pale:#fff7ed;
+            --ti:#0369a1;--ti-light:#0ea5e9;--ti-pale:#f0f9ff;
+            --ti2:#7c3aed;--ti2-pale:#f5f3ff;
+            --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+        .logo{padding:10px 0;}.logo img{height:48px;display:block;}
+        .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
+        .hd{width:1px;height:32px;background:var(--border);}
+        .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
+        nav{display:flex;gap:2px;margin-left:auto;}
+        .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+        .nav-btn:hover{color:var(--text);background:var(--bg3);}
+        .nav-btn.active{color:var(--ti);border-bottom-color:var(--ti);background:var(--ti-pale);}
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+        .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+        .sdot.ready{background:var(--green);animation:none;}
+        .sdot.error{background:var(--red);animation:none;}
+        .sdot.syncing{background:var(--ti-light);animation:pulse .8s infinite;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+        main{max-width:1300px;margin:0 auto;padding:28px 24px;}
+        .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
+        .page-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
+
+        .aba-switcher{display:flex;gap:6px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:50px;padding:6px 8px;box-shadow:var(--shadow);width:fit-content;margin-bottom:24px;flex-wrap:wrap;}
+        .aba-btn{display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:40px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--muted);background:transparent;white-space:nowrap;}
+        .aba-btn:hover{color:var(--text);background:var(--bg3);}
+        .aba-btn .aba-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;background:var(--bg3);border:1px solid var(--border);padding:2px 7px;border-radius:20px;color:var(--muted);transition:all .2s;}
+        .aba-btn.active-ativos{background:var(--ti);color:#fff;}
+        .aba-btn.active-distratados{background:var(--orange);color:#fff;}
+        .aba-btn.active-desligados{background:#64748b;color:#fff;}
+        .aba-btn.active-ti{background:var(--ti2);color:#fff;}
+        .aba-btn.active-ativos .aba-badge,.aba-btn.active-distratados .aba-badge,
+        .aba-btn.active-desligados .aba-badge,.aba-btn.active-ti .aba-badge
+        {background:rgba(255,255,255,.25);border-color:transparent;color:#fff;}
+
+        .painel{display:none;}.painel.active{display:block;}
+        .metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:20px;}
+        .mc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:15px 18px;box-shadow:var(--shadow);}
+        .mc-icon{font-size:20px;margin-bottom:6px;}
+        .mc-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;}
+        .mc-val{font-size:24px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
+        .mc-sub{font-size:10px;color:var(--muted);margin-top:4px;font-weight:600;}
+        .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+        @media(max-width:900px){.g2{grid-template-columns:1fr;}}
+        .cc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);}
+        .cc-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:3px;}
+        .cc-sub{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:12px;}
+        .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+        .bar-label{font-size:12px;font-weight:600;color:var(--text);width:150px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .bar-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+        .bar-fill{height:100%;border-radius:4px;transition:width .8s ease;}
+        .bar-count{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);width:28px;text-align:right;flex-shrink:0;}
+        .filters{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow);display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
+        .fg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px;}
+        .fg label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
+        .fc{padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;-webkit-appearance:none;}
+        .fc:focus{border-color:var(--ti);}
+        select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+        .btn{padding:8px 16px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+        .btn-ti{background:var(--ti);color:#fff;}.btn-ti:hover{background:#075985;}
+        .btn-green{background:var(--green);color:#fff;}.btn-green:hover{background:#15803d;}
+        .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}.btn-ghost:hover{background:var(--bg2);}
+        .btn-sm{padding:6px 12px;font-size:12px;}
+        .btn:disabled{opacity:.5;cursor:not-allowed;}
+        .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+        .spinner.dark{border:2px solid var(--border);border-top-color:var(--ti);}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+        .table-head{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+        .tbl-title{font-size:13px;font-weight:800;}
+        .tbl-count{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+        .tbl-scroll{overflow-x:auto;}
+        table{width:100%;border-collapse:collapse;min-width:700px;}
+        thead th{padding:9px 13px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
+        tbody tr{transition:background .12s;cursor:pointer;}
+        tbody tr:hover td{background:var(--bg3);}
+        tbody td{padding:10px 13px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        tbody tr:last-child td{border-bottom:none;}
+        .mono{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+        .td-nome{font-weight:700;}
+        .td-valor{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--green);}
+        .td-zero{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;}
+        .eb{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+        .eb-notebook{background:var(--ti-pale);color:var(--ti);border:1.5px solid rgba(3,105,161,.2);}
+        .eb-celular{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
+        .eb-tablet{background:var(--ti2-pale);color:var(--ti2);border:1.5px solid rgba(124,92,252,.2);}
+        .eb-outro{background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0;}
+        .eb-novo{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
+        .eb-bom{background:var(--ti-pale);color:var(--ti);border:1.5px solid rgba(3,105,161,.2);}
+        .eb-regular{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
+        .eb-ruim{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
+        .pagination{display:flex;align-items:center;justify-content:center;gap:5px;padding:12px;flex-wrap:wrap;border-top:1px solid var(--border);}
+        .pagination button{background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;color:var(--muted);padding:5px 11px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;transition:all .15s;}
+        .pagination button.active,.pagination button:hover{background:var(--ti);color:#fff;border-color:var(--ti);}
+        .pagination button:disabled{opacity:.4;cursor:not-allowed;}
+        .pg-info{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+        .modal-overlay.open{display:flex;}
+        .modal-box{background:var(--bg2);border-radius:18px;padding:26px 28px;max-width:620px;width:100%;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;}
+        .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;}
+        .modal-title{font-size:15px;font-weight:800;}
+        .modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:5px 11px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);}
+        .modal-close:hover{background:var(--red-pale);color:var(--red);}
+        .df-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+        .df{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px 13px;}
+        .df.full{grid-column:1/-1;}
+        .dfl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:3px;}
+        .dfv{font-size:13px;font-weight:600;}
+        .form-section{border-radius:12px;padding:16px;margin-top:14px;}
+        .form-section.edit{background:var(--ti-pale);border:1.5px solid rgba(3,105,161,.2);}
+        .form-section.insert{background:var(--green-pale);border:1.5px solid rgba(22,163,74,.2);}
+        .form-section-title{font-size:12px;font-weight:800;margin-bottom:12px;}
+        .form-section.edit .form-section-title{color:var(--ti);}
+        .form-section.insert .form-section-title{color:var(--green);}
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+        .form-group{display:flex;flex-direction:column;gap:4px;}
+        .form-group.full{grid-column:1/-1;}
+        .form-group label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+        .form-control{padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;transition:border-color .2s;}
+        .form-control:focus{border-color:var(--ti);}
+        select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+        textarea.form-control{resize:vertical;min-height:65px;}
+        .empty{text-align:center;padding:50px;color:var(--muted);}
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
+        .toast.show{display:block;animation:fadeUp .3s ease;}
+        @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+        .valor-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-pale);border:1.5px solid rgba(22,163,74,.2);border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800;color:var(--green);}
+
+        /* ── IA WIDGET ── */
+        #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+        #iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--ti),#075985);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(3,105,161,.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .25s;color:#fff;position:relative;}
+        #iaToggle:hover{transform:scale(1.08);}
+        #iaToggle.aberto{background:linear-gradient(135deg,#444,#1a1a1a);}
+        .ia-unread{position:absolute;top:-3px;right:-3px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid #fff;line-height:1;}
+        #iaJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:400px;max-width:calc(100vw - 32px);max-height:660px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;animation:iaSlide .25s ease;}
+        #iaJanela.aberto{display:flex;}
+        @keyframes iaSlide{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+        .ia-topo{background:linear-gradient(135deg,var(--ti),#075985);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+        .ia-topo-esq{display:flex;align-items:center;gap:10px;}
+        .ia-topo-titulo{font-size:14px;font-weight:800;}
+        .ia-topo-sub{font-size:11px;opacity:.8;margin-top:1px;}
+        .ia-fechar{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+        .ia-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+        .ia-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;}
+        .ia-sug:hover{border-color:var(--ti);color:var(--ti);background:var(--ti-pale);}
+        .ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:220px;max-height:380px;}
+        .ia-msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
+        .ia-msg.user{background:var(--ti);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+        .ia-msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
+        .ia-msg.ai.carregando{color:var(--muted);font-style:italic;}
+        .ia-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+        .ia-input{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;}
+        .ia-input:focus{border-color:var(--ti);}
+        .ia-enviar{background:var(--ti);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
+        .ia-enviar:disabled{opacity:.5;cursor:not-allowed;}
+        @media(max-width:768px){#iaJanela{width:calc(100vw - 32px);}#iaWidget{right:16px;bottom:16px;}}
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <span class="logo-fb">🍽️</span>
+    </div>
+    <div class="hd"></div>
+    <div class="h-title">Central de T.I.</div>
+<nav>
+    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+    <button class="nav-btn active" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+</nav>
+</header>
+
+<div id="statusBar">
+    <div class="sdot" id="sdot"></div>
+    <span id="statusText">Carregando...</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span id="lastSync" style="font-size:11px;color:var(--muted)"></span>
+        <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ CSV</button>
+        <button class="btn btn-ti" id="btnSync" onclick="sincronizar()">🔄 Sincronizar</button>
+    </span>
+</div>
+
+<main>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div>
+            <div class="page-title">🖥️ Ativos &amp; Comodatos</div>
+            <div class="page-sub" id="pageSub">Carregando...</div>
+        </div>
+        <div id="valorBadge" class="valor-badge" style="display:none">💰 <span id="valorTotal">—</span></div>
+    </div>
+
+    <div class="aba-switcher">
+        <button class="aba-btn active-ativos" id="btn-ativos" onclick="setAba('ativos')">
+            <span>📱</span> Ativos <span class="aba-badge" id="badge-ativos">—</span>
+        </button>
+        <button class="aba-btn" id="btn-distratados" onclick="setAba('distratados')">
+            <span>📋</span> Distratados <span class="aba-badge" id="badge-distratados">—</span>
+        </button>
+        <button class="aba-btn" id="btn-desligados" onclick="setAba('desligados')">
+            <span>🔴</span> Desligados <span class="aba-badge" id="badge-desligados">—</span>
+        </button>
+        <button class="aba-btn" id="btn-ti" onclick="setAba('ti')">
+            <span>🖥️</span> T.I <span class="aba-badge" id="badge-ti">—</span>
+        </button>
+    </div>
+
+    <!-- ═══ PAINEL ATIVOS ═══ -->
+    <div class="painel active" id="painel-ativos">
+        <div class="metrics">
+            <div class="mc"><div class="mc-icon">📱</div><div class="mc-label">Total</div><div class="mc-val" style="color:var(--ti)" id="a-total">—</div><div class="mc-sub">comodatos ativos</div></div>
+            <div class="mc"><div class="mc-icon">💻</div><div class="mc-label">Notebooks</div><div class="mc-val" style="color:var(--ti)" id="a-nb">—</div></div>
+            <div class="mc"><div class="mc-icon">📱</div><div class="mc-label">Celulares</div><div class="mc-val" style="color:var(--green)" id="a-cel">—</div></div>
+            <div class="mc"><div class="mc-icon">💰</div><div class="mc-label">Valor Total</div><div class="mc-val" style="color:var(--green);font-size:16px" id="a-valor">—</div></div>
+        </div>
+        <div class="g2">
+            <div class="cc"><div class="cc-title">Por Tipo de Aparelho</div><div class="cc-sub" id="a-tipo-sub">—</div><div id="a-chart-tipo"></div></div>
+            <div class="cc"><div class="cc-title">Top Comodatários</div><div class="cc-sub">com mais de 1 item</div><div id="a-chart-comod"></div></div>
+        </div>
+        <div class="filters">
+            <div class="fg"><label>🔍 Buscar</label><input type="text" class="fc" id="a-busca" placeholder="Nome, aparelho, modelo…" oninput="filtrar('ativos')"></div>
+            <div class="fg" style="max-width:160px"><label>Aparelho</label><select class="fc" id="a-fapa" onchange="filtrar('ativos')"><option value="">Todos</option></select></div>
+            <span class="pg-info" id="a-count" style="align-self:flex-end;padding-bottom:9px"></span>
+            <button class="btn btn-ghost btn-sm" onclick="limparFiltro('ativos')">✕ Limpar</button>
+        </div>
+        <div class="table-wrap">
+            <div class="table-head">
+                <div><div class="tbl-title">📱 Comodatos Ativos</div></div>
+                <button class="btn btn-green btn-sm" onclick="abrirInsert('ativos')">➕ Novo Registro</button>
+            </div>
+            <div class="tbl-scroll">
+                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Modelo</th><th>Valor</th><th>Assinatura</th><th>Etiqueta</th><th>Obs</th></tr></thead>
+                <tbody id="a-body"></tbody></table>
+            </div>
+            <div class="pagination" id="a-pag"></div>
+        </div>
+    </div>
+
+    <!-- ═══ PAINEL DISTRATADOS ═══ -->
+    <div class="painel" id="painel-distratados">
+        <div class="metrics">
+            <div class="mc"><div class="mc-icon">📋</div><div class="mc-label">Total</div><div class="mc-val" style="color:var(--orange)" id="d-total">—</div></div>
+            <div class="mc"><div class="mc-icon">💻</div><div class="mc-label">Notebooks</div><div class="mc-val" style="color:var(--ti)" id="d-nb">—</div></div>
+            <div class="mc"><div class="mc-icon">📱</div><div class="mc-label">Celulares</div><div class="mc-val" style="color:var(--green)" id="d-cel">—</div></div>
+            <div class="mc"><div class="mc-icon">💰</div><div class="mc-label">Valor Total</div><div class="mc-val" style="color:var(--green);font-size:16px" id="d-valor">—</div></div>
+        </div>
+        <div class="g2">
+            <div class="cc"><div class="cc-title">Por Tipo de Aparelho</div><div class="cc-sub" id="d-tipo-sub">—</div><div id="d-chart-tipo"></div></div>
+            <div class="cc"><div class="cc-title">Top Comodatários</div><div class="cc-sub">histórico</div><div id="d-chart-comod"></div></div>
+        </div>
+        <div class="filters">
+            <div class="fg"><label>🔍 Buscar</label><input type="text" class="fc" id="d-busca" placeholder="Nome, aparelho, modelo…" oninput="filtrar('distratados')"></div>
+            <div class="fg" style="max-width:160px"><label>Aparelho</label><select class="fc" id="d-fapa" onchange="filtrar('distratados')"><option value="">Todos</option></select></div>
+            <span class="pg-info" id="d-count" style="align-self:flex-end;padding-bottom:9px"></span>
+            <button class="btn btn-ghost btn-sm" onclick="limparFiltro('distratados')">✕ Limpar</button>
+        </div>
+        <div class="table-wrap">
+            <div class="table-head">
+                <div><div class="tbl-title">📋 Distratados</div></div>
+                <button class="btn btn-green btn-sm" onclick="abrirInsert('distratados')">➕ Novo Registro</button>
+            </div>
+            <div class="tbl-scroll">
+                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Modelo</th><th>Nº Linha</th><th>Valor</th><th>Assinatura</th><th>Distrato</th><th>Obs</th></tr></thead>
+                <tbody id="d-body"></tbody></table>
+            </div>
+            <div class="pagination" id="d-pag"></div>
+        </div>
+    </div>
+
+    <!-- ═══ PAINEL DESLIGADOS ═══ -->
+    <div class="painel" id="painel-desligados">
+        <div class="metrics">
+            <div class="mc"><div class="mc-icon">🔴</div><div class="mc-label">Total</div><div class="mc-val" style="color:#64748b" id="des-total">—</div></div>
+            <div class="mc"><div class="mc-icon">💻</div><div class="mc-label">Notebooks</div><div class="mc-val" style="color:var(--ti)" id="des-nb">—</div></div>
+            <div class="mc"><div class="mc-icon">📱</div><div class="mc-label">Celulares</div><div class="mc-val" style="color:var(--green)" id="des-cel">—</div></div>
+            <div class="mc"><div class="mc-icon">💰</div><div class="mc-label">Valor Total</div><div class="mc-val" style="color:var(--green);font-size:16px" id="des-valor">—</div></div>
+        </div>
+        <div class="g2">
+            <div class="cc"><div class="cc-title">Por Tipo de Aparelho</div><div class="cc-sub" id="des-tipo-sub">—</div><div id="des-chart-tipo"></div></div>
+            <div class="cc"><div class="cc-title">Top Comodatários</div><div class="cc-sub">histórico</div><div id="des-chart-comod"></div></div>
+        </div>
+        <div class="filters">
+            <div class="fg"><label>🔍 Buscar</label><input type="text" class="fc" id="des-busca" placeholder="Nome, aparelho…" oninput="filtrar('desligados')"></div>
+            <div class="fg" style="max-width:160px"><label>Aparelho</label><select class="fc" id="des-fapa" onchange="filtrar('desligados')"><option value="">Todos</option></select></div>
+            <span class="pg-info" id="des-count" style="align-self:flex-end;padding-bottom:9px"></span>
+            <button class="btn btn-ghost btn-sm" onclick="limparFiltro('desligados')">✕ Limpar</button>
+        </div>
+        <div class="table-wrap">
+            <div class="table-head">
+                <div><div class="tbl-title">🔴 Desligados</div></div>
+                <button class="btn btn-green btn-sm" onclick="abrirInsert('desligados')">➕ Novo Registro</button>
+            </div>
+            <div class="tbl-scroll">
+                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Nº Linha</th><th>Modelo</th><th>Valor</th><th>Assinatura</th><th>Distrato</th><th>Obs</th></tr></thead>
+                <tbody id="des-body"></tbody></table>
+            </div>
+            <div class="pagination" id="des-pag"></div>
+        </div>
+    </div>
+
+    <!-- ═══ PAINEL T.I ═══ -->
+    <div class="painel" id="painel-ti">
+        <div class="metrics">
+            <div class="mc"><div class="mc-icon">🖥️</div><div class="mc-label">Total</div><div class="mc-val" style="color:var(--ti2)" id="ti-total">—</div></div>
+            <div class="mc"><div class="mc-icon">✅</div><div class="mc-label">Bom Estado</div><div class="mc-val" style="color:var(--green)" id="ti-bom">—</div></div>
+            <div class="mc"><div class="mc-icon">📍</div><div class="mc-label">Locais</div><div class="mc-val" style="color:var(--ti2)" id="ti-locais">—</div></div>
+            <div class="mc"><div class="mc-icon">💰</div><div class="mc-label">Valor Total</div><div class="mc-val" style="color:var(--green);font-size:16px" id="ti-valor">—</div></div>
+        </div>
+        <div class="g2">
+            <div class="cc"><div class="cc-title">Por Equipamento</div><div class="cc-sub" id="ti-tipo-sub">—</div><div id="ti-chart-tipo"></div></div>
+            <div class="cc"><div class="cc-title">Por Local</div><div class="cc-sub" id="ti-local-sub">—</div><div id="ti-chart-local"></div></div>
+        </div>
+        <div class="filters">
+            <div class="fg"><label>🔍 Buscar</label><input type="text" class="fc" id="ti-busca" placeholder="Equipamento, marca, modelo…" oninput="filtrar('ti')"></div>
+            <div class="fg" style="max-width:160px"><label>Tipo</label><select class="fc" id="ti-fequip" onchange="filtrar('ti')"><option value="">Todos</option></select></div>
+            <div class="fg" style="max-width:160px"><label>Estado</label><select class="fc" id="ti-festado" onchange="filtrar('ti')"><option value="">Todos</option></select></div>
+            <div class="fg" style="max-width:180px"><label>Local</label><select class="fc" id="ti-flocal" onchange="filtrar('ti')"><option value="">Todos</option></select></div>
+            <span class="pg-info" id="ti-count" style="align-self:flex-end;padding-bottom:9px"></span>
+            <button class="btn btn-ghost btn-sm" onclick="limparFiltro('ti')">✕ Limpar</button>
+        </div>
+        <div class="table-wrap">
+            <div class="table-head">
+                <div><div class="tbl-title">🖥️ Inventário T.I</div></div>
+                <button class="btn btn-green btn-sm" onclick="abrirInsert('ti')">➕ Novo Equipamento</button>
+            </div>
+            <div class="tbl-scroll">
+                <table><thead><tr><th>#</th><th>Equipamento</th><th>Marca</th><th>Modelo</th><th>Local</th><th>Estado</th><th>Dt. Compra</th><th>Valor</th><th>Obs</th></tr></thead>
+                <tbody id="ti-body"></tbody></table>
+            </div>
+            <div class="pagination" id="ti-pag"></div>
+        </div>
+    </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTitulo">—</div>
+            <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕ Fechar</button>
+        </div>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<!-- IA WIDGET -->
+<div id="iaWidget">
+    <div id="iaJanela">
+        <div class="ia-topo">
+            <div class="ia-topo-esq">
+                <span style="font-size:24px">🤖</span>
+                <div>
+                    <div class="ia-topo-titulo">IA — Ativos T.I.</div>
+                    <div class="ia-topo-sub">Analise comodatos, T.I. e patrimônio</div>
+                </div>
+            </div>
+            <button class="ia-fechar" onclick="toggleIA()">✕</button>
+        </div>
+        <div class="ia-sugs">
+            <button class="ia-sug" onclick="perguntarIA('Quantos ativos temos no total?')">📊 Resumo</button>
+            <button class="ia-sug" onclick="perguntarIA('Qual o valor total do patrimônio T.I.?')">💰 Patrimônio</button>
+            <button class="ia-sug" onclick="perguntarIA('Quais equipamentos estão em mau estado?')">⚠️ Estado</button>
+            <button class="ia-sug" onclick="perguntarIA('Quem tem mais comodatos ativos?')">👤 Top</button>
+            <button class="ia-sug" onclick="perguntarIA('Faça um resumo executivo dos ativos.')">📋 Executivo</button>
+        </div>
+        <div class="ia-msgs" id="iaMsgs">
+            <div class="ia-msg ai">
+                👋 Olá! Posso analisar os ativos, comodatos, distratados, desligados e inventário T.I.<br><br>
+                <span style="font-size:11px;color:var(--muted)">💡 Clique em uma sugestão ou digite sua pergunta.</span>
+            </div>
+        </div>
+        <div class="ia-rodape">
+            <input type="text" class="ia-input" id="inputIA" placeholder="Ex: Qual o valor total em notebooks?">
+            <button class="ia-enviar" id="btnIA" onclick="perguntarIA()">➤</button>
+        </div>
+    </div>
+    <button id="iaToggle" onclick="toggleIA()" title="IA Ativos T.I.">
+        🤖
+        <div class="ia-unread" id="iaUnread">1</div>
+    </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const D = {
+    ativos:[], distratados:[], desligados:[], ti:[],
+    f:{ ativos:[], distratados:[], desligados:[], ti:[] },
+    pag:{ ativos:1, distratados:1, desligados:1, ti:1 },
+    raw: null,
+};
+let abaAtual = 'ativos';
+const PER = 25;
+const CORES = ['var(--ti)','var(--ti2)','var(--orange)','var(--green)','var(--yellow)','#0891b2','#db2777'];
+const PREFIX = { ativos:'a', distratados:'d', desligados:'des', ti:'ti' };
+
+const $ = id => document.getElementById(id);
+const toast = (msg, ms=2500) => { const el=$('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),ms); };
+const setStatus = (cls, msg) => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
+
+const fmtData = dt => {
+    if (!dt) return '—';
+    try { const d=new Date(dt); return isNaN(d)?dt:d.toLocaleDateString('pt-BR'); } catch { return dt; }
+};
+const aparelhoBadge = ap => {
+    const l=(ap||'').toLowerCase();
+    if(l.includes('notebook')||l.includes('laptop')) return `<span class="eb eb-notebook">💻 ${ap}</span>`;
+    if(l.includes('celular')||l.includes('smartph')) return `<span class="eb eb-celular">📱 ${ap}</span>`;
+    if(l.includes('tablet'))                         return `<span class="eb eb-tablet">📲 ${ap}</span>`;
+    return ap ? `<span class="eb eb-outro">${ap}</span>` : '—';
+};
+const estadoBadge = e => {
+    const l=(e||'').toLowerCase();
+    if(l==='novo')    return `<span class="eb eb-novo">🟢 ${e}</span>`;
+    if(l==='bom')     return `<span class="eb eb-bom">🔵 ${e}</span>`;
+    if(l==='regular'||l==='usado') return `<span class="eb eb-regular">🟡 ${e}</span>`;
+    if(l==='ruim'||l==='defeito'||l==='danificado') return `<span class="eb eb-ruim">🔴 ${e}</span>`;
+    return e ? `<span class="eb eb-outro">${e}</span>` : '—';
+};
+const valorDisplay = v => v>0
+    ? `<span class="td-valor">R$ ${v.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>`
+    : `<span class="td-zero">—</span>`;
+
+function setAba(aba) {
+    abaAtual = aba;
+    ['ativos','distratados','desligados','ti'].forEach(k => {
+        $('painel-'+k).classList.remove('active');
+        $('btn-'+k).className = 'aba-btn';
+    });
+    $('painel-'+aba).classList.add('active');
+    $('btn-'+aba).className = 'aba-btn active-'+aba;
+    if (D.raw) atualizarValorBadge(aba);
+}
+
+function atualizarValorBadge(aba) {
+    const map = { ativos:D.raw?.statsAtivos?.valorTotalFormatado, distratados:D.raw?.statsDistratados?.valorTotalFormatado, desligados:D.raw?.statsDesligados?.valorTotalFormatado, ti:D.raw?.statsTI?.valorTotalFormatado };
+    const v = map[aba];
+    $('valorTotal').textContent = v||'—';
+    $('valorBadge').style.display = v ? '' : 'none';
+}
+
+function carregar() {
+    setStatus('syncing','Carregando...');
+    fetch('/ti/api/ativos/').then(r=>r.json()).then(raw => {
+        if (!raw.ok) { setStatus('error','⚠️ '+(raw.erro||'Erro')); return; }
+        D.raw = raw;
+        D.ativos=raw.ativos||[];
+        D.distratados=raw.distratados||[];
+        D.desligados=raw.desligados||[];
+        D.ti=raw.ti||[];
+        D.f.ativos=D.ativos;
+        D.f.distratados=D.distratados;
+        D.f.desligados=D.desligados;
+        D.f.ti=D.ti;
+        renderTudo(raw);
+        setStatus('ready',`✓ ${D.ativos.length} ativos · ${D.distratados.length} distratados · ${D.desligados.length} desligados · ${D.ti.length} T.I`);
+        if (raw.sincronizadoEm) $('lastSync').textContent='Sync: '+new Date(raw.sincronizadoEm).toLocaleString('pt-BR');
+    }).catch(e=>setStatus('error','❌ '+e.message));
+}
+
+function renderTudo(raw) {
+    const sa=raw.statsAtivos||{}, sd=raw.statsDistratados||{}, sde=raw.statsDesligados||{}, sti=raw.statsTI||{};
+    $('badge-ativos').textContent=D.ativos.length;
+    $('badge-distratados').textContent=D.distratados.length;
+    $('badge-desligados').textContent=D.desligados.length;
+    $('badge-ti').textContent=D.ti.length;
+    $('pageSub').textContent=`${D.ativos.length} ativos · ${D.distratados.length} distratados · ${D.desligados.length} desligados · ${D.ti.length} T.I`;
+    $('a-total').textContent=D.ativos.length;
+    $('a-nb').textContent=D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length;
+    $('a-cel').textContent=D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('celular')||(i.aparelho||'').toLowerCase().includes('smartph')).length;
+    $('a-valor').textContent=sa.valorTotalFormatado||'—';
+    $('a-tipo-sub').textContent=(sa.porAparelho||[]).length+' tipos';
+    renderBarras('a-chart-tipo',sa.porAparelho||[],'aparelho','qtd',['var(--ti)','var(--green)','var(--ti2)']);
+    renderBarras('a-chart-comod',(sa.topComodatarios||[]).filter(c=>c.qtd>1),'nome','qtd',['var(--orange)']);
+    popularFiltro('a-fapa',D.ativos,'aparelho');
+    $('d-total').textContent=D.distratados.length;
+    $('d-nb').textContent=D.distratados.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length;
+    $('d-cel').textContent=D.distratados.filter(i=>(i.aparelho||'').toLowerCase().includes('celular')||(i.aparelho||'').toLowerCase().includes('smartph')).length;
+    $('d-valor').textContent=sd.valorTotalFormatado||'—';
+    $('d-tipo-sub').textContent=(sd.porAparelho||[]).length+' tipos';
+    renderBarras('d-chart-tipo',sd.porAparelho||[],'aparelho','qtd',['var(--orange)','var(--ti)','var(--green)']);
+    renderBarras('d-chart-comod',(sd.topComodatarios||[]).filter(c=>c.qtd>1),'nome','qtd',['var(--ti2)']);
+    popularFiltro('d-fapa',D.distratados,'aparelho');
+    $('des-total').textContent=D.desligados.length;
+    $('des-nb').textContent=D.desligados.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length;
+    $('des-cel').textContent=D.desligados.filter(i=>(i.aparelho||'').toLowerCase().includes('celular')||(i.aparelho||'').toLowerCase().includes('smartph')).length;
+    $('des-valor').textContent=sde.valorTotalFormatado||'—';
+    $('des-tipo-sub').textContent=(sde.porAparelho||[]).length+' tipos';
+    renderBarras('des-chart-tipo',sde.porAparelho||[],'aparelho','qtd',['#64748b','var(--ti)','var(--green)']);
+    renderBarras('des-chart-comod',(sde.topComodatarios||[]).filter(c=>c.qtd>1),'nome','qtd',['var(--red)']);
+    popularFiltro('des-fapa',D.desligados,'aparelho');
+    $('ti-total').textContent=D.ti.length;
+    $('ti-bom').textContent=sti.emBomEstado||0;
+    $('ti-locais').textContent=(sti.porLocal||[]).length;
+    $('ti-valor').textContent=sti.valorTotalFormatado||'—';
+    $('ti-tipo-sub').textContent=(sti.porEquipamento||[]).length+' tipos';
+    $('ti-local-sub').textContent=(sti.porLocal||[]).length+' locais';
+    renderBarras('ti-chart-tipo',(sti.porEquipamento||[]).slice(0,8),'tipo','qtd',CORES);
+    renderBarras('ti-chart-local',(sti.porLocal||[]).slice(0,8),'local','qtd',['var(--ti2)','#a78bfa']);
+    popularFiltro('ti-fequip',D.ti,'equipamento');
+    $('ti-festado').innerHTML='<option value="">Todos</option>'+[...new Set(D.ti.map(i=>i.estado||'').filter(Boolean))].sort().map(e=>`<option value="${e}">${e}</option>`).join('');
+    $('ti-flocal').innerHTML='<option value="">Todos</option>'+[...new Set(D.ti.map(i=>i.local||'').filter(Boolean))].sort().map(l=>`<option value="${l}">${l}</option>`).join('');
+    atualizarValorBadge(abaAtual);
+    ['ativos','distratados','desligados','ti'].forEach(k=>renderTabela(k));
+}
+
+function popularFiltro(id, lista, campo) {
+    const vals=[...new Set(lista.map(i=>i[campo]||'').filter(Boolean))].sort();
+    $(id).innerHTML='<option value="">Todos</option>'+vals.map(v=>`<option value="${v}">${v}</option>`).join('');
+}
+
+function filtrar(aba) {
+    const p=PREFIX[aba];
+    const q=($(`${p}-busca`)?.value||'').toLowerCase();
+    let lista;
+    if (aba==='ti') {
+        const equip=$('ti-fequip').value, estado=$('ti-festado').value, local=$('ti-flocal').value;
+        lista=D.ti.filter(i=>{
+            const txt=`${i.equipamento} ${i.marca} ${i.modelo} ${i.local} ${i.numero}`.toLowerCase();
+            if(q&&!txt.includes(q)) return false;
+            if(equip&&i.equipamento!==equip) return false;
+            if(estado&&i.estado!==estado) return false;
+            if(local&&i.local!==local) return false;
+            return true;
+        });
+    } else {
+        const fapa=$(`${p}-fapa`).value;
+        lista=D[aba].filter(i=>{
+            const txt=`${i.comodatario} ${i.aparelho} ${i.modelo}`.toLowerCase();
+            if(q&&!txt.includes(q)) return false;
+            if(fapa&&i.aparelho!==fapa) return false;
+            return true;
+        });
+    }
+    D.f[aba]=lista; D.pag[aba]=1;
+    $(`${p}-count`).textContent=`${lista.length} item${lista.length!==1?'s':''}`;
+    renderTabela(aba);
+}
+
+function limparFiltro(aba) {
+    const p=PREFIX[aba];
+    [$(`${p}-busca`),$(`${p}-fapa`)].forEach(el=>{if(el)el.value='';});
+    if(aba==='ti'){$('ti-festado').value='';$('ti-flocal').value='';}
+    filtrar(aba);
+}
+
+function renderTabela(aba) {
+    const p=PREFIX[aba], lista=D.f[aba];
+    const total=Math.ceil(lista.length/PER), pag=D.pag[aba];
+    const page=lista.slice((pag-1)*PER,pag*PER);
+    $(`${p}-count`).textContent=`${lista.length} item${lista.length!==1?'s':''}`;
+    if(!lista.length){$(`${p}-body`).innerHTML='<tr><td colspan="9"><div class="empty"><p>Nenhum item encontrado</p></div></td></tr>';$(`${p}-pag`).innerHTML='';return;}
+    if(aba==='ti'){
+        $('ti-body').innerHTML=page.map(i=>{
+            const enc=encodeURIComponent(JSON.stringify(i));
+            return `<tr onclick="abrirDetalhe('ti','${enc}')">
+                <td class="mono">${i.numero||'—'}</td>
+                <td class="td-nome">${i.equipamento||'—'}</td>
+                <td style="color:var(--muted)">${i.marca||'—'}</td>
+                <td title="${i.modelo}">${i.modelo||'—'}</td>
+                <td style="font-weight:600">${i.local||'—'}</td>
+                <td>${estadoBadge(i.estado)}</td>
+                <td class="mono">${fmtData(i.dtCompra)}</td>
+                <td>${valorDisplay(i.valor)}</td>
+                <td style="color:var(--muted);font-size:11px" title="${i.obs}">${i.obs||'—'}</td>
+            </tr>`;
+        }).join('');
+    } else {
+        $(`${p}-body`).innerHTML=page.map(i=>{
+            const enc=encodeURIComponent(JSON.stringify(i));
+            let extra='';
+            if(aba==='ativos')      extra=`<td class="mono">${i.assinatura||'—'}</td><td style="font-size:11px;color:var(--muted)">${i.etiqueta||'—'}</td><td style="font-size:11px;color:var(--muted)" title="${i.obs}">${i.obs||'—'}</td>`;
+            if(aba==='distratados') extra=`<td class="mono">${i.numLinha||'—'}</td><td class="mono">${i.assinatura||'—'}</td><td class="mono">${i.distrato||'—'}</td><td style="font-size:11px;color:var(--muted)" title="${i.obs}">${i.obs||'—'}</td>`;
+            if(aba==='desligados')  extra=`<td class="mono">${i.numLinha||'—'}</td><td class="mono">${i.assinatura||'—'}</td><td class="mono">${i.distrato||'—'}</td><td style="font-size:11px;color:var(--muted)" title="${i.obs}">${i.obs||'—'}</td>`;
+            return `<tr onclick="abrirDetalhe('${aba}','${enc}')">
+                <td class="td-nome" title="${i.comodatario}">${i.comodatario||'—'}</td>
+                <td>${aparelhoBadge(i.aparelho)}</td>
+                <td style="font-size:11px;color:var(--muted)" title="${i.modelo}">${i.modelo||'—'}</td>
+                <td>${valorDisplay(i.valor)}</td>
+                ${extra}
+            </tr>`;
+        }).join('');
+    }
+    renderPag(`${p}-pag`,total,pag,np=>{D.pag[aba]=np;renderTabela(aba);});
+}
+
+function renderPag(id,total,atual,cb){
+    if(total<=1){$(id).innerHTML='';return;}
+    let h=`<button ${atual===1?'disabled':''} onclick="(${cb})(${atual-1})">‹</button>`;
+    for(let i=1;i<=total;i++){
+        if(total>7&&Math.abs(i-atual)>2&&i!==1&&i!==total){if(i===atual-3||i===atual+3)h+=`<span class="pg-info">…</span>`;continue;}
+        h+=`<button class="${i===atual?'active':''}" onclick="(${cb})(${i})">${i}</button>`;
+    }
+    h+=`<button ${atual===total?'disabled':''} onclick="(${cb})(${atual+1})">›</button>`;
+    h+=`<span class="pg-info">Pág. ${atual}/${total}</span>`;
+    $(id).innerHTML=h;
+}
+
+function renderBarras(id,items,kL,kV,cores){
+    const el=$(id);if(!el)return;
+    if(!items||!items.length){el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:10px;text-align:center">Sem dados</div>';return;}
+    const max=items[0][kV]||1;
+    el.innerHTML=items.slice(0,8).map((item,i)=>`
+        <div class="bar-row">
+            <div class="bar-label" title="${item[kL]}">${item[kL]}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${Math.round(item[kV]/max*100)}%;background:${(cores||CORES)[i%CORES.length]}"></div></div>
+            <div class="bar-count">${item[kV]}</div>
+        </div>`).join('');
+}
+
+function abrirDetalhe(aba, enc) {
+    const i = JSON.parse(decodeURIComponent(enc));
+    let titulo, detalhes, formEditar;
+    if (aba === 'ti') {
+        titulo = `🖥️ ${i.equipamento||'Equipamento'} — #${i.numero||''}`;
+        detalhes = `<div class="df-grid">
+            <div class="df"><div class="dfl">Nº</div><div class="dfv mono">${i.numero||'—'}</div></div>
+            <div class="df"><div class="dfl">Equipamento</div><div class="dfv">${i.equipamento||'—'}</div></div>
+            <div class="df"><div class="dfl">Marca</div><div class="dfv">${i.marca||'—'}</div></div>
+            <div class="df"><div class="dfl">Modelo</div><div class="dfv">${i.modelo||'—'}</div></div>
+            <div class="df"><div class="dfl">Local</div><div class="dfv">${i.local||'—'}</div></div>
+            <div class="df"><div class="dfl">Estado</div><div class="dfv">${estadoBadge(i.estado)}</div></div>
+            <div class="df"><div class="dfl">Dt. Compra</div><div class="dfv">${fmtData(i.dtCompra)}</div></div>
+            <div class="df"><div class="dfl">Valor</div><div class="dfv" style="color:var(--green);font-weight:800">${i.valorFormatado||'—'}</div></div>
+            ${i.obs?`<div class="df full"><div class="dfl">Obs</div><div class="dfv">${i.obs}</div></div>`:''}
+        </div>`;
+        formEditar = `<div class="form-section edit">
+            <div class="form-section-title">✏️ Editar</div>
+            <div class="form-grid">
+                <div class="form-group"><label>Local</label><input type="text" class="form-control" id="e-local" value="${i.local||''}"></div>
+                <div class="form-group"><label>Estado</label>
+                    <select class="form-control" id="e-estado">${['Novo','Bom','Regular','Usado','Ruim','Defeito'].map(s=>`<option value="${s}"${i.estado===s?' selected':''}>${s}</option>`).join('')}</select></div>
+                <div class="form-group"><label>Dt. Compra</label><input type="text" class="form-control" id="e-dtCompra" value="${i.dtCompraOriginal||''}"></div>
+                <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
+                <div class="form-group full"><label>Observações</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>
+            </div>
+            <button class="btn btn-ti" id="btnSalvar" onclick="salvar('ti',${i.rowIndex})">💾 Salvar</button>
+        </div>`;
+    } else {
+        titulo = `📋 ${i.comodatario||'—'}`;
+        detalhes = `<div class="df-grid">
+            <div class="df"><div class="dfl">Comodatário</div><div class="dfv">${i.comodatario||'—'}</div></div>
+            <div class="df"><div class="dfl">Aparelho</div><div class="dfv">${aparelhoBadge(i.aparelho)}</div></div>
+            <div class="df full"><div class="dfl">Modelo</div><div class="dfv">${i.modelo||'—'}</div></div>
+            <div class="df"><div class="dfl">Valor</div><div class="dfv" style="color:var(--green);font-weight:800">${i.valorFormatado||'—'}</div></div>
+            <div class="df"><div class="dfl">Assinatura</div><div class="dfv">${i.assinatura||'—'}</div></div>
+            ${aba!=='ativos'?`<div class="df"><div class="dfl">Distrato</div><div class="dfv">${i.distrato||'—'}</div></div>`:''}
+            ${aba==='ativos'?`<div class="df"><div class="dfl">Etiqueta</div><div class="dfv">${i.etiqueta||'—'}</div></div>`:''}
+            ${aba==='desligados'?`<div class="df"><div class="dfl">Nº Linha</div><div class="dfv">${i.numLinha||'—'}</div></div>`:''}
+            ${i.obs?`<div class="df full"><div class="dfl">Obs</div><div class="dfv">${i.obs}</div></div>`:''}
+        </div>`;
+        let camposEditar = '';
+        const aopts = ['NOTEBOOK','CELULAR','TABLET','OUTROS'].map(s=>`<option value="${s}"${i.aparelho===s?' selected':''}>${s}</option>`).join('');
+        if (aba==='ativos') {
+            camposEditar=`<div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+                <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
+                <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
+                <div class="form-group"><label>Etiqueta</label><input type="text" class="form-control" id="e-etiqueta" value="${i.etiqueta||''}"></div>
+                <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
+                <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>`;
+        } else if (aba==='distratados') {
+            camposEditar=`<div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+                <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
+                <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
+                <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="e-distrato" value="${i.distrato||''}"></div>
+                <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
+                <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>`;
+        } else {
+            camposEditar=`<div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+                <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
+                <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
+                <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
+                <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="e-distrato" value="${i.distrato||''}"></div>
+                <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
+                <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>`;
+        }
+        formEditar = `<div class="form-section edit">
+            <div class="form-section-title">✏️ Editar</div>
+            <div class="form-grid">${camposEditar}</div>
+            <button class="btn btn-ti" id="btnSalvar" onclick="salvar('${aba}',${i.rowIndex})">💾 Salvar</button>
+        </div>`;
+    }
+    $('modalTitulo').textContent = titulo;
+    $('modalBody').innerHTML = detalhes + formEditar;
+    $('modalOverlay').classList.add('open');
+}
+
+function abrirInsert(aba) {
+    const TITULOS = { ativos:'➕ Novo Comodato — Ativos', distratados:'➕ Novo Registro — Distratados', desligados:'➕ Novo Registro — Desligados', ti:'➕ Novo Equipamento — T.I' };
+    $('modalTitulo').textContent = TITULOS[aba]||'Novo Registro';
+    const aopts = ['NOTEBOOK','CELULAR','TABLET','OUTROS'].map(s=>`<option value="${s}">${s}</option>`).join('');
+    const eopts = ['Novo','Bom','Regular','Usado','Ruim','Defeito'].map(s=>`<option value="${s}">${s}</option>`).join('');
+    let campos = '';
+    if (aba==='ativos') {
+        campos=`<div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
+            <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo" placeholder="Marca, modelo, S/N…"></div>
+            <div class="form-group"><label>Assinatura (data)</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group"><label>Etiqueta / Verificação</label><input type="text" class="form-control" id="n-etiqueta" placeholder="Código etiqueta"></div>
+            <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
+    } else if (aba==='distratados') {
+        campos=`<div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
+            <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo"></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha"></div>
+            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="n-distrato" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
+    } else if (aba==='desligados') {
+        campos=`<div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha"></div>
+            <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo"></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
+            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="n-distrato" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
+    } else {
+        campos=`<div class="form-group"><label>Nº Equipamento</label><input type="text" class="form-control" id="n-numero" placeholder="Ex: 001"></div>
+            <div class="form-group"><label>Equipamento *</label><input type="text" class="form-control" id="n-equipamento" placeholder="Notebook, Monitor…"></div>
+            <div class="form-group"><label>Marca</label><input type="text" class="form-control" id="n-marca" placeholder="Dell, Lenovo…"></div>
+            <div class="form-group"><label>Modelo</label><input type="text" class="form-control" id="n-modelo"></div>
+            <div class="form-group"><label>Local</label><input type="text" class="form-control" id="n-local"></div>
+            <div class="form-group"><label>Estado</label><select class="form-control" id="n-estado">${eopts}</select></div>
+            <div class="form-group"><label>Dt. Compra</label><input type="text" class="form-control" id="n-dtCompra" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
+            <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
+    }
+    $('modalBody').innerHTML = `<div class="form-section insert">
+        <div class="form-section-title">📝 Preencha os campos</div>
+        <div class="form-grid">${campos}</div>
+        <button class="btn btn-green" id="btnInserir" onclick="confirmarInsert('${aba}')">✅ Inserir na Planilha</button>
+    </div>`;
+    $('modalOverlay').classList.add('open');
+}
+
+async function salvar(aba, rowIndex) {
+    const btn=$('btnSalvar'); btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Salvando...';
+    const body={};
+    ['local','estado','dtCompra','valor','obs','aparelho','modelo','assinatura','etiqueta','distrato','numLinha'].forEach(k=>{const el=$('e-'+k);if(el)body[k]=el.value.trim();});
+    try {
+        const r=await fetch(`/ti/api/ativos/${rowIndex}?aba=${aba}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        const d=await r.json();
+        btn.disabled=false; btn.innerHTML='💾 Salvar';
+        if(d.ok){toast('✅ Salvo!');$('modalOverlay').classList.remove('open');carregar();}
+        else toast('❌ '+(d.erro||'Erro'),4000);
+    } catch(e){btn.disabled=false;btn.innerHTML='💾 Salvar';toast('❌ '+e.message,4000);}
+}
+
+async function confirmarInsert(aba) {
+    const btn=$('btnInserir');
+    const obrig=aba==='ti'?$('n-equipamento'):$('n-comodatario');
+    if(!obrig?.value?.trim()){toast('⚠️ Preencha o campo obrigatório');return;}
+    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Inserindo...';
+    const body={};
+    ['comodatario','aparelho','modelo','valor','assinatura','etiqueta','distrato','numLinha','obs','numero','equipamento','marca','local','estado','dtCompra'].forEach(k=>{const el=$('n-'+k);if(el)body[k]=el.value.trim();});
+    try {
+        const r=await fetch(`/ti/api/ativos/inserir?aba=${aba}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        const d=await r.json();
+        btn.disabled=false; btn.innerHTML='✅ Inserir na Planilha';
+        if(d.ok){toast(`✅ Inserido na linha ${d.linha}!`);$('modalOverlay').classList.remove('open');sincronizar();}
+        else toast('❌ '+(d.erro||'Erro ao inserir'),4000);
+    } catch(e){btn.disabled=false;btn.innerHTML='✅ Inserir na Planilha';toast('❌ '+e.message,4000);}
+}
+
+function fecharModal(e){ if(e.target.id==='modalOverlay') $('modalOverlay').classList.remove('open'); }
+
+function sincronizar() {
+    const btn=$('btnSync'); btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
+    setStatus('syncing','Lendo planilha...');
+    fetch('/ti/api/ativos/sincronizar',{method:'POST'}).then(r=>r.json()).then(d=>{
+        btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
+        if(d.ok){const t=d.totais||{};toast(`✅ Ativos:${t.ativos} · Dist:${t.distratados} · Deslig:${t.desligados} · T.I:${t.ti}`);carregar();}
+        else{toast('❌ '+(d.erro||'Falha'),4000);setStatus('error','❌ '+(d.erro||''));}
+    }).catch(e=>{btn.disabled=false;btn.innerHTML='🔄 Sincronizar';toast('❌ '+e.message,4000);});
+}
+
+function exportCSV(){
+    const lista=D.f[abaAtual]||[];
+    if(!lista.length){toast('Sem dados');return;}
+    let h, rows;
+    if(abaAtual==='ti'){
+        h='Nº,Equipamento,Marca,Modelo,Local,Estado,Dt.Compra,Valor,Obs';
+        rows=lista.map(i=>[i.numero,i.equipamento,i.marca,i.modelo,i.local,i.estado,fmtData(i.dtCompra),i.valorFormatado,i.obs].map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
+    } else {
+        h='Comodatário,Aparelho,Modelo,Valor,Assinatura,Extra,Obs';
+        rows=lista.map(i=>[i.comodatario,i.aparelho,i.modelo,i.valorFormatado,i.assinatura,i.distrato||i.etiqueta||i.numLinha||'',i.obs].map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
+    }
+    const el=document.createElement('a');
+    el.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(h+'\n'+rows.join('\n'));
+    el.download=`ativos_${abaAtual}_${new Date().toISOString().slice(0,10)}.csv`;
+    el.click();
+    toast(`📥 ${lista.length} registros exportados`);
+}
+
+// ══ IA ══════════════════════════════════════════════════════
+var _iaAberto = false;
+
+function toggleIA() {
+    _iaAberto = !_iaAberto;
+    const jan=$('iaJanela'), tog=$('iaToggle');
+    if (_iaAberto) {
+        jan.classList.add('aberto'); tog.classList.add('aberto');
+        tog.innerHTML='✕<div class="ia-unread" id="iaUnread"></div>';
+    } else {
+        jan.classList.remove('aberto'); tog.classList.remove('aberto');
+        tog.innerHTML='🤖<div class="ia-unread" id="iaUnread">1</div>';
+        setTimeout(()=>{const u=$('iaUnread');if(u)u.style.display='flex';},100);
+    }
+}
+
+function montarContextoIA() {
+    const sa=D.raw?.statsAtivos||{}, sd=D.raw?.statsDistratados||{},
+          sde=D.raw?.statsDesligados||{}, sti=D.raw?.statsTI||{};
+    const amostraAtivos=(D.ativos||[]).slice(0,20).map(i=>`  • ${i.comodatario||'—'} | ${i.aparelho||'—'} | ${i.modelo||'—'} | ${i.valorFormatado||'—'}`).join('\n');
+    const amostraTI=(D.ti||[]).slice(0,20).map(i=>`  • #${i.numero||'—'} ${i.equipamento||'—'} | ${i.marca||'—'} ${i.modelo||'—'} | ${i.local||'—'} | ${i.estado||'—'} | ${i.valorFormatado||'—'}`).join('\n');
+    return `=== ATIVOS T.I. — DIVINO FOGÃO ===
+
+--- COMODATOS ATIVOS ---
+Total: ${D.ativos.length}
+Valor total: ${sa.valorTotalFormatado||'—'}
+Notebooks: ${D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length}
+Celulares: ${D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('celular')).length}
+
+--- DISTRATADOS ---
+Total: ${D.distratados.length}
+Valor total: ${sd.valorTotalFormatado||'—'}
+
+--- DESLIGADOS ---
+Total: ${D.desligados.length}
+Valor total: ${sde.valorTotalFormatado||'—'}
+
+--- INVENTÁRIO T.I ---
+Total: ${D.ti.length}
+Em bom estado: ${sti.emBomEstado||0}
+Locais: ${(sti.porLocal||[]).length}
+Valor total: ${sti.valorTotalFormatado||'—'}
+
+--- AMOSTRA ATIVOS ---
+${amostraAtivos||'  Sem dados'}
+
+--- AMOSTRA T.I ---
+${amostraTI||'  Sem dados'}`.trim();
+}
+
+async function perguntarIA(fixa) {
+    const inp=$('inputIA');
+    const q = fixa || (inp?inp.value.trim():'');
+    if (!q) return;
+    if (inp) inp.value='';
+    if (!_iaAberto) toggleIA();
+
+    const box=$('iaMsgs');
+    const mu=document.createElement('div'); mu.className='ia-msg user'; mu.textContent=q; box.appendChild(mu);
+    const ma=document.createElement('div'); ma.className='ia-msg ai carregando';
+    ma.innerHTML='<span style="opacity:.6">⏳ Analisando ativos...</span>';
+    box.appendChild(ma); box.scrollTop=box.scrollHeight;
+
+    const btn=$('btnIA'); if(btn) btn.disabled=true;
+
+    try {
+        const resp=await fetch('/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q,contexto:montarContextoIA()})});
+        if(!resp.ok) throw new Error('HTTP '+resp.status);
+        const json=await resp.json();
+        const txt=json.resposta||json.erro||'Sem resposta.';
+        ma.className='ia-msg ai';
+        ma.innerHTML=txt
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--ti)">■</span> ')
+            .replace(/\n/g,'<br>');
+    } catch(e) {
+        ma.className='ia-msg ai';
+        ma.textContent='❌ Erro: '+e.message;
+    }
+    if(btn) btn.disabled=false;
+    box.scrollTop=box.scrollHeight;
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    const inp=$('inputIA');
+    if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') perguntarIA(); });
+    setTimeout(()=>{ if(!_iaAberto){const u=$('iaUnread');if(u){u.style.display='flex';u.textContent='1';}} },3000);
+});
+
+carregar();
+</script>
+</body>
+</html>

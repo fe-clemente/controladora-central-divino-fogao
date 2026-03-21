@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universidade — Divino Fogão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
+            --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+            --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+            --accent:#2563eb; --accent-pale:#eff6ff;
+            --green:#16a34a; --green-pale:#f0fdf4;
+            --yellow:#d97706; --yellow-pale:#fffbeb;
+            --orange:#ea580c; --orange-pale:#fff7ed;
+            --purple:#7c3aed; --purple-pale:#f5f3ff;
+            --shadow:0 2px 12px rgba(0,0,0,0.08);
+            --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+        .logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
+        .logo img{height:52px;width:auto;display:block;}
+        .logo-fallback{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1px;display:none;}
+        .header-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+        .header-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
+        nav{display:flex;gap:2px;margin-left:auto;}
+        .tab-btn{background:none;border:none;color:var(--muted);padding:20px 14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s;border-bottom:3px solid transparent;white-space:nowrap;text-decoration:none;display:flex;align-items:center;gap:6px;}
+        .tab-btn:hover{color:var(--text);background:var(--bg3);}
+        .tab-btn.active{color:var(--orange);border-bottom-color:var(--orange);background:var(--orange-pale);}
+
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+        .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+        .sdot.ready{background:var(--green);animation:none;}
+        .sdot.error{background:var(--red);animation:none;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+        main{max-width:1260px;margin:0 auto;padding:28px 24px;}
+
+        .section-header{margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
+        .section-header h2{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px;}
+        .section-header p{color:var(--muted);font-size:13px;}
+
+        .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;margin-bottom:22px;}
+        .stat-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);}
+        .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:700;margin-bottom:7px;}
+        .stat-value{font-size:30px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px;}
+        .stat-sub{font-size:11px;color:var(--muted);font-weight:600;}
+
+        .filters-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:18px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+        .filter-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;}
+        .filter-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
+        .filter-control{padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none;}
+        .filter-control:focus{border-color:var(--orange);}
+        select.filter-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+
+        .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+        .btn-orange{background:var(--orange);color:#fff;box-shadow:0 2px 8px rgba(234,88,12,.3);}
+        .btn-orange:hover{background:#c2410c;transform:translateY(-1px);}
+        .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+        .btn-ghost:hover{background:var(--bg2);}
+        .btn-toggle{background:var(--bg3);color:var(--muted);border:1.5px solid var(--border);font-size:12px;padding:7px 14px;}
+        .btn-toggle.active{background:var(--purple-pale);color:var(--purple);border-color:rgba(124,58,237,.3);}
+        .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+        .table-head-bar{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+        .table-head-title{font-size:13px;font-weight:800;}
+        .table-count{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+        .tbl-scroll{overflow-x:auto;}
+
+        table{width:100%;border-collapse:collapse;min-width:700px;font-size:12px;}
+        thead th{padding:10px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg);white-space:nowrap;}
+        thead th.num{text-align:right;}
+
+        /* Nível 1 — Unidade */
+        tr.row-unidade td{padding:0;}
+        .cell-unidade{display:flex;align-items:center;gap:8px;padding:11px 14px;font-weight:800;font-size:13px;color:var(--text);cursor:pointer;user-select:none;background:var(--bg3);border-bottom:1px solid var(--border);}
+        .cell-unidade:hover{background:#f0ece4;}
+        .chevron{display:inline-block;font-size:11px;transition:transform .2s;color:var(--muted);flex-shrink:0;}
+        .chevron.open{transform:rotate(90deg);}
+        .cell-unidade-nums{margin-left:auto;display:flex;gap:6px;flex-shrink:0;}
+        .num-pill{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;}
+
+        /* Nível 2 — Formação */
+        tr.row-formacao td{padding:0;border-bottom:1px solid var(--border);}
+        .cell-formacao{display:flex;align-items:center;gap:8px;padding:9px 14px 9px 32px;font-weight:700;font-size:12px;color:var(--text);background:#fdfcfa;cursor:pointer;user-select:none;}
+        .cell-formacao:hover{background:#f5f1ea;}
+
+        /* Nível 3 — Curso */
+        tr.row-curso td{border-bottom:1px solid var(--border);}
+        tr.row-curso:last-child td{border-bottom:none;}
+        tr.row-curso td.curso-nome{padding:8px 14px 8px 52px;font-size:12px;color:var(--text);}
+        tr.row-curso td.num-cell{text-align:right;padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+        tr.row-curso:hover td{background:var(--bg3);}
+
+        /* Totais de formação */
+        tr.row-total-formacao td{background:#f5f1ea;border-top:1px solid #e0d9cf;border-bottom:2px solid var(--border);}
+        tr.row-total-formacao td.total-label{padding:8px 14px 8px 32px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+        tr.row-total-formacao td.num-cell{text-align:right;padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900;}
+
+        /* Totais de unidade */
+        tr.row-total-unidade td{background:#ede9e0;border-top:2px solid #d5cec4;border-bottom:2px solid var(--border);}
+        tr.row-total-unidade td.total-label{padding:9px 14px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+        tr.row-total-unidade td.num-cell{text-align:right;padding:9px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:900;color:var(--red);}
+
+        /* Total geral */
+        tr.row-total-geral td{background:var(--red-pale);border-top:3px solid var(--red);}
+        tr.row-total-geral td.total-label{padding:12px 14px;font-size:13px;font-weight:800;color:var(--red);}
+        tr.row-total-geral td.num-cell{text-align:right;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:900;color:var(--red);}
+
+        .sit-aberto{color:var(--yellow);}
+        .sit-andamento{color:var(--accent);}
+        .sit-concluido{color:var(--green);}
+        .sit-pendente{color:var(--orange);}
+        .sit-total{color:var(--red);}
+
+        .loading-msg{text-align:center;padding:60px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
+        .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .empty{text-align:center;padding:60px;color:var(--muted);}
+        .empty .icon{font-size:44px;margin-bottom:12px;}
+        .empty p{font-size:14px;font-weight:600;}
+
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
+        .toast.show{display:block;animation:fadeUp .3s ease;}
+        @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+        /* ── FLOATING IA ──────────────────────────────────────── */
+        #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+        #iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--orange),#9a3412);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .25s;position:relative;color:#fff;}
+        #iaToggle:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(234,88,12,.6);}
+        #iaToggle.aberto{background:linear-gradient(135deg,#444,#1a1a1a);}
+        .ia-unread{position:absolute;top:-3px;right:-3px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid #fff;line-height:1;}
+        #iaJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:390px;max-height:640px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;animation:slideUp .25s ease;}
+        #iaJanela.aberto{display:flex;}
+        @keyframes slideUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+        .ia-topo{background:linear-gradient(135deg,var(--orange),#9a3412);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+        .ia-topo-esq{display:flex;align-items:center;gap:10px;}
+        .ia-topo-titulo{font-size:14px;font-weight:800;}
+        .ia-topo-sub{font-size:11px;opacity:.8;margin-top:1px;}
+        .ia-fechar{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+        .ia-fechar:hover{background:rgba(255,255,255,.28);}
+        .ia-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+        .ia-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;}
+        .ia-sug:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-pale);}
+        .ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:220px;max-height:360px;}
+        .msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
+        .msg.user{background:var(--orange);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;box-shadow:0 2px 8px rgba(234,88,12,.25);}
+        .msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
+        .msg.ai.carregando{color:var(--muted);font-style:italic;}
+        .ia-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+        .ia-input{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;transition:border-color .2s;}
+        .ia-input:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(234,88,12,.08);}
+        .ia-input::placeholder{color:var(--muted);font-weight:400;}
+        .ia-enviar{background:var(--orange);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+        .ia-enviar:hover{background:#c2410c;}
+        .ia-enviar:disabled{opacity:.5;cursor:not-allowed;}
+        @media(max-width:768px){#iaJanela{width:calc(100vw - 32px);}#iaWidget{right:16px;bottom:16px;}}
+
+        @media(max-width:768px){
+            header{padding:0 14px;gap:10px;}
+            .header-title{display:none;}
+            .tab-btn{padding:14px 10px;font-size:11px;}
+            main{padding:20px 14px;}
+            .stats-row{grid-template-columns:repeat(2,1fr);}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão"
+             onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
+        <span class="logo-fallback">🍽️ DIVINO FOGÃO</span>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">Central de Treinamentos</div>
+    <nav>
+        <!-- 1 --> <a href="/"             class="tab-btn">📊 Dashboard</a>
+        <!-- 2 --> <a href="/"             class="tab-btn">🔔 Lembretes</a>
+        <!-- 3 --> <a href="/"             class="tab-btn">🔍 Busca</a>
+        <!-- 4 --> <a href="/sults"        class="tab-btn" id="btnSults">
+                       🏪 Sults <span id="sults-sub" style="font-size:10px;font-family:monospace;opacity:.7"></span>
+                   </a>
+        <!-- 5 --> <a href="/chamados"     class="tab-btn">📞 Chamados T&D</a>
+        <!-- 6 --> <a href="/universidade" class="tab-btn active">🎓 Universidade</a>
+        <!-- 7 --> <a href="/"             class="tab-btn">🔄 Turnover</a>
+        <!-- 8 --> <a href="/"             class="tab-btn">➕ Cadastro</a>
+        <!-- 9 --> <a href="/"             class="tab-btn">📋 Histórico</a>
+    </nav>
+</header>
+ 
+
+<div id="statusBar">
+    <div class="sdot" id="sdot"></div>
+    <span id="statusText">Carregando dados...</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span id="syncInfo" style="font-size:11px;color:var(--muted)"></span>
+        <button class="btn btn-orange" id="btnSync" onclick="carregar(true)">🔄 Atualizar</button>
+    </span>
+</div>
+
+<main>
+    <div class="section-header">
+        <div>
+            <h2>🎓 Universidade — Cursos por Unidade</h2>
+            <p>Situação dos cursos por unidade e formação — Tabela Dinâmica 10</p>
+        </div>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-card" style="border-top:3px solid var(--orange)">
+            <div class="stat-label" style="color:var(--orange)">🏪 Unidades</div>
+            <div class="stat-value" style="color:var(--orange)" id="sc-unidades">—</div>
+            <div class="stat-sub">com cursos registrados</div>
+        </div>
+        <div class="stat-card" style="border-top:3px solid var(--yellow)">
+            <div class="stat-label" style="color:var(--yellow)">📂 Aberto</div>
+            <div class="stat-value" style="color:var(--yellow)" id="sc-aberto">—</div>
+            <div class="stat-sub">cursos em aberto</div>
+        </div>
+        <div class="stat-card" style="border-top:3px solid var(--accent)">
+            <div class="stat-label" style="color:var(--accent)">⚙️ Andamento</div>
+            <div class="stat-value" style="color:var(--accent)" id="sc-andamento">—</div>
+            <div class="stat-sub">em andamento</div>
+        </div>
+        <div class="stat-card" style="border-top:3px solid var(--green)">
+            <div class="stat-label" style="color:var(--green)">✅ Concluído</div>
+            <div class="stat-value" style="color:var(--green)" id="sc-concluido">—</div>
+            <div class="stat-sub">cursos concluídos</div>
+        </div>
+        <div class="stat-card" style="border-top:3px solid var(--orange)">
+            <div class="stat-label" style="color:var(--orange)">⏳ Pendente</div>
+            <div class="stat-value" style="color:var(--orange)" id="sc-pendente">—</div>
+            <div class="stat-sub">pendentes</div>
+        </div>
+        <div class="stat-card" style="border-top:3px solid var(--red)">
+            <div class="stat-label" style="color:var(--red)">📊 Total Geral</div>
+            <div class="stat-value" style="color:var(--red)" id="sc-total">—</div>
+            <div class="stat-sub">total de registros</div>
+        </div>
+    </div>
+
+    <div class="filters-bar">
+        <div class="filter-group">
+            <span class="filter-label">🏪 Unidade</span>
+            <select class="filter-control" id="fUnidade" onchange="aplicarFiltros()">
+                <option value="">Todas as unidades</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">📚 Formação</span>
+            <select class="filter-control" id="fFormacao" onchange="aplicarFiltros()">
+                <option value="">Todas as formações</option>
+            </select>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+            <div>
+                <div class="filter-label" style="margin-bottom:5px">👁️ Totais</div>
+                <button class="btn btn-toggle active" id="btnToggleTotais" onclick="toggleTotais()">✓ Mostrar totais</button>
+            </div>
+            <div>
+                <div class="filter-label" style="margin-bottom:5px">📂 Expandir</div>
+                <button class="btn btn-ghost" onclick="expandirTudo()">⊕ Tudo</button>
+            </div>
+            <div>
+                <div class="filter-label" style="margin-bottom:5px">&nbsp;</div>
+                <button class="btn btn-ghost" onclick="recolherTudo()">⊖ Recolher</button>
+            </div>
+            <div>
+                <div class="filter-label" style="margin-bottom:5px">&nbsp;</div>
+                <button class="btn btn-ghost" onclick="limparFiltros()">✕ Limpar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <div class="table-head-bar">
+            <div>
+                <div class="table-head-title">📋 Cursos por Unidade / Formação</div>
+                <div class="table-count" id="tableCount"></div>
+            </div>
+        </div>
+        <div class="tbl-scroll">
+            <div id="tableContainer">
+                <div class="loading-msg"><div class="spinner"></div> Carregando dados da planilha...</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="iaWidget">
+    <div id="iaJanela">
+        <div class="ia-topo">
+            <div class="ia-topo-esq">
+                <span style="font-size:24px">🎓</span>
+                <div>
+                    <div class="ia-topo-titulo">IA Análise — Universidade</div>
+                    <div class="ia-topo-sub">Consulte os dados de cursos e unidades</div>
+                </div>
+            </div>
+            <button class="ia-fechar" onclick="toggleIA()">✕</button>
+        </div>
+        <div class="ia-sugs">
+            <button class="ia-sug" onclick="perguntarIA('Quais unidades têm mais cursos concluídos?')">🏆 Top unidades</button>
+            <button class="ia-sug" onclick="perguntarIA('Quais formações têm mais cursos pendentes?')">⏳ Pendentes</button>
+            <button class="ia-sug" onclick="perguntarIA('Qual o percentual de conclusão geral?')">📊 % Conclusão</button>
+            <button class="ia-sug" onclick="perguntarIA('Quais unidades não têm nenhum curso concluído?')">⚠️ Sem conclusão</button>
+            <button class="ia-sug" onclick="perguntarIA('Faça um resumo executivo dos cursos')">📋 Resumo</button>
+        </div>
+        <div class="ia-msgs" id="iaMsgs">
+            <div class="msg ai">
+                🎓 Olá! Sou a IA da Universidade Divino Fogão — analiso os dados de cursos em tempo real.<br><br>
+                <strong>Exemplos do que posso responder:</strong><br>
+                <span style="color:var(--orange);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Quais unidades têm mais cursos abertos?</span><br>
+                <span style="color:var(--orange);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Qual formação tem maior taxa de conclusão?</span><br>
+                <span style="color:var(--orange);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Mostre as unidades com cursos em andamento</span><br>
+                <span style="color:var(--orange);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Qual o total de cursos pendentes por formação?</span><br><br>
+                <span style="font-size:11px;color:var(--muted)">💡 Clique em qualquer exemplo para testar.</span>
+            </div>
+        </div>
+        <div class="ia-rodape">
+            <input type="text" class="ia-input" id="inputIA"
+                placeholder="Ex: Quais unidades têm mais pendentes?"
+                onkeydown="if(event.key==='Enter')perguntarIA()">
+            <button class="ia-enviar" id="iaBtnEnviar" onclick="perguntarIA()">➤</button>
+        </div>
+    </div>
+    <button id="iaToggle" onclick="toggleIA()" title="IA Análise Universidade">
+        🎓
+        <div class="ia-unread" id="iaUnread">1</div>
+    </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '';
+
+// ─── Estado ───────────────────────────────────────────────────────────────────
+var dadosBrutos      = null;   // array de linhas { unidade, formacao, curso, aberto, andamento, concluido, pendente, total }
+var dadosPivot       = null;   // { unidade: { formacao: { curso: {aberto,andamento,concluido,pendente,total} } } }
+var mostrarTotais    = true;
+var unidadesAbertas  = new Set();
+var formacoesAbertas = new Set();
+var filtroUnidade    = '';
+var filtroFormacao   = '';
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function setStatus(cls, msg) {
+    document.getElementById('sdot').className = 'sdot ' + cls;
+    document.getElementById('statusText').textContent = msg;
+}
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function nZ(n)  { return (n > 0) ? n : '<span style="color:var(--muted);font-weight:400">—</span>'; }
+function numCell(v, cls) {
+    return '<td class="num-cell' + (cls ? ' ' + cls : '') + '">' + nZ(v) + '</td>';
+}
+
+// ─── Carregar ─────────────────────────────────────────────────────────────────
+async function carregar(forcar) {
+    setStatus('', 'Carregando...');
+    var btn = document.getElementById('btnSync');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner" style="border-top-color:#fff"></div>';
+    try {
+        var url = forcar ? API + '/universidade/dados?forcar=1' : API + '/universidade/dados';
+        var r = await fetch(url);
+        var d = await r.json();
+        if (d.erro && !(d.linhas && d.linhas.length)) {
+            setStatus('error', '⚠️ ' + d.erro);
+            document.getElementById('tableContainer').innerHTML =
+                '<div class="empty"><div class="icon">⚠️</div><p>' + esc(d.erro) + '</p></div>';
+            return;
+        }
+        dadosBrutos = d.linhas || [];
+        processar();
+        renderTudo();
+        setStatus('ready', '✓ ' + dadosBrutos.length + ' linhas · ' + d.totalUnidades + ' unidades');
+        if (d.sincronizadoEm) {
+            document.getElementById('syncInfo').textContent =
+                'Atualizado: ' + new Date(d.sincronizadoEm).toLocaleString('pt-BR');
+        }
+    } catch(e) {
+        setStatus('error', '❌ ' + e.message);
+        document.getElementById('tableContainer').innerHTML =
+            '<div class="empty"><div class="icon">⚠️</div><p>' + esc(e.message) + '</p></div>';
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '🔄 Atualizar';
+    }
+}
+
+// ─── Montar pivot ─────────────────────────────────────────────────────────────
+// Cada linha já vem com os números diretos: { unidade, formacao, curso, aberto, andamento, concluido, pendente, total }
+// A tabela dinâmica pode ter linhas sem "curso" mas com unidade/formação (linhas de grupo)
+// → essas são ignoradas no pivot de cursos; os totais são calculados somando os cursos filhos
+function processar() {
+    var pivot = {};
+
+    dadosBrutos.forEach(function(l) {
+        var unidade  = l.unidade  || '(sem unidade)';
+        var formacao = l.formacao || '(sem formação)';
+        var curso    = l.curso    || '';
+
+        // Só monta o pivot para linhas que têm curso (dados reais, não subtotais)
+        if (!curso) return;
+
+        if (!pivot[unidade]) pivot[unidade] = {};
+        if (!pivot[unidade][formacao]) pivot[unidade][formacao] = {};
+
+        // Se o mesmo curso aparecer mais de uma vez, soma
+        if (!pivot[unidade][formacao][curso]) {
+            pivot[unidade][formacao][curso] = {aberto:0,andamento:0,concluido:0,pendente:0,total:0};
+        }
+        var c = pivot[unidade][formacao][curso];
+        c.aberto    += l.aberto;
+        c.andamento += l.andamento;
+        c.concluido += l.concluido;
+        c.pendente  += l.pendente;
+        c.total     += l.total;
+    });
+
+    dadosPivot = pivot;
+    popularFiltros();
+    calcularStats();
+}
+
+// ─── Soma helpers ─────────────────────────────────────────────────────────────
+function somarObj(obj) {
+    var r = {aberto:0,andamento:0,concluido:0,pendente:0,total:0};
+    Object.values(obj).forEach(function(c) {
+        r.aberto    += c.aberto    || 0;
+        r.andamento += c.andamento || 0;
+        r.concluido += c.concluido || 0;
+        r.pendente  += c.pendente  || 0;
+        r.total     += c.total     || 0;
+    });
+    return r;
+}
+function somarFormacoes(formacoes) {
+    var r = {aberto:0,andamento:0,concluido:0,pendente:0,total:0};
+    Object.values(formacoes).forEach(function(cursos) {
+        var s = somarObj(cursos);
+        r.aberto    += s.aberto;
+        r.andamento += s.andamento;
+        r.concluido += s.concluido;
+        r.pendente  += s.pendente;
+        r.total     += s.total;
+    });
+    return r;
+}
+
+// ─── Populando filtros ────────────────────────────────────────────────────────
+function popularFiltros() {
+    if (!dadosPivot) return;
+    var unidades  = Object.keys(dadosPivot).sort();
+    var formacoesSet = new Set();
+    dadosBrutos.forEach(function(l) { if (l.formacao) formacoesSet.add(l.formacao); });
+    var formacoes = [...formacoesSet].sort();
+
+    document.getElementById('fUnidade').innerHTML =
+        '<option value="">Todas as unidades</option>' +
+        unidades.map(function(u){ return '<option value="' + esc(u) + '">' + esc(u) + '</option>'; }).join('');
+    document.getElementById('fFormacao').innerHTML =
+        '<option value="">Todas as formações</option>' +
+        formacoes.map(function(f){ return '<option value="' + esc(f) + '">' + esc(f) + '</option>'; }).join('');
+}
+
+// ─── Stats cards ──────────────────────────────────────────────────────────────
+function calcularStats() {
+    if (!dadosPivot) return;
+    var unidades = getUnidadesFiltradas();
+    var tot = {aberto:0,andamento:0,concluido:0,pendente:0,total:0};
+    var unidsComCurso = new Set();
+
+    unidades.forEach(function(u) {
+        var formacoes = Object.keys(dadosPivot[u])
+            .filter(function(f){ return !filtroFormacao || f === filtroFormacao; });
+        formacoes.forEach(function(f) {
+            var s = somarObj(dadosPivot[u][f]);
+            tot.aberto    += s.aberto;
+            tot.andamento += s.andamento;
+            tot.concluido += s.concluido;
+            tot.pendente  += s.pendente;
+            tot.total     += s.total;
+            if (s.total > 0) unidsComCurso.add(u);
+        });
+    });
+
+    document.getElementById('sc-unidades').textContent  = unidsComCurso.size;
+    document.getElementById('sc-aberto').textContent    = tot.aberto;
+    document.getElementById('sc-andamento').textContent = tot.andamento;
+    document.getElementById('sc-concluido').textContent = tot.concluido;
+    document.getElementById('sc-pendente').textContent  = tot.pendente;
+    document.getElementById('sc-total').textContent     = tot.total;
+}
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+function renderTudo() { calcularStats(); renderTabela(); }
+
+function getUnidadesFiltradas() {
+    if (!dadosPivot) return [];
+    return Object.keys(dadosPivot)
+        .filter(function(u){ return !filtroUnidade || u === filtroUnidade; })
+        .sort();
+}
+
+function aplicarFiltros() {
+    filtroUnidade  = document.getElementById('fUnidade').value;
+    filtroFormacao = document.getElementById('fFormacao').value;
+    renderTudo();
+}
+
+function limparFiltros() {
+    document.getElementById('fUnidade').value  = '';
+    document.getElementById('fFormacao').value = '';
+    filtroUnidade = filtroFormacao = '';
+    renderTudo();
+}
+
+function toggleTotais() {
+    mostrarTotais = !mostrarTotais;
+    var btn = document.getElementById('btnToggleTotais');
+    btn.classList.toggle('active', mostrarTotais);
+    btn.textContent = mostrarTotais ? '✓ Mostrar totais' : '◻ Ocultar totais';
+    renderTabela();
+}
+
+function expandirTudo() {
+    if (!dadosPivot) return;
+    getUnidadesFiltradas().forEach(function(u) {
+        unidadesAbertas.add(u);
+        Object.keys(dadosPivot[u])
+            .filter(function(f){ return !filtroFormacao || f === filtroFormacao; })
+            .forEach(function(f){ formacoesAbertas.add(u + '|||' + f); });
+    });
+    renderTabela();
+}
+
+function recolherTudo() {
+    unidadesAbertas.clear();
+    formacoesAbertas.clear();
+    renderTabela();
+}
+
+function toggleUnidade(uid) {
+    if (unidadesAbertas.has(uid)) {
+        unidadesAbertas.delete(uid);
+        [...formacoesAbertas].forEach(function(k){
+            if (k.startsWith(uid + '|||')) formacoesAbertas.delete(k);
+        });
+    } else {
+        unidadesAbertas.add(uid);
+    }
+    renderTabela();
+}
+
+function toggleFormacao(uid, fid) {
+    var key = uid + '|||' + fid;
+    if (formacoesAbertas.has(key)) formacoesAbertas.delete(key);
+    else formacoesAbertas.add(key);
+    renderTabela();
+}
+
+// ─── Render da tabela ─────────────────────────────────────────────────────────
+function renderTabela() {
+    if (!dadosPivot) return;
+    var container = document.getElementById('tableContainer');
+    var unidades  = getUnidadesFiltradas();
+
+    if (!unidades.length) {
+        container.innerHTML = '<div class="empty"><div class="icon">🔍</div><p>Nenhuma unidade encontrada</p></div>';
+        document.getElementById('tableCount').textContent = '';
+        return;
+    }
+
+    var totGeral = {aberto:0,andamento:0,concluido:0,pendente:0,total:0};
+    var rows = '';
+    var qtdUnidades = 0;
+
+    unidades.forEach(function(u) {
+        var formacoes = Object.keys(dadosPivot[u])
+            .filter(function(f){ return !filtroFormacao || f === filtroFormacao; })
+            .sort();
+        if (!formacoes.length) return;
+
+        var sumU    = somarFormacoes(
+            Object.fromEntries(formacoes.map(function(f){ return [f, dadosPivot[u][f]]; }))
+        );
+        if (sumU.total === 0 && !filtroUnidade) return; // pula unidades sem dados
+        qtdUnidades++;
+
+        totGeral.aberto    += sumU.aberto;
+        totGeral.andamento += sumU.andamento;
+        totGeral.concluido += sumU.concluido;
+        totGeral.pendente  += sumU.pendente;
+        totGeral.total     += sumU.total;
+
+        var uAberta = unidadesAbertas.has(u);
+
+        // ── Linha da unidade ──────────────────────────────────────────────────
+        rows += '<tr class="row-unidade" onclick="toggleUnidade(\'' + esc(u) + '\')"><td colspan="6" style="padding:0">' +
+            '<div class="cell-unidade">' +
+            '<span class="chevron ' + (uAberta ? 'open' : '') + '">▶</span>' +
+            '<span style="flex:1">' + esc(u) + '</span>' +
+            '<div class="cell-unidade-nums">' +
+            (sumU.aberto    > 0 ? '<span class="num-pill sit-aberto">'    + sumU.aberto    + '</span>' : '') +
+            (sumU.andamento > 0 ? '<span class="num-pill sit-andamento">' + sumU.andamento + '</span>' : '') +
+            (sumU.concluido > 0 ? '<span class="num-pill sit-concluido">' + sumU.concluido + '</span>' : '') +
+            (sumU.pendente  > 0 ? '<span class="num-pill sit-pendente">'  + sumU.pendente  + '</span>' : '') +
+            '<span class="num-pill" style="color:var(--red);font-size:12px;font-weight:900">' + sumU.total + '</span>' +
+            '</div></div></td></tr>';
+
+        if (!uAberta) return;
+
+        // ── Formações ─────────────────────────────────────────────────────────
+        formacoes.forEach(function(f) {
+            var fKey    = u + '|||' + f;
+            var fAberta = formacoesAbertas.has(fKey);
+            var sumF    = somarObj(dadosPivot[u][f]);
+            var cursos  = Object.keys(dadosPivot[u][f]).sort();
+
+            rows += '<tr class="row-formacao" onclick="toggleFormacao(\'' + esc(u) + '\',\'' + esc(f) + '\')"><td colspan="6" style="padding:0">' +
+                '<div class="cell-formacao">' +
+                '<span class="chevron ' + (fAberta ? 'open' : '') + '" style="margin-left:8px">▶</span>' +
+                '<span style="flex:1">' + esc(f) + '</span>' +
+                '<div class="cell-unidade-nums" style="margin-right:4px">' +
+                (sumF.aberto    > 0 ? '<span class="num-pill sit-aberto" style="font-size:10px">'    + sumF.aberto    + '</span>' : '') +
+                (sumF.andamento > 0 ? '<span class="num-pill sit-andamento" style="font-size:10px">' + sumF.andamento + '</span>' : '') +
+                (sumF.concluido > 0 ? '<span class="num-pill sit-concluido" style="font-size:10px">' + sumF.concluido + '</span>' : '') +
+                (sumF.pendente  > 0 ? '<span class="num-pill sit-pendente" style="font-size:10px">'  + sumF.pendente  + '</span>' : '') +
+                '<span class="num-pill" style="color:var(--text);font-size:11px;font-weight:800">' + sumF.total + '</span>' +
+                '</div></div></td></tr>';
+
+            if (!fAberta) return;
+
+            // ── Cursos ────────────────────────────────────────────────────────
+            cursos.forEach(function(c) {
+                var cv = dadosPivot[u][f][c];
+                rows += '<tr class="row-curso">' +
+                    '<td class="curso-nome" style="max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(c) + '">' + esc(c) + '</td>' +
+                    numCell(cv.aberto,    'sit-aberto') +
+                    numCell(cv.andamento, 'sit-andamento') +
+                    numCell(cv.concluido, 'sit-concluido') +
+                    numCell(cv.pendente,  'sit-pendente') +
+                    numCell(cv.total,     'sit-total') +
+                    '</tr>';
+            });
+
+            // ── Total da formação ─────────────────────────────────────────────
+            if (mostrarTotais) {
+                rows += '<tr class="row-total-formacao">' +
+                    '<td class="total-label">📎 ' + esc(f) + ' Total</td>' +
+                    numCell(sumF.aberto,    'sit-aberto') +
+                    numCell(sumF.andamento, 'sit-andamento') +
+                    numCell(sumF.concluido, 'sit-concluido') +
+                    numCell(sumF.pendente,  'sit-pendente') +
+                    numCell(sumF.total,     'sit-total') +
+                    '</tr>';
+            }
+        });
+
+        // ── Total da unidade ──────────────────────────────────────────────────
+        if (mostrarTotais && uAberta) {
+            rows += '<tr class="row-total-unidade">' +
+                '<td class="total-label">🏪 ' + esc(u) + ' Total</td>' +
+                numCell(sumU.aberto,    'sit-aberto') +
+                numCell(sumU.andamento, 'sit-andamento') +
+                numCell(sumU.concluido, 'sit-concluido') +
+                numCell(sumU.pendente,  'sit-pendente') +
+                numCell(sumU.total,     'sit-total') +
+                '</tr>';
+        }
+    });
+
+    // ── Total geral ───────────────────────────────────────────────────────────
+    if (mostrarTotais) {
+        rows += '<tr class="row-total-geral">' +
+            '<td class="total-label">📊 TOTAL GERAL</td>' +
+            numCell(totGeral.aberto,    'sit-aberto') +
+            numCell(totGeral.andamento, 'sit-andamento') +
+            numCell(totGeral.concluido, 'sit-concluido') +
+            numCell(totGeral.pendente,  'sit-pendente') +
+            numCell(totGeral.total,     'sit-total') +
+            '</tr>';
+    }
+
+    document.getElementById('tableCount').textContent =
+        qtdUnidades + ' unidade(s) · ' + totGeral.total + ' registros';
+
+    container.innerHTML =
+        '<table>' +
+        '<thead><tr>' +
+        '<th style="min-width:300px">Unidade / Formação / Curso</th>' +
+        '<th class="num" style="color:var(--yellow)">Aberto</th>' +
+        '<th class="num" style="color:var(--accent)">Andamento</th>' +
+        '<th class="num" style="color:var(--green)">Concluído</th>' +
+        '<th class="num" style="color:var(--orange)">Pendente</th>' +
+        '<th class="num" style="color:var(--red)">Total</th>' +
+        '</tr></thead>' +
+        '<tbody>' + (rows || '<tr><td colspan="6" style="padding:40px;text-align:center;color:var(--muted)">Nenhum dado encontrado</td></tr>') + '</tbody>' +
+        '</table>';
+}
+
+// ─── IA Widget ────────────────────────────────────────────────────────────────
+var iaAberto = false;
+
+function toggleIA() {
+    iaAberto = !iaAberto;
+    var jan = document.getElementById('iaJanela');
+    var tog = document.getElementById('iaToggle');
+    if (iaAberto) {
+        jan.classList.add('aberto');
+        tog.classList.add('aberto');
+        tog.innerHTML = '✕';
+        var u = document.getElementById('iaUnread');
+        if (u) u.style.display = 'none';
+    } else {
+        jan.classList.remove('aberto');
+        tog.classList.remove('aberto');
+        tog.innerHTML = '🎓<div class="ia-unread" id="iaUnread"></div>';
+    }
+}
+
+async function perguntarIA(fixa) {
+    var inp = document.getElementById('inputIA');
+    var q   = fixa || inp.value.trim();
+    if (!q) return;
+    inp.value = '';
+    if (!iaAberto) toggleIA();
+
+    var box = document.getElementById('iaMsgs');
+    var mu  = document.createElement('div');
+    mu.className = 'msg user';
+    mu.textContent = q;
+    box.appendChild(mu);
+
+    var ma = document.createElement('div');
+    ma.className = 'msg ai carregando';
+    ma.innerHTML = '<span style="opacity:.6">⏳ Analisando os dados de cursos...</span>';
+    box.appendChild(ma);
+    box.scrollTop = box.scrollHeight;
+
+    var envBtn = document.getElementById('iaBtnEnviar');
+    if (envBtn) envBtn.disabled = true;
+
+    try {
+        // Monta contexto com os dados em memória
+        var ctx = montarContextoIA();
+        var r = await fetch('/ia/analisar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pergunta: ctx + '\n\nPergunta do usuário: ' + q, ano: String(new Date().getFullYear()) })
+        });
+        var d = await r.json();
+        var txt = d.resposta || d.erro || 'Sem resposta.';
+        ma.className = 'msg ai';
+        ma.innerHTML = txt
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--orange)">■</span> ')
+            .replace(/\n/g,'<br>');
+    } catch(e) {
+        ma.className = 'msg ai';
+        ma.textContent = '❌ Erro: ' + e.message;
+    }
+
+    if (envBtn) envBtn.disabled = false;
+    box.scrollTop = box.scrollHeight;
+}
+
+function montarContextoIA() {
+    if (!dadosPivot) return 'Dados ainda não carregados.';
+
+    // Resumo geral
+    var unidades = Object.keys(dadosPivot).sort();
+    var totGeral = {aberto:0,andamento:0,concluido:0,pendente:0,total:0};
+    var linhasResumo = [];
+
+    unidades.forEach(function(u) {
+        var sumU = somarFormacoes(dadosPivot[u]);
+        totGeral.aberto    += sumU.aberto;
+        totGeral.andamento += sumU.andamento;
+        totGeral.concluido += sumU.concluido;
+        totGeral.pendente  += sumU.pendente;
+        totGeral.total     += sumU.total;
+        if (sumU.total > 0) {
+            var pct = sumU.total > 0 ? Math.round((sumU.concluido / sumU.total) * 100) : 0;
+            linhasResumo.push('  • ' + u + ' | Aberto:' + sumU.aberto + ' And:' + sumU.andamento + ' Conc:' + sumU.concluido + ' Pend:' + sumU.pendente + ' Total:' + sumU.total + ' (' + pct + '% concluído)');
+        }
+    });
+
+    // Top formações
+    var formMap = {};
+    Object.values(dadosPivot).forEach(function(formacoes) {
+        Object.entries(formacoes).forEach(function(pair) {
+            var f = pair[0], cursos = pair[1];
+            if (!formMap[f]) formMap[f] = {aberto:0,andamento:0,concluido:0,pendente:0,total:0};
+            var s = somarObj(cursos);
+            formMap[f].aberto    += s.aberto;
+            formMap[f].andamento += s.andamento;
+            formMap[f].concluido += s.concluido;
+            formMap[f].pendente  += s.pendente;
+            formMap[f].total     += s.total;
+        });
+    });
+    var topFormacoes = Object.entries(formMap)
+        .sort(function(a,b){ return b[1].total - a[1].total; })
+        .slice(0, 10)
+        .map(function(pair){
+            var f = pair[0], v = pair[1];
+            return '  • ' + f + ' | Total:' + v.total + ' Conc:' + v.concluido + ' Pend:' + v.pendente;
+        });
+
+    var pctGeral = totGeral.total > 0 ? Math.round((totGeral.concluido / totGeral.total) * 100) : 0;
+
+    return 'Você é assistente de análise da Universidade Divino Fogão.\n' +
+        'Responda em português, de forma direta e objetiva. Use apenas os dados abaixo.\n\n' +
+        '=== RESUMO GERAL ===\n' +
+        'Unidades: ' + unidades.length + ' | Total registros: ' + totGeral.total + '\n' +
+        'Aberto: ' + totGeral.aberto + ' | Andamento: ' + totGeral.andamento + ' | Concluído: ' + totGeral.concluido + ' | Pendente: ' + totGeral.pendente + '\n' +
+        'Taxa de conclusão geral: ' + pctGeral + '%\n\n' +
+        '=== POR UNIDADE ===\n' + linhasResumo.join('\n') + '\n\n' +
+        '=== TOP FORMAÇÕES ===\n' + topFormacoes.join('\n');
+}
+
+// Mostrar badge após 3s
+setTimeout(function() {
+    if (!iaAberto) {
+        var u = document.getElementById('iaUnread');
+        if (u) { u.style.display = 'flex'; u.textContent = '1'; }
+    }
+}, 3000);
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    var inp = document.getElementById('inputIA');
+    if (inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') perguntarIA(); });
+});
+carregar();
+fetch('/sults/resumo').then(r => r.json()).then(function(s) {
+    var el = document.getElementById('sults-sub');
+    if (el) el.textContent = (s.totalUnidades||'—') + ' lojas · ' + (s.totalFuncionarios||'—') + ' func.';
+}).catch(function(){});
+</script>
+</body>
+</html>

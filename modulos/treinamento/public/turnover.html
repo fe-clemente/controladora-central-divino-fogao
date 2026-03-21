@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turnover — Divino Fogão</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
+            --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+            --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+            --accent:#2563eb; --green:#16a34a; --green-pale:#f0fdf4;
+            --yellow:#d97706; --yellow-pale:#fffbeb;
+            --shadow:0 2px 12px rgba(0,0,0,0.08);
+            --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);overflow-x:auto;}
+        .logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
+        .logo img{height:52px;width:auto;display:block;}
+        .logo-fallback{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1px;display:none;}
+        .header-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+        .header-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
+        nav{display:flex;gap:2px;margin-left:auto;}
+        .tab-btn{background:none;border:none;color:var(--muted);padding:20px 14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all 0.2s;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;text-decoration:none;}
+        .tab-btn:hover{color:var(--text);background:var(--bg3);}
+        .tab-btn.active{color:var(--red);border-bottom-color:var(--red);background:var(--red-pale);}
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;}
+        .status-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+        .status-dot.ready{background:var(--green);animation:none;}
+        .status-dot.error{background:var(--red);animation:none;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+        main{max-width:1260px;margin:0 auto;padding:28px 24px;}
+        .section-header{margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
+        .section-header h2{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px;}
+        .section-header p{color:var(--muted);font-size:13px;}
+        .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+        .btn-primary{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
+        .btn-primary:hover{background:var(--red-light);transform:translateY(-1px);}
+        .btn-secondary{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+        .btn-secondary:hover{background:var(--bg2);}
+        .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
+        .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .form-input{width:100%;padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;}
+        .form-input:focus{border-color:var(--red);}
+        .form-select{width:100%;padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;}
+        .form-select:focus{border-color:var(--red);}
+        .to-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;}
+        .chart-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--shadow);margin-bottom:20px;}
+        .chart-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;}
+        .filters-row{display:grid;grid-template-columns:1fr 1fr 120px auto;gap:10px;margin-bottom:18px;align-items:end;}
+        .filter-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px;}
+        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+        .table-head{padding:14px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+        .table-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
+        .tbl-scroll{overflow-x:auto;}
+        table#toTabela{width:100%;border-collapse:collapse;font-size:12px;min-width:950px;}
+        #toThead th{padding:9px 10px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;background:var(--bg);}
+        #toTbody tr{cursor:pointer;}
+        #toTbody tr:hover td{background:var(--bg3);}
+        #toTbody td{padding:7px 10px;border-bottom:1px solid var(--border);font-size:12px;white-space:nowrap;}
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9991;align-items:center;justify-content:center;}
+        .modal-overlay.open{display:flex;}
+        .modal-box{background:var(--bg2);border-radius:18px;padding:28px;width:min(480px,95vw);box-shadow:var(--shadow-lg);}
+        .modal-grafico{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9990;align-items:center;justify-content:center;padding:16px;}
+        .modal-grafico.open{display:flex;}
+        .modal-grafico-box{background:var(--bg2);border-radius:18px;padding:32px;width:min(1000px,96vw);max-height:92vh;overflow-y:auto;box-shadow:0 25px 80px rgba(0,0,0,.4);}
+        /* ── DEBUG ── */
+        #debugBox{position:fixed;bottom:90px;left:16px;background:rgba(0,0,0,.85);color:#0f0;border-radius:10px;padding:10px 14px;font-size:11px;font-family:'JetBrains Mono',monospace;max-width:320px;z-index:9998;display:none;}
+        #debugBox.vis{display:block;}
+        /* ── IA ── */
+        #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+        #iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--red),#8b0000);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(200,16,46,0.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all 0.25s;position:relative;color:#fff;}
+        #iaToggle:hover{transform:scale(1.08);}
+        #iaToggle.aberto{background:linear-gradient(135deg,#444,#1a1a1a);}
+        .ia-unread{position:absolute;top:-3px;right:-3px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid #fff;line-height:1;}
+        #iaJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:390px;max-height:640px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;animation:slideUp 0.25s ease;}
+        #iaJanela.aberto{display:flex;}
+        @keyframes slideUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+        .ia-topo{background:linear-gradient(135deg,var(--red),#8b0000);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+        .ia-topo-esq{display:flex;align-items:center;gap:10px;}
+        .ia-topo-titulo{font-size:14px;font-weight:800;}
+        .ia-topo-sub{font-size:11px;opacity:0.8;margin-top:1px;}
+        .ia-fechar{background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+        .ia-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+        .ia-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s;white-space:nowrap;}
+        .ia-sug:hover{border-color:var(--red);color:var(--red);background:var(--red-pale);}
+        .ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:220px;max-height:360px;}
+        .msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
+        .msg.user{background:var(--red);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+        .msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
+        .msg.ai.carregando{color:var(--muted);font-style:italic;}
+        .ia-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+        .ia-input{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;}
+        .ia-input:focus{border-color:var(--red);}
+        .ia-input::placeholder{color:var(--muted);font-weight:400;}
+        .ia-enviar{background:var(--red);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
+        .ia-enviar:disabled{opacity:0.5;cursor:not-allowed;}
+        @media(max-width:768px){
+            header{padding:0 14px;gap:10px;}
+            .header-title{display:none;}
+            .tab-btn{padding:14px 10px;font-size:11px;}
+            main{padding:20px 14px;}
+            .filters-row{grid-template-columns:1fr;}
+            #iaJanela{width:calc(100vw - 32px);}
+            #iaWidget{right:16px;bottom:16px;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão"
+             onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
+        <span class="logo-fallback">🍽️ DIVINO FOGÃO</span>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">Central de Treinamentos</div>
+    <nav>
+        <a href="/"             class="tab-btn">📊 Dashboard</a>
+        <a href="/"             class="tab-btn">🔔 Lembretes</a>
+        <a href="/"             class="tab-btn">🔍 Busca</a>
+        <a href="/sults"        class="tab-btn">🏪 Sults <span id="sults-sub" style="font-size:10px;font-family:monospace;opacity:.7"></span></a>
+        <a href="/chamados"     class="tab-btn">📞 Chamados T&D</a>
+        <a href="/universidade" class="tab-btn">🎓 Universidade</a>
+        <a href="/turnover"     class="tab-btn active">🔄 Turnover</a>
+        <a href="/"             class="tab-btn">➕ Cadastro</a>
+        <a href="/"             class="tab-btn">📋 Histórico</a>
+    </nav>
+</header>
+
+<div id="statusBar">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Carregando dados de turnover...</span>
+</div>
+
+<main>
+    <div class="section-header">
+        <div>
+            <h2>🔄 Controle de Turnover</h2>
+            <p>Registros da <strong>Cadastral 2026</strong> — AK=Data Desligamento · AL=Motivo — clique em qualquer linha para atualizar</p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="abrirGraficoTurnover()">📊 Gráfico de Motivos</button>
+            <button class="btn btn-secondary" onclick="exportarTurnoverCSV()">⬇ CSV</button>
+            <button class="btn btn-secondary" onclick="carregarTurnover(true)">↻ Atualizar</button>
+        </div>
+    </div>
+
+    <div class="filters-row">
+        <div>
+            <label class="filter-label">NOME</label>
+            <input id="toFiltroNome" class="form-input" placeholder="Buscar por nome…" oninput="filtrarTO()">
+        </div>
+        <div>
+            <label class="filter-label">LOJA</label>
+            <input id="toFiltroLoja" class="form-input" placeholder="Buscar por loja…" oninput="filtrarTO()">
+        </div>
+        <div>
+            <label class="filter-label">ANO</label>
+            <select id="toAnoFiltro" class="form-select" onchange="_toRegistros=[];_toData=null;carregarTurnover(true)">
+                <option value="">Todos</option>
+            </select>
+        </div>
+        <div>
+            <label class="filter-label">&nbsp;</label>
+            <button class="btn btn-secondary" onclick="limparFiltrosTO()">✕ Limpar</button>
+        </div>
+    </div>
+
+    <div class="to-cards" id="toCards"></div>
+
+    <div class="chart-card">
+        <div class="chart-title">Motivos de Desligamento e Top Lojas</div>
+        <div id="secTurnoverDash"><span style="color:var(--muted);font-size:12px">Carregando…</span></div>
+    </div>
+
+    <div class="table-wrap">
+        <div class="table-head">
+            <div class="table-title">Registros <span id="toContagem" style="font-size:12px;font-weight:600;color:var(--muted)"></span></div>
+        </div>
+        <div class="tbl-scroll">
+            <table id="toTabela">
+                <thead id="toThead"></thead>
+                <tbody id="toTbody">
+                    <tr><td colspan="8" style="padding:30px;text-align:center;color:var(--muted)">
+                        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+                            <div class="spinner"></div> Carregando...
+                        </div>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<!-- DEBUG BOX -->
+<div id="debugBox"></div>
+
+<!-- MODAL EDITAR -->
+<div id="modalEditTO" class="modal-overlay">
+    <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px">
+            <div>
+                <div style="font-size:15px;font-weight:800" id="toEditNome">Editar Registro</div>
+                <div style="font-size:12px;color:var(--muted)" id="toEditSub"></div>
+            </div>
+            <button onclick="fecharEditTO()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted)">✕</button>
+        </div>
+        <input type="hidden" id="toEditRow">
+        <div style="display:grid;gap:14px">
+            <div>
+                <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">DATA DE DESLIGAMENTO (col AK) — deixe em branco se ativo</label>
+                <input type="date" id="toEditDataDeslig" class="form-input">
+                <div style="font-size:10px;color:var(--muted);margin-top:3px">Branco = ativo · Data preenchida = desligado</div>
+            </div>
+            <div>
+                <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">MOTIVO DO DESLIGAMENTO (col AL)</label>
+                <select id="toEditMotivo" class="form-select">
+                    <option value="">— Selecione —</option>
+                    <option>Pedido de demissão</option>
+                    <option>Demissão sem justa causa</option>
+                    <option>Demissão por justa causa</option>
+                    <option>Término de contrato</option>
+                    <option>Promoção / Transferência</option>
+                    <option>Aposentadoria</option>
+                    <option>Abandono de emprego</option>
+                    <option>Falta de identificação com o treinamento</option>
+                    <option>Problemas familiares</option>
+                    <option>Motivos de saúde</option>
+                    <option>Proposta de outra empresa</option>
+                    <option>Outros</option>
+                </select>
+            </div>
+            <div id="toAvisoDesligamento" style="background:#fee2e2;border:1.5px solid rgba(200,16,46,.3);border-radius:10px;padding:12px;font-size:12px;color:#b91c1c;display:none">
+                ⚠️ Ao salvar, <strong>AK</strong> (data) e <strong>AL</strong> (motivo) serão gravados na Cadastral 2026.
+            </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
+            <button class="btn btn-secondary" onclick="fecharEditTO()">Cancelar</button>
+            <button class="btn btn-primary" id="btnSalvarTO" onclick="salvarEditTO()">💾 Salvar na Planilha</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL GRÁFICO -->
+<div id="modalGraficoTO" class="modal-grafico">
+    <div class="modal-grafico-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div style="font-size:16px;font-weight:800">📊 Turnover — Motivos de Desligamento</div>
+            <div style="display:flex;gap:10px;align-items:center">
+                <select id="toGraficoAno" class="form-select" style="width:110px" onchange="renderGraficoTOModal()">
+                    <option value="">Todos os anos</option>
+                </select>
+                <button onclick="document.getElementById('modalGraficoTO').classList.remove('open')"
+                    style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted)">✕</button>
+            </div>
+        </div>
+        <div id="graficoTOWrap"></div>
+    </div>
+</div>
+
+<!-- ── FLOATING IA ── -->
+<div id="iaWidget">
+    <div id="iaJanela">
+        <div class="ia-topo">
+            <div class="ia-topo-esq">
+                <span style="font-size:24px;">🤖</span>
+                <div>
+                    <div class="ia-topo-titulo">IA Análise — Turnover</div>
+                    <div class="ia-topo-sub">Converse sobre os dados de desligamentos</div>
+                </div>
+            </div>
+            <button class="ia-fechar" onclick="toggleIA()">✕</button>
+        </div>
+        <div class="ia-sugs">
+            <button class="ia-sug" onclick="perguntarIA('Quais os principais motivos de desligamento?')">📋 Motivos</button>
+            <button class="ia-sug" onclick="perguntarIA('Quais lojas têm maior taxa de turnover?')">🏪 Por loja</button>
+            <button class="ia-sug" onclick="perguntarIA('Qual o percentual de turnover atual?')">📊 % Turnover</button>
+            <button class="ia-sug" onclick="perguntarIA('Quantos colaboradores foram desligados este ano?')">🚪 Desligados</button>
+            <button class="ia-sug" onclick="perguntarIA('Faça um resumo executivo do turnover')">📋 Resumo</button>
+            <button class="ia-sug" onclick="perguntarIA('Quais meses tiveram mais desligamentos?')">📅 Por mês</button>
+        </div>
+        <div class="ia-msgs" id="iaMsgs">
+            <div class="msg ai">
+                👋 Olá! Sou a IA de Turnover do Divino Fogão.<br><br>
+                <strong>Exemplos:</strong><br>
+                <span style="color:var(--red);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Quais os motivos mais comuns de desligamento?</span><br>
+                <span style="color:var(--red);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Qual loja tem mais turnover?</span><br>
+                <span style="color:var(--red);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Quantos foram desligados por justa causa?</span><br>
+                <span style="color:var(--red);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Compare o turnover por trimestre</span><br><br>
+                <span style="font-size:11px;color:var(--muted)">💡 Clique em qualquer exemplo para testar.</span>
+            </div>
+        </div>
+        <div class="ia-rodape">
+            <input type="text" class="ia-input" id="inputIA" placeholder="Ex: Quais os motivos de desligamento?">
+            <button class="ia-enviar" id="iaBtnEnviar" onclick="perguntarIA()">➤</button>
+        </div>
+    </div>
+    <button id="iaToggle" onclick="toggleIA()" title="IA Análise Turnover">
+        🤖
+        <div class="ia-unread" id="iaUnread">1</div>
+    </button>
+</div>
+
+<script>
+const API = const API = '';
+var _toData = null, _toFilt = [], _toRegistros = [], iaAberto = false;
+
+/* ── DEBUG ─────────────────────────────────────────────────────── */
+var _dbg = [];
+function dbg(msg, tipo) {
+    var hora = new Date().toLocaleTimeString('pt-BR');
+    var cor  = tipo === 'err' ? '#f88' : tipo === 'ok' ? '#8f8' : '#ff8';
+    _dbg.push('<span style="color:' + cor + '">' + hora + ' ' + msg + '</span>');
+    if (_dbg.length > 12) _dbg.shift();
+    var box = document.getElementById('debugBox');
+    if (box) { box.innerHTML = _dbg.join('<br>'); box.classList.add('vis'); }
+}
+
+/* ── STATUS ─────────────────────────────────────────────────────── */
+async function verificarStatus() {
+    var dot = document.getElementById('statusDot');
+    var txt = document.getElementById('statusText');
+    try {
+        var r = await fetch(API + '/turnover/status');
+        var d = await r.json();
+        dbg('status: ' + d.status, 'ok');
+        if (d.status === 'pronto') {
+            dot.className = 'status-dot ready';
+            txt.textContent = '✓ ' + d.totalRegistros + ' registros · ' + d.pctTurnover + '% turnover · ' +
+                (d.sincronizadoEm ? new Date(d.sincronizadoEm).toLocaleTimeString('pt-BR') : '');
+        } else if (d.status === 'erro') {
+            dot.className = 'status-dot error';
+            txt.textContent = '⚠️ ' + (d.erro || 'Erro ao carregar');
+            dbg('status erro: ' + d.erro, 'err');
+        } else {
+            dot.className = 'status-dot';
+            txt.textContent = '⏳ Sincronizando...';
+            setTimeout(verificarStatus, 2000);
+        }
+    } catch(e) {
+        dot.className = 'status-dot error';
+        txt.textContent = '⚠️ Servidor offline';
+        dbg('status offline: ' + e.message, 'err');
+        setTimeout(verificarStatus, 5000);
+    }
+}
+
+/* ── CARDS ──────────────────────────────────────────────────────── */
+function mkToCard(ic, lb, sb, vl, cor, dest) {
+    return '<div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;' + (dest ? 'border-left:4px solid ' + cor : '') + '">' +
+        '<div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">' + ic + ' ' + lb + '</div>' +
+        '<div style="font-size:28px;font-weight:900;color:' + cor + ';font-family:JetBrains Mono,monospace;margin-bottom:2px">' + vl + '</div>' +
+        '<div style="font-size:10px;color:var(--muted)">' + sb + '</div></div>';
+}
+
+function renderToCards() {
+    var el = document.getElementById('toCards');
+    if (!el || !_toData) return;
+    var d = _toData, pct = d.pctTurnover || 0;
+    var cor = pct > 20 ? '#c8102e' : pct > 10 ? '#f59e0b' : '#16a34a';
+    el.innerHTML =
+        mkToCard('📋','Total Cadastrado no Ano','(col AJ — início trabalho)', d.cadastradosAno, '#2563eb') +
+        mkToCard('✅','Total Ativos','AK em branco', d.totalAtivos, '#16a34a') +
+        mkToCard('🚪','Desligados no Ano','AK preenchida no ano selecionado', d.desligadosAno, '#c8102e') +
+        mkToCard('🔄','Turnover %','desligados ÷ total geral × 100', pct + '%', cor, true);
+}
+
+/* ── GRÁFICO INLINE ─────────────────────────────────────────────── */
+function renderGraficoMotivosInline(d) {
+    var wrap = document.getElementById('secTurnoverDash');
+    if (!wrap || !d) return;
+    var motivos = (d.motivos || []).filter(function(m){ return m.motivo !== 'Não informado'; });
+    if (!motivos.length && d.motivos && d.motivos.length) motivos = d.motivos;
+    if (!motivos.length) {
+        wrap.innerHTML = '<p style="color:var(--muted);font-size:12px">Sem desligamentos com motivo registrado para ' + d.ano + '.</p>';
+        return;
+    }
+    var total = d.desligadosAno || 1, max = motivos[0].qtd;
+    var cores = ['#c8102e','#f59e0b','#2563eb','#7c3aed','#0891b2','#16a34a','#db2777','#ea580c'];
+    var barras = motivos.slice(0, 8).map(function(m, i) {
+        var pct = Math.round((m.qtd / total) * 100);
+        var barW = Math.round((m.qtd / max) * 100);
+        var cor = cores[i % cores.length];
+        return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">' +
+            '<div style="width:160px;font-size:11px;font-weight:600;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + m.motivo + '">' + m.motivo + '</div>' +
+            '<div style="height:22px;width:' + barW + '%;min-width:4px;max-width:55%;background:' + cor + ';border-radius:4px;flex-shrink:0"></div>' +
+            '<span style="font-size:11px;font-weight:800;color:' + cor + ';font-family:JetBrains Mono,monospace;white-space:nowrap">' + m.qtd + ' (' + pct + '%)</span></div>';
+    }).join('');
+    var lojas = (d.porLoja || []).slice(0, 5).map(function(l) {
+        var cor = l.pct > 30 ? '#c8102e' : l.pct > 15 ? '#f59e0b' : '#16a34a';
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--border);font-size:12px">' +
+            '<span style="font-weight:700;flex:2">' + l.loja + '</span>' +
+            '<span style="color:var(--muted);flex:1;text-align:center">' + l.desligados + '/' + l.total + '</span>' +
+            '<span style="font-weight:900;color:' + cor + ';font-family:JetBrains Mono,monospace;flex:1;text-align:right">' + l.pct + '%</span></div>';
+    }).join('');
+    wrap.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">' +
+        '<div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Motivos — ' + d.ano + '</div>' + barras + '</div>' +
+        '<div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Top Lojas</div>' +
+        '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">' +
+        '<div style="display:flex;padding:5px 10px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted)"><span style="flex:2">Loja</span><span style="flex:1;text-align:center">Deslig/Total</span><span style="flex:1;text-align:right">%</span></div>' +
+        lojas + '</div></div></div>';
+}
+
+/* ── CARREGAR ───────────────────────────────────────────────────── */
+async function carregarTurnover(forcar) {
+    var anoSel = document.getElementById('toAnoFiltro').value || '';
+    dbg('carregarTurnover ano=' + (anoSel || 'todos') + ' forcar=' + !!forcar);
+
+    if (forcar || !_toData || String(_toData.ano) !== (anoSel || 'todos')) _toRegistros = [];
+    if (_toData && !forcar && String(_toData.ano) === (anoSel || 'todos')) {
+        dbg('usando cache', 'ok');
+        renderToCompleto();
+        return;
+    }
+
+    document.getElementById('toTbody').innerHTML = '<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--muted)"><div style="display:flex;align-items:center;justify-content:center;gap:10px"><div class="spinner"></div> Buscando dados...</div></td></tr>';
+
+    try {
+        var urlDados = API + '/turnover/dados' + (anoSel ? '?ano=' + anoSel : '');
+        var urlRegs  = API + '/turnover/registros' + (anoSel ? '?ano=' + anoSel : '');
+        dbg('fetch: ' + urlDados);
+
+        var results = await Promise.all([fetch(urlDados), fetch(urlRegs)]);
+        var rDados = results[0], rRegs = results[1];
+
+        dbg('dados status: ' + rDados.status + ' regs: ' + rRegs.status, rDados.ok ? 'ok' : 'err');
+
+        if (!rDados.ok) throw new Error('HTTP ' + rDados.status + ' em /turnover/dados');
+        if (!rRegs.ok)  throw new Error('HTTP ' + rRegs.status  + ' em /turnover/registros');
+
+        _toData      = await rDados.json();
+        var dRegs    = await rRegs.json();
+        _toRegistros = dRegs.registros || [];
+
+        dbg('dados ok: ano=' + _toData.ano + ' deslig=' + _toData.desligadosAno, 'ok');
+        dbg('registros: ' + _toRegistros.length, 'ok');
+
+        if (_toData.erro) throw new Error(_toData.erro);
+
+        ['toAnoFiltro', 'toGraficoAno'].forEach(function(id) {
+            var sel = document.getElementById(id);
+            if (!sel || sel.getAttribute('data-populated')) return;
+            (_toData.anos || []).forEach(function(a) {
+                var o = document.createElement('option');
+                o.value = a; o.text = a; sel.appendChild(o);
+            });
+            sel.setAttribute('data-populated', '1');
+            var hoje = String(new Date().getFullYear());
+            Array.from(sel.options).forEach(function(o) { if (o.value === hoje) o.selected = true; });
+        });
+
+        renderToCompleto();
+        verificarStatus();
+    } catch(e) {
+        dbg('ERRO: ' + e.message, 'err');
+        document.getElementById('toTbody').innerHTML =
+            '<tr><td colspan="8" style="padding:30px;text-align:center;color:red">❌ Erro: ' + e.message + '</td></tr>';
+    }
+}
+
+function renderToCompleto() {
+    renderToCards();
+    aplicarFiltrosTO();
+    renderGraficoMotivosInline(_toData);
+}
+
+/* ── FILTROS ────────────────────────────────────────────────────── */
+function filtrarTO() { aplicarFiltrosTO(); }
+
+function limparFiltrosTO() {
+    document.getElementById('toFiltroNome').value = '';
+    document.getElementById('toFiltroLoja').value = '';
+    aplicarFiltrosTO();
+}
+
+function aplicarFiltrosTO() {
+    if (!_toData) return;
+    renderToTabela(
+        (document.getElementById('toFiltroNome').value || '').toLowerCase().trim(),
+        (document.getElementById('toFiltroLoja').value || '').toLowerCase().trim()
+    );
+}
+
+/* ── TABELA ─────────────────────────────────────────────────────── */
+async function renderToTabela(filtNome, filtLoja) {
+    var tbody = document.getElementById('toTbody');
+    var cont  = document.getElementById('toContagem');
+    if (!tbody) return;
+
+    if (!_toRegistros.length) {
+        tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">⏳ Carregando registros...</td></tr>';
+        try {
+            var anoSel = document.getElementById('toAnoFiltro').value || '';
+            var fetchR = await fetch(API + '/turnover/registros' + (anoSel ? '?ano=' + anoSel : ''));
+            var jsonR  = await fetchR.json();
+            _toRegistros = jsonR.registros || [];
+            dbg('registros lazy: ' + _toRegistros.length, 'ok');
+        } catch(e) {
+            tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:red">❌ ' + e.message + '</td></tr>';
+            dbg('erro registros: ' + e.message, 'err');
+            return;
+        }
+    }
+
+    var lista = _toRegistros.filter(function(reg) {
+        if (filtNome && !reg.nome.toLowerCase().includes(filtNome)) return false;
+        if (filtLoja && !reg.loja.toLowerCase().includes(filtLoja)) return false;
+        return true;
+    });
+    _toFilt = lista;
+
+    if (cont) cont.textContent = '(' + lista.length + ' registros)';
+
+    var cols = ['Nº','Loja','Nome','Função','Início Trab.','Data Deslig.','Motivo','Status'];
+    document.getElementById('toThead').innerHTML = '<tr>' + cols.map(function(col) {
+        return '<th style="padding:9px 10px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;background:var(--bg)">' + col + '</th>';
+    }).join('') + '</tr>';
+
+    if (!lista.length) {
+        tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">Nenhum registro encontrado.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = lista.map(function(reg) {
+        var ativo  = !reg.dataDeslig;
+        var rowBg  = ativo ? '' : 'background:rgba(200,16,46,.04)';
+        var status = ativo
+            ? '<span style="background:#dcfce7;color:#15803d;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700">✅ Ativo</span>'
+            : '<span style="background:#fee2e2;color:#b91c1c;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700">🚪 Desligado</span>';
+        var idx = _toRegistros.indexOf(reg);
+        return '<tr style="' + rowBg + '" onclick="abrirEditTO(' + idx + ')">' +
+            tdTO(reg.num) + tdTO(reg.loja,'font-weight:700') + tdTO(reg.nome,'font-weight:700') +
+            tdTO(reg.funcao) + tdTO(reg.inicioTrab || '—') +
+            tdTO(reg.dataDeslig || '—', 'color:' + (reg.dataDeslig ? 'var(--red)' : 'var(--muted)')) +
+            tdTO(reg.motivo || '—', 'color:' + (reg.motivo ? 'var(--red)' : 'var(--muted)')) +
+            '<td style="padding:7px 10px;border-bottom:1px solid var(--border)">' + status + '</td></tr>';
+    }).join('');
+}
+
+function tdTO(v, st) {
+    return '<td style="padding:7px 10px;border-bottom:1px solid var(--border);font-size:12px;white-space:nowrap;' + (st || '') + '">' + (v || '—') + '</td>';
+}
+
+/* ── MODAL EDITAR ───────────────────────────────────────────────── */
+function abrirEditTO(idx) {
+    var reg = _toRegistros[idx];
+    if (!reg) return;
+    document.getElementById('toEditNome').textContent  = reg.nome;
+    document.getElementById('toEditSub').textContent   = reg.loja + (reg.funcao ? ' · ' + reg.funcao : '');
+    document.getElementById('toEditRow').value         = reg.rowIndex;
+    document.getElementById('toEditDataDeslig').value  = reg.dataDeslig || '';
+    document.getElementById('toEditMotivo').value      = reg.motivo || '';
+    var aviso = document.getElementById('toAvisoDesligamento');
+    if (aviso) aviso.style.display = reg.dataDeslig ? 'block' : 'none';
+    document.getElementById('modalEditTO').classList.add('open');
+}
+
+function fecharEditTO() {
+    document.getElementById('modalEditTO').classList.remove('open');
+}
+
+async function salvarEditTO() {
+    var rowIndex  = parseInt(document.getElementById('toEditRow').value);
+    var dataDeslig = document.getElementById('toEditDataDeslig').value.trim();
+    var motivo    = document.getElementById('toEditMotivo').value.trim();
+    if (dataDeslig && !motivo) { alert('Informe o motivo do desligamento.'); return; }
+
+    var btn = document.getElementById('btnSalvarTO');
+    btn.textContent = '⏳ Salvando…'; btn.disabled = true;
+    try {
+        var patchR = await fetch(API + '/turnover/' + rowIndex, {
+            method: 'PATCH',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ dataDeslig: dataDeslig, motivo: motivo })
+        });
+        var patchJ = await patchR.json();
+        if (!patchJ.ok) throw new Error(patchJ.erro || 'Erro ao salvar');
+
+        _toRegistros.forEach(function(reg) {
+            if (reg.rowIndex === rowIndex) { reg.dataDeslig = dataDeslig; reg.motivo = motivo; }
+        });
+        _toData = null;
+        fecharEditTO();
+        await carregarTurnover(true);
+        alert(dataDeslig ? '✅ Desligamento registrado!' : '✅ Registro atualizado!');
+    } catch(e) {
+        alert('❌ ' + e.message);
+        dbg('salvar erro: ' + e.message, 'err');
+    } finally {
+        btn.textContent = '💾 Salvar'; btn.disabled = false;
+    }
+}
+
+/* ── MODAL GRÁFICO ──────────────────────────────────────────────── */
+function abrirGraficoTurnover() {
+    if (!_toData) { carregarTurnover().then(abrirGraficoTurnover); return; }
+    renderGraficoTOModal();
+    document.getElementById('modalGraficoTO').classList.add('open');
+}
+
+function renderGraficoTOModal() {
+    var wrap = document.getElementById('graficoTOWrap');
+    if (!wrap || !_toData) return;
+    var d = _toData, motivos = d.motivos || [], totDeslig = d.desligadosAno || 1;
+    var cores = ['#c8102e','#f59e0b','#2563eb','#7c3aed','#0891b2','#16a34a','#db2777','#ea580c'];
+
+    var barrasMotivos = motivos.length ? motivos.slice(0,10).map(function(m, i) {
+        var pct  = Math.round((m.qtd / totDeslig) * 100);
+        var barW = Math.round((m.qtd / motivos[0].qtd) * 100);
+        var cor  = cores[i % cores.length];
+        return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">' +
+            '<div style="width:200px;font-size:12px;font-weight:600;text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="' + m.motivo + '">' + m.motivo + '</div>' +
+            '<div style="height:26px;width:' + barW + '%;min-width:4px;background:' + cor + ';border-radius:5px"></div>' +
+            '<span style="font-size:12px;font-weight:800;color:' + cor + ';font-family:JetBrains Mono,monospace">' + m.qtd + ' (' + pct + '%)</span></div>';
+    }).join('') : '<p style="color:var(--muted)">Sem motivos registrados.</p>';
+
+    var lojaRows = (d.porLoja || []).map(function(l) {
+        var cor = l.pct > 30 ? '#c8102e' : l.pct > 15 ? '#f59e0b' : '#16a34a';
+        return '<tr><td style="padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700;font-size:12px">' + l.loja + '</td>' +
+            '<td style="padding:7px 10px;border-bottom:1px solid var(--border);text-align:center;font-size:12px;font-family:JetBrains Mono,monospace">' + l.desligados + '/' + l.total + '</td>' +
+            '<td style="padding:7px 10px;border-bottom:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px">' +
+            '<div style="height:16px;width:' + Math.round(l.pct) + '%;min-width:2px;background:' + cor + ';border-radius:3px"></div>' +
+            '<span style="font-size:12px;font-weight:900;color:' + cor + ';font-family:JetBrains Mono,monospace">' + l.pct + '%</span></div></td></tr>';
+    }).join('');
+
+    wrap.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">' +
+        '<div><div style="font-size:13px;font-weight:800;margin-bottom:14px">Motivos — ' + (d.ano || 'Todos') + ' <span style="font-size:11px;font-weight:400;color:var(--muted)">(' + totDeslig + ' desligamentos)</span></div>' + barrasMotivos + '</div>' +
+        '<div><div style="font-size:13px;font-weight:800;margin-bottom:14px">Turnover por Loja</div>' +
+        '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden"><table style="width:100%;border-collapse:collapse"><thead><tr>' +
+        '<th style="padding:8px 10px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Loja</th>' +
+        '<th style="padding:8px 10px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:center">Deslig/Total</th>' +
+        '<th style="padding:8px 10px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border)">% Turnover</th>' +
+        '</tr></thead><tbody>' + (lojaRows || '<tr><td colspan="3" style="padding:16px;text-align:center;color:var(--muted)">Sem dados</td></tr>') + '</tbody></table></div></div></div>' +
+        '<div style="margin-top:16px;display:flex;gap:12px;font-size:11px;justify-content:center">' +
+        '<span><span style="display:inline-block;width:10px;height:10px;background:#16a34a;border-radius:2px;margin-right:4px"></span>Saudável (&lt;15%)</span>' +
+        '<span><span style="display:inline-block;width:10px;height:10px;background:#f59e0b;border-radius:2px;margin-right:4px"></span>Atenção (15–30%)</span>' +
+        '<span><span style="display:inline-block;width:10px;height:10px;background:#c8102e;border-radius:2px;margin-right:4px"></span>Alto (&gt;30%)</span></div>';
+}
+
+/* ── CSV ────────────────────────────────────────────────────────── */
+function exportarTurnoverCSV() {
+    if (!_toFilt.length) { alert('Filtre os dados primeiro.'); return; }
+    var cols  = ['Nr','Loja','Nome','Funcao','Inicio Trabalho','Data Desligamento','Motivo'];
+    var linhas = _toFilt.map(function(reg) {
+        return [reg.num, reg.loja, reg.nome, reg.funcao, reg.inicioTrab, reg.dataDeslig, reg.motivo]
+            .map(function(v) { return '"' + String(v || '') + '"'; }).join(',');
+    });
+    var csv  = cols.join(',') + '\n' + linhas.join('\n');
+    var blob = new Blob([csv], {type:'text/csv'});
+    var a    = document.createElement('a');
+    a.href   = URL.createObjectURL(blob);
+    a.download = 'turnover.csv';
+    a.click();
+}
+
+/* ── IA ─────────────────────────────────────────────────────────── */
+function toggleIA() {
+    iaAberto = !iaAberto;
+    var jan = document.getElementById('iaJanela');
+    var tog = document.getElementById('iaToggle');
+    if (iaAberto) {
+        jan.classList.add('aberto'); tog.classList.add('aberto'); tog.innerHTML = '✕';
+        var u = document.getElementById('iaUnread'); if (u) u.style.display = 'none';
+    } else {
+        jan.classList.remove('aberto'); tog.classList.remove('aberto');
+        tog.innerHTML = '🤖<div class="ia-unread" id="iaUnread"></div>';
+    }
+}
+
+async function perguntarIA(fixa) {
+    var inp = document.getElementById('inputIA');
+    var q   = fixa || inp.value.trim();
+    if (!q) return;
+    inp.value = '';
+    if (!iaAberto) toggleIA();
+
+    var box = document.getElementById('iaMsgs');
+    var mu  = document.createElement('div'); mu.className = 'msg user'; mu.textContent = q; box.appendChild(mu);
+    var ma  = document.createElement('div'); ma.className = 'msg ai carregando';
+    ma.innerHTML = '<span style="opacity:.6">⏳ Analisando dados de turnover com Gemini…</span>';
+    box.appendChild(ma); box.scrollTop = box.scrollHeight;
+
+    var envBtn = document.getElementById('iaBtnEnviar');
+    if (envBtn) envBtn.disabled = true;
+
+    try {
+        var contexto = '';
+        if (_toData) {
+            var td = _toData;
+            var motivosCtx = (td.motivos || []).map(function(m) { return '  • ' + m.motivo + ': ' + m.qtd + ' casos'; }).join('\n');
+            var lojasCtx   = (td.porLoja  || []).slice(0,10).map(function(l) { return '  • ' + l.loja + ': ' + l.desligados + '/' + l.total + ' (' + l.pct + '%)'; }).join('\n');
+            var mesCtx     = (td.porMes   || []).map(function(m) { return '  • ' + m.mes + ': ' + m.desligados + ' desligamentos'; }).join('\n');
+            contexto =
+                '=== DADOS DE TURNOVER ' + td.ano + ' ===\n' +
+                'Total geral: ' + td.totalGeral + ' colaboradores\n' +
+                'Ativos: ' + td.totalAtivos + '\n' +
+                'Desligados no ano: ' + td.desligadosAno + '\n' +
+                'Taxa de turnover: ' + td.pctTurnover + '%\n' +
+                'Cadastrados no ano: ' + td.cadastradosAno + '\n\n' +
+                '=== MOTIVOS DE DESLIGAMENTO ===\n' + (motivosCtx || '  Sem dados') + '\n\n' +
+                '=== TURNOVER POR LOJA ===\n' + (lojasCtx || '  Sem dados') + '\n\n' +
+                '=== DESLIGAMENTOS POR MÊS ===\n' + (mesCtx || '  Sem dados');
+        }
+
+        var iaFetch = await fetch(API + '/ia/analisar', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                pergunta: contexto + '\n\nPergunta: ' + q,
+                ano: String(new Date().getFullYear())
+            })
+        });
+
+        if (!iaFetch.ok) throw new Error('HTTP ' + iaFetch.status);
+        var iaJson = await iaFetch.json();
+        var txt    = iaJson.resposta || iaJson.erro || 'Sem resposta.';
+
+        ma.className = 'msg ai';
+        ma.innerHTML = txt
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--red)">■</span> ')
+            .replace(/\n/g,'<br>');
+
+        dbg('IA ok', 'ok');
+    } catch(e) {
+        ma.className = 'msg ai';
+        ma.textContent = '❌ Erro: ' + e.message;
+        dbg('IA erro: ' + e.message, 'err');
+    }
+
+    if (envBtn) envBtn.disabled = false;
+    box.scrollTop = box.scrollHeight;
+}
+
+/* ── SULTS SUB ──────────────────────────────────────────────────── */
+fetch('/sults/resumo').then(function(r){ return r.json(); }).then(function(s) {
+    var el = document.getElementById('sults-sub');
+    if (el) el.textContent = (s.totalUnidades || '—') + ' lojas · ' + (s.totalFuncionarios || '—') + ' func.';
+}).catch(function(){});
+
+/* ── INIT ───────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('inputIA').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') perguntarIA();
+    });
+    setTimeout(function() {
+        if (!iaAberto) {
+            var u = document.getElementById('iaUnread');
+            if (u) { u.style.display = 'flex'; u.textContent = '1'; }
+        }
+    }, 3000);
+
+    dbg('página carregada, iniciando...', 'ok');
+    verificarStatus();
+    carregarTurnover();
+});
+</script>
+</body>
+</html>

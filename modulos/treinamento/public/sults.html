@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unidades — Divino Fogão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
+  --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+  --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+  --accent:#2563eb;
+  --green:#16a34a; --green-pale:#f0fdf4;
+  --yellow:#d97706; --yellow-pale:#fffbeb;
+  --shadow:0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* HEADER */
+header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
+.logo img{height:52px;width:auto;display:block;}
+.logo-fallback{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1px;display:none;}
+.header-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+.header-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
+nav{display:flex;gap:2px;margin-left:auto;}
+.tab-btn{background:none;border:none;color:var(--muted);padding:20px 16px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;text-decoration:none;}
+.tab-btn:hover{color:var(--text);background:var(--bg3);}
+.tab-btn.active{color:var(--red);border-bottom-color:var(--red);background:var(--red-pale);}
+
+/* STATUS BAR */
+#statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+.status-dot.ready{background:var(--green);animation:none;}
+.status-dot.error{background:var(--red);animation:none;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* LAYOUT */
+main{max-width:1100px;margin:0 auto;padding:32px 24px;}
+.section-header{margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
+.section-header h2{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.section-header p{color:var(--muted);font-size:13px;}
+
+/* VIEW SWITCHER */
+.view-switcher{display:flex;gap:0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg3);}
+.view-btn{padding:9px 20px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted);transition:all .18s;display:flex;align-items:center;gap:7px;white-space:nowrap;}
+.view-btn:not(:last-child){border-right:1px solid var(--border);}
+.view-btn.active{background:var(--red);color:#fff;}
+.view-btn:not(.active):hover{background:var(--bg2);color:var(--text);}
+
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:10px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:var(--bg3);color:var(--text);transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;}
+.btn:hover{background:var(--bg2);border-color:#ccc;}
+.btn-primary{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 2px 8px rgba(200,16,46,.3);}
+.btn-primary:hover{background:var(--red-light);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);transition:all .2s;}
+.stat-card:hover{box-shadow:var(--shadow-lg);}
+.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:700;margin-bottom:8px;}
+.stat-value{font-size:34px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:5px;}
+.stat-sub{font-size:12px;color:var(--muted);font-weight:600;}
+
+/* CHART */
+.chart-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--shadow);margin-bottom:20px;}
+.chart-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:18px;}
+.grafico-barras{display:flex;flex-direction:column;gap:9px;max-height:380px;overflow-y:auto;}
+.barra-row{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.barra-row:hover .barra-label{color:var(--red);}
+.barra-label{width:210px;min-width:210px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:600;color:var(--text);transition:color .15s;}
+.barra-track{flex:1;height:18px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+.barra-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-light));border-radius:4px;transition:width .9s cubic-bezier(.4,0,.2,1);min-width:4px;}
+.barra-num{width:28px;text-align:right;font-weight:700;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+
+/* CONTROLES */
+.controles{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+.busca-input{flex:1;min-width:200px;max-width:360px;padding:10px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;background:var(--bg2);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
+.busca-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.08);}
+.busca-input::placeholder{color:var(--muted);font-weight:400;}
+.filtro-select{padding:10px 32px 10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;background:var(--bg2);color:var(--text);cursor:pointer;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.filtro-select:focus{border-color:var(--red);}
+
+/* TABELA */
+.tabela-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:24px;}
+.tabela-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.tabela-header-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
+.total-badge{background:var(--bg3);border:1px solid var(--border);padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:10px 14px;text-align:left;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;background:var(--bg);border-bottom:2px solid var(--border);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--bg3);}
+tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
+.td-nome{font-weight:700;color:var(--text);}
+.td-uf{display:inline-block;background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:800;color:var(--muted);}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
+.badge-ativa{background:var(--green-pale);color:var(--green);border:1px solid rgba(22,163,74,.2);}
+.badge-impl{background:var(--yellow-pale);color:var(--yellow);border:1px solid rgba(217,119,6,.2);}
+.td-func{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:16px;color:var(--red);}
+.td-email{font-size:12px;color:var(--muted);}
+
+/* FUNC AVATAR na tabela */
+.func-av-mini{width:30px;height:30px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);font-size:11px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);font-weight:800;overflow:hidden;flex-shrink:0;vertical-align:middle;margin-right:8px;}
+.func-av-mini img{width:100%;height:100%;object-fit:cover;}
+
+/* LOADING */
+.loading-msg{text-align:center;padding:50px 24px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.aberto{display:flex;}
+.modal{background:var(--bg2);border-radius:18px;width:100%;max-width:700px;max-height:86vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.18);animation:slideUp .22s ease;border:1.5px solid var(--border);}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;}
+.modal-titulo{font-size:16px;font-weight:800;color:var(--text);margin-bottom:3px;}
+.modal-sub{font-size:12px;color:var(--muted);font-weight:600;}
+.modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);font-family:'Nunito',sans-serif;transition:all .15s;flex-shrink:0;}
+.modal-close:hover{background:var(--red-pale);color:var(--red);border-color:rgba(200,16,46,.3);}
+.modal-busca{padding:14px 24px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.modal-body{overflow-y:auto;flex:1;}
+.func-item{display:flex;align-items:center;gap:14px;padding:13px 24px;border-bottom:1px solid var(--border);transition:background .1s;}
+.func-item:last-child{border-bottom:none;}
+.func-item:hover{background:var(--bg);}
+.func-avatar{width:38px;height:38px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);flex-shrink:0;font-size:13px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:800;overflow:hidden;}
+.func-avatar img{width:100%;height:100%;object-fit:cover;}
+.func-nome{font-weight:700;font-size:13px;color:var(--text);}
+.func-cargo{font-size:11px;color:var(--muted);margin-top:2px;}
+.func-contato{margin-left:auto;text-align:right;font-size:11px;color:var(--muted);line-height:1.7;}
+.modal-vazio{padding:48px;text-align:center;color:var(--muted);font-size:13px;font-weight:600;}
+
+/* IA WIDGET */
+#iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+#iaJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:390px;max-height:640px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;}
+.ia-topo{background:linear-gradient(135deg,var(--red),#8b0000);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ia-topo-esq{display:flex;align-items:center;gap:10px;}
+.ia-topo-titulo{font-size:14px;font-weight:800;}
+.ia-topo-sub{font-size:11px;opacity:.8;margin-top:1px;}
+.ia-fechar{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.ia-fechar:hover{background:rgba(255,255,255,.28);}
+.ia-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+.ia-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;}
+.ia-sug:hover{border-color:var(--red);color:var(--red);background:var(--red-pale);}
+#iaMsgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:220px;max-height:360px;scroll-behavior:smooth;}
+.msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
+.msg.user{background:var(--red);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+.msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
+.ia-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+#iaInput{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;transition:border-color .2s;}
+#iaInput:focus{border-color:var(--red);box-shadow:0 0 0 2px rgba(200,16,46,.08);}
+#iaInput::placeholder{color:var(--muted);font-weight:400;}
+#iaBtn{background:var(--red);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+#iaBtn:hover{background:var(--red-light);}
+#iaBtn:disabled{opacity:.5;cursor:not-allowed;}
+#iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--red),#8b0000);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(200,16,46,.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .25s;color:#fff;}
+#iaToggle:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(200,16,46,.6);}
+@keyframes slideUpIA{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.ia-link{color:var(--red);cursor:pointer;}
+
+/* DEBUG */
+#debug{position:fixed;bottom:100px;left:16px;background:rgba(255,255,255,.96);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);max-width:280px;z-index:998;backdrop-filter:blur(10px);box-shadow:var(--shadow-lg);}
+.dl{padding:1px 0;}.dl.ok{color:var(--green);}.dl.err{color:var(--red);}.dl.warn{color:var(--yellow);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  header{padding:0 14px;gap:10px;}.header-title{display:none;}
+  #statusBar{padding:7px 14px;}main{padding:20px 14px;}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .barra-label{width:120px;min-width:120px;}
+  #iaJanela{width:calc(100vw - 32px);}#iaWidget{right:16px;bottom:16px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="logo-fallback">🍽️ DIVINO FOGÃO</span>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">Central de Treinamentos</div>
+    <nav>
+        <!-- 1 --> <a href="/"             class="tab-btn">📊 Dashboard</a>
+        <!-- 2 --> <a href="/"             class="tab-btn">🔔 Lembretes</a>
+        <!-- 3 --> <a href="/"             class="tab-btn">🔍 Busca</a>
+        <!-- 4 --> <a href="/sults"        class="tab-btn active">
+                       🏪 Sults <span id="sults-sub" style="font-size:10px;font-family:monospace;opacity:.7"></span>
+                   </a>
+        <!-- 5 --> <a href="/chamados"     class="tab-btn">📞 Chamados T&D</a>
+        <!-- 6 --> <a href="/universidade" class="tab-btn">🎓 Universidade</a>
+        <!-- 7 --> <a href="/"             class="tab-btn">🔄 Turnover</a>
+        <!-- 8 --> <a href="/"             class="tab-btn">➕ Cadastro</a>
+        <!-- 9 --> <a href="/"             class="tab-btn">📋 Histórico</a>
+    </nav>
+</header>
+
+<div id="statusBar">
+  <div class="status-dot" id="statusDot"></div>
+  <span id="statusText">Carregando dados SULTS...</span>
+</div>
+
+<main>
+  <div class="section-header">
+    <div>
+      <h2>🏪 Unidades &amp; Funcionários</h2>
+      <p>Dados sincronizados via SULTS — <span id="syncInfo" style="font-family:'JetBrains Mono',monospace;">—</span></p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <!-- View switcher -->
+      <div class="view-switcher">
+        <button class="view-btn active" id="btnViewUnidades" onclick="setView('unidades')">🏪 Unidades</button>
+        <button class="view-btn"        id="btnViewFunc"     onclick="setView('funcionarios')">👥 Funcionários</button>
+      </div>
+      <button class="btn" id="btnSync" onclick="sincronizar()">🔄 Sincronizar agora</button>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="stats-row">
+    <div class="stat-card" style="border-top:3px solid var(--red)">
+      <div class="stat-label" style="color:var(--red)">🏪 Unidades Ativas</div>
+      <div class="stat-value" style="color:var(--red)" id="totalUnidades">—</div>
+      <div class="stat-sub">em operação</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid var(--green)">
+      <div class="stat-label" style="color:var(--green)">👥 Funcionários Ativos</div>
+      <div class="stat-value" style="color:var(--green)" id="totalFuncionarios">—</div>
+      <div class="stat-sub">cadastrados no SULTS</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid var(--yellow)">
+      <div class="stat-label" style="color:var(--yellow)">🔧 Em Implantação</div>
+      <div class="stat-value" style="color:var(--yellow)" id="totalImplantacao">—</div>
+      <div class="stat-sub">em abertura</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid var(--accent)">
+      <div class="stat-label" style="color:var(--accent)">📊 Média por Unidade</div>
+      <div class="stat-value" style="color:var(--accent)" id="mediaFunc">—</div>
+      <div class="stat-sub">funcionários/unidade</div>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: UNIDADES ══ -->
+  <div id="viewUnidades">
+    <div class="chart-card">
+      <div class="chart-title">
+        📊 Top Unidades por Funcionários Ativos
+        <span style="font-size:10px;font-weight:400;text-transform:none;margin-left:6px;">(clique para ver funcionários)</span>
+      </div>
+      <div class="grafico-barras" id="grafico">
+        <div class="loading-msg"><div class="spinner"></div> Carregando gráfico...</div>
+      </div>
+    </div>
+
+    <div class="controles">
+      <input type="text" class="busca-input" id="buscaUnidade" placeholder="🔍 Buscar unidade..." oninput="filtrarUnidades()">
+      <select class="filtro-select" id="filtroUF" onchange="filtrarUnidades()">
+        <option value="">Todos os estados</option>
+      </select>
+      <select class="filtro-select" id="filtroSit" onchange="filtrarUnidades()">
+        <option value="">Todas as situações</option>
+        <option value="1">Ativas</option>
+        <option value="3">Em implantação</option>
+      </select>
+    </div>
+
+    <div class="tabela-card">
+      <div class="tabela-header">
+        <div class="tabela-header-title">Lista de Unidades</div>
+        <div class="total-badge" id="totalVisUnidades">0 unidades</div>
+      </div>
+      <div id="tabelaUnidades">
+        <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: FUNCIONÁRIOS ══ -->
+  <div id="viewFuncionarios" style="display:none;">
+    <div class="controles">
+      <input type="text" class="busca-input" id="buscaFunc" placeholder="🔍 Buscar funcionário, cargo ou unidade..." oninput="filtrarFuncionarios()">
+      <select class="filtro-select" id="filtroFuncUF" onchange="filtrarFuncionarios()">
+        <option value="">Todos os estados</option>
+      </select>
+      <select class="filtro-select" id="filtroFuncUnidade" onchange="filtrarFuncionarios()">
+        <option value="">Todas as unidades</option>
+      </select>
+    </div>
+
+    <div class="tabela-card">
+      <div class="tabela-header">
+        <div class="tabela-header-title">Todos os Funcionários Ativos</div>
+        <div class="total-badge" id="totalVisFunc">0 funcionários</div>
+      </div>
+      <div id="tabelaFunc">
+        <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL FUNCIONÁRIOS DA UNIDADE -->
+<div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-titulo" id="modalTitulo">Funcionários</div>
+        <div class="modal-sub"    id="modalSub"></div>
+      </div>
+      <button class="modal-close" onclick="fecharModal()">✕ Fechar</button>
+    </div>
+    <div class="modal-busca">
+      <input type="text" class="busca-input" style="max-width:100%;width:100%"
+             placeholder="🔍 Buscar funcionário..." id="buscaFuncModal" oninput="filtrarFuncModal()">
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- IA WIDGET -->
+<div id="iaWidget">
+  <div id="iaJanela">
+    <div class="ia-topo">
+      <div class="ia-topo-esq">
+        <span style="font-size:24px">🤖</span>
+        <div>
+          <div class="ia-topo-titulo">IA Análise — Unidades</div>
+          <div class="ia-topo-sub">Pergunte sobre unidades e funcionários</div>
+        </div>
+      </div>
+      <button class="ia-fechar" onclick="toggleIA()">✕</button>
+    </div>
+    <div class="ia-sugs">
+      <button class="ia-sug" onclick="perguntar('Qual unidade tem mais funcionários?')">🏆 Top unidades</button>
+      <button class="ia-sug" onclick="perguntar('Faça um resumo geral das unidades')">📊 Resumo</button>
+      <button class="ia-sug" onclick="perguntar('Quais estados têm mais unidades?')">🗺️ Por estado</button>
+      <button class="ia-sug" onclick="perguntar('Quais unidades estão em implantação?')">🔧 Implantação</button>
+    </div>
+    <div id="iaMsgs">
+      <div class="msg ai">👋 Olá! Posso analisar os dados das unidades SULTS.<br><br>
+        <span class="ia-link" onclick="setInput('Qual unidade tem mais funcionários?')">→ Qual unidade tem mais funcionários?</span><br>
+        <span class="ia-link" onclick="setInput('Quantos funcionários tem no DF?')">→ Quantos funcionários tem no DF?</span><br>
+        <span class="ia-link" onclick="setInput('Liste as unidades em implantação')">→ Liste as unidades em implantação</span>
+      </div>
+    </div>
+    <div class="ia-rodape">
+      <input type="text" id="iaInput" placeholder="Pergunte sobre as unidades..." onkeydown="if(event.key==='Enter')perguntar()">
+      <button id="iaBtn" onclick="perguntar()">➤</button>
+    </div>
+  </div>
+  <button id="iaToggle" onclick="toggleIA()" title="IA Análise Unidades">🤖</button>
+</div>
+
+<div id="debug"></div>
+
+<script>
+let dados = null;
+let unidadesFiltradas = [];
+let todosFuncionarios = []; // lista flat de todos os func
+let funcFiltrados     = [];
+let funcAtualModal    = [];
+let iaAberto = false;
+let viewAtual = 'unidades';
+
+const debugEl = document.getElementById('debug');
+function log(m, t) {
+  const d = document.createElement('div'); d.className = 'dl '+(t||'');
+  const h = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  d.textContent = h+' '+m; debugEl.appendChild(d);
+  while (debugEl.children.length > 7) debugEl.removeChild(debugEl.firstChild);
+}
+
+// ─── VIEW SWITCHER ────────────────────────────────────────────────────────────
+function setView(v) {
+  viewAtual = v;
+  document.getElementById('viewUnidades').style.display    = v === 'unidades'     ? '' : 'none';
+  document.getElementById('viewFuncionarios').style.display = v === 'funcionarios' ? '' : 'none';
+  document.getElementById('btnViewUnidades').classList.toggle('active', v === 'unidades');
+  document.getElementById('btnViewFunc').classList.toggle('active', v === 'funcionarios');
+  if (v === 'funcionarios' && dados) filtrarFuncionarios();
+}
+
+// ─── CARREGAR ─────────────────────────────────────────────────────────────────
+async function carregar() {
+  try {
+    const r = await fetch('/sults/dados');
+    if (!r.ok) throw new Error('HTTP '+r.status);
+    dados = await r.json();
+    render();
+    log('SULTS OK — '+dados.totalUnidades+' unidades', 'ok');
+  } catch(e) {
+    document.getElementById('tabelaUnidades').innerHTML =
+      `<div class="loading-msg" style="flex-direction:column;gap:14px">❌ ${e.message}<button class="btn btn-primary" onclick="carregar()">🔄 Tentar novamente</button></div>`;
+    document.getElementById('statusDot').className = 'status-dot error';
+    document.getElementById('statusText').textContent = '⚠️ Servidor offline';
+    log('Erro: '+e.message, 'err');
+  }
+}
+
+function render() {
+  if (!dados) return;
+  document.getElementById('totalUnidades').textContent    = dados.totalUnidades;
+  document.getElementById('totalFuncionarios').textContent= dados.totalFuncionarios;
+  document.getElementById('totalImplantacao').textContent = dados.totalUnidadesImplantacao;
+  const ativas = dados.unidades.filter(u => u.situacaoId === 1);
+  document.getElementById('mediaFunc').textContent = ativas.length ? Math.round(dados.totalFuncionarios/ativas.length) : 0;
+
+  const dt = new Date(dados.sincronizadoEm), str = dt.toLocaleString('pt-BR');
+  document.getElementById('syncInfo').textContent = str;
+  document.getElementById('statusDot').className  = 'status-dot ready';
+  document.getElementById('statusText').textContent =
+    `✓ ${dados.totalUnidades} unidades · ${dados.totalFuncionarios} funcionários · Última sync: ${str}`;
+
+  // Filtro UF
+  const ufs = [...new Set(dados.unidades.map(u => u.uf).filter(Boolean))].sort();
+  const optUF = '<option value="">Todos os estados</option>' + ufs.map(u=>`<option value="${u}">${u}</option>`).join('');
+  document.getElementById('filtroUF').innerHTML = optUF;
+  document.getElementById('filtroFuncUF').innerHTML = optUF;
+
+  // Filtro Unidade (para view funcionários)
+  const nomes = [...new Set(dados.unidades.filter(u=>u.situacaoId===1).map(u=>u.nomeFantasia))].sort();
+  document.getElementById('filtroFuncUnidade').innerHTML =
+    '<option value="">Todas as unidades</option>' +
+    nomes.map(n=>`<option value="${n}">${n}</option>`).join('');
+
+  // Monta lista flat de funcionários
+  todosFuncionarios = [];
+  for (const u of dados.unidades) {
+    for (const f of (u.funcionarios || [])) {
+      todosFuncionarios.push({ ...f, unidade: u.nomeFantasia, uf: u.uf, cidade: u.cidade, unidadeId: u.id });
+    }
+  }
+  todosFuncionarios.sort((a,b) => a.nome.localeCompare(b.nome));
+  funcFiltrados = [...todosFuncionarios];
+
+  renderGrafico();
+  filtrarUnidades();
+  if (viewAtual === 'funcionarios') filtrarFuncionarios();
+}
+
+// ─── GRÁFICO ──────────────────────────────────────────────────────────────────
+function renderGrafico() {
+  const top = [...dados.unidades].filter(u=>u.situacaoId===1)
+    .sort((a,b)=>b.totalFuncionarios-a.totalFuncionarios).slice(0,20);
+  const max = top[0]?.totalFuncionarios || 1;
+  document.getElementById('grafico').innerHTML = top.map(u=>
+    `<div class="barra-row" onclick="abrirModal(${u.id})" title="Ver funcionários">
+      <div class="barra-label" title="${u.nomeFantasia}">${u.nomeFantasia}</div>
+      <div class="barra-track"><div class="barra-fill" style="width:${(u.totalFuncionarios/max*100).toFixed(1)}%"></div></div>
+      <div class="barra-num">${u.totalFuncionarios}</div>
+    </div>`).join('') || '<div style="padding:20px;color:var(--muted);text-align:center">Sem dados</div>';
+}
+
+// ─── VIEW UNIDADES ────────────────────────────────────────────────────────────
+function filtrarUnidades() {
+  if (!dados) return;
+  const q   = document.getElementById('buscaUnidade').value.toLowerCase().trim();
+  const uf  = document.getElementById('filtroUF').value;
+  const sit = document.getElementById('filtroSit').value;
+  unidadesFiltradas = dados.unidades.filter(u => {
+    if (q && !u.nomeFantasia.toLowerCase().includes(q) &&
+             !(u.cidade||'').toLowerCase().includes(q) &&
+             !(u.razaoSocial||'').toLowerCase().includes(q)) return false;
+    if (uf  && u.uf !== uf) return false;
+    if (sit && String(u.situacaoId) !== sit) return false;
+    return true;
+  });
+  document.getElementById('totalVisUnidades').textContent =
+    `${unidadesFiltradas.length} unidade${unidadesFiltradas.length!==1?'s':''}`;
+  renderTabelaUnidades();
+}
+
+function renderTabelaUnidades() {
+  if (!unidadesFiltradas.length) {
+    document.getElementById('tabelaUnidades').innerHTML = '<div class="loading-msg">Nenhuma unidade encontrada.</div>';
+    return;
+  }
+  document.getElementById('tabelaUnidades').innerHTML = `<table>
+    <thead><tr>
+      <th>Nome Fantasia</th><th>Localização</th><th>Situação</th><th>Funcionários</th><th>E-mail</th>
+    </tr></thead>
+    <tbody>${unidadesFiltradas.map(u=>`
+      <tr onclick="abrirModal(${u.id})">
+        <td class="td-nome">${u.nomeFantasia}</td>
+        <td><span class="td-uf">${u.uf||'—'}</span> <span style="color:var(--muted);font-size:12px">${u.cidade||''}</span></td>
+        <td>${u.situacaoId===1?'<span class="badge badge-ativa">● Ativa</span>':'<span class="badge badge-impl">● Implantação</span>'}</td>
+        <td class="td-func">${u.totalFuncionarios}</td>
+        <td class="td-email">${u.email||'—'}</td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+// ─── VIEW FUNCIONÁRIOS ────────────────────────────────────────────────────────
+function filtrarFuncionarios() {
+  if (!dados) return;
+  const q       = document.getElementById('buscaFunc').value.toLowerCase().trim();
+  const uf      = document.getElementById('filtroFuncUF').value;
+  const unidade = document.getElementById('filtroFuncUnidade').value;
+
+  funcFiltrados = todosFuncionarios.filter(f => {
+    if (q && !f.nome.toLowerCase().includes(q) &&
+             !(f.cargo||'').toLowerCase().includes(q) &&
+             !f.unidade.toLowerCase().includes(q)) return false;
+    if (uf      && f.uf !== uf) return false;
+    if (unidade && f.unidade !== unidade) return false;
+    return true;
+  });
+
+  document.getElementById('totalVisFunc').textContent =
+    `${funcFiltrados.length} funcionário${funcFiltrados.length!==1?'s':''}`;
+  renderTabelaFunc();
+}
+
+function renderTabelaFunc() {
+  if (!funcFiltrados.length) {
+    document.getElementById('tabelaFunc').innerHTML = '<div class="loading-msg">Nenhum funcionário encontrado.</div>';
+    return;
+  }
+  document.getElementById('tabelaFunc').innerHTML = `<table>
+    <thead><tr>
+      <th>Funcionário</th><th>Cargo</th><th>Unidade</th><th>UF</th><th>Contato</th>
+    </tr></thead>
+    <tbody>${funcFiltrados.map(f => {
+      const ini = f.nome.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
+      const av  = f.thumbnail
+        ? `<span class="func-av-mini"><img src="${f.thumbnail}" onerror="this.parentElement.textContent='${ini}'"></span>`
+        : `<span class="func-av-mini">${ini}</span>`;
+      return `<tr onclick="abrirModalUnidade(${f.unidadeId})">
+        <td class="td-nome">${av}${f.nome}</td>
+        <td style="color:var(--muted);font-size:12px">${f.cargo||'—'}</td>
+        <td style="font-size:12px;font-weight:700">${f.unidade}</td>
+        <td><span class="td-uf">${f.uf||'—'}</span></td>
+        <td class="td-email">${f.email||f.celular||'—'}</td>
+      </tr>`;
+    }).join('')}
+    </tbody></table>`;
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function abrirModal(id) {
+  const u = dados.unidades.find(u=>u.id===id); if(!u) return;
+  document.getElementById('modalTitulo').textContent = u.nomeFantasia;
+  document.getElementById('modalSub').textContent =
+    `${u.totalFuncionarios} funcionário${u.totalFuncionarios!==1?'s':''} · ${u.cidade||''} ${u.uf||''}`;
+  funcAtualModal = u.funcionarios || [];
+  document.getElementById('buscaFuncModal').value = '';
+  renderFuncModal(funcAtualModal);
+  document.getElementById('modalOverlay').classList.add('aberto');
+}
+function abrirModalUnidade(id) { abrirModal(id); }
+
+function filtrarFuncModal() {
+  const q = document.getElementById('buscaFuncModal').value.toLowerCase().trim();
+  renderFuncModal(q ? funcAtualModal.filter(f=>f.nome.toLowerCase().includes(q)||(f.cargo||'').toLowerCase().includes(q)) : funcAtualModal);
+}
+
+function renderFuncModal(lista) {
+  if (!lista.length) { document.getElementById('modalBody').innerHTML = '<div class="modal-vazio">👥 Nenhum funcionário encontrado.</div>'; return; }
+  document.getElementById('modalBody').innerHTML = [...lista].sort((a,b)=>a.nome.localeCompare(b.nome)).map(f => {
+    const ini = f.nome.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
+    const av  = f.thumbnail
+      ? `<div class="func-avatar"><img src="${f.thumbnail}" onerror="this.parentElement.textContent='${ini}'"></div>`
+      : `<div class="func-avatar">${ini}</div>`;
+    return `<div class="func-item">${av}
+      <div><div class="func-nome">${f.nome}</div><div class="func-cargo">${f.cargo||'Sem cargo'}</div></div>
+      <div class="func-contato">${f.celular?`📱 ${f.celular}<br>`:''} ${f.email?`✉️ ${f.email}`:''}</div>
+    </div>`;
+  }).join('');
+}
+
+function fecharModal(e) {
+  if (!e || e.target===document.getElementById('modalOverlay'))
+    document.getElementById('modalOverlay').classList.remove('aberto');
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') fecharModal(); });
+
+// ─── SINCRONIZAR ──────────────────────────────────────────────────────────────
+async function sincronizar() {
+  const btn = document.getElementById('btnSync');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Sincronizando...';
+  document.getElementById('statusDot').className = 'status-dot';
+  document.getElementById('statusText').textContent = '⏳ Sincronizando com SULTS...';
+  try {
+    const r = await fetch('/sults/sincronizar', {method:'POST'});
+    const d = await r.json();
+    if (d.sucesso) {
+      await carregar(); btn.innerHTML = '✅ Sincronizado!';
+      log('Sync OK', 'ok');
+    } else {
+      throw new Error(d.erro || 'Falha');
+    }
+  } catch(e) {
+    btn.innerHTML = '❌ Erro';
+    log('Sync falhou: '+e.message, 'err');
+    document.getElementById('statusDot').className = 'status-dot error';
+  }
+  setTimeout(()=>{btn.disabled=false;btn.innerHTML='🔄 Sincronizar agora';}, 2500);
+}
+
+// ─── IA ───────────────────────────────────────────────────────────────────────
+function setInput(t) { document.getElementById('iaInput').value=t; document.getElementById('iaInput').focus(); }
+function toggleIA() {
+  iaAberto = !iaAberto;
+  const j=document.getElementById('iaJanela'), t=document.getElementById('iaToggle');
+  if(iaAberto){ j.style.display='flex'; j.style.animation='slideUpIA .25s ease'; t.innerHTML='✕'; t.style.background='linear-gradient(135deg,#444,#1a1a1a)'; }
+  else{ j.style.display='none'; t.innerHTML='🤖'; t.style.background='linear-gradient(135deg,var(--red),#8b0000)'; }
+}
+async function perguntar(fixa) {
+  const inp=document.getElementById('iaInput');
+  const q=fixa||inp.value.trim(); if(!q) return;
+  inp.value=''; if(!iaAberto) toggleIA();
+  const box=document.getElementById('iaMsgs');
+  const mu=document.createElement('div'); mu.className='msg user'; mu.textContent=q; box.appendChild(mu);
+  const ma=document.createElement('div'); ma.className='msg ai'; ma.innerHTML='<span style="opacity:.6">⏳ Analisando...</span>'; box.appendChild(ma);
+  box.scrollTop=box.scrollHeight;
+  document.getElementById('iaBtn').disabled=true;
+  try {
+    let ctx='Você é assistente de análise de rede de franquias do Divino Fogão.\nResponda em português, direto. Use só os dados abaixo.\n\n';
+    if(dados){
+      const av=dados.unidades.filter(u=>u.situacaoId===1);
+      const porUF={}; av.forEach(u=>{porUF[u.uf]=(porUF[u.uf]||0)+1;});
+      const topUF=Object.entries(porUF).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v])=>`${k}:${v}`).join(', ');
+      ctx+=`Unidades ativas:${dados.totalUnidades} | Em implantação:${dados.totalUnidadesImplantacao} | Funcionários:${dados.totalFuncionarios}\n`
+        +`Por estado: ${topUF}\n\n=== TODAS ATIVAS ===\n`
+        +av.map(u=>`- ${u.nomeFantasia} | ${u.uf} - ${u.cidade} | ${u.totalFuncionarios} func.`).join('\n');
+    }
+    const r=await fetch('/ia/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:ctx+'\n\nPergunta: '+q,ano:String(new Date().getFullYear())})});
+    const d=await r.json();
+    const txt=(d.resposta||d.erro||'Sem resposta').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    ma.innerHTML=txt;
+  } catch(e){ ma.innerHTML='❌ Erro: '+e.message; }
+  document.getElementById('iaBtn').disabled=false;
+  box.scrollTop=box.scrollHeight;
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('iaInput').addEventListener('keydown', e=>{ if(e.key==='Enter') perguntar(); });
+  carregar();
+});
+
+fetch('/sults/resumo').then(r => r.json()).then(function(s) {
+    var el = document.getElementById('sults-sub');
+    if (el) el.textContent = (s.totalUnidades||'—') + ' lojas · ' + (s.totalFuncionarios||'—') + ' func.';
+}).catch(function(){});
+</script>
+</body>
+</html>

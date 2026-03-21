@@ -1,0 +1,902 @@
+[
+  {
+    "id": 1,
+    "nome": "Ordem de Pagamento",
+    "url": "https://intra.dvsi.com.br/",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Internos",
+    "descricao": ""
+  },
+  {
+    "id": 2,
+    "nome": "Controle de Implantação",
+    "url": "https://controleimplantacao.dvsi.com.br/login",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Internos",
+    "descricao": ""
+  },
+  {
+    "id": 3,
+    "nome": "SISCAD",
+    "url": "https://dvsi.com.br/siscad/siscad/login.php",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Internos",
+    "descricao": ""
+  },
+  {
+    "id": 4,
+    "nome": "ERP",
+    "url": "https://dvsi.com.br/erp/index.php",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Internos",
+    "descricao": ""
+  },
+  {
+    "id": 14,
+    "nome": "ERP Associação",
+    "url": "https://associacao.dvsi.com.br/erp/index.php",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Internos",
+    "descricao": ""
+  },
+  {
+    "id": 15,
+    "nome": "Consultoria",
+    "url": "https://dvsi.com.br/consultoria/",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Internos",
+    "descricao": ""
+  },
+  {
+    "id": 5,
+    "nome": "TOTVS Chef Web",
+    "url": "https://chefwebcloud.chef.totvs.com.br/Login/?ReturnUrl=%2f",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Externos",
+    "descricao": ""
+  },
+  {
+    "id": 6,
+    "nome": "Google Admin — E-mails",
+    "url": "https://admin.google.com/",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Externos",
+    "descricao": ""
+  },
+  {
+    "id": 7,
+    "nome": "SULTS",
+    "url": "https://divinofogao.sults.com.br/solucoes",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Externos",
+    "descricao": ""
+  },
+  {
+    "id": 8,
+    "nome": "SULTS API Developers",
+    "url": "https://developers.sults.com.br/",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Externos",
+    "descricao": ""
+  },
+  {
+    "id": 16,
+    "nome": "ClickUp",
+    "url": "https://app.clickup.com/90133044789/v/l/li/901325450229",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Externos",
+    "descricao": ""
+  },
+  {
+    "id": 17,
+    "nome": "Kaspersky",
+    "url": "https://my.kaspersky.com/?returnUrl=%2FMyLicenses#/auth/layout/main",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Externos",
+    "descricao": ""
+  },
+  {
+    "id": 18,
+    "nome": "Linx — Área do Cliente",
+    "url": "https://www.linx.com.br/area-do-cliente-e-suporte/",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Externos",
+    "descricao": ""
+  },
+  {
+    "id": 19,
+    "nome": "Algar — Área do Cliente",
+    "url": "https://algar.com.br/AreaClienteCorporativo",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Externos",
+    "descricao": ""
+  },
+  {
+    "id": 9,
+    "nome": "Pix TEF — Controle de Implantação",
+    "url": "https://docs.google.com/spreadsheets/d/1-61H_O1t1Y9ulxbrakM3kmtfFb8JoIW9qOEmz_p2_Pg/edit?gid=244003848#gid=244003848",
+    "tipo": "planilha",
+    "criadoEm": "Invalid Date",
+    "grupo": "Planilhas Google",
+    "descricao": ""
+  },
+  {
+    "id": 20,
+    "nome": "Controle de Projetos",
+    "url": "https://docs.google.com/spreadsheets/d/1O0dCvn7vs6PevBIKhEJeerh0h2pLz0izZ9dZIGuZZVs/edit?gid=368710133#gid=368710133",
+    "tipo": "planilha",
+    "criadoEm": "Invalid Date",
+    "grupo": "Planilhas Google",
+    "descricao": ""
+  },
+  {
+    "id": 21,
+    "nome": "Controle de OP",
+    "url": "https://docs.google.com/spreadsheets/d/1uDne5khXSNf723joyiUWYQjAc7M5vZfekqlP-HYvV-k/edit?gid=238345264#gid=238345264",
+    "tipo": "planilha",
+    "criadoEm": "Invalid Date",
+    "grupo": "Planilhas Google",
+    "descricao": ""
+  },
+  {
+    "id": 22,
+    "nome": "Planilha de Migração",
+    "url": "https://docs.google.com/spreadsheets/d/1aqS-In7hzRP3jay6QbLOq5SLH9Q434vi5qZjOKo1tnI/edit?gid=1348630875#gid=1348630875",
+    "tipo": "planilha",
+    "criadoEm": "Invalid Date",
+    "grupo": "Planilhas Google",
+    "descricao": ""
+  },
+  {
+    "id": 32,
+    "nome": "Cotação TI",
+    "url": "https://docs.google.com/spreadsheets/d/14e70ULnkucdNDWl6oJlVozxwwEZ8oda_ev5Z_-38p-Q/edit?gid=0#gid=0",
+    "tipo": "planilha",
+    "criadoEm": "Invalid Date",
+    "grupo": "Planilhas Google",
+    "descricao": ""
+  },
+  {
+    "id": 10,
+    "nome": "Manual — Extração XML SAT e NFCE",
+    "url": "https://docs.google.com/document/d/1_ILg2QDP0KyPH8JRZJEjfpyHeZrIHBQ8UCzsQugwd5E/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 11,
+    "nome": "Manual — Cadastro de Novo Colaborador",
+    "url": "https://docs.google.com/document/d/1QdDC8fiQvdjIQDutfZgP1w82ZaGoeneeYUWtVPYT0gk/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 12,
+    "nome": "Manual — Isenção de Pagamentos fora do Prazo",
+    "url": "https://docs.google.com/document/d/1mELXPwHzH9XHrNHcCKU26C46h_XSEbsdVCdAu2JndQY/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 13,
+    "nome": "Manual — Desligamento de Colaborador",
+    "url": "https://docs.google.com/document/d/15ODyIlvdsVXc7bE1pXv0kG3qUe_X9UylKy3X2o0pvH0/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 23,
+    "nome": "Manual — Controle de Implantação",
+    "url": "https://docs.google.com/document/d/1G68caFP1KZibVp1b30FihiIWWoqzvgAWDmzwd3zotBI/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 24,
+    "nome": "Manual — OP Financeiro",
+    "url": "https://docs.google.com/document/d/1evLGJGXgCpAOwCJK36IAG1BmRA97oaRTsEBxBDPALVA/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 25,
+    "nome": "Manual — OP Controladoria",
+    "url": "https://docs.google.com/document/d/1DDGCAnhXs4NVkPH8DZBSPJSf0iA-Kw70CfDLCzyba-4/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 26,
+    "nome": "Manual — OP Acesso Gestor",
+    "url": "https://docs.google.com/document/d/1rR4phhDqkrswSE7jVXdcL-Ictn6l-54yvwe2B5vjfBE/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 27,
+    "nome": "Manual — Instalação Kaspersky",
+    "url": "https://docs.google.com/document/d/1ENUFupnOFJ_e6NJG6UGQ3ZEwGrnK2zYRWShIw9-itDg/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 28,
+    "nome": "Manual — Áudio e Vídeo USB-C",
+    "url": "https://docs.google.com/document/d/1paaQLOcHIi1-RYfP3N6bCoMZ3QkzuXuKzHwRNxPg5Tc/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 29,
+    "nome": "Pasta — Manuais de Arquitetura",
+    "url": "https://drive.google.com/drive/folders/1aSpIrBkVzupCHOLDR2oGYR0JKkS6AOgX",
+    "tipo": "drive",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 30,
+    "nome": "Manual — Cadastro Reconhecimento Facial",
+    "url": "https://docs.google.com/document/d/1VoyW5qW4XO4aR6tvRzossKN41q4uZ3jgJspc8RZnJ3w/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 31,
+    "nome": "Manual — Troca Regime Fiscal TOTVS",
+    "url": "https://docs.google.com/document/d/1Mni_AwXRFkMp5sAnqUt4P9JivGKTlT1sJ4Ig5Xe9GK4/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Manuais",
+    "descricao": ""
+  },
+  {
+    "id": 101,
+    "nome": "Cadastros de Produto",
+    "url": "https://docs.google.com/document/d/1dAu1HrnIG0VNV2Qdii6rR06LDdZKCzN0j2Efg8D3gtE/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 102,
+    "nome": "Cadastrar Operador Caixa PDV",
+    "url": "https://docs.google.com/document/d/14UJEANwPOmQgpzOvXS2rkd3eJnBkPzWNB7wh4EhyRj4/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 103,
+    "nome": "Criar Plano de Contas e Conta Depósito",
+    "url": "https://docs.google.com/document/d/1GmwPZdp8YZ7ZtaKcqsloYfwx6BHeh72TNSBulhArXrw/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 104,
+    "nome": "Criação de Produtos — Delivery",
+    "url": "https://drive.google.com/file/d/1fh8u2qz_5DrDcZjP-FLEUhZAo-_CWDbu/view?usp=drive_link",
+    "tipo": "drive",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 105,
+    "nome": "Entrada de Notas Compra",
+    "url": "https://docs.google.com/document/d/12V53rjuNHnKa1Nf7Ly4PcG0dvrumSLfITWzVeiewAZ8/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 106,
+    "nome": "Ocultar/Inativar produto cadastrado",
+    "url": "https://docs.google.com/document/d/1mI5CrOw__q8rlxeuKlltnGRGjS3apzDUIdMTI1c8Skw/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 107,
+    "nome": "Pegar Cupom",
+    "url": "https://docs.google.com/document/d/1IK9nutfj3rBw0ugPahqNnjOnt99guYp4uElhNUGIw-E/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Consulta",
+    "descricao": ""
+  },
+  {
+    "id": 108,
+    "nome": "Lista de Relatórios mais Utilizados Chefweb",
+    "url": "https://docs.google.com/document/d/1OsypWuwZzGfallaBj4R9YUxXNM7Mqi0kVn2IZJ0AF9s/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Consulta",
+    "descricao": ""
+  },
+  {
+    "id": 109,
+    "nome": "Valores de Produtos por Loja",
+    "url": "https://docs.google.com/document/d/1ReV_YG5oxVd8yXBaahuANTOPP5MLLZ5JWFL5g-9K2eg/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Consulta",
+    "descricao": ""
+  },
+  {
+    "id": 110,
+    "nome": "Dados Fiscais Produtos",
+    "url": "https://docs.google.com/document/d/1mCuMjhDVcplUNaMbu9hAM5H5ZYKQYkV2vCsSJ7196Go/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Fiscal",
+    "descricao": ""
+  },
+  {
+    "id": 111,
+    "nome": "Extração de XML — SAT e NFCe",
+    "url": "https://docs.google.com/document/d/1_ILg2QDP0KyPH8JRZJEjfpyHeZrIHBQ8UCzsQugwd5E/edit",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Fiscal",
+    "descricao": ""
+  },
+  {
+    "id": 112,
+    "nome": "Manutenção em Massa (dados fiscais)",
+    "url": "https://docs.google.com/document/d/1oBXHyl3e2I8eZXuDRCLRvzU6C8b-vakTzsNXShaCZrg/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Fiscal",
+    "descricao": ""
+  },
+  {
+    "id": 113,
+    "nome": "Troca de Regime Fiscal",
+    "url": "https://docs.google.com/document/d/1Mni_AwXRFkMp5sAnqUt4P9JivGKTlT1sJ4Ig5Xe9GK4/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Fiscal",
+    "descricao": ""
+  },
+  {
+    "id": 114,
+    "nome": "Relatório de Produtos x Dados Fiscais",
+    "url": "https://docs.google.com/document/d/1TavIwRo7QiOS3bKRxB1ezKSiEahnPjtdmU80PamqTn8/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Fiscal",
+    "descricao": ""
+  },
+  {
+    "id": 115,
+    "nome": "Retirar Opção à Vista e Parcelado do PDV",
+    "url": "https://docs.google.com/document/d/116R1lImqUHyWHtDP7CtdqauUpAjb8SCb3d2yVTp28WI/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Config PDV",
+    "descricao": ""
+  },
+  {
+    "id": 116,
+    "nome": "Implantação Lojas Novas — Totvs",
+    "url": "https://docs.google.com/document/d/1w7l-oledhgMoBbYEj2HOlhWTGv8s-AKfIRaJVaWpjkA/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Config PDV",
+    "descricao": ""
+  },
+  {
+    "id": 117,
+    "nome": "Contatos do Suporte Chef/Food e TEF",
+    "url": "https://docs.google.com/document/d/1t4072xywQc0ZH4zYpquGvGDApsu46x5DDsTP78OM9xU/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Informações",
+    "descricao": ""
+  },
+  {
+    "id": 118,
+    "nome": "Custo de Implantação Loja Nova",
+    "url": "https://docs.google.com/document/d/1Zo6SOtow65Lppy0m59x_Um8JHtenJ19J3_bqKYLKKUo/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Informações",
+    "descricao": ""
+  },
+  {
+    "id": 119,
+    "nome": "Custo implantação loja com troca de sistema",
+    "url": "https://docs.google.com/document/d/1AZDz9crlDaWRPP-TdcD05KLCYqDc0HcVE7lpoSZNTdY/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Totvs — Informações",
+    "descricao": ""
+  },
+  {
+    "id": 201,
+    "nome": "Cadastro de Produto",
+    "url": "https://drive.google.com/file/d/1dSTUePS0K6QWd0GuMTb_mk2Q60fF4Yzg/view?usp=drive_link",
+    "tipo": "drive",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 202,
+    "nome": "Cadastrar Usuário Degust Web",
+    "url": "https://docs.google.com/document/d/1uW8ca_ZyzfAyUyygdtdZwTBnoL2QvW70GJp9uCSyss0/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 203,
+    "nome": "Cadastrar Caixa PDV",
+    "url": "https://docs.google.com/document/d/1aBbxM-kTs9ThdnmGmK_A-wENAL7qqFlc05cj8qE9EOM/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 204,
+    "nome": "Criação de Ambiente Loja",
+    "url": "https://drive.google.com/file/d/1k6AWEvLs5toOjCo3KYmKOqKyFkN4na6E/view?usp=drive_link",
+    "tipo": "drive",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 205,
+    "nome": "Lista de Relatórios mais Utilizados",
+    "url": "https://docs.google.com/document/d/1Vtj5JjmIZj-n4NWofmQuHspP9bIgSmwk1EkKM3vwXbs/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Consulta",
+    "descricao": ""
+  },
+  {
+    "id": 206,
+    "nome": "Dados Fiscais Produtos",
+    "url": "https://drive.google.com/file/d/10_8UlZR0FL_cXs6lSKkCvit9FvHATkVY/view?usp=drive_link",
+    "tipo": "drive",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Fiscal",
+    "descricao": ""
+  },
+  {
+    "id": 207,
+    "nome": "Troca Regime Fiscal",
+    "url": "https://docs.google.com/document/d/19rjbN4WeoGaYm48-uSS4zdMqWMjyVEmJVrznNHQSxrw/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Fiscal",
+    "descricao": ""
+  },
+  {
+    "id": 208,
+    "nome": "Dados Fiscais Produtos — Loja",
+    "url": "https://docs.google.com/document/d/1uxbGyw8Y03A26pf35oJpIUjHCpIzC5UsYR0mMQh366M/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Fiscal",
+    "descricao": ""
+  },
+  {
+    "id": 209,
+    "nome": "Forçar Atualização PDV",
+    "url": "https://docs.google.com/document/d/1FxphTwgem_aJDnJC6IHlsJeKBotF8ZjMxTCxM1t_7Fk/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Config PDV",
+    "descricao": ""
+  },
+  {
+    "id": 210,
+    "nome": "Implantações — Novas Lojas Linx",
+    "url": "https://docs.google.com/document/d/1WtLXLS3Ql_LhM5fBWPgq2zEvTrjyq9jzaco8H6c76QI/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Config PDV",
+    "descricao": ""
+  },
+  {
+    "id": 211,
+    "nome": "Alteração de Preço — Frente de Caixa Linx",
+    "url": "https://docs.google.com/document/d/11_m6YghgeTGFvlv9838nt8flNntNleEk4pzDqQRQMPs/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Config PDV",
+    "descricao": ""
+  },
+  {
+    "id": 212,
+    "nome": "Contatos do Suporte Degust e TEF",
+    "url": "https://docs.google.com/document/d/1-ch2QriFECHm9KkCNwyAmim8402b0P5pECoupt1NjGM/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Informações",
+    "descricao": ""
+  },
+  {
+    "id": 213,
+    "nome": "Custo de implantação loja nova Linx",
+    "url": "https://docs.google.com/document/d/1vqjRgMi2cXlHuz_D02CErIKPX0GlRXyjOLgqiXpGiLI/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Linx — Informações",
+    "descricao": ""
+  },
+  {
+    "id": 301,
+    "nome": "Treinamento Geral Retaguarda",
+    "url": "https://drive.google.com/file/d/1GqUouERS_v3Rr8ES5Sef1xoHwgnkpvZ8/view?usp=drive_link",
+    "tipo": "drive",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Retaguarda",
+    "descricao": ""
+  },
+  {
+    "id": 302,
+    "nome": "Alterar Preço SW",
+    "url": "https://docs.google.com/document/d/1ejM1ofl5DLAiplBk6eLDvCHsSXIxrsgLackrXWscPw0/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Retaguarda",
+    "descricao": ""
+  },
+  {
+    "id": 303,
+    "nome": "Dados Fiscais SW",
+    "url": "https://docs.google.com/document/d/1rGuApebgdjKC11wH-yrp0mJijR7Fz1lgnYiE5fUEfgI/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Retaguarda",
+    "descricao": ""
+  },
+  {
+    "id": 304,
+    "nome": "Canais de Suporte",
+    "url": "https://docs.google.com/document/d/15Dnzflzi7jj4O5NGgSdnOxaBgtBSHmLARf5DV6f44EE/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Retaguarda",
+    "descricao": ""
+  },
+  {
+    "id": 305,
+    "nome": "Relatórios Mais úteis",
+    "url": "https://docs.google.com/document/d/1QUJj8S5owewWSYFfOo5JiCTYvw0kN2WaiyPo6i4nqE8/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Retaguarda",
+    "descricao": ""
+  },
+  {
+    "id": 306,
+    "nome": "Custo e contato comercial",
+    "url": "https://docs.google.com/document/d/1T-uCpcbJnXeZsktDA1S7kEnERczvbnTbsBh6NdcDTvc/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Retaguarda",
+    "descricao": ""
+  },
+  {
+    "id": 307,
+    "nome": "Verificar Fechamentos de Caixa",
+    "url": "https://docs.google.com/document/d/1lgR9-UVVUJC_dhL3lK93gtv_JXPoir5GUy1VViZfngM/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Retaguarda",
+    "descricao": ""
+  },
+  {
+    "id": 308,
+    "nome": "Contratar SWFast — Loja",
+    "url": "https://docs.google.com/document/d/18BPaUX5Fv3Fh8SoPi2GptsoLSb5YH2oUOyGjkOI74tk/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Retaguarda",
+    "descricao": ""
+  },
+  {
+    "id": 309,
+    "nome": "Preencher dados fiscais",
+    "url": "https://docs.google.com/document/d/1-Ii9HKB_Y0VHTCKGogKJdC69CiSz-vzoscSIeLWwx4w/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Retaguarda",
+    "descricao": ""
+  },
+  {
+    "id": 310,
+    "nome": "Cadastro de Grupos e Subgrupos SW",
+    "url": "https://docs.google.com/document/d/1FIYYBQ0icYjYsUUepNVPE0cFzj5BGUMIA1O8U0SXwXs/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Cadastros",
+    "descricao": ""
+  },
+  {
+    "id": 311,
+    "nome": "Implantações — Novas Lojas SW",
+    "url": "https://docs.google.com/document/d/1rdZa9aBnnCGxGJBsfOWEu3aNXiQUxHL7xx8NXen1HSw/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Config PDV",
+    "descricao": ""
+  },
+  {
+    "id": 312,
+    "nome": "Correção Tela de caixa não abre completamente",
+    "url": "https://docs.google.com/document/d/1vTeU9sQVNynnNqeKJB_yj2-SAn3EwoLXtANmv219DlQ/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "SwFast — Config PDV",
+    "descricao": ""
+  },
+  {
+    "id": 401,
+    "nome": "Liberar Vendas paradas no Sitef",
+    "url": "https://docs.google.com/document/d/1t7mz3SsfAqildUFiA93lJIv0Uklo_1V4sqp654P-EyQ/edit?tab=t.0",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "TEF",
+    "descricao": ""
+  },
+  {
+    "id": 501,
+    "nome": "Ativando Office e Windows",
+    "url": "https://docs.google.com/document/d/1kH3hO-3NiByowWE0Q9AGUgR2a-bzD93-OFIq7SNh93Q/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Manutenção",
+    "descricao": ""
+  },
+  {
+    "id": 502,
+    "nome": "Instalar Impressora",
+    "url": "https://docs.google.com/document/d/12e1K6IP73WSlZazWEHTGx-uC5ARPQ-wx4Eel7cWt7Q0/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Manutenção",
+    "descricao": ""
+  },
+  {
+    "id": 503,
+    "nome": "Arquivos Usados Com Frequência",
+    "url": "https://docs.google.com/document/d/1Idvli-79KvXhgN6cbdHAB7qZhjAZvnEnWxWlHzkjpAU/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Manutenção",
+    "descricao": ""
+  },
+  {
+    "id": 504,
+    "nome": "Instalação Certificado A1",
+    "url": "https://docs.google.com/document/d/1F2NiqFP-mN1WJhIk3TJYLGmlvsxsZ4_HF1UNpbjIyl8/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Manutenção",
+    "descricao": ""
+  },
+  {
+    "id": 505,
+    "nome": "Manual — Cadastro de Biometria",
+    "url": "https://docs.google.com/document/d/1VoyW5qW4XO4aR6tvRzossKN41q4uZ3jgJspc8RZnJ3w/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 506,
+    "nome": "Manual — Cadastro Key Access (Catracas QR Code)",
+    "url": "https://docs.google.com/document/d/1o4w_n_t_3iWEHP7WliLNXUcLeLbbygkd0SgLrDC9eFQ/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 507,
+    "nome": "Comodatos — notebooks e celulares",
+    "url": "https://docs.google.com/document/d/1A_Drc1h9cobPFsfo_tNVHWFIiS2vwf_0H0Rcvjgwwa4/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 508,
+    "nome": "Transferir conteúdo de conta Google",
+    "url": "https://docs.google.com/document/d/1mGi97KrV640G9F-Lkzx56HutqjWuyjNq-7zRCc_cjsg/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 509,
+    "nome": "Novo colaborador — Cadastro Google e Sults",
+    "url": "https://docs.google.com/document/d/1xA-SWOpll6CE6ttBX-YqK-XeCSj0nhbiuPusvwtMbsU/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Cadastro",
+    "descricao": ""
+  },
+  {
+    "id": 510,
+    "nome": "Faturamento Mensal ★",
+    "url": "https://docs.google.com/document/d/1naeFKmP_vF1uA99qn_vIKncj3Vu1_MvaSGThBqkO9gU/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Rotinas",
+    "descricao": ""
+  },
+  {
+    "id": 511,
+    "nome": "Relatório de Lojas x Sistemas (envio mensal)",
+    "url": "https://dvsi.com.br/siscad/siscad/Presentation/teste.php",
+    "tipo": "sistema",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Rotinas",
+    "descricao": ""
+  },
+  {
+    "id": 512,
+    "nome": "Empresas e informações de Links de Telecom ★",
+    "url": "https://docs.google.com/document/d/1lc44nIinMZpGTJRhRoYuh1-yrhLYoOzBHje5OWvsAnE/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Infra",
+    "descricao": ""
+  },
+  {
+    "id": 513,
+    "nome": "Prestadores de Serviço Central e Loja ★",
+    "url": "https://docs.google.com/document/d/1Ow_2RQg62BUeqKq0FqbAVrcmJO_O5KRsmauxqFrUPXo/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Infra",
+    "descricao": ""
+  },
+  {
+    "id": 514,
+    "nome": "Acesso às Câmeras",
+    "url": "https://docs.google.com/spreadsheets/d/14qxlpmSrFi6HHhW_-kMMZNC2JefX44I6g8j572gwpHI/edit?usp=sharing",
+    "tipo": "planilha",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Infra",
+    "descricao": ""
+  },
+  {
+    "id": 515,
+    "nome": "Lista de Comodatos Colaboradores e Externos",
+    "url": "https://docs.google.com/spreadsheets/d/1pbJCNgIsUAobTE2lmOdHaqjmXHxfirJw/edit?usp=sharing",
+    "tipo": "planilha",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Infra",
+    "descricao": ""
+  },
+  {
+    "id": 516,
+    "nome": "Lista de Ramais Digitais 11-3811-1560",
+    "url": "https://docs.google.com/spreadsheets/d/1kxHm3bU4MJFUm9O6DX0ljRxo6Dxy8oYEian1izYudNA/edit?usp=sharing",
+    "tipo": "planilha",
+    "criadoEm": "Invalid Date",
+    "grupo": "Central — Infra",
+    "descricao": ""
+  },
+  {
+    "id": 601,
+    "nome": "Lista de Equipamentos Totvs e Linx",
+    "url": "https://docs.google.com/document/d/1EMe3uSSFKQwYx4itKxhTIyGkX8gCVmyreK_o-EVFxAw/edit?usp=sharing",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Implantações — Infraestrutura",
+    "descricao": ""
+  },
+  {
+    "id": 602,
+    "nome": "CheckList Implantação — TI",
+    "url": "https://docs.google.com/document/d/1_mZQ6vqHpotbKyr0Ftwh8OwCq3afTGpiWG3lwQ4Eo4Q/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Implantações — Checklists",
+    "descricao": ""
+  },
+  {
+    "id": 603,
+    "nome": "Checklist Implantação — Loja",
+    "url": "https://docs.google.com/document/d/1ihELLDk8VGyIcSEPjd84_cdq3KYHf4chW212uAK6i0M/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Implantações — Checklists",
+    "descricao": ""
+  },
+  {
+    "id": 604,
+    "nome": "Liberar Dossiê de Vendas Lojas Novas",
+    "url": "https://docs.google.com/document/d/1iYCjQQKTm0h-4Uj_J8VdW2ppRPminDQMPY7IX7NFYuw/edit?usp=drive_link",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "Implantações — Relatórios",
+    "descricao": ""
+  },
+  {
+    "id": 701,
+    "nome": "Entrada de Notas — Correção de vínculo de produtos",
+    "url": "https://drive.google.com/file/d/1k_crVhoy-Hq0GzTW7bXqt513iAlMCkSD/view?usp=sharing",
+    "tipo": "drive",
+    "criadoEm": "Invalid Date",
+    "grupo": "ERP — Financeiro",
+    "descricao": ""
+  },
+  {
+    "id": 702,
+    "nome": "Lançamento de Contagem de Cofre — Perfil Franqueado",
+    "url": "https://docs.google.com/document/d/1Me3gnPvdA2P7Nj7-WLnOpzgHQ6nb1-",
+    "tipo": "manual",
+    "criadoEm": "Invalid Date",
+    "grupo": "ERP — Financeiro",
+    "descricao": ""
+  },
+  {
+    "id": 703,
+    "nome": "Dash Solvis",
+    "url": "https://sistema.solvis.net.br/",
+    "tipo": "link",
+    "criadoEm": "Invalid Date",
+    "grupo": "Sistemas Internos",
+    "descricao": ""
+  }
+]

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sem Acesso — Divino Fogão</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d0d0d;
+    color: #f0ece4;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(224,90,43,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .box {
+    max-width: 420px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .code {
+    font-family: 'Syne', sans-serif;
+    font-size: 6rem;
+    font-weight: 800;
+    color: #e05a2b;
+    line-height: 1;
+    margin-bottom: 8px;
+    opacity: 0.9;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 10px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .btn-primary {
+    background: #e8b84b;
+    color: #0d0d0d;
+    font-weight: 500;
+  }
+  .btn-primary:hover { background: #f0c960; }
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid #2a2a2a;
+    color: #666;
+  }
+  .btn-secondary:hover { border-color: #666; color: #f0ece4; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="code">403</div>
+  <h1>Sem permissão de acesso</h1>
+  <p>Você não tem acesso a este módulo.<br>Entre em contato com o administrador para solicitar acesso.</p>
+  <div class="actions">
+    <a href="/" class="btn btn-primary">Voltar ao início</a>
+    <a href="/logout" class="btn btn-secondary">Trocar conta</a>
+  </div>
+</div>
+</body>
+</html>

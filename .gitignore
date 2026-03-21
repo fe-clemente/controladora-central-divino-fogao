@@ -1,0 +1,12 @@
+# Ignorar chaves sensíveis
+minha-chave.json
+*key*.json
+*secret*.json
+*credentials*.json
+
+# Ambiente
+.env
+.env.*
+
+# Node
+node_modules/

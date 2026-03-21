@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard T.I. — Divino Fogão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --red:#c8102e; --red-pale:#fff0f2;
+        --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+        --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+        --green:#16a34a; --green-pale:#f0fdf4;
+        --yellow:#d97706; --yellow-pale:#fffbeb;
+        --orange:#ea580c; --orange-pale:#fff7ed;
+        --ti:#0369a1; --ti-light:#0ea5e9; --ti-pale:#f0f9ff;
+        --ti2:#7c3aed; --ti2-pale:#f5f3ff;
+        --shadow:0 2px 12px rgba(0,0,0,.08);
+        --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+    .logo{padding:10px 0;}.logo img{height:48px;display:block;}
+    .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
+    .hd{width:1px;height:32px;background:var(--border);}
+    .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
+    nav{display:flex;gap:2px;margin-left:auto;}
+    .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+    .nav-btn:hover{color:var(--text);background:var(--bg3);}
+    .nav-btn.active{color:var(--ti);border-bottom-color:var(--ti);background:var(--ti-pale);}
+
+    #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+    .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+    .sdot.ready{background:var(--green);animation:none;}
+    .sdot.error{background:var(--red);animation:none;}
+    .sdot.syncing{background:var(--ti-light);animation:pulse .8s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+    main{max-width:1260px;margin:0 auto;padding:28px 24px;}
+    .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
+    .page-sub{font-size:13px;color:var(--muted);margin-bottom:24px;}
+
+    .hcard{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:all .2s;margin-bottom:16px;text-decoration:none;display:block;}
+    .hcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+    .hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:16px 16px 0 0;}
+    .hcard.c-ti::before    {background:linear-gradient(90deg,var(--ti),var(--ti-light));} .hcard.c-ti:hover{border-color:var(--ti);}
+    .hcard.c-orange::before{background:linear-gradient(90deg,var(--orange),#fb923c);}     .hcard.c-orange:hover{border-color:var(--orange);}
+    .hcard.c-green::before {background:linear-gradient(90deg,var(--green),#4ade80);}      .hcard.c-green:hover{border-color:var(--green);}
+    .hcard.c-purple::before{background:linear-gradient(90deg,var(--ti2),#a78bfa);}        .hcard.c-purple:hover{border-color:var(--ti2);}
+    .hcard.c-yellow::before{background:linear-gradient(90deg,var(--yellow),#fbbf24);}     .hcard.c-yellow:hover{border-color:var(--yellow);}
+
+    .hcard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;}
+    .hcard-top-left{display:flex;align-items:flex-start;gap:12px;}
+    .hcard-icon{font-size:26px;flex-shrink:0;margin-top:2px;}
+    .hcard-name{font-size:14px;font-weight:800;margin-bottom:3px;}
+    .hcard-desc{font-size:11px;color:var(--muted);font-weight:600;}
+    .hcard-top-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+    .hcard-link{font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;}
+    .hcard-link.c-ti{color:var(--ti);} .hcard-link.c-orange{color:var(--orange);} .hcard-link.c-green{color:var(--green);} .hcard-link.c-purple{color:var(--ti2);} .hcard-link.c-yellow{color:var(--yellow);}
+
+    .year-tabs{display:flex;gap:4px;align-items:center;flex-wrap:wrap;}
+    .yt{padding:4px 11px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+    .yt.active{color:#fff;border-color:transparent;}
+    .c-green .yt.active{background:var(--green);}
+
+    .ativos-abas-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+    @media(max-width:700px){.ativos-abas-grid{grid-template-columns:repeat(2,1fr);}}
+    .aba-card{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:border-color .15s;}
+    .aba-card:hover{border-color:var(--ti);}
+    .aba-card-icon{font-size:22px;flex-shrink:0;}
+    .aba-card-info{display:flex;flex-direction:column;gap:2px;}
+    .aba-card-val{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
+    .aba-card-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+    .aba-card.c-ativos     {border-color:rgba(3,105,161,.25);}  .aba-card.c-ativos     .aba-card-val{color:var(--ti);}
+    .aba-card.c-distratados{border-color:rgba(234,88,12,.25);}  .aba-card.c-distratados .aba-card-val{color:var(--orange);}
+    .aba-card.c-desligados {border-color:rgba(100,116,139,.25);}.aba-card.c-desligados .aba-card-val{color:#64748b;}
+    .aba-card.c-ti-aba     {border-color:rgba(124,58,237,.25);}  .aba-card.c-ti-aba    .aba-card-val{color:var(--ti2);}
+
+    .hcard-prog{background:var(--bg3);border-radius:10px;padding:12px 14px;}
+    .hcard-prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+    .hcard-prog-label{font-size:12px;font-weight:700;}
+    .hcard-prog-pct{font-size:12px;font-weight:900;font-family:'JetBrains Mono',monospace;}
+    .hcard-prog-track{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+    .hcard-prog-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(.23,1,.32,1);}
+    .hcard-prog-sub{font-size:11px;color:var(--muted);margin-top:5px;}
+
+    .hcard-metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:16px;}
+    .hm{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center;}
+    .hm-val{font-size:24px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px;}
+    .hm-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);line-height:1.3;}
+    .hm.green{border-color:rgba(22,163,74,.3);}  .hm.orange{border-color:rgba(234,88,12,.3);}
+    .hm.yellow{border-color:rgba(217,119,6,.3);} .hm.red{border-color:rgba(200,16,46,.3);}
+    .hm.ti{border-color:rgba(3,105,161,.3);}     .hm.purple{border-color:rgba(124,58,237,.3);}
+    .hm.muted{border-color:rgba(139,146,184,.2);}
+
+    .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    .bar-label{font-size:12px;font-weight:600;color:var(--text);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .bar-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+    .bar-fill{height:100%;border-radius:4px;transition:width .8s ease;}
+    .bar-count{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);width:28px;text-align:right;flex-shrink:0;}
+
+    .hcard-2col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+    @media(max-width:700px){.hcard-2col{grid-template-columns:1fr;}}
+    .hcard-2col-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;}
+
+    .links-tipos-grid{display:flex;flex-wrap:wrap;gap:10px;}
+    .link-tipo-pill{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;flex:1;min-width:110px;transition:border-color .15s;}
+    .link-tipo-pill:hover{border-color:var(--ti2);}
+    .link-tipo-icon{font-size:18px;flex-shrink:0;}
+    .link-tipo-info{display:flex;flex-direction:column;gap:1px;}
+    .link-tipo-count{font-size:20px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ti2);line-height:1;}
+    .link-tipo-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+
+    /* ── CARD GESTÃO ATIVOS ── */
+    .ga-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px;}
+    .ga-metric{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+    .ga-metric-val{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px;}
+    .ga-metric-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+    .ga-prog-wrap{background:var(--bg3);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+    .ga-prog-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+    .ga-prog-title{font-size:13px;font-weight:800;}
+    .ga-prog-nums{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--muted);}
+    .ga-prog-track{height:12px;background:var(--bg);border-radius:6px;overflow:hidden;border:1px solid var(--border);}
+    .ga-prog-fill{height:100%;border-radius:6px;transition:width 1.4s cubic-bezier(.23,1,.32,1);}
+    .ga-prog-sub{font-size:11px;color:var(--muted);margin-top:6px;}
+    .ga-valor-row{display:flex;gap:10px;flex-wrap:wrap;}
+    .ga-valor-pill{flex:1;min-width:140px;background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;}
+    .ga-valor-pill-val{font-size:20px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:3px;}
+    .ga-valor-pill-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+
+    .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+    .btn-ti{background:var(--ti);color:#fff;box-shadow:0 2px 8px rgba(3,105,161,.3);}
+    .btn-ti:hover{background:#075985;}
+    .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+    .spinner.dark{border:2px solid var(--border);border-top-color:var(--ti);}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
+    .toast.show{display:block;animation:fadeUp .3s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+    .loading-msg{text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .sem-dados{color:var(--muted);font-size:12px;text-align:center;padding:16px;}
+
+    #iaTiWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+    #iaTiToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--ti),#075985);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(3,105,161,0.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all 0.25s;position:relative;color:#fff;}
+    #iaTiToggle:hover{transform:scale(1.08);}
+    #iaTiToggle.aberto{background:linear-gradient(135deg,#444,#1a1a1a);}
+    .iati-unread{position:absolute;top:-3px;right:-3px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid #fff;line-height:1;}
+    #iaTiJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:400px;max-height:660px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;animation:iaTiSlideUp 0.25s ease;}
+    #iaTiJanela.aberto{display:flex;}
+    @keyframes iaTiSlideUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+    .iati-topo{background:linear-gradient(135deg,var(--ti),#075985);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+    .iati-topo-esq{display:flex;align-items:center;gap:10px;}
+    .iati-topo-titulo{font-size:14px;font-weight:800;}
+    .iati-topo-sub{font-size:11px;opacity:0.8;margin-top:1px;}
+    .iati-fechar{background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+    .iati-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+    .iati-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s;white-space:nowrap;}
+    .iati-sug:hover{border-color:var(--ti);color:var(--ti);background:var(--ti-pale);}
+    .iati-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:220px;max-height:380px;}
+    .iati-msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
+    .iati-msg.user{background:var(--ti);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+    .iati-msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
+    .iati-msg.ai.carregando{color:var(--muted);font-style:italic;}
+    .iati-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+    .iati-input{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;}
+    .iati-input:focus{border-color:var(--ti);}
+    .iati-input::placeholder{color:var(--muted);font-weight:400;}
+    .iati-enviar{background:var(--ti);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
+    .iati-enviar:disabled{opacity:0.5;cursor:not-allowed;}
+    @media(max-width:768px){#iaTiJanela{width:calc(100vw - 32px);}#iaTiWidget{right:16px;bottom:16px;}}
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <span class="logo-fb">🍽️</span>
+    </div>
+    <div class="hd"></div>
+    <div class="h-title">Central de T.I.</div>
+<nav>
+    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+    <button class="nav-btn active" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+</nav>
+</header>
+
+<div id="statusBar">
+    <div class="sdot" id="sdot"></div>
+    <span id="statusText">Carregando...</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span id="lastSync" style="font-size:11px;color:var(--muted)"></span>
+        <button class="btn btn-ti" id="btnSync" onclick="sincronizar()">🔄 Sincronizar</button>
+    </span>
+</div>
+
+<main>
+    <div class="page-title">🖥️ Central de T.I.</div>
+    <div class="page-sub" id="pageSub">Carregando dados do setor de tecnologia...</div>
+
+    <!-- ══ 1. CARD PROJETOS ══ -->
+    <a href="/projetos.html" class="hcard c-purple" id="cardProjetos">
+        <div class="hcard-top">
+            <div class="hcard-top-left">
+                <div class="hcard-icon">📋</div>
+                <div>
+                    <div class="hcard-name">Projetos T.I.</div>
+                    <div class="hcard-desc">Acompanhamento de projetos e entregas do setor</div>
+                </div>
+            </div>
+            <div class="hcard-top-right">
+                <span class="hcard-link c-purple">Ver detalhes →</span>
+            </div>
+        </div>
+        <div class="hcard-metrics" id="projMetrics">
+            <div class="loading-msg"><div class="spinner dark"></div></div>
+        </div>
+        <div class="hcard-prog">
+            <div class="hcard-prog-header">
+                <span class="hcard-prog-label">Projetos concluídos</span>
+                <span class="hcard-prog-pct" style="color:var(--ti2)" id="proj-pct">0%</span>
+            </div>
+            <div class="hcard-prog-track">
+                <div class="hcard-prog-fill" id="proj-bar" style="width:0%;background:linear-gradient(90deg,var(--ti2),#a78bfa)"></div>
+            </div>
+            <div class="hcard-prog-sub" id="proj-prog-sub"></div>
+        </div>
+
+        <!-- Lista expansível de projetos -->
+        <div style="margin-top:10px">
+            <button onclick="event.preventDefault();const b=$('projListaBox');const a=$('projArrow');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'▼':'▲'"
+                style="background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;color:var(--muted);display:flex;align-items:center;gap:5px;padding:0;width:100%">
+                <span id="projArrow">▼</span> Ver projetos detalhados
+            </button>
+            <div id="projListaBox" style="display:none;margin-top:10px">
+                <div style="color:var(--muted);font-size:12px;text-align:center;padding:12px">Carregando...</div>
+            </div>
+        </div>
+    </a>
+
+    <!-- ══ 2. CARD GESTÃO DE ATIVOS (NOVO) ══ -->
+    <a href="/controle-equipamentos.html" class="hcard c-yellow" id="cardGestaoAtivos">
+        <div class="hcard-top">
+            <div class="hcard-top-left">
+                <div class="hcard-icon">📦</div>
+                <div>
+                    <div class="hcard-name">Gestão de Ativos — Colaboradores</div>
+                    <div class="hcard-desc">Controle de equipamentos por funcionário · progresso de cadastro · patrimônio</div>
+                </div>
+            </div>
+            <div class="hcard-top-right">
+                <span class="hcard-link c-yellow">Ver detalhes →</span>
+            </div>
+        </div>
+        <div id="gaConteudo">
+            <div class="loading-msg"><div class="spinner dark"></div> Carregando...</div>
+        </div>
+    </a>
+
+    <!-- ══ 3. CARD ATIVOS (legado) ══ -->
+    <a href="/ativos.html" class="hcard c-ti" id="cardAtivos">
+        <div class="hcard-top">
+            <div class="hcard-top-left">
+                <div class="hcard-icon">🖥️</div>
+                <div>
+                    <div class="hcard-name">Controle de Ativos</div>
+                    <div class="hcard-desc">Comodatos, desligados e patrimônio T.I. — todas as abas</div>
+                </div>
+            </div>
+            <div class="hcard-top-right">
+                <span class="hcard-link c-ti">Ver detalhes →</span>
+            </div>
+        </div>
+        <div class="ativos-abas-grid" id="ativosAbas">
+            <div class="loading-msg" style="grid-column:1/-1"><div class="spinner dark"></div></div>
+        </div>
+        <div class="hcard-prog">
+            <div class="hcard-prog-header">
+                <span class="hcard-prog-label">T.I em operação normal (Bom / Novo)</span>
+                <span class="hcard-prog-pct" style="color:var(--green)" id="ativ-pct-ok">0%</span>
+            </div>
+            <div class="hcard-prog-track">
+                <div class="hcard-prog-fill" id="ativ-bar-ok" style="width:0%;background:linear-gradient(90deg,var(--ti2),#a78bfa)"></div>
+            </div>
+            <div class="hcard-prog-sub" id="ativ-prog-sub">—</div>
+        </div>
+    </a>
+
+    <!-- ══ 4. CARD MIGRAÇÃO ══ -->
+    <a href="/migracao.html" class="hcard c-orange" id="cardMigracao">
+        <div class="hcard-top">
+            <div class="hcard-top-left">
+                <div class="hcard-icon">🔄</div>
+                <div>
+                    <div class="hcard-name">Migração de Sistema — Lojas &amp; SoftHouses</div>
+                    <div class="hcard-desc">Progresso de migração das lojas para o SW · dados SULTS + planilha</div>
+                </div>
+            </div>
+            <div class="hcard-top-right">
+                <span class="hcard-link c-orange">Ver detalhes →</span>
+            </div>
+        </div>
+        <div class="hcard-metrics" id="migMetrics">
+            <div class="loading-msg"><div class="spinner dark"></div></div>
+        </div>
+        <div class="hcard-prog">
+            <div class="hcard-prog-header">
+                <span class="hcard-prog-label">Lojas já no SW</span>
+                <span class="hcard-prog-pct" style="color:var(--green)" id="mig-pct">0%</span>
+            </div>
+            <div class="hcard-prog-track">
+                <div class="hcard-prog-fill" id="mig-bar" style="width:0%;background:linear-gradient(90deg,var(--green),#4ade80)"></div>
+            </div>
+            <div class="hcard-prog-sub" id="mig-prog-sub"></div>
+        </div>
+    </a>
+
+    <!-- ══ 5. CARD CHAMADOS ══ -->
+    <a href="/chamados.html" class="hcard c-green" id="cardChamados">
+        <div class="hcard-top">
+            <div class="hcard-top-left">
+                <div class="hcard-icon">📞</div>
+                <div>
+                    <div class="hcard-name">Chamados T.I.</div>
+                    <div class="hcard-desc">Tecnologia &amp; Suporte — SULTS</div>
+                </div>
+            </div>
+            <div class="hcard-top-right">
+                <div class="year-tabs" id="chamYearTabs" onclick="event.preventDefault()">
+                    <button class="yt active" data-ano="todos" onclick="setAno('todos',this)">Todos</button>
+                </div>
+                <span class="hcard-link c-green">Ver detalhes →</span>
+            </div>
+        </div>
+        <div class="hcard-metrics" id="chamMetrics">
+            <div class="loading-msg"><div class="spinner dark"></div></div>
+        </div>
+        <div class="hcard-2col" id="chamGraficos" style="display:none">
+            <div><div class="hcard-2col-title">Por Tipo</div><div id="chamBTipo"></div></div>
+            <div><div class="hcard-2col-title">Por Responsável</div><div id="chamBResp"></div></div>
+        </div>
+        <div id="chamSemDados" class="sem-dados" style="display:none">Sem dados — clique em <strong>Sincronizar</strong></div>
+    </a>
+
+    <!-- ══ 6. CARD PIX TEF ══ -->
+    <a href="/pix.html" class="hcard c-green" id="cardPix">
+        <div class="hcard-top">
+            <div class="hcard-top-left">
+                <div class="hcard-icon">💳</div>
+                <div>
+                    <div class="hcard-name">Implantação Pix TEF</div>
+                    <div class="hcard-desc">Controle de implantação do Pix TEF por loja</div>
+                </div>
+            </div>
+            <div class="hcard-top-right">
+                <span class="hcard-link c-green">Ver detalhes →</span>
+            </div>
+        </div>
+        <div class="hcard-metrics" id="pixMetrics">
+            <div class="loading-msg"><div class="spinner dark"></div></div>
+        </div>
+        <div class="hcard-prog">
+            <div class="hcard-prog-header">
+                <span class="hcard-prog-label">Lojas com Pix TEF concluído</span>
+                <span class="hcard-prog-pct" style="color:var(--green)" id="pix-pct">0%</span>
+            </div>
+            <div class="hcard-prog-track">
+                <div class="hcard-prog-fill" id="pix-bar" style="width:0%;background:linear-gradient(90deg,var(--green),#4ade80)"></div>
+            </div>
+            <div class="hcard-prog-sub" id="pix-prog-sub"></div>
+        </div>
+    </a>
+
+    <!-- ══ 7. CARD LINKS ══ -->
+    <a href="/linkexterno.html" class="hcard c-purple" id="cardLinks">
+        <div class="hcard-top">
+            <div class="hcard-top-left">
+                <div class="hcard-icon">🔗</div>
+                <div>
+                    <div class="hcard-name">Links &amp; Recursos</div>
+                    <div class="hcard-desc">Sistemas, planilhas, manuais e portais externos</div>
+                </div>
+            </div>
+            <div class="hcard-top-right">
+                <span class="hcard-link c-purple">Ver todos →</span>
+            </div>
+        </div>
+        <div id="linksMetrics">
+            <div class="loading-msg"><div class="spinner dark"></div></div>
+        </div>
+    </a>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div id="iaTiWidget">
+    <div id="iaTiJanela">
+        <div class="iati-topo">
+            <div class="iati-topo-esq">
+                <span style="font-size:24px;">🤖</span>
+                <div>
+                    <div class="iati-topo-titulo">IA Análise — T.I.</div>
+                    <div class="iati-topo-sub">Converse sobre ativos, chamados e migração</div>
+                </div>
+            </div>
+            <button class="iati-fechar" onclick="toggleIATi()">✕</button>
+        </div>
+        <div class="iati-sugs">
+            <button class="iati-sug" onclick="perguntarIATi('Qual o status geral dos equipamentos T.I.?')">🖥️ Status</button>
+            <button class="iati-sug" onclick="perguntarIATi('Quantos chamados estão abertos?')">📞 Chamados</button>
+            <button class="iati-sug" onclick="perguntarIATi('Como está o progresso da migração?')">🔄 Migração</button>
+            <button class="iati-sug" onclick="perguntarIATi('Qual o status do Pix TEF?')">💳 Pix TEF</button>
+            <button class="iati-sug" onclick="perguntarIATi('Faça um resumo executivo do setor de T.I.')">📋 Resumo</button>
+            <button class="iati-sug" onclick="perguntarIATi('Quais equipamentos estão em mal estado?')">⚠️ Alertas</button>
+        </div>
+        <div class="iati-msgs" id="iaTiMsgs">
+            <div class="iati-msg ai">
+                👋 Olá! Sou a IA da Central T.I. do Divino Fogão.<br><br>
+                <strong>Posso ajudar com:</strong><br>
+                <span style="color:var(--ti);cursor:pointer" onclick="document.getElementById('inputIATi').value=this.innerText;document.getElementById('inputIATi').focus()">→ Qual o status dos equipamentos T.I.?</span><br>
+                <span style="color:var(--ti);cursor:pointer" onclick="document.getElementById('inputIATi').value=this.innerText;document.getElementById('inputIATi').focus()">→ Quantas lojas já migraram para o SW?</span><br>
+                <span style="color:var(--ti);cursor:pointer" onclick="document.getElementById('inputIATi').value=this.innerText;document.getElementById('inputIATi').focus()">→ Qual a taxa de resolução dos chamados?</span><br>
+                <span style="color:var(--ti);cursor:pointer" onclick="document.getElementById('inputIATi').value=this.innerText;document.getElementById('inputIATi').focus()">→ Resumo executivo do setor de T.I.</span><br><br>
+                <span style="font-size:11px;color:var(--muted)">💡 Clique em qualquer exemplo para testar.</span>
+            </div>
+        </div>
+        <div class="iati-rodape">
+            <input type="text" class="iati-input" id="inputIATi" placeholder="Ex: Como está a migração das lojas?">
+            <button class="iati-enviar" id="iaTiBtnEnviar" onclick="perguntarIATi()">➤</button>
+        </div>
+    </div>
+    <button id="iaTiToggle" onclick="toggleIATi()" title="IA Análise T.I.">
+        🤖
+        <div class="iati-unread" id="iaTiUnread">1</div>
+    </button>
+</div>
+
+<script>
+const G = { cham: { todos: null, anoSel: 'todos' } };
+window._tiDados = {};
+
+const CORES = ['var(--ti)','var(--ti2)','var(--orange)','var(--green)','var(--yellow)','#0891b2','#db2777','#65a30d'];
+const TIPO_CFG = {
+    sistema:     { icon:'⚙️',  label:'Sistemas' },
+    planilha:    { icon:'📊',  label:'Planilhas' },
+    manual:      { icon:'📘',  label:'Manuais' },
+    apresentacao:{ icon:'📑',  label:'Apresentações' },
+    formulario:  { icon:'📋',  label:'Formulários' },
+    drive:       { icon:'📁',  label:'Drive' },
+    link:        { icon:'🔗',  label:'Links' },
+};
+
+const toast = (msg, ms=2500) => { const el=$('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),ms); };
+const setStatus = (cls, msg) => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
+const $ = id => document.getElementById(id);
+const set = (id, v) => { const el=$(id); if(el) el.textContent=(v??'—'); };
+const pct = (v,t) => (!t?0:Math.min(100,+((v/t)*100).toFixed(1)));
+
+function miniCards(containerId, cards) {
+    const el=$(containerId); if(!el) return;
+    el.innerHTML = cards.map(c=>`<div class="hm ${c.cls||''}"><div class="hm-val" style="color:${c.cor||'var(--text)'}">${c.val??'—'}</div><div class="hm-lbl">${c.lbl}</div></div>`).join('');
+}
+
+function renderBarras(containerId, items, kL, kV, cores) {
+    const el=$(containerId); if(!el) return;
+    if(!items||!items.length){el.innerHTML='<div class="sem-dados">Sem dados</div>';return;}
+    const max=items[0][kV]||1;
+    el.innerHTML=items.slice(0,6).map((item,i)=>`<div class="bar-row"><div class="bar-label" title="${item[kL]}">${item[kL]}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(item[kV]/max*100)}%;background:${(cores||CORES)[i%CORES.length]}"></div></div><div class="bar-count">${item[kV]}</div></div>`).join('');
+}
+
+function buildYearTabs(anos) {
+    const c=$('chamYearTabs'); if(!c) return;
+    [...c.querySelectorAll('.yt:not([data-ano="todos"])')].forEach(b=>b.remove());
+    anos.sort().forEach(ano=>{
+        const btn=document.createElement('button'); btn.className='yt'; btn.dataset.ano=String(ano); btn.textContent=String(ano);
+        btn.onclick=function(e){e.preventDefault();setAno(String(ano),this);};
+        c.insertBefore(btn,c.lastElementChild);
+    });
+}
+function setAno(ano, btnEl) {
+    G.cham.anoSel=ano;
+    $('chamYearTabs').querySelectorAll('.yt').forEach(b=>b.classList.remove('active'));
+    btnEl.classList.add('active');
+    renderChamados(ano);
+}
+
+// ── Card Projetos ──────────────────────────────────────────
+async function carregarProjetos() {
+    try {
+        const r = await fetch('/projetos/dados');
+        const d = await r.json();
+        if (!d.ok || !d.projetos?.length) {
+            $('projMetrics').innerHTML='<div class="sem-dados">Clique em Sincronizar para carregar os projetos</div>';
+            return;
+        }
+        const lista = d.projetos || [];
+        const total = lista.length;
+
+        // Usa os campos reais do projetosService: pctConcluido, atraso, pendentes, emValidacao
+        const totalTarefas  = lista.reduce((s,p) => s + (p.totalTarefas  || 0), 0);
+        const totalConc     = lista.reduce((s,p) => s + (p.concluidas    || 0), 0);
+        const totalAtraso   = lista.reduce((s,p) => s + (p.atraso        || 0), 0);
+        const totalPend     = lista.reduce((s,p) => s + (p.pendentes     || 0), 0);
+        const totalValid    = lista.reduce((s,p) => s + (p.emValidacao   || 0), 0);
+        const projConc100   = lista.filter(p => p.pctConcluido >= 100).length;
+        const projComAtraso = lista.filter(p => p.atraso > 0).length;
+        const progMedio     = total ? Math.round(lista.reduce((s,p) => s + (p.pctConcluido||0), 0) / total) : 0;
+
+        miniCards('projMetrics', [
+            { val:total,         lbl:'Projetos',      cor:'var(--ti2)',   cls:'purple' },
+            { val:projConc100,   lbl:'100% Concluídos', cor:'var(--green)', cls:'green' },
+            { val:totalConc,     lbl:'Tarefas Concluídas', cor:'var(--green)', cls:'green' },
+            { val:totalValid,    lbl:'Em Validação',  cor:'#1d4ed8',      cls:'ti'    },
+            { val:totalPend,     lbl:'Pendentes',     cor:'var(--yellow)', cls:'yellow'},
+            { val:totalAtraso,   lbl:'Em Atraso',     cor:'#dc2626',      cls:'red'   },
+        ]);
+
+        const bar=$('proj-bar'); if(bar) bar.style.width=progMedio+'%';
+        $('proj-pct').textContent=progMedio+'%';
+        $('proj-prog-sub').textContent=
+            `${projConc100} de ${total} projetos a 100% · ${projComAtraso} com atraso · progresso médio ${progMedio}%`;
+
+        // Mini-cards dos projetos abaixo da barra
+        const pctCor = p => p>=100?'var(--green)':p>=70?'#2563eb':p>=40?'var(--yellow)':'var(--red)';
+        const projHtml = lista.map(p => {
+            const cor = pctCor(p.pctConcluido||0);
+            const atrasoTag = p.atraso>0
+                ? `<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:1px 6px;font-size:9px;font-weight:800;margin-left:4px">🚨 ${p.atraso}</span>`
+                : '';
+            return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color .15s" onmouseover="this.style.borderColor='var(--ti2)'" onmouseout="this.style.borderColor='var(--border)'">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.nome}${atrasoTag}</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:5px">
+                  <div style="flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)">
+                    <div style="height:100%;width:${Math.min(p.pctConcluido||0,100)}%;background:${cor};border-radius:3px;transition:width .8s ease"></div>
+                  </div>
+                  <span style="font-size:10px;font-weight:900;font-family:'JetBrains Mono',monospace;color:${cor};white-space:nowrap">${(p.pctConcluido||0).toFixed(0)}%</span>
+                </div>
+              </div>
+              <div style="display:flex;gap:6px;flex-shrink:0">
+                <div style="text-align:center">
+                  <div style="font-size:13px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--green)">${p.concluidas||0}</div>
+                  <div style="font-size:8px;font-weight:800;text-transform:uppercase;color:var(--muted)">Conc.</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:13px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--yellow)">${p.pendentes||0}</div>
+                  <div style="font-size:8px;font-weight:800;text-transform:uppercase;color:var(--muted)">Pend.</div>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+
+        const container = $('projListaBox');
+        if (container) {
+            container.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">${projHtml}</div>`;
+        }
+
+        window._tiDados.projetos=lista;
+    } catch(e) { $('projMetrics').innerHTML='<div class="sem-dados">Dados não disponíveis</div>'; }
+}
+
+// ── Card Gestão Ativos (novo) ──────────────────────────────
+async function carregarGestaoAtivos() {
+    const box=$('gaConteudo');
+    try {
+        const r=await fetch('/controle-equipamentos',{credentials:'include'});
+        if (r.status===401) { box.innerHTML='<div class="sem-dados">Faça login para ver os dados</div>'; return; }
+        const d=await r.json();
+        if (!d.ok||!d.equipamentos) { box.innerHTML='<div class="sem-dados">Sincronize a Gestão de Ativos para ver dados</div>'; return; }
+        const lista=d.equipamentos||[], stats=d.stats||{}, total=lista.length;
+        const normS=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+        const comEquip=lista.filter(i=>i.tipoAparelho&&i.tipoAparelho!=='').length;
+        const semEquip=total-comEquip;
+        const deslig=lista.filter(i=>normS(i.statusAtual).includes('deslig')).length;
+        const manut=lista.filter(i=>normS(i.statusAtual).includes('manut')).length;
+        const semComod=lista.filter(i=>i.assinouComodato!=='Sim').length;
+        const valorTotal=stats.valorTotalFormatado||'—';
+        let valorRestituido='—';
+        try { const rh=await fetch('/controle-equipamentos/historico-stats',{credentials:'include'}); if(rh.ok){const dh=await rh.json(); if(dh.ok) valorRestituido=dh.totalRestituidoFormatado||'—';} } catch{}
+        const pctCad=total?Math.round((comEquip/total)*100):0;
+        const corBarra=pctCad>=80?'linear-gradient(90deg,var(--green),#4ade80)':pctCad>=50?'linear-gradient(90deg,var(--yellow),#fbbf24)':'linear-gradient(90deg,var(--orange),#fb923c)';
+        const porTipo=stats.porTipo||[];
+        box.innerHTML=`
+          <div class="ga-grid">
+            <div class="ga-metric" style="border-color:rgba(3,105,161,.3)"><div class="ga-metric-val" style="color:var(--ti)">${total}</div><div class="ga-metric-lbl">Colaboradores</div></div>
+            <div class="ga-metric" style="border-color:rgba(22,163,74,.3)"><div class="ga-metric-val" style="color:var(--green)">${comEquip}</div><div class="ga-metric-lbl">Com Equipamento</div></div>
+            <div class="ga-metric" style="border-color:rgba(234,88,12,.3)"><div class="ga-metric-val" style="color:var(--orange)">${semEquip}</div><div class="ga-metric-lbl">Sem Equipamento</div></div>
+            <div class="ga-metric" style="border-color:rgba(200,16,46,.3)"><div class="ga-metric-val" style="color:var(--red)">${deslig}</div><div class="ga-metric-lbl">Desligados</div></div>
+            <div class="ga-metric" style="border-color:rgba(217,119,6,.3)"><div class="ga-metric-val" style="color:var(--yellow)">${manut}</div><div class="ga-metric-lbl">Manutenção</div></div>
+            <div class="ga-metric" style="border-color:rgba(124,58,237,.3)"><div class="ga-metric-val" style="color:var(--ti2)">${semComod}</div><div class="ga-metric-lbl">Sem Comodato</div></div>
+          </div>
+          <div class="ga-prog-wrap">
+            <div class="ga-prog-header"><span class="ga-prog-title">Colaboradores com equipamento cadastrado</span><span class="ga-prog-nums">${comEquip} / ${total}</span></div>
+            <div class="ga-prog-track"><div class="ga-prog-fill" id="gaProgFill" style="width:0%;background:${corBarra}"></div></div>
+            <div class="ga-prog-sub">${pctCad}% dos colaboradores possuem ao menos um equipamento cadastrado · ${semEquip} aguardando cadastro</div>
+          </div>
+          <div class="ga-valor-row">
+            <div class="ga-valor-pill" style="border-color:rgba(3,105,161,.3)"><div class="ga-valor-pill-val" style="color:var(--ti)">${valorTotal}</div><div class="ga-valor-pill-lbl">💰 Valor total em ativos</div></div>
+            <div class="ga-valor-pill" style="border-color:rgba(217,119,6,.3)"><div class="ga-valor-pill-val" style="color:var(--yellow)">${valorRestituido}</div><div class="ga-valor-pill-lbl">💳 Total restituído (trocas)</div></div>
+          </div>
+          ${porTipo.length?`<div style="margin-top:14px"><div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:8px">Distribuição por tipo</div>${porTipo.slice(0,5).map((t,i)=>`<div class="bar-row"><div class="bar-label">${t.tipo}</div><div class="bar-track"><div class="bar-fill" style="width:${t.pct}%;background:${CORES[i%CORES.length]}"></div></div><div class="bar-count">${t.qtd}</div></div>`).join('')}</div>`:''}
+        `;
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{ const f=$('gaProgFill'); if(f) f.style.width=pctCad+'%'; }));
+        window._tiDados.gestaoAtivos={total,comEquip,semEquip,deslig,manut,semComod,valorTotal,valorRestituido,pctCad};
+    } catch(e) { box.innerHTML=`<div class="sem-dados">Erro: ${e.message}</div>`; }
+}
+
+// ── Card Ativos (legado) ───────────────────────────────────
+async function carregarAtivos() {
+    try {
+        const r = await fetch('/ativos/');
+        const d = await r.json();
+        if (!d.ok) { $('ativosAbas').innerHTML='<div class="sem-dados" style="grid-column:1/-1">Sincronize os ativos para ver dados</div>'; return; }
+        const nAtivos=(d.ativos||[]).length, nDist=(d.distratados||[]).length,
+              nDesl=(d.desligados||[]).length, nTI=(d.ti||[]).length,
+              sti=d.statsTI||{}, tiBom=sti.emBomEstado||0;
+        $('ativosAbas').innerHTML=`
+            <div class="aba-card c-ativos"><div class="aba-card-icon">📱</div><div class="aba-card-info"><span class="aba-card-val">${nAtivos}</span><span class="aba-card-lbl">Ativos</span></div></div>
+            <div class="aba-card c-distratados"><div class="aba-card-icon">📋</div><div class="aba-card-info"><span class="aba-card-val">${nDist}</span><span class="aba-card-lbl">Distratados</span></div></div>
+            <div class="aba-card c-desligados"><div class="aba-card-icon">🔴</div><div class="aba-card-info"><span class="aba-card-val">${nDesl}</span><span class="aba-card-lbl">Desligados</span></div></div>
+            <div class="aba-card c-ti-aba"><div class="aba-card-icon">🖥️</div><div class="aba-card-info"><span class="aba-card-val">${nTI}</span><span class="aba-card-lbl">T.I</span></div></div>`;
+        const p=pct(tiBom,nTI||1);
+        $('ativ-pct-ok').textContent=p+'%'; $('ativ-bar-ok').style.width=p+'%';
+        $('ativ-prog-sub').textContent=`${tiBom} equipamentos T.I em bom/novo estado de ${nTI} cadastrados`;
+        const total=nAtivos+nDist+nDesl+nTI;
+        $('pageSub').textContent=`${total} registros · ${nAtivos} ativos · ${nTI} T.I · ${nDist} distratados · ${nDesl} desligados`;
+        window._tiDados.ativos=d.ativos||[]; window._tiDados.distratados=d.distratados||[];
+        window._tiDados.desligados=d.desligados||[]; window._tiDados.ti=d.ti||[];
+        window._tiDados.statsTI=d.statsTI||{};
+    } catch(e) { $('ativosAbas').innerHTML=`<div class="sem-dados" style="grid-column:1/-1">Erro: ${e.message}</div>`; }
+}
+
+// ── Card Migração ──────────────────────────────────────────
+function renderMigracao(s) {
+    if (!s||!s.ok) { $('migMetrics').innerHTML='<div class="sem-dados">Sincronize a migração para ver dados</div>'; return; }
+    miniCards('migMetrics', [
+        { val:s.sultsTotal,       lbl:'Total SULTS',           cor:'var(--ti)',     cls:'ti' },
+        { val:s.sultsAtivas,      lbl:'Ativas',                cor:'var(--ti)' },
+        { val:s.sultsImplantacao, lbl:'Inauguração\nPendente', cor:'var(--orange)', cls:'orange' },
+        { val:s.comSW,            lbl:'Lojas no SW',            cor:'var(--green)',  cls:'green' },
+        { val:s.outrosSW,         lbl:'Outras\nSoftHouses',     cor:'var(--orange)', cls:'orange' },
+        { val:s.semInfo,          lbl:'Sem Info\nde Sistema',   cor:'var(--muted)',  cls:'muted' },
+    ]);
+    const p=s.pctMigrado||0;
+    set('mig-pct',p+'%'); const bar=$('mig-bar'); if(bar) bar.style.width=p+'%';
+    set('mig-prog-sub',`${s.comSW||0} lojas já no SW de ${s.sultsTotal||0} unidades no SULTS`);
+    window._tiDados.migracao=s;
+}
+
+// ── Card Chamados ──────────────────────────────────────────
+function renderChamados(ano) {
+    ano=ano||G.cham.anoSel||'todos';
+    const d=G.cham.todos;
+    if (!d||!d.ok) { $('chamMetrics').innerHTML=''; $('chamSemDados').style.display=''; $('chamGraficos').style.display='none'; return; }
+    $('chamSemDados').style.display='none';
+    const chamados=d.chamados||[];
+    const lista=ano==='todos'?chamados:chamados.filter(c=>c.dataCriacao&&new Date(c.dataCriacao).getFullYear()===parseInt(ano));
+    const total=lista.length, abertos=lista.filter(c=>!c.fechado).length, fechados=lista.filter(c=>c.fechado).length;
+    const txRes=total?Math.round(fechados/total*100):0;
+    miniCards('chamMetrics', [
+        { val:total,      lbl:ano==='todos'?'Total Geral':'Total '+ano, cor:'var(--green)', cls:'ti' },
+        { val:abertos,    lbl:'Abertos',       cor:'var(--red)',    cls:'red' },
+        { val:fechados,   lbl:'Concluídos',    cor:'var(--green)', cls:'green' },
+        { val:txRes+'%',  lbl:'Taxa Resolução', cor:txRes>=70?'var(--green)':'var(--yellow)' },
+    ]);
+    const tipoMap={}, respMap={};
+    lista.forEach(c=>{ const t=c.tipo||'—'; tipoMap[t]=(tipoMap[t]||0)+1; const r=c.responsavel||'—'; respMap[r]=(respMap[r]||0)+1; });
+    const topTipo=Object.entries(tipoMap).sort((a,b)=>b[1]-a[1]).map(([tipo,total])=>({tipo,total}));
+    const topResp=Object.entries(respMap).sort((a,b)=>b[1]-a[1]).map(([nome,total])=>({nome,total}));
+    if (topTipo.length) {
+        $('chamGraficos').style.display='';
+        renderBarras('chamBTipo',topTipo,'tipo','total',['var(--green)','#4ade80','#86efac']);
+        renderBarras('chamBResp',topResp,'nome','total',['var(--ti)','var(--ti-light)','#38bdf8']);
+    } else { $('chamGraficos').style.display='none'; }
+    window._tiDados.chamados=chamados;
+}
+
+// ── Card Pix TEF ───────────────────────────────────────────
+async function carregarPix() {
+    try {
+        const s=await fetch('/pix/stats').then(r=>r.json());
+        if (!s.ok) { $('pixMetrics').innerHTML='<div class="sem-dados">Sincronize o Pix TEF para ver dados</div>'; return; }
+        miniCards('pixMetrics', [
+            { val:s.total,      lbl:'Total Lojas', cor:'var(--ti)',     cls:'ti' },
+            { val:s.concluidos, lbl:'Concluídas',  cor:'var(--green)', cls:'green' },
+            { val:s.pendentes,  lbl:'Pendentes',   cor:'var(--muted)', cls:'muted' },
+            { val:s.impedidos,  lbl:'Impedidas',   cor:'#dc2626',      cls:'red' },
+            { val:s.aguardar,   lbl:'Aguardar',    cor:'var(--yellow)',cls:'yellow' },
+        ]);
+        const p=s.pctConcluido||0;
+        $('pix-pct').textContent=p+'%'; const bar=$('pix-bar'); if(bar) bar.style.width=p+'%';
+        $('pix-prog-sub').textContent=`${s.concluidos||0} de ${s.total||0} lojas com Pix TEF implantado`;
+        window._tiDados.pix=s;
+    } catch(e) { $('pixMetrics').innerHTML='<div class="sem-dados">Dados não disponíveis</div>'; }
+}
+
+// ── Card Links ─────────────────────────────────────────────
+// ── Card Links ─────────────────────────────────────────────
+// ── Card Links — VERSÃO FINAL ──────────────────────────────
+// SUBSTITUA a função carregarLinks() no seu index.html por esta:
+async function carregarLinks() {
+    try {
+const r = await fetch('/links/
+        // Trata sessão expirada — retorna HTML em vez de JSON
+        if (r.status === 401 || r.redirected) {
+            $('linksMetrics').innerHTML = '<div class="sem-dados">Sessão expirada — faça login</div>';
+            return;
+        }
+
+        // Garante que é JSON antes de fazer .json()
+        const ct = r.headers.get('content-type') || '';
+        if (!ct.includes('application/json')) {
+            $('linksMetrics').innerHTML = '<div class="sem-dados">Erro de autenticação — faça login</div>';
+            return;
+        }
+
+        const d = await r.json();
+
+        if (!d.ok || !d.links?.length) {
+            $('linksMetrics').innerHTML = '<div class="sem-dados">Sem links cadastrados</div>';
+            return;
+        }
+
+        // Conta por tipo — usa fallback genérico se tipo não estiver no TIPO_CFG
+        const contagem = {};
+        d.links.forEach(l => {
+            const t = (l.tipo || 'link').toLowerCase();
+            contagem[t] = (contagem[t] || 0) + 1;
+        });
+
+        const total  = d.links.length;
+        const grupos = Object.keys(d.grupos || {}).length;
+        const sorted = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
+
+        // TIPO_CFG com fallback para tipos customizados
+        const TIPO_CFG_LOCAL = {
+            sistema:      { icon: '⚙️',  label: 'Sistemas'      },
+            planilha:     { icon: '📊',  label: 'Planilhas'     },
+            manual:       { icon: '📘',  label: 'Manuais'       },
+            apresentacao: { icon: '📑',  label: 'Apresentações' },
+            formulario:   { icon: '📋',  label: 'Formulários'   },
+            drive:        { icon: '📁',  label: 'Drive'         },
+            link:         { icon: '🔗',  label: 'Links'         },
+        };
+
+        // Pill TOTAL em destaque (roxo) + pills por tipo
+        const pillTotal = `
+            <div class="link-tipo-pill" style="border-color:rgba(124,58,237,.35);background:var(--ti2-pale)">
+                <span class="link-tipo-icon">🔗</span>
+                <div class="link-tipo-info">
+                    <span class="link-tipo-count" style="color:var(--ti2)">${total}</span>
+                    <span class="link-tipo-label">TOTAL</span>
+                </div>
+            </div>`;
+
+        const pillsTipo = sorted.map(([tipo, qtd]) => {
+            const cfg = TIPO_CFG_LOCAL[tipo] || { icon: '🏷️', label: tipo.charAt(0).toUpperCase() + tipo.slice(1) };
+            return `<div class="link-tipo-pill">
+                <span class="link-tipo-icon">${cfg.icon}</span>
+                <div class="link-tipo-info">
+                    <span class="link-tipo-count">${qtd}</span>
+                    <span class="link-tipo-label">${cfg.label}</span>
+                </div>
+            </div>`;
+        }).join('');
+
+        $('linksMetrics').innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <span style="font-size:12px;font-weight:700;color:var(--muted)">
+                    <strong style="color:var(--ti2)">${total}</strong> links · <strong style="color:var(--ti2)">${grupos}</strong> grupos
+                </span>
+                <span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">${sorted.length} tipos</span>
+            </div>
+            <div class="links-tipos-grid">${pillTotal}${pillsTipo}</div>`;
+
+        // Salva nos dados globais para a IA
+        window._tiDados.links = d.links;
+
+    } catch (e) {
+        console.error('[links]', e.message);
+        $('linksMetrics').innerHTML = '<div class="sem-dados">Dados não disponíveis</div>';
+    }
+}
+// ── Carregar tudo ──────────────────────────────────────────
+async function carregar() {
+    setStatus('syncing','Carregando dashboard...');
+    const [rMig,rCham]=await Promise.allSettled([
+        fetch('/migracao/lojas-sw/stats').then(r=>r.json()),
+        fetch('/ti/chamados/dados').then(r=>r.json()),
+    ]);
+    setStatus('ready','✓ Dashboard carregado');
+    renderMigracao(rMig.status==='fulfilled'?rMig.value:null);
+    const cham=rCham.status==='fulfilled'?rCham.value:null;
+    G.cham.todos=cham;
+    if (cham&&cham.ok&&cham.chamados) {
+        const anos=[...new Set((cham.chamados||[]).filter(c=>c.dataCriacao).map(c=>new Date(c.dataCriacao).getFullYear()))].filter(Boolean).sort();
+        buildYearTabs(anos);
+        if (cham.sincronizadoEm) $('lastSync').textContent='Sync: '+new Date(cham.sincronizadoEm).toLocaleString('pt-BR');
+    }
+    renderChamados('todos');
+    carregarProjetos();
+    carregarGestaoAtivos();
+    carregarAtivos();
+    carregarPix();
+    carregarLinks();
+}
+
+async function sincronizar() {
+    const btn=$('btnSync');
+    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
+    setStatus('syncing','🔄 Buscando dados...');
+    try {
+        const [rA,rC]=await Promise.allSettled([
+            fetch('/ativos/sincronizar',{method:'POST'}).then(r=>r.json()),
+            fetch('/ti/chamados/sincronizar',{method:'POST'}).then(r=>r.json()),
+        ]);
+        const ta=rA.status==='fulfilled'&&rA.value?.ok?rA.value.totais:null;
+        const tc=rC.status==='fulfilled'&&rC.value?.ok?rC.value.totalTI:null;
+        if (ta||tc) { toast(`✅ Ativos: ${ta?`${ta.ativos}·${ta.distratados}·${ta.desligados}·${ta.ti}`:'—'} | Chamados: ${tc??'—'}`); await carregar(); }
+        else { toast('⚠️ Sincronização parcial — verifique os serviços',4000); setStatus('error','⚠️ Sincronização parcial'); await carregar(); }
+    } catch(e) { toast('❌ '+e.message,4000); setStatus('error','❌ '+e.message); }
+    btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
+}
+
+// ── IA ─────────────────────────────────────────────────────
+var _iaTiAberto = false;
+
+function toggleIATi() {
+    _iaTiAberto = !_iaTiAberto;
+    var jan = $('iaTiJanela'), tog = $('iaTiToggle');
+    if (_iaTiAberto) {
+        jan.classList.add('aberto'); tog.classList.add('aberto');
+        tog.innerHTML = '✕<div class="iati-unread" id="iaTiUnread"></div>';
+    } else {
+        jan.classList.remove('aberto'); tog.classList.remove('aberto');
+        tog.innerHTML = '🤖<div class="iati-unread" id="iaTiUnread">1</div>';
+        setTimeout(function(){var u=$('iaTiUnread');if(u){u.style.display='flex';}},100);
+    }
+}
+
+function _montarContextoTIFront() {
+    var d = window._tiDados || {};
+    var ativos=(d.ativos||[]), dist=(d.distratados||[]), desl=(d.desligados||[]),
+        ti=(d.ti||[]), sti=(d.statsTI||{}), chams=(d.chamados||[]),
+        m=(d.migracao||{}), p=(d.pix||{}), ga=(d.gestaoAtivos||{}),
+        proj=(d.projetos||[]);
+    var tiLines=ti.slice(0,20).map(function(e){return '  • '+(e.descricao||e.item||'—')+' | '+(e.estado||'—')+' | '+(e.loja||e.local||'—');}).join('\n');
+    var chamLines=chams.slice(0,20).map(function(c){return '  • ['+(c.fechado?'FECHADO':'ABERTO')+'] '+(c.tipo||'—')+' | Resp: '+(c.responsavel||'—');}).join('\n');
+    var abertos=chams.filter(function(c){return !c.fechado;}).length;
+    var fechados=chams.filter(function(c){return c.fechado;}).length;
+    return '=== CENTRAL T.I. — DIVINO FOGÃO ===\n\n'+
+        '--- PROJETOS ---\nTotal: '+proj.length+'\n\n'+
+        '--- GESTÃO DE ATIVOS ---\n'+
+        'Total colaboradores: '+(ga.total||0)+'\nCom equipamento: '+(ga.comEquip||0)+'\nSem equipamento: '+(ga.semEquip||0)+'\n% cadastro: '+(ga.pctCad||0)+'%\nValor total: '+(ga.valorTotal||'—')+'\nRestituído: '+(ga.valorRestituido||'—')+'\n\n'+
+        '--- ATIVOS (legado) ---\n'+
+        'Comodatos: '+ativos.length+'\nDistratados: '+dist.length+'\nDesligados: '+desl.length+'\nEquip. T.I.: '+ti.length+'\nEm bom estado: '+(sti.emBomEstado||0)+'\n\n'+
+        '--- EQUIP. T.I. (amostra) ---\n'+(tiLines||'  Sem dados')+'\n\n'+
+        '--- MIGRAÇÃO ---\nTotal SULTS: '+(m.sultsTotal||0)+'\nLojas no SW: '+(m.comSW||0)+'\n% Migrado: '+(m.pctMigrado||0)+'%\n\n'+
+        '--- PIX TEF ---\nTotal: '+(p.total||0)+'\nConcluídas: '+(p.concluidos||0)+'\n% Concluído: '+(p.pctConcluido||0)+'%\n\n'+
+        '--- CHAMADOS ---\nTotal: '+chams.length+'\nAbertos: '+abertos+'\nFechados: '+fechados+'\nTaxa resolução: '+(chams.length?Math.round(fechados/chams.length*100):0)+'%\n\n'+
+        '--- ÚLTIMOS CHAMADOS ---\n'+(chamLines||'  Sem dados');
+}
+
+async function perguntarIATi(fixa) {
+    var inp = $('inputIATi');
+    var q   = fixa || (inp ? inp.value.trim() : '');
+    if (!q) return;
+    if (inp) inp.value = '';
+    if (!_iaTiAberto) toggleIATi();
+    var box = $('iaTiMsgs');
+    var mu  = document.createElement('div'); mu.className='iati-msg user'; mu.textContent=q; box.appendChild(mu);
+    var ma  = document.createElement('div'); ma.className='iati-msg ai carregando';
+    ma.innerHTML='<span style="opacity:.6">⏳ Analisando dados de T.I. com Gemini…</span>';
+    box.appendChild(ma); box.scrollTop=box.scrollHeight;
+    var btn=$('iaTiBtnEnviar'); if(btn) btn.disabled=true;
+    try {
+        var resp = await fetch('/ia-ti/perguntar', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ pergunta: q, contexto: _montarContextoTIFront() })
+        });
+        if (!resp.ok) throw new Error('HTTP '+resp.status);
+        var json = await resp.json();
+        var txt  = json.resposta || json.erro || 'Sem resposta.';
+        ma.className='iati-msg ai';
+        ma.innerHTML=txt
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--ti)">■</span> ')
+            .replace(/\n/g,'<br>');
+    } catch(e) {
+        ma.className='iati-msg ai';
+        ma.textContent='❌ Erro: '+e.message;
+    }
+    if(btn) btn.disabled=false;
+    box.scrollTop=box.scrollHeight;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var input=$('inputIATi');
+    if(input) input.addEventListener('keydown',function(e){if(e.key==='Enter') perguntarIATi();});
+    setTimeout(function(){
+        if(!_iaTiAberto){var u=$('iaTiUnread');if(u){u.style.display='flex';u.textContent='1';}}
+    },3000);
+});
+
+carregar();
+</script>
+</body>
+</html>

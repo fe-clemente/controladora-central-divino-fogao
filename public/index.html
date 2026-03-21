@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Sistemas — Divino Fogão</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:#c8102e; --red-pale:#fff0f2;
+    --bg:#f5f3ef; --bg2:#fff; --bg3:#faf8f5;
+    --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+    --green:#16a34a;
+    --yellow:#d97706;
+    --ti:#0369a1; --ti-pale:#f0f9ff;
+    --ti2:#7c3aed; --ti2-pale:#f5f3ff;
+    --shadow:0 2px 12px rgba(0,0,0,.08);
+    --shadow-lg:0 8px 32px rgba(0,0,0,.13);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+  header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
+  .logo{padding:10px 0;}
+  .logo img{height:48px;display:block;}
+  .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
+  .hd{width:1px;height:32px;background:var(--border);flex-shrink:0;}
+  .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
+  .h-user{margin-left:auto;display:flex;align-items:center;gap:10px;}
+  .h-foto{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);object-fit:cover;display:none;}
+  .h-nome{font-size:12px;font-weight:700;color:var(--muted);}
+  .btn-logout{background:none;border:1.5px solid var(--border);padding:6px 14px;border-radius:9px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;text-decoration:none;transition:all .2s;}
+  .btn-logout:hover{border-color:var(--red);color:var(--red);}
+
+  #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;}
+  .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.4s infinite;flex-shrink:0;}
+  .sdot.ok{background:var(--green);animation:none;}
+  .sdot.err{background:var(--red);animation:none;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  .hero{background:var(--bg2);border-bottom:1px solid var(--border);padding:32px 28px 28px;}
+  .hero-inner{max-width:1300px;margin:0 auto;}
+  .hero-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px;}
+  .hero h1{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:900;margin-bottom:4px;}
+  .hero h1 span{color:var(--ti2);}
+  .hero-sub{font-size:13px;color:var(--muted);}
+
+  main{max-width:1300px;margin:0 auto;padding:28px 24px;}
+
+  .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .sec-title{font-size:13px;font-weight:900;}
+  .sec-count{font-size:11px;font-weight:700;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+
+  .modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:32px;}
+
+  .module-card{
+    background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:24px;
+    text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:14px;
+    box-shadow:var(--shadow);transition:all .2s;position:relative;overflow:hidden;
+  }
+  .module-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:4px;
+    border-radius:16px 16px 0 0;background:var(--card-accent,var(--ti2));
+  }
+  .module-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--card-accent,var(--ti2));}
+  .module-card.bloqueado{opacity:.5;cursor:not-allowed;pointer-events:none;}
+  .module-card.bloqueado::before{background:var(--border);}
+
+  .card-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;background:var(--bg3);border:1.5px solid var(--border);}
+  .card-nome{font-size:15px;font-weight:900;margin-bottom:4px;}
+  .card-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+  .card-footer{margin-top:auto;display:flex;align-items:center;justify-content:space-between;}
+  .card-tag{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:20px;background:var(--ti2-pale);color:var(--ti2);}
+  .card-tag.lock{background:#f3f4f6;color:#9ca3af;}
+  .card-arrow{font-size:14px;font-weight:900;color:var(--muted);transition:all .2s;}
+  .module-card:hover .card-arrow{color:var(--card-accent,var(--ti2));transform:translateX(4px);}
+
+  .master-card{
+    grid-column:1/-1;background:linear-gradient(135deg,#f5f3ff,#ede9fe);
+    border-color:#c4b5fd;flex-direction:row;align-items:center;gap:20px;
+  }
+  .master-card .card-icon{background:#ede9fe;border-color:#c4b5fd;font-size:1.6rem;width:52px;height:52px;}
+  .master-card .card-body{flex:1;}
+  .master-card .card-nome{font-size:16px;}
+
+  #loading{display:flex;align-items:center;justify-content:center;min-height:50vh;flex-direction:column;gap:14px;color:var(--muted);}
+  .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--ti2);border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #content{display:none;}
+
+  footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:20px;font-family:'JetBrains Mono',monospace;}
+
+  @media(max-width:600px){
+    header{padding:0 16px;} main{padding:20px 16px;} .hero{padding:24px 16px;} .master-card{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+    <span class="logo-fb">🍽️</span>
+  </div>
+  <div class="hd"></div>
+  <div class="h-title">Central de Sistemas</div>
+  <div class="h-user">
+    <img class="h-foto" id="userFoto" src="" alt="">
+    <span class="h-nome" id="userName">—</span>
+    <a href="/logout" class="btn-logout">Sair</a>
+  </div>
+</header>
+
+<div id="statusBar">
+  <div class="sdot" id="sdot"></div>
+  <span id="statusTxt">Verificando sessão...</span>
+  <span style="margin-left:auto" id="footerHora"></span>
+</div>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <span style="font-size:13px">Carregando sistemas...</span>
+</div>
+
+<div id="content">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-label">Divino Fogão · Central de Sistemas</div>
+      <h1>Olá, <span id="heroNome">—</span> 👋</h1>
+      <p class="hero-sub">Selecione um módulo abaixo para acessar o sistema.</p>
+    </div>
+  </div>
+
+  <main>
+    <div class="sec-hdr">
+      <div class="sec-title">📦 Módulos disponíveis</div>
+      <div class="sec-count" id="secCount"></div>
+    </div>
+    <div class="modules-grid" id="modulesGrid"></div>
+  </main>
+</div>
+
+<footer id="footer">Divino Fogão © 2026 — T.I.</footer>
+
+<script>
+const MODULOS = [
+  { id:'ti',          nome:'T.I.',               desc:'Ativos, projetos, chamados, migração e controle de equipamentos.', icon:'🖥️', href:'/ti',  tag:'Tecnologia', accent:'#0369a1' },
+  { id:'treinamento', nome:'Treinamento & Dev.',  desc:'Chamados T&D, turnover, universidade corporativa e SULTS.',        icon:'🎓', href:'/treinamento',   tag:'T&D',        accent:'#7c3aed' },
+  { id:'suprimentos', nome:'Suprimentos',         desc:'Gestão de compras, fornecedores e controle de estoque.',           icon:'📦', href:'/suprimentos',   tag:'Compras',    accent:'#16a34a' },
+  { id:'marketing',   nome:'Marketing',           desc:'Campanhas, materiais e indicadores de comunicação.',               icon:'📣', href:'/marketing',     tag:'Marketing',  accent:'#c8102e' },
+];
+
+const $ = id => document.getElementById(id);
+
+setInterval(() => {
+  $('footerHora').textContent = new Date().toLocaleTimeString('pt-BR');
+}, 1000);
+
+async function init() {
+  try {
+    const res  = await fetch('/auth/me');
+    const data = await res.json();
+    if (!data.logado) { location.href = '/login'; return; }
+
+    const user     = data.usuario;
+    const modulos  = user.modulos || [];
+    const isMaster = user.isMaster || modulos.includes('master');
+
+    $('userName').textContent = user.nome || user.email;
+    $('heroNome').textContent = (user.nome || '').split(' ')[0] || user.email;
+    if (user.foto) { const f = $('userFoto'); f.src = user.foto; f.style.display = 'block'; }
+
+    const grid = $('modulesGrid');
+    let comAcesso = 0;
+
+    MODULOS.forEach(mod => {
+      const tem = isMaster || modulos.includes(mod.id);
+      if (tem) comAcesso++;
+      const el = document.createElement(tem ? 'a' : 'div');
+      if (tem) el.href = mod.href;
+      el.className = 'module-card' + (tem ? '' : ' bloqueado');
+      el.style.setProperty('--card-accent', mod.accent);
+      el.innerHTML = `
+        <div class="card-icon">${mod.icon}</div>
+        <div class="card-body">
+          <div class="card-nome">${mod.nome}</div>
+          <div class="card-desc">${mod.desc}</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag${tem ? '' : ' lock'}">${tem ? mod.tag : '🔒 Sem acesso'}</span>
+          ${tem ? '<span class="card-arrow">→</span>' : ''}
+        </div>`;
+      grid.appendChild(el);
+    });
+
+    if (isMaster) {
+      const m = document.createElement('a');
+      m.href = '/master.html';
+      m.className = 'module-card master-card';
+      m.style.setProperty('--card-accent', '#7c3aed');
+      m.innerHTML = `
+        <div class="card-icon">⚡</div>
+        <div class="card-body">
+          <div class="card-nome">Painel Master</div>
+          <div class="card-desc">Gestão de usuários, permissões, logs de acesso e status de todos os sistemas.</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag" style="background:#ede9fe;color:#7c3aed">Master</span>
+          <span class="card-arrow" style="color:#7c3aed">→</span>
+        </div>`;
+      grid.appendChild(m);
+    }
+
+    $('secCount').textContent = `${comAcesso} de ${MODULOS.length} disponíveis`;
+    $('sdot').className = 'sdot ok';
+    $('statusTxt').textContent = `Sessão ativa — ${user.email}`;
+    $('loading').style.display = 'none';
+    $('content').style.display = 'block';
+
+  } catch (e) {
+    $('sdot').className = 'sdot err';
+    $('statusTxt').textContent = 'Erro ao carregar sessão';
+    $('loading').innerHTML = `
+      <p style="color:#c8102e;font-weight:700">Erro ao carregar</p>
+      <a href="/login" style="color:#7c3aed;font-size:13px;font-weight:700">Fazer login novamente</a>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>

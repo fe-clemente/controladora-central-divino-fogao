@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migração — Lojas &amp; SoftHouses · Divino Fogão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:#c8102e; --red-pale:#fff0f2;
+            --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+            --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+            --green:#16a34a; --green-pale:#f0fdf4;
+            --yellow:#d97706; --yellow-pale:#fffbeb;
+            --orange:#ea580c; --orange-pale:#fff7ed;
+            --ti:#0369a1; --ti-light:#0ea5e9; --ti-pale:#f0f9ff;
+            --ti2:#7c3aed; --ti2-pale:#f5f3ff;
+            --shadow:0 2px 12px rgba(0,0,0,0.08);
+            --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+        .logo{padding:10px 0;} .logo img{height:48px;display:block;}
+        .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
+        .hd{width:1px;height:32px;background:var(--border);}
+        .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
+        nav{display:flex;gap:2px;margin-left:auto;}
+        .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+        .nav-btn:hover{color:var(--text);background:var(--bg3);}
+        .nav-btn.active{color:var(--ti);border-bottom-color:var(--ti);background:var(--ti-pale);}
+
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+        .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+        .sdot.ready{background:var(--green);animation:none;}
+        .sdot.error{background:var(--red);animation:none;}
+        .sdot.syncing{background:var(--ti-light);animation:pulse .8s infinite;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+        main{max-width:1260px;margin:0 auto;padding:28px 24px;}
+        .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
+        .page-sub{font-size:13px;color:var(--muted);margin-bottom:24px;}
+
+        .metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:24px;}
+        .mc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);}
+        .mc-icon{font-size:20px;margin-bottom:6px;}
+        .mc-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;}
+        .mc-val{font-size:28px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
+        .mc-sub{font-size:10px;color:var(--muted);margin-top:4px;font-weight:600;}
+
+        .st{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:28px 0 12px;display:flex;align-items:center;gap:8px;}
+        .st::after{content:'';flex:1;height:1px;background:var(--border);}
+
+        .cc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px;box-shadow:var(--shadow);}
+
+        /* Barras */
+        .prog-row{margin-bottom:14px;}
+        .prog-row:last-child{margin-bottom:0;}
+        .prog-header{display:flex;justify-content:space-between;margin-bottom:6px;}
+        .prog-label{font-size:12px;font-weight:700;}
+        .prog-pct{font-size:12px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+        .prog-track{height:10px;background:var(--bg);border-radius:5px;overflow:hidden;border:1px solid var(--border);}
+        .prog-fill{height:100%;border-radius:5px;transition:width 1s cubic-bezier(.23,1,.32,1);}
+
+        /* Abas */
+        .tabs-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:6px;box-shadow:var(--shadow);display:flex;gap:4px;margin-bottom:20px;width:fit-content;}
+        .tab-btn{background:none;border:none;padding:9px 22px;border-radius:9px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--muted);transition:all .18s;white-space:nowrap;}
+        .tab-btn:hover{color:var(--text);background:var(--bg3);}
+        .tab-btn.active{background:var(--ti);color:#fff;box-shadow:0 2px 8px rgba(3,105,161,.25);}
+        .tab-panel{display:none;}
+        .tab-panel.active{display:block;}
+
+        /* Filtros */
+        .filters{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+        .filter-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:130px;}
+        .filter-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
+        .filter-control{padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;-webkit-appearance:none;}
+        .filter-control:focus{border-color:var(--ti);}
+        select.filter-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+        .filter-count{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;align-self:flex-end;padding-bottom:10px;white-space:nowrap;}
+
+        /* Botões */
+        .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+        .btn-ti{background:var(--ti);color:#fff;box-shadow:0 2px 8px rgba(3,105,161,.3);}
+        .btn-ti:hover{background:#075985;}
+        .btn-green{background:var(--green);color:#fff;}
+        .btn-green:hover{background:#15803d;}
+        .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+        .btn-ghost:hover{background:var(--bg2);}
+        .btn-sm{padding:6px 13px;font-size:12px;}
+        .btn:disabled{opacity:.5;cursor:not-allowed;}
+        .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+        .spinner.dark{border:2px solid var(--border);border-top-color:var(--ti);}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* Tabela */
+        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+        .table-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+        .table-head-title{font-size:13px;font-weight:800;}
+        .tbl-scroll{overflow-x:auto;}
+        table{width:100%;border-collapse:collapse;min-width:780px;}
+        thead th{padding:10px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
+        tbody tr{transition:background .15s;}
+        tbody tr:hover td{background:var(--bg3);}
+        tbody td{padding:11px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+        tbody tr:last-child td{border-bottom:none;}
+        .id-cell{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+        .nome-cell{font-weight:700;}
+        .nome-cell .sub{font-size:11px;color:var(--muted);font-weight:400;margin-top:1px;}
+
+        /* Badges */
+        .sp{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+        .sp-green {background:var(--green-pale);color:var(--green); border:1.5px solid rgba(22,163,74,.2);}
+        .sp-yellow{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
+        .sp-blue  {background:var(--ti-pale);    color:var(--ti);    border:1.5px solid rgba(3,105,161,.2);}
+        .sp-grey  {background:#f1f5f9;           color:#64748b;      border:1.5px solid #e2e8f0;}
+        .sp-orange{background:var(--orange-pale);color:var(--orange);border:1.5px solid rgba(234,88,12,.2);}
+        .sp-purple{background:var(--ti2-pale);   color:var(--ti2);   border:1.5px solid rgba(124,92,252,.2);}
+
+        /* Cards SoftHouse */
+        .sh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+        .sh-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow);transition:all .2s;position:relative;overflow:hidden;}
+        .sh-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:14px 14px 0 0;background:linear-gradient(90deg,var(--orange),#fb923c);}
+        .sh-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--orange);}
+        .sh-card-title{font-size:14px;font-weight:800;margin-bottom:2px;}
+        .sh-card-sub{font-size:11px;color:var(--muted);margin-bottom:10px;}
+        .sh-prog{margin-bottom:8px;}
+        .sh-prog-track{height:7px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);margin-top:4px;}
+        .sh-prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--orange),#fb923c);}
+        .sh-lojas-toggle{background:none;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--ti);cursor:pointer;padding:0;margin-top:6px;}
+        .sh-lojas-list{display:none;margin-top:8px;background:var(--bg3);border-radius:9px;padding:8px 10px;max-height:140px;overflow-y:auto;border:1px solid var(--border);}
+        .sh-loja-item{font-size:12px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border);}
+        .sh-loja-item:last-child{border:none;}
+
+        /* Paginação */
+        .pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;flex-wrap:wrap;border-top:1px solid var(--border);}
+        .pagination button{background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;color:var(--muted);padding:6px 12px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;transition:all .15s;}
+        .pagination button.active,.pagination button:hover{background:var(--ti);color:#fff;border-color:var(--ti);}
+        .pagination button:disabled{opacity:.4;cursor:not-allowed;}
+        .pg-info{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+
+        /* Modal observação */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+        .modal-overlay.open{display:flex;}
+        .modal-box{background:var(--bg2);border-radius:18px;padding:28px 30px;max-width:540px;width:100%;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;}
+        .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;}
+        .modal-title{font-size:16px;font-weight:800;}
+        .modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);}
+        .modal-close:hover{background:var(--red-pale);color:var(--red);}
+        .modal-loja-info{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:13px;}
+        .modal-loja-info strong{display:block;font-size:14px;margin-bottom:4px;}
+        .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+        .form-group label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
+        .form-control{padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;}
+        .form-control:focus{border-color:var(--ti);}
+        textarea.form-control{resize:vertical;min-height:90px;}
+        .modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+
+        /* Check "Em Andamento" na tabela */
+        .check-andamento{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);cursor:pointer;appearance:none;-webkit-appearance:none;transition:all .15s;flex-shrink:0;position:relative;background:var(--bg2);}
+        .check-andamento:checked{background:var(--ti);border-color:var(--ti);}
+        .check-andamento:checked::after{content:'✓';position:absolute;color:#fff;font-size:11px;font-weight:800;top:50%;left:50%;transform:translate(-50%,-50%);}
+
+        /* Obs badge */
+        .obs-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;background:var(--ti-pale);color:var(--ti);border:1px solid rgba(3,105,161,.2);}
+
+        /* Misc */
+        .empty{text-align:center;padding:50px 20px;color:var(--muted);}
+        .empty .icon{font-size:40px;margin-bottom:12px;}
+        .empty p{font-size:13px;font-weight:600;}
+        .loading-msg{text-align:center;padding:40px;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
+        .alert-card{background:var(--yellow-pale);border:1.5px solid rgba(217,119,6,.3);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+        .alert-card.info{background:var(--ti-pale);border-color:rgba(3,105,161,.25);}
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
+        .toast.show{display:block;animation:fadeUp .3s ease;}
+        @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+        /* IA */
+        #iaWidget{
+            position:fixed;
+            right:24px;
+            bottom:24px;
+            z-index:4000;
+            display:flex;
+            flex-direction:column;
+            align-items:flex-end;
+            gap:12px;
+        }
+        #iaToggle{
+            width:58px;
+            height:58px;
+            border-radius:50%;
+            border:none;
+            cursor:pointer;
+            color:#fff;
+            font-size:26px;
+            background:linear-gradient(135deg,#0369a1,#075985);
+            box-shadow:0 6px 24px rgba(3,105,161,.35);
+        }
+        #iaJanela{
+            width:390px;
+            max-width:calc(100vw - 32px);
+            height:560px;
+            background:#fff;
+            border:1px solid var(--border);
+            border-radius:18px;
+            box-shadow:var(--shadow-lg);
+            display:none;
+            flex-direction:column;
+            overflow:hidden;
+        }
+        #iaJanela.aberto{display:flex}
+        .ia-topo{
+            background:linear-gradient(135deg,#0369a1,#075985);
+            color:#fff;
+            padding:14px 16px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+        .ia-topo-titulo{font-size:14px;font-weight:800}
+        .ia-topo-sub{font-size:11px;opacity:.85}
+        .ia-fechar{
+            background:rgba(255,255,255,.15);
+            border:none;
+            color:#fff;
+            width:28px;
+            height:28px;
+            border-radius:8px;
+            cursor:pointer;
+        }
+        .ia-sugs{
+            padding:10px 12px;
+            display:flex;
+            flex-wrap:wrap;
+            gap:6px;
+            background:#faf8f5;
+            border-bottom:1px solid var(--border);
+        }
+        .ia-sug{
+            border:1px solid var(--border);
+            background:#fff;
+            color:#6b7280;
+            border-radius:16px;
+            padding:6px 10px;
+            font-size:11px;
+            font-weight:700;
+            cursor:pointer;
+        }
+        .ia-msgs{
+            flex:1;
+            overflow-y:auto;
+            padding:14px;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+        .msg{
+            max-width:88%;
+            padding:10px 14px;
+            border-radius:12px;
+            font-size:13px;
+            line-height:1.6;
+            white-space:pre-wrap;
+            word-break:break-word;
+        }
+        .msg.user{
+            align-self:flex-end;
+            background:#0369a1;
+            color:#fff;
+            border-bottom-right-radius:4px;
+        }
+        .msg.ai{
+            align-self:flex-start;
+            background:#faf8f5;
+            color:#1f2937;
+            border:1px solid var(--border);
+            border-bottom-left-radius:4px;
+        }
+        .msg.ai.carregando{
+            color:#6b7280;
+            font-style:italic;
+        }
+        .ia-rodape{
+            display:flex;
+            gap:8px;
+            padding:12px;
+            background:#faf8f5;
+            border-top:1px solid var(--border);
+        }
+        .ia-input{
+            flex:1;
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:10px 12px;
+            outline:none;
+            font-size:13px;
+            font-family:'Nunito',sans-serif;
+        }
+        .ia-enviar{
+            width:38px;
+            height:38px;
+            border:none;
+            border-radius:10px;
+            background:#0369a1;
+            color:#fff;
+            cursor:pointer;
+            font-size:18px;
+        }
+
+        @media (max-width: 760px){
+            nav{overflow:auto}
+            #iaJanela{
+                width:calc(100vw - 20px);
+                height:70vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <span class="logo-fb">🍽️</span>
+    </div>
+    <div class="hd"></div>
+    <div class="h-title">Central de T.I.</div>
+<nav>
+    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+    <button class="nav-btn active" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+</nav>
+</header>
+
+<div id="statusBar">
+    <div class="sdot" id="sdot"></div>
+    <span id="statusText">Carregando...</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span id="lastSync" style="font-size:11px;color:var(--muted)"></span>
+        <button class="btn btn-ghost btn-sm" onclick="exportarCSV()">⬇ CSV</button>
+        <button class="btn btn-ti" id="btnSync" onclick="sincronizar()">🔄 Sincronizar</button>
+    </span>
+</div>
+
+<main>
+    <div class="page-title">🔄 Migração — Lojas &amp; SoftHouses</div>
+    <div class="page-sub" id="pageSub">Carregando...</div>
+    <div id="alertas"></div>
+
+    <!-- KPIs -->
+    <div class="metrics">
+        <div class="mc"><div class="mc-icon">🏪</div><div class="mc-label">Total SULTS</div>
+            <div class="mc-val" style="color:var(--ti)" id="m-sults">—</div><div class="mc-sub">unidades ativas</div></div>
+        <div class="mc"><div class="mc-icon">📋</div><div class="mc-label">Na Planilha</div>
+            <div class="mc-val" style="color:var(--ti2)" id="m-plan">—</div><div class="mc-sub">lojas mapeadas</div></div>
+        <div class="mc"><div class="mc-icon">✅</div><div class="mc-label">Já no SW</div>
+            <div class="mc-val" style="color:var(--green)" id="m-sw">—</div>
+            <div class="mc-sub" id="m-sw-sub">de <span id="m-sw-total">—</span> no SULTS</div></div>
+        <div class="mc"><div class="mc-icon">💻</div><div class="mc-label">SoftHouses</div>
+            <div class="mc-val" style="color:var(--orange)" id="m-sh">—</div><div class="mc-sub">sistemas mapeados</div></div>
+        <div class="mc"><div class="mc-icon">⏳</div><div class="mc-label">Pendentes</div>
+            <div class="mc-val" style="color:var(--yellow)" id="m-pend">—</div><div class="mc-sub">ainda não migraram</div></div>
+        <div class="mc"><div class="mc-icon">❓</div><div class="mc-label">Sem Info</div>
+            <div class="mc-val" style="color:var(--muted)" id="m-seminfo">—</div><div class="mc-sub">não informado</div></div>
+    </div>
+
+    <!-- Barras de progresso -->
+    <div class="st">📊 Progresso Geral</div>
+    <div class="cc" style="margin-bottom:24px">
+        <!-- ✅ Migradas = lojas com SW / total SULTS -->
+        <div class="prog-row">
+            <div class="prog-header">
+                <span class="prog-label">✅ Lojas já no SW (vs total SULTS)</span>
+                <span class="prog-pct" style="color:var(--green)" id="pct-sw">0%</span>
+            </div>
+            <div class="prog-track"><div class="prog-fill" id="bar-sw" style="width:0%;background:linear-gradient(90deg,var(--green),#4ade80)"></div></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px" id="bar-sw-detalhe"></div>
+        </div>
+        <!-- Outros SW (Totvs, LinxD, etc.) -->
+        <div class="prog-row">
+            <div class="prog-header">
+                <span class="prog-label">🔄 Outros sistemas (a migrar)</span>
+                <span class="prog-pct" style="color:var(--orange)" id="pct-outros">0%</span>
+            </div>
+            <div class="prog-track"><div class="prog-fill" id="bar-outros" style="width:0%;background:linear-gradient(90deg,var(--orange),#fb923c)"></div></div>
+        </div>
+        <!-- Sem informação -->
+        <div class="prog-row">
+            <div class="prog-header">
+                <span class="prog-label">❓ Sem informação de sistema</span>
+                <span class="prog-pct" style="color:var(--muted)" id="pct-seminfo">0%</span>
+            </div>
+            <div class="prog-track"><div class="prog-fill" id="bar-seminfo" style="width:0%;background:#94a3b8"></div></div>
+        </div>
+    </div>
+
+    <!-- Abas -->
+    <div class="tabs-bar">
+        <button class="tab-btn active" data-tab="lojas">🏪 Lojas</button>
+        <button class="tab-btn" data-tab="softhouses">💻 SoftHouses</button>
+    </div>
+
+    <!-- ═══ TAB LOJAS ═══ -->
+    <div class="tab-panel active" id="tab-lojas">
+        <div class="filters">
+            <div class="filter-group">
+                <span class="filter-label">🔍 Buscar</span>
+                <input type="text" class="filter-control" id="fLoja" placeholder="Nome, código, cidade..." oninput="filtrarLojas()">
+            </div>
+            <div class="filter-group" style="max-width:190px">
+                <span class="filter-label">Software House</span>
+                <select class="filter-control" id="fLojaSW" onchange="filtrarLojas()">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+            <div class="filter-group" style="max-width:120px">
+                <span class="filter-label">UF</span>
+                <select class="filter-control" id="fLojaUF" onchange="filtrarLojas()">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+            <div class="filter-group" style="max-width:180px">
+                <span class="filter-label">Status</span>
+                <select class="filter-control" id="fLojaStatus" onchange="filtrarLojas()">
+                    <option value="">Todos</option>
+                    <option value="Em Andamento">🔄 Em Andamento</option>
+                    <option value="sem_obs">❓ Sem observação</option>
+                    <option value="com_obs">📝 Com observação</option>
+                </select>
+            </div>
+            <div class="filter-count" id="cntLojas">0 lojas</div>
+            <button class="btn btn-ghost btn-sm" onclick="limparFiltros()">✕ Limpar</button>
+        </div>
+
+        <div class="table-wrap">
+            <div class="table-head">
+                <div class="table-head-title">🏪 Lojas — Planilha × SULTS</div>
+                <div style="font-size:11px;color:var(--muted)">
+                    ☑ Marque para colocar em andamento &nbsp;|&nbsp; 📝 Clique para adicionar observação
+                </div>
+            </div>
+            <div class="tbl-scroll">
+                <table>
+                    <thead><tr>
+                        <th style="width:36px">🔄</th>
+                        <th>#Cód</th>
+                        <th>Loja</th>
+                        <th>UF</th>
+                        <th>Software House</th>
+                        <th>Observação</th>
+                        <th style="text-align:center">Ação</th>
+                    </tr></thead>
+                    <tbody id="bodyLojas">
+                        <tr><td colspan="7"><div class="loading-msg"><div class="spinner dark"></div> Carregando...</div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" id="pagLojas"></div>
+        </div>
+    </div>
+
+    <!-- ═══ TAB SOFTHOUSES ═══ -->
+    <div class="tab-panel" id="tab-softhouses">
+        <div class="filters">
+            <div class="filter-group">
+                <span class="filter-label">🔍 Buscar</span>
+                <input type="text" class="filter-control" id="fSH" placeholder="Nome da softhouse..." oninput="filtrarSH()">
+            </div>
+            <div class="filter-count" id="cntSH">0 softhouses</div>
+        </div>
+        <div class="sh-grid" id="gridSH">
+            <div class="loading-msg"><div class="spinner dark"></div> Carregando...</div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal de observação -->
+<div class="modal-overlay" id="modalObs" onclick="fecharModal(event)">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="modal-title">📝 Adicionar Observação</div>
+            <button class="modal-close" onclick="document.getElementById('modalObs').classList.remove('open')">✕ Fechar</button>
+        </div>
+        <div class="modal-loja-info" id="modalLojaInfo"></div>
+        <div class="form-group">
+            <label>Observação (salva na planilha — coluna E)</label>
+            <textarea class="form-control" id="inputObs" placeholder="Digite a observação sobre a migração desta loja..."></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="document.getElementById('modalObs').classList.remove('open')">Cancelar</button>
+            <button class="btn btn-ti" id="btnSalvarObs" onclick="salvarObs()">💾 Salvar na planilha</button>
+        </div>
+        <input type="hidden" id="obsLojaData">
+    </div>
+</div>
+
+<!-- IA -->
+<div id="iaWidget">
+    <div id="iaJanela">
+        <div class="ia-topo">
+            <div>
+                <div class="ia-topo-titulo">🤖 IA — Migração</div>
+                <div class="ia-topo-sub">Leitura da tela atual</div>
+            </div>
+            <button class="ia-fechar" onclick="toggleIA()">✕</button>
+        </div>
+
+        <div class="ia-sugs">
+            <button class="ia-sug" onclick="usarSugestao('Me dê um resumo executivo desta página.')">Resumo</button>
+            <button class="ia-sug" onclick="usarSugestao('Quais lojas exigem atenção?')">Atenção</button>
+            <button class="ia-sug" onclick="usarSugestao('Quais gargalos você identifica?')">Gargalos</button>
+            <button class="ia-sug" onclick="usarSugestao('Quais ações você recomenda agora?')">Ações</button>
+        </div>
+
+        <div class="ia-msgs" id="iaMsgs">
+            <div class="msg ai">Olá. Posso analisar os números, filtros e lojas visíveis desta página.</div>
+        </div>
+
+        <div class="ia-rodape">
+            <input type="text" id="inputIA" class="ia-input" placeholder="Pergunte sobre os dados desta tela...">
+            <button class="ia-enviar" id="btnIA" onclick="perguntarIA()">➤</button>
+        </div>
+    </div>
+
+    <button id="iaToggle" onclick="toggleIA()">🤖</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Estado ───────────────────────────────────────────────── */
+const S = {
+    lojas:[], lojasFilt:[],
+    softhouses:[], shFilt:[],
+    pLojas:1, perPage:25,
+};
+
+/* ── Helpers ──────────────────────────────────────────────── */
+const toast = (msg, ms=2800) => {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), ms);
+};
+const setStatus = (cls, msg) => {
+    document.getElementById('sdot').className = 'sdot '+cls;
+    document.getElementById('statusText').textContent = msg;
+};
+const swBadge = sw => {
+    if (!sw) return '<span class="sp sp-grey">—</span>';
+    const up = sw.trim().toUpperCase();
+    if (up === 'SW')           return `<span class="sp sp-purple">✓ SW</span>`;
+    if (!sw.trim() || up === 'NÃO INFORMADO' || up === 'NAO INFORMADO')
+                               return `<span class="sp sp-grey">Não informado</span>`;
+    return `<span class="sp sp-orange">${sw}</span>`;
+};
+const pct = (v, t) => (!t ? 0 : Math.min(100, +((v/t)*100).toFixed(1)));
+function setBar(idPct, idBar, v, t) {
+    const p = pct(v, t);
+    document.getElementById(idPct).textContent = p+'%';
+    document.getElementById(idBar).style.width = p+'%';
+}
+
+/* ── Carregar ─────────────────────────────────────────────── */
+function carregar() {
+    setStatus('syncing','Carregando...');
+    fetch('/migracao/dados').then(r=>r.json()).then(d => {
+        if (!d.ok) {
+            setStatus('error','⚠️ '+(d.erro||'Erro'));
+            document.getElementById('bodyLojas').innerHTML =
+                `<tr><td colspan="7"><div class="empty"><div class="icon">📦</div>
+                 <p>${d.erro||'Sem dados'}</p>
+                 <button class="btn btn-ti" style="margin-top:14px" onclick="sincronizar()">🔄 Sincronizar agora</button>
+                 </div></td></tr>`;
+            return;
+        }
+        processar(d);
+        setStatus('ready',`✓ ${d.sultsTotal} no SULTS · ${d.planilhaLojasTotal} na planilha`);
+        if (d.sincronizadoEm)
+            document.getElementById('lastSync').textContent =
+                'Sync: '+new Date(d.sincronizadoEm).toLocaleString('pt-BR');
+    }).catch(e => setStatus('error','❌ '+e.message));
+}
+
+function processar(d) {
+    // ✅ Usa lojasSW (da planilha) como fonte primária para a tabela
+    S.lojas      = d.lojasSW || [];
+    S.lojasFilt  = S.lojas;
+    S.softhouses = d.softhouses || [];
+    S.shFilt     = S.softhouses;
+
+    const st = d.stats || {};
+    const sultsTotal = d.sultsTotal || 0;
+
+    // KPIs
+    document.getElementById('m-sults').textContent   = sultsTotal;
+    document.getElementById('m-plan').textContent    = d.planilhaLojasTotal || S.lojas.length;
+    document.getElementById('m-sw').textContent      = st.comSW    || 0;
+    document.getElementById('m-sw-total').textContent = sultsTotal;
+    document.getElementById('m-sh').textContent      = S.softhouses.length;
+    document.getElementById('m-pend').textContent    = st.pendentes || 0;
+    document.getElementById('m-seminfo').textContent = st.semInfo   || 0;
+
+    // ✅ Barras: denominador = sultsTotal (comparativo real)
+    const total = st.totalPlanilha || S.lojas.length || 1;
+    const base  = sultsTotal || total;
+    setBar('pct-sw',      'bar-sw',      st.comSW    ||0, base);
+    setBar('pct-outros',  'bar-outros',  st.outrosSW ||0, base);
+    setBar('pct-seminfo', 'bar-seminfo', st.semInfo  ||0, base);
+
+    document.getElementById('bar-sw-detalhe').textContent =
+        `${st.comSW||0} lojas já no SW de ${sultsTotal} no SULTS (${pct(st.comSW||0,base)}%)`;
+
+    // Subtítulo
+    document.getElementById('pageSub').textContent =
+        `${sultsTotal} unidades SULTS · ${d.planilhaLojasTotal||0} na planilha · ${st.comSW||0} já no SW`;
+
+    // Alertas
+    const al = document.getElementById('alertas');
+    al.innerHTML = '';
+    if (st.semInfo > 0)
+        al.innerHTML += `<div class="alert-card"><span style="font-size:18px">❓</span>
+            <span style="font-size:13px;font-weight:600"><strong>${st.semInfo}</strong> lojas sem informação de sistema.</span></div>`;
+
+    popularFiltros();
+    renderLojas();
+    renderSH();
+}
+
+/* ── Filtros ──────────────────────────────────────────────── */
+function popularFiltros() {
+    const sws = [...new Set(S.lojas.map(l=>l.softwareHouse||'').filter(Boolean))].sort();
+    document.getElementById('fLojaSW').innerHTML =
+        '<option value="">Todos</option>'+sws.map(s=>`<option value="${s}">${s}</option>`).join('');
+
+    const ufs = [...new Set(S.lojas.map(l=>l.uf||'').filter(Boolean))].sort();
+    document.getElementById('fLojaUF').innerHTML =
+        '<option value="">Todos</option>'+ufs.map(u=>`<option value="${u}">${u}</option>`).join('');
+}
+
+function filtrarLojas() {
+    const q  = (document.getElementById('fLoja').value||'').toLowerCase();
+    const sw = document.getElementById('fLojaSW').value;
+    const uf = document.getElementById('fLojaUF').value;
+    const st = document.getElementById('fLojaStatus').value;
+
+    S.lojasFilt = S.lojas.filter(l => {
+        const txt = `${l.codigo||''} ${l.loja||''} ${l.uf||''}`.toLowerCase();
+        if (q  && !txt.includes(q))                               return false;
+        if (sw && (l.softwareHouse||'') !== sw)                   return false;
+        if (uf && (l.uf||'') !== uf)                              return false;
+        if (st === 'Em Andamento' && l.statusMigracao !== 'Em Andamento') return false;
+        if (st === 'sem_obs'  && (l.observacoes||'').trim())      return false;
+        if (st === 'com_obs'  && !(l.observacoes||'').trim())     return false;
+        return true;
+    });
+    S.pLojas = 1;
+    renderLojas();
+}
+
+/* ── IA: atualiza contexto após filtros */
+const filtrarLojasOriginal = filtrarLojas;
+filtrarLojas = function() {
+    filtrarLojasOriginal();
+};
+
+function limparFiltros() {
+    ['fLoja','fLojaSW','fLojaUF','fLojaStatus'].forEach(id => document.getElementById(id).value='');
+    filtrarLojas();
+}
+
+/* ── Render Lojas ─────────────────────────────────────────── */
+function renderLojas() {
+    const list = S.lojasFilt;
+    document.getElementById('cntLojas').textContent = `${list.length} loja${list.length!==1?'s':''}`;
+    if (!list.length) {
+        document.getElementById('bodyLojas').innerHTML =
+            '<tr><td colspan="7"><div class="empty"><div class="icon">🔍</div><p>Nenhuma loja encontrada</p></div></td></tr>';
+        document.getElementById('pagLojas').innerHTML=''; return;
+    }
+    const totalPag = Math.ceil(list.length/S.perPage);
+    const page = list.slice((S.pLojas-1)*S.perPage, S.pLojas*S.perPage);
+
+    document.getElementById('bodyLojas').innerHTML = page.map(l => {
+        const isAndamento = l.statusMigracao === 'Em Andamento';
+        const obs = (l.observacoes||'').trim();
+        const lojaEnc = encodeURIComponent(JSON.stringify({
+            codigo:   l.codigo,
+            loja:     l.loja,
+            rowIndex: l.rowIndex,
+            sw:       l.softwareHouse,
+            uf:       l.uf,
+            obsAtual: obs,
+        }));
+
+        return `<tr>
+            <td>
+                <!-- ✅ Check simples para marcar Em Andamento -->
+                <input type="checkbox" class="check-andamento"
+                    ${isAndamento ? 'checked' : ''}
+                    title="Marcar como Em Andamento"
+                    onchange="toggleAndamento('${l.codigo}', this.checked)"
+                />
+            </td>
+            <td class="id-cell">${l.codigo||'—'}</td>
+            <td class="nome-cell">
+                ${l.loja||'—'}
+                ${isAndamento ? '<br><span class="obs-badge">🔄 Em Andamento</span>' : ''}
+            </td>
+            <td><span class="sp sp-grey" style="font-size:10px;padding:2px 6px">${l.uf||'—'}</span></td>
+            <td>${swBadge(l.softwareHouse)}</td>
+            <td style="max-width:200px">
+                ${obs
+                    ? `<span style="font-size:11px;color:var(--muted)" title="${obs}">${obs.length>50?obs.slice(0,50)+'…':obs}</span>`
+                    : '<span style="color:var(--border);font-size:11px">—</span>'}
+                ${l._obsLocal ? ' <span class="obs-badge">local</span>' : ''}
+            </td>
+            <td style="text-align:center">
+                <button class="btn btn-ghost btn-sm" onclick="abrirModalObs('${lojaEnc}')">
+                    📝 ${obs ? 'Editar obs' : 'Obs'}
+                </button>
+            </td>
+        </tr>`;
+    }).join('');
+
+    renderPag('pagLojas', totalPag, S.pLojas, p => { S.pLojas=p; renderLojas(); });
+}
+
+/* ── Toggle Em Andamento (check) ─────────────────────────── */
+function toggleAndamento(codigo, marcado) {
+    const status = marcado ? 'Em Andamento' : '';
+    fetch(`/migracao/status/${encodeURIComponent(codigo)}`, {
+        method:  'PATCH',
+        headers: {'Content-Type':'application/json'},
+        body:    JSON.stringify({ status }),
+    }).then(r=>r.json()).then(d => {
+        if (d.ok) {
+            toast(marcado ? '🔄 Marcado como Em Andamento' : '✓ Status removido');
+            // Atualiza estado local sem recarregar tudo
+            const idx = S.lojas.findIndex(l => l.codigo === String(codigo));
+            if (idx >= 0) {
+                S.lojas[idx].statusMigracao = status;
+                S.lojasFilt = S.lojas.filter(l => S.lojasFilt.includes(l) ||
+                    S.lojasFilt.some(f => f.codigo === l.codigo));
+                renderLojas();
+            }
+        } else toast('❌ '+(d.erro||'Erro'), 4000);
+    }).catch(e => toast('❌ '+e.message, 4000));
+}
+
+/* ── Modal Observação ─────────────────────────────────────── */
+function abrirModalObs(enc) {
+    const d = JSON.parse(decodeURIComponent(enc));
+    document.getElementById('obsLojaData').value = enc;
+    document.getElementById('inputObs').value = d.obsAtual || '';
+    document.getElementById('modalLojaInfo').innerHTML =
+        `<strong>${d.loja || d.codigo}</strong>
+         Código: ${d.codigo||'—'} &nbsp;·&nbsp; UF: ${d.uf||'—'} &nbsp;·&nbsp; ${d.sw||'Sem SW'}`;
+    document.getElementById('modalObs').classList.add('open');
+    setTimeout(() => document.getElementById('inputObs').focus(), 100);
+}
+
+function fecharModal(e) {
+    if (e.target.id==='modalObs') document.getElementById('modalObs').classList.remove('open');
+}
+
+function salvarObs() {
+    const enc  = document.getElementById('obsLojaData').value;
+    const d    = JSON.parse(decodeURIComponent(enc));
+    const obs  = document.getElementById('inputObs').value.trim();
+    const btn  = document.getElementById('btnSalvarObs');
+
+    if (!obs) { toast('⚠️ Digite uma observação antes de salvar'); return; }
+
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Salvando...';
+
+    fetch('/migracao/observacao', {
+        method:  'POST',
+        headers: {'Content-Type':'application/json'},
+        body:    JSON.stringify({
+            codigo:   d.codigo,
+            rowIndex: d.rowIndex,
+            obs,
+            status:   '',   // não muda o status ao salvar obs
+        }),
+    }).then(r=>r.json()).then(r => {
+        btn.disabled=false; btn.innerHTML='💾 Salvar na planilha';
+        if (r.ok) {
+            const msg = r.gravadoPlanilha
+                ? '✅ Observação salva na planilha!'
+                : '✅ Salvo localmente (será gravado na planilha no próximo sync)';
+            toast(msg);
+            document.getElementById('modalObs').classList.remove('open');
+
+            // Atualiza estado local
+            const idx = S.lojas.findIndex(l => l.codigo === String(d.codigo));
+            if (idx >= 0) { S.lojas[idx].observacoes = obs; S.lojas[idx]._obsLocal = true; renderLojas(); }
+        } else toast('❌ '+(r.erro||'Erro ao salvar'), 4000);
+    }).catch(e => {
+        btn.disabled=false; btn.innerHTML='💾 Salvar na planilha';
+        toast('❌ '+e.message, 4000);
+    });
+}
+
+/* ── Render SoftHouses ────────────────────────────────────── */
+function filtrarSH() {
+    const q = (document.getElementById('fSH').value||'').toLowerCase();
+    S.shFilt = q ? S.softhouses.filter(s=>(s.nome||'').toLowerCase().includes(q)) : S.softhouses;
+    renderSH();
+}
+
+function renderSH() {
+    const list = S.shFilt.length || document.getElementById('fSH').value ? S.shFilt : S.softhouses;
+    document.getElementById('cntSH').textContent = `${list.length} softhouse${list.length!==1?'s':''}`;
+    if (!list.length) {
+        document.getElementById('gridSH').innerHTML =
+            '<div class="empty"><div class="icon">💻</div><p>Nenhuma softhouse — sincronize primeiro</p></div>'; return;
+    }
+    const totalPlan = S.lojas.length || 1;
+    document.getElementById('gridSH').innerHTML = list.map(sh => {
+        const isSW   = sh.nome.trim().toUpperCase() === 'SW';
+        const cor    = isSW ? 'var(--green)' : 'var(--orange)';
+        const borda  = isSW ? 'border-color:var(--green)' : '';
+        const lojasHtml = (sh.lojas||[]).map(l =>
+            `<div class="sh-loja-item">🏪 ${l.nome||l.codigo||'—'} <span style="color:var(--muted);font-size:10px">${l.uf||''}</span></div>`
+        ).join('') || '<div class="sh-loja-item" style="color:var(--muted)">Nenhuma loja</div>';
+
+        const pctSH = pct(sh.totalLojas, totalPlan);
+
+        return `<div class="sh-card" style="${borda}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+                <div>
+                    <div class="sh-card-title">${sh.nome||'—'}</div>
+                    <div class="sh-card-sub">${sh.totalLojas} loja${sh.totalLojas!==1?'s':''}</div>
+                </div>
+                ${isSW ? '<span class="sp sp-green">✅ Destino</span>' : '<span class="sp sp-orange">A migrar</span>'}
+            </div>
+            <div class="sh-prog">
+                <div style="font-size:11px;color:var(--muted);display:flex;justify-content:space-between">
+                    <span>% do total planilha</span><span style="font-family:monospace;font-weight:700">${pctSH}%</span>
+                </div>
+                <div class="sh-prog-track"><div class="sh-prog-fill" style="width:${pctSH}%;background:${cor}"></div></div>
+            </div>
+            <button class="sh-lojas-toggle" onclick="toggleLojas(this)">▼ Ver lojas (${sh.totalLojas})</button>
+            <div class="sh-lojas-list">${lojasHtml}</div>
+        </div>`;
+    }).join('');
+}
+
+function toggleLojas(btn) {
+    const list = btn.nextElementSibling;
+    list.style.display = list.style.display==='block' ? 'none' : 'block';
+    btn.textContent = btn.textContent.startsWith('▼') ? btn.textContent.replace('▼','▲') : btn.textContent.replace('▲','▼');
+}
+
+/* ── Paginação ────────────────────────────────────────────── */
+function renderPag(cid, total, atual, cb) {
+    if (total<=1) { document.getElementById(cid).innerHTML=''; return; }
+    let h = `<button ${atual===1?'disabled':''} onclick="(${cb})(${atual-1})">‹</button>`;
+    for (let i=1;i<=total;i++) {
+        if (total>7&&Math.abs(i-atual)>2&&i!==1&&i!==total) {
+            if (i===atual-3||i===atual+3) h+=`<span class="pg-info">…</span>`; continue;
+        }
+        h+=`<button class="${i===atual?'active':''}" onclick="(${cb})(${i})">${i}</button>`;
+    }
+    h+=`<button ${atual===total?'disabled':''} onclick="(${cb})(${atual+1})">›</button>`;
+    h+=`<span class="pg-info">Pág. ${atual}/${total}</span>`;
+    document.getElementById(cid).innerHTML = h;
+}
+
+/* ── Sincronizar ──────────────────────────────────────────── */
+function sincronizar() {
+    const btn = document.getElementById('btnSync');
+    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
+    setStatus('syncing','🔄 Buscando dados...');
+    fetch('/migracao/sincronizar',{method:'POST'}).then(r=>r.json()).then(d=>{
+        btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
+        if (d.ok) {
+            toast(`✅ ${d.totalSults} SULTS · ${d.totalLojasSW} planilha · SW: ${d.stats?.comSW||0}`);
+            carregar();
+        } else { toast('❌ '+(d.erro||'Falha'),4000); setStatus('error','❌ '+(d.erro||'')); }
+    }).catch(e=>{btn.disabled=false;btn.innerHTML='🔄 Sincronizar';toast('❌ '+e.message,4000);});
+}
+
+/* ── Exportar CSV ─────────────────────────────────────────── */
+function exportarCSV() {
+    if (!S.lojasFilt.length) { toast('Sem dados'); return; }
+    const h = 'Código,Loja,UF,Software House,Observação,Status';
+    const r = S.lojasFilt.map(l =>
+        [l.codigo,l.loja,l.uf,l.softwareHouse,l.observacoes,l.statusMigracao]
+        .map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')
+    );
+    const a=document.createElement('a');
+    a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(h+'\n'+r.join('\n'));
+    a.download=`migracao_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click(); toast('📥 CSV exportado');
+}
+
+/* ── Abas ─────────────────────────────────────────────────── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('tab-'+this.dataset.tab).classList.add('active');
+    });
+});
+
+/* ── IA ───────────────────────────────────────────────────── */
+const $ia = id => document.getElementById(id);
+
+function toggleIA() {
+    $ia('iaJanela').classList.toggle('aberto');
+}
+
+function usarSugestao(txt) {
+    $ia('inputIA').value = txt;
+    $ia('inputIA').focus();
+}
+
+function addMsgIA(tipo, texto) {
+    const box = $ia('iaMsgs');
+    const div = document.createElement('div');
+    div.className = 'msg ' + tipo;
+    div.textContent = texto;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+}
+
+function montarContextoIA() {
+    const titulo = document.querySelector('.page-title')?.textContent?.trim() || document.title;
+    const subtitulo = document.querySelector('.page-sub')?.textContent?.trim() || '';
+    const abaAtiva = document.querySelector('.tab-btn.active')?.textContent?.trim() || 'Lojas';
+
+    const indicadores = [...document.querySelectorAll('.mc')].map(card => {
+        const label = card.querySelector('.mc-label')?.textContent?.trim() || 'Indicador';
+        const valor = card.querySelector('.mc-val')?.textContent?.trim() || '—';
+        const sub = card.querySelector('.mc-sub')?.textContent?.trim() || '';
+        return `- ${label}: ${valor}${sub ? ' | ' + sub : ''}`;
+    }).join('\n');
+
+    const barras = [
+        `- Lojas já no SW: ${document.getElementById('pct-sw')?.textContent?.trim() || '0%'}`,
+        `- Outros sistemas: ${document.getElementById('pct-outros')?.textContent?.trim() || '0%'}`,
+        `- Sem informação: ${document.getElementById('pct-seminfo')?.textContent?.trim() || '0%'}`
+    ].join('\n');
+
+    const filtros = [
+        `- Busca lojas: ${document.getElementById('fLoja')?.value?.trim() || 'vazio'}`,
+        `- Software House: ${document.getElementById('fLojaSW')?.value?.trim() || 'Todos'}`,
+        `- UF: ${document.getElementById('fLojaUF')?.value?.trim() || 'Todos'}`,
+        `- Status: ${document.getElementById('fLojaStatus')?.value?.trim() || 'Todos'}`,
+        `- Busca SoftHouse: ${document.getElementById('fSH')?.value?.trim() || 'vazio'}`
+    ].join('\n');
+
+    const lojasVisiveis = [...document.querySelectorAll('#bodyLojas tr')]
+        .slice(0, 20)
+        .map(tr => [...tr.querySelectorAll('td')]
+            .map(td => td.textContent.trim().replace(/\s+/g, ' '))
+            .filter(Boolean)
+            .join(' | '))
+        .filter(Boolean)
+        .map(l => `- ${l}`)
+        .join('\n');
+
+    const shVisiveis = [...document.querySelectorAll('#gridSH .sh-card')]
+        .slice(0, 12)
+        .map(card => {
+            const titulo = card.querySelector('.sh-card-title')?.textContent?.trim() || '—';
+            const sub = card.querySelector('.sh-card-sub')?.textContent?.trim() || '';
+            return `- ${titulo}${sub ? ' | ' + sub : ''}`;
+        })
+        .join('\n');
+
+    return `
+PÁGINA: ${titulo}
+SUBTÍTULO: ${subtitulo}
+ABA ATIVA: ${abaAtiva}
+
+INDICADORES:
+${indicadores || 'Sem indicadores visíveis'}
+
+PROGRESSO:
+${barras}
+
+FILTROS:
+${filtros}
+
+LOJAS VISÍVEIS:
+${lojasVisiveis || 'Nenhuma linha visível'}
+
+SOFTHOUSES VISÍVEIS:
+${shVisiveis || 'Nenhum card visível'}
+    `.trim();
+}
+
+async function perguntarIA() {
+    const pergunta = $ia('inputIA').value.trim();
+    if (!pergunta) return;
+
+    addMsgIA('user', pergunta);
+    $ia('inputIA').value = '';
+    $ia('btnIA').disabled = true;
+
+    const loading = addMsgIA('ai carregando', 'Analisando...');
+    try {
+        const r = await fetch('/ia-ti/perguntar', {
+            method:'POST',
+            headers:{ 'Content-Type':'application/json' },
+            credentials:'include',
+            body: JSON.stringify({
+                pergunta,
+                contexto: montarContextoIA(),
+                pagina: location.pathname
+            })
+        });
+
+        const d = await r.json();
+        loading.remove();
+
+        if (!d.ok) {
+            addMsgIA('ai', 'Erro: ' + (d.erro || 'Falha ao consultar a IA.'));
+            return;
+        }
+
+        addMsgIA('ai', d.resposta || 'Sem resposta.');
+    } catch (e) {
+        loading.remove();
+        addMsgIA('ai', 'Erro: ' + e.message);
+    } finally {
+        $ia('btnIA').disabled = false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const input = $ia('inputIA');
+    if (input) {
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') perguntarIA();
+        });
+    }
+});
+
+carregar();
+</script>
+</body>
+</html>

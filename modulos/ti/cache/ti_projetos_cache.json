@@ -1,0 +1,105 @@
+{
+  "projetos": [
+    {
+      "rowIndex": 3,
+      "nome": "Extração de realtório – SULTS",
+      "totalTarefas": 12,
+      "concluidas": 12,
+      "pctConcluido": 100,
+      "emValidacao": 1,
+      "pendentes": 0,
+      "atraso": 0,
+      "ultimaMoviment": "15/03/2026 14:53"
+    },
+    {
+      "rowIndex": 4,
+      "nome": "Etiquetas NFC",
+      "totalTarefas": 19,
+      "concluidas": 14,
+      "pctConcluido": 73,
+      "emValidacao": 1,
+      "pendentes": 4,
+      "atraso": 0,
+      "ultimaMoviment": "11/03/2026 12:15"
+    },
+    {
+      "rowIndex": 5,
+      "nome": "TICWAY",
+      "totalTarefas": 37,
+      "concluidas": 32,
+      "pctConcluido": 86,
+      "emValidacao": 0,
+      "pendentes": 3,
+      "atraso": 0,
+      "ultimaMoviment": "13/03/2026 16:36"
+    },
+    {
+      "rowIndex": 6,
+      "nome": "Agente de IA Agenda Treinamento",
+      "totalTarefas": 14,
+      "concluidas": 6,
+      "pctConcluido": 42,
+      "emValidacao": 1,
+      "pendentes": 6,
+      "atraso": 0,
+      "ultimaMoviment": "04/03/2026 12:35"
+    },
+    {
+      "rowIndex": 7,
+      "nome": "Cartão desconto para todos os Franqueados",
+      "totalTarefas": 35,
+      "concluidas": 7,
+      "pctConcluido": 20,
+      "emValidacao": 0,
+      "pendentes": 26,
+      "atraso": 0,
+      "ultimaMoviment": "05/03/2026 21:46"
+    },
+    {
+      "rowIndex": 8,
+      "nome": "Dev Integ Sefaz",
+      "totalTarefas": 35,
+      "concluidas": 18,
+      "pctConcluido": 51,
+      "emValidacao": 1,
+      "pendentes": 16,
+      "atraso": 0,
+      "ultimaMoviment": "27/02/2026 14:09"
+    },
+    {
+      "rowIndex": 9,
+      "nome": "Digitalização de Controles de Temperatura",
+      "totalTarefas": 16,
+      "concluidas": 1,
+      "pctConcluido": 6,
+      "emValidacao": 0,
+      "pendentes": 14,
+      "atraso": 0,
+      "ultimaMoviment": "27/02/2026 14:09"
+    },
+    {
+      "rowIndex": 10,
+      "nome": "Automação Indicadores(T.I DIVINO)",
+      "totalTarefas": 25,
+      "concluidas": 13,
+      "pctConcluido": 52,
+      "emValidacao": 3,
+      "pendentes": 2,
+      "atraso": 0,
+      "ultimaMoviment": "16/03/2026 10:18"
+    },
+    {
+      "rowIndex": 11,
+      "nome": "Projeto Doação de NF sem CPF",
+      "totalTarefas": 18,
+      "concluidas": 2,
+      "pctConcluido": 11,
+      "emValidacao": 0,
+      "pendentes": 15,
+      "atraso": 0,
+      "ultimaMoviment": "16/03/2026 10:18"
+    }
+  ],
+  "sincronizadoEm": "2026-03-20T23:03:35.417Z",
+  "_savedAt": "2026-03-20T23:03:35.417Z"
+}

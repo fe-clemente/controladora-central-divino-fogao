@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projetos T.I. — Divino Fogão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:#c8102e; --red-pale:#fff0f2;
+            --bg:#f5f3ef; --bg2:#fff; --bg3:#faf8f5;
+            --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+            --green:#16a34a; --green-pale:#f0fdf4;
+            --yellow:#d97706; --yellow-pale:#fffbeb;
+            --orange:#ea580c; --orange-pale:#fff7ed;
+            --ti:#0369a1; --ti-light:#0ea5e9; --ti-pale:#f0f9ff;
+            --ti2:#7c3aed; --ti2-pale:#f5f3ff;
+            --shadow:0 2px 12px rgba(0,0,0,.08);
+            --shadow-lg:0 8px 32px rgba(0,0,0,.13);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+        /* ── HEADER ── */
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
+        .logo{padding:10px 0;}
+        .logo img{height:48px;display:block;}
+        .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
+        .hd{width:1px;height:32px;background:var(--border);flex-shrink:0;}
+        .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
+        nav{display:flex;gap:2px;margin-left:auto;}
+        .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+        .nav-btn:hover{color:var(--text);background:var(--bg3);}
+        .nav-btn.active{color:var(--ti2);border-bottom-color:var(--ti2);background:var(--ti2-pale);}
+
+        /* ── STATUS BAR ── */
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+        .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.4s infinite;flex-shrink:0;}
+        .sdot.ok{background:var(--green);animation:none;}
+        .sdot.err{background:var(--red);animation:none;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+        main{max-width:1300px;margin:0 auto;padding:28px 24px;}
+
+        /* ── MÉTRICAS ── */
+        .metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:22px;}
+        .mc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:15px 18px;box-shadow:var(--shadow);}
+        .mc-icon{font-size:20px;margin-bottom:5px;}
+        .mc-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:4px;}
+        .mc-val{font-size:28px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
+        .mc-sub{font-size:10px;color:var(--muted);margin-top:3px;font-weight:600;}
+
+        /* ── TOOLBAR ── */
+        .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+        .section-title{font-size:14px;font-weight:900;}
+        .btn-planilha{background:var(--ti2);color:#fff;border:none;padding:8px 16px;border-radius:9px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(124,58,237,.3);transition:all .18s;}
+        .btn-planilha:hover{background:#6d28d9;}
+        .toolbar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px;}
+        .fg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px;}
+        .fg label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
+        .fc{padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;transition:border-color .2s;}
+        .fc:focus{border-color:var(--ti2);}
+        .view-toggle{display:flex;gap:4px;}
+        .vbtn{padding:7px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg3);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .18s;}
+        .vbtn.active{background:var(--ti2);color:#fff;border-color:var(--ti2);}
+
+        /* ── BOTÕES ── */
+        .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;}
+        .btn-ti2{background:var(--ti2);color:#fff;}
+        .btn-ti2:hover{background:#6d28d9;}
+        .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+        .btn-ghost:hover{background:var(--bg2);}
+        .btn:disabled{opacity:.5;cursor:not-allowed;}
+        .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+        .spinner.dark{border:2px solid var(--border);border-top-color:var(--ti2);}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* ── CARDS ── */
+        .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:24px;}
+        .proj-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow);transition:all .2s;position:relative;overflow:hidden;}
+        .proj-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--ti2);}
+        .proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:16px 16px 0 0;background:linear-gradient(90deg,var(--ti2),#a78bfa);}
+        .proj-card.atraso::before{background:linear-gradient(90deg,var(--red),#f87171);}
+        .proj-card-nome{font-size:14px;font-weight:900;margin-bottom:14px;line-height:1.3;padding-top:4px;}
+        .pbar-wrap{margin-bottom:14px;}
+        .pbar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+        .pbar-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
+        .pbar-pct{font-size:16px;font-weight:900;font-family:'JetBrains Mono',monospace;}
+        .pbar{height:10px;background:var(--bg);border-radius:5px;overflow:hidden;border:1px solid var(--border);}
+        .pbar-fill{height:100%;border-radius:5px;transition:width .9s ease;}
+        .card-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+        .cs{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:8px 10px;text-align:center;}
+        .cs-val{font-size:16px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
+        .cs-lbl{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--muted);margin-top:3px;letter-spacing:.4px;}
+        .atraso-badge{background:#fee2e2;color:#b91c1c;border:1.5px solid rgba(185,28,28,.2);padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800;}
+
+        /* ── TABELA ── */
+        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+        .table-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+        .tbl-scroll{overflow-x:auto;}
+        table{width:100%;border-collapse:collapse;min-width:800px;}
+        thead th{padding:10px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
+        tbody tr{transition:background .13s;}
+        tbody tr:hover td{background:var(--ti2-pale);}
+        tbody td{padding:10px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+        tbody tr:last-child td{border-bottom:none;}
+        .mono{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+        .empty{text-align:center;padding:50px;color:var(--muted);}
+
+        /* ── TOAST ── */
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1410;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;white-space:nowrap;}
+        .toast.show{display:block;animation:fadeUp .3s ease;}
+        @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+        /* ── IA ── */
+        #iaWidget{
+            position:fixed;
+            right:24px;
+            bottom:24px;
+            z-index:4000;
+            display:flex;
+            flex-direction:column;
+            align-items:flex-end;
+            gap:12px;
+        }
+        #iaToggle{
+            width:58px;
+            height:58px;
+            border-radius:50%;
+            border:none;
+            cursor:pointer;
+            color:#fff;
+            font-size:26px;
+            background:linear-gradient(135deg,#0369a1,#075985);
+            box-shadow:0 6px 24px rgba(3,105,161,.35);
+        }
+        #iaJanela{
+            width:390px;
+            max-width:calc(100vw - 32px);
+            height:560px;
+            background:#fff;
+            border:1px solid var(--border);
+            border-radius:18px;
+            box-shadow:var(--shadow-lg);
+            display:none;
+            flex-direction:column;
+            overflow:hidden;
+        }
+        #iaJanela.aberto{display:flex}
+        .ia-topo{
+            background:linear-gradient(135deg,#0369a1,#075985);
+            color:#fff;
+            padding:14px 16px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+        .ia-topo-titulo{font-size:14px;font-weight:800}
+        .ia-topo-sub{font-size:11px;opacity:.85}
+        .ia-fechar{
+            background:rgba(255,255,255,.15);
+            border:none;
+            color:#fff;
+            width:28px;
+            height:28px;
+            border-radius:8px;
+            cursor:pointer;
+        }
+        .ia-sugs{
+            padding:10px 12px;
+            display:flex;
+            flex-wrap:wrap;
+            gap:6px;
+            background:#faf8f5;
+            border-bottom:1px solid var(--border);
+        }
+        .ia-sug{
+            border:1px solid var(--border);
+            background:#fff;
+            color:#6b7280;
+            border-radius:16px;
+            padding:6px 10px;
+            font-size:11px;
+            font-weight:700;
+            cursor:pointer;
+        }
+        .ia-msgs{
+            flex:1;
+            overflow-y:auto;
+            padding:14px;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+        .msg{
+            max-width:88%;
+            padding:10px 14px;
+            border-radius:12px;
+            font-size:13px;
+            line-height:1.6;
+            white-space:pre-wrap;
+            word-break:break-word;
+        }
+        .msg.user{
+            align-self:flex-end;
+            background:#0369a1;
+            color:#fff;
+            border-bottom-right-radius:4px;
+        }
+        .msg.ai{
+            align-self:flex-start;
+            background:#faf8f5;
+            color:#1f2937;
+            border:1px solid var(--border);
+            border-bottom-left-radius:4px;
+        }
+        .msg.ai.carregando{
+            color:#6b7280;
+            font-style:italic;
+        }
+        .ia-rodape{
+            display:flex;
+            gap:8px;
+            padding:12px;
+            background:#faf8f5;
+            border-top:1px solid var(--border);
+        }
+        .ia-input{
+            flex:1;
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:10px 12px;
+            outline:none;
+            font-size:13px;
+            font-family:'Nunito',sans-serif;
+        }
+        .ia-enviar{
+            width:38px;
+            height:38px;
+            border:none;
+            border-radius:10px;
+            background:#0369a1;
+            color:#fff;
+            cursor:pointer;
+            font-size:18px;
+        }
+
+        @media (max-width: 760px){
+            nav{overflow:auto}
+            #iaJanela{
+                width:calc(100vw - 20px);
+                height:70vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <span class="logo-fb">🍽️</span>
+    </div>
+    <div class="hd"></div>
+    <div class="h-title">Central de T.I.</div>
+<nav>
+    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+    <button class="nav-btn active" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+</nav>
+</header>
+
+<div id="statusBar">
+    <div class="sdot" id="sdot"></div>
+    <span id="statusTxt">Carregando projetos...</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span id="syncInfo" style="font-size:10px;color:var(--muted)"></span>
+        <button class="btn btn-ghost" style="font-size:12px" onclick="exportCSV()">⬇ CSV</button>
+        <button class="btn btn-ti2" id="btnSync" onclick="sincronizar()">🔄 Sincronizar</button>
+    </span>
+</div>
+
+<main>
+    <div class="metrics">
+        <div class="mc"><div class="mc-icon">📋</div><div class="mc-label">Total Projetos</div>
+            <div class="mc-val" style="color:var(--ti2)" id="k-total">—</div><div class="mc-sub">em andamento</div></div>
+        <div class="mc"><div class="mc-icon">✅</div><div class="mc-label">Tarefas Concluídas</div>
+            <div class="mc-val" style="color:var(--green)" id="k-conc">—</div><div class="mc-sub">de <span id="k-total-tar">—</span> totais</div></div>
+        <div class="mc"><div class="mc-icon">🔍</div><div class="mc-label">Em Validação</div>
+            <div class="mc-val" style="color:#1d4ed8" id="k-valid">—</div><div class="mc-sub">aguardando validação</div></div>
+        <div class="mc"><div class="mc-icon">⏳</div><div class="mc-label">Pendentes</div>
+            <div class="mc-val" style="color:var(--yellow)" id="k-pend">—</div><div class="mc-sub">a realizar</div></div>
+        <div class="mc"><div class="mc-icon">🚨</div><div class="mc-label">Em Atraso</div>
+            <div class="mc-val" style="color:var(--red)" id="k-atraso">—</div><div class="mc-sub">tarefas atrasadas</div></div>
+        <div class="mc"><div class="mc-icon">📊</div><div class="mc-label">Progresso Médio</div>
+            <div class="mc-val" style="color:var(--ti2)" id="k-prog">—</div><div class="mc-sub">% médio geral</div></div>
+    </div>
+
+    <div class="section-hdr">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <div class="section-title">📋 Status dos Projetos T.I.</div>
+            <div class="view-toggle">
+                <button class="vbtn active" id="vCards"  onclick="setView('cards')">🃏 Cards</button>
+                <button class="vbtn"        id="vTabela" onclick="setView('tabela')">📋 Tabela</button>
+            </div>
+        </div>
+        <a class="btn-planilha"
+           href="https://docs.google.com/spreadsheets/d/1O0dCvn7vs6PevBIKhEJeerh0h2pLz0izZ9dZIGuZZVs/edit?gid=368710133#gid=368710133"
+           target="_blank" rel="noopener">
+            📊 Abrir Planilha ↗
+        </a>
+    </div>
+
+    <div class="toolbar">
+        <div class="fg">
+            <label>🔍 Buscar projeto</label>
+            <input type="text" class="fc" id="fBusca" placeholder="Nome do projeto…" oninput="aplicarFiltros()">
+        </div>
+        <div class="fg" style="max-width:180px">
+            <label>Situação</label>
+            <select class="fc" id="fSit" onchange="aplicarFiltros()">
+                <option value="">Todos</option>
+                <option value="atraso">🚨 Com atraso</option>
+                <option value="validacao">🔍 Em validação</option>
+                <option value="concluido">✅ 100% concluído</option>
+            </select>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-end">
+            <button class="btn btn-ghost" onclick="limparFiltros()">✕ Limpar</button>
+        </div>
+    </div>
+
+    <div id="viewCards">
+        <div class="proj-grid" id="projGrid">
+            <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px">
+                <div class="spinner dark"></div> Carregando projetos...
+            </div>
+        </div>
+    </div>
+
+    <div id="viewTabela" style="display:none">
+        <div class="table-wrap">
+            <div class="table-head">
+                <div style="font-size:13px;font-weight:800">📋 Projetos em Andamento</div>
+                <div class="mono" id="tblCount"></div>
+            </div>
+            <div class="tbl-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Projeto</th><th>Total</th><th>Concluídas</th>
+                            <th>% Concluído</th><th>Validação</th><th>Pendentes</th>
+                            <th>Atraso</th><th>Última Movimentação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- IA -->
+<div id="iaWidget">
+    <div id="iaJanela">
+        <div class="ia-topo">
+            <div>
+                <div class="ia-topo-titulo">🤖 IA — Projetos</div>
+                <div class="ia-topo-sub">Leitura da tela atual</div>
+            </div>
+            <button class="ia-fechar" onclick="toggleIA()">✕</button>
+        </div>
+
+        <div class="ia-sugs">
+            <button class="ia-sug" onclick="usarSugestao('Me dê um resumo executivo dos projetos.')">Resumo</button>
+            <button class="ia-sug" onclick="usarSugestao('Quais projetos exigem atenção imediata?')">Atenção</button>
+            <button class="ia-sug" onclick="usarSugestao('Quais gargalos e atrasos você identifica?')">Gargalos</button>
+            <button class="ia-sug" onclick="usarSugestao('Quais ações você recomenda agora?')">Ações</button>
+        </div>
+
+        <div class="ia-msgs" id="iaMsgs">
+            <div class="msg ai">Olá. Posso analisar os indicadores, filtros e projetos visíveis desta página.</div>
+        </div>
+
+        <div class="ia-rodape">
+            <input type="text" id="inputIA" class="ia-input" placeholder="Pergunte sobre os projetos desta tela...">
+            <button class="ia-enviar" id="btnIA" onclick="perguntarIA()">➤</button>
+        </div>
+    </div>
+
+    <button id="iaToggle" onclick="toggleIA()">🤖</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_DADOS = '/ti/api/projetos/dados';
+const API_SYNC  = '/ti/api/projetos/sincronizar';
+
+let projetos = [], filtrado = [], viewAtual = 'cards';
+
+const $ = id => document.getElementById(id);
+const toast = (msg, ms = 2800) => {
+    $('toast').textContent = msg;
+    $('toast').classList.add('show');
+    setTimeout(() => $('toast').classList.remove('show'), ms);
+};
+const setStatus = (cls, msg) => {
+    $('sdot').className = 'sdot ' + (cls || '');
+    $('statusTxt').textContent = msg;
+};
+const pctCor = p => p >= 90 ? 'var(--green)' : p >= 50 ? '#2563eb' : p >= 25 ? 'var(--yellow)' : 'var(--red)';
+
+async function carregar() {
+    setStatus('', 'Carregando projetos...');
+    try {
+        const r = await fetch(API_DADOS);
+        const d = await r.json();
+        if (!d.ok) { setStatus('err', '❌ ' + d.erro); return; }
+        projetos = d.projetos || [];
+        atualizarKPIs();
+        aplicarFiltros();
+        setStatus('ok', `✓ ${projetos.length} projetos carregados`);
+        if (d.sincronizadoEm)
+            $('syncInfo').textContent = 'Sync: ' + new Date(d.sincronizadoEm).toLocaleString('pt-BR');
+    } catch (e) { setStatus('err', '❌ ' + e.message); }
+}
+
+async function sincronizar() {
+    const btn = $('btnSync');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Sincronizando...';
+    try {
+        const r = await fetch(API_SYNC, { method: 'POST' });
+        const d = await r.json();
+        if (d.ok) { toast('✅ Sincronizado!'); await carregar(); }
+        else toast('❌ ' + (d.erro || 'Falha'), 4000);
+    } catch (e) { toast('❌ ' + e.message, 4000); }
+    btn.disabled = false; btn.innerHTML = '🔄 Sincronizar';
+}
+
+function atualizarKPIs() {
+    const totalTar  = projetos.reduce((s, p) => s + p.totalTarefas, 0);
+    const totalConc = projetos.reduce((s, p) => s + p.concluidas, 0);
+    const totalVal  = projetos.reduce((s, p) => s + p.emValidacao, 0);
+    const totalPend = projetos.reduce((s, p) => s + p.pendentes, 0);
+    const totalAtr  = projetos.reduce((s, p) => s + p.atraso, 0);
+    const progMed   = projetos.length
+        ? Math.round(projetos.reduce((s, p) => s + p.pctConcluido, 0) / projetos.length) : 0;
+    $('k-total').textContent     = projetos.length;
+    $('k-conc').textContent      = totalConc;
+    $('k-total-tar').textContent = totalTar;
+    $('k-valid').textContent     = totalVal;
+    $('k-pend').textContent      = totalPend;
+    $('k-atraso').textContent    = totalAtr;
+    $('k-prog').textContent      = progMed + '%';
+}
+
+function aplicarFiltros() {
+    const busca = $('fBusca').value.toLowerCase().trim();
+    const sit   = $('fSit').value;
+    filtrado = projetos.filter(p => {
+        if (busca && !p.nome.toLowerCase().includes(busca)) return false;
+        if (sit === 'atraso'    && p.atraso === 0)       return false;
+        if (sit === 'validacao' && p.emValidacao === 0)  return false;
+        if (sit === 'concluido' && p.pctConcluido < 100) return false;
+        return true;
+    });
+    $('tblCount').textContent = `${filtrado.length} projeto(s)`;
+    renderCards();
+    renderTabela();
+}
+
+function limparFiltros() {
+    ['fBusca','fSit'].forEach(id => $(id).value = '');
+    aplicarFiltros();
+}
+
+function renderCards() {
+    const grid = $('projGrid');
+    if (!filtrado.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--muted)">🔍 Nenhum projeto encontrado</div>';
+        return;
+    }
+    grid.innerHTML = filtrado.map(p => {
+        const cor = pctCor(p.pctConcluido);
+        return `<div class="proj-card${p.atraso > 0 ? ' atraso' : ''}">
+            <div class="proj-card-nome">${p.nome}${p.atraso > 0 ? ' <span class="atraso-badge">🚨 '+p.atraso+' em atraso</span>' : ''}</div>
+            <div class="pbar-wrap">
+                <div class="pbar-top">
+                    <span class="pbar-lbl">Progresso</span>
+                    <span class="pbar-pct" style="color:${cor}">${p.pctConcluido.toFixed(1)}%</span>
+                </div>
+                <div class="pbar"><div class="pbar-fill" style="width:${Math.min(p.pctConcluido,100)}%;background:${cor}"></div></div>
+            </div>
+            <div class="card-stats">
+                <div class="cs"><div class="cs-val" style="color:var(--muted)">${p.totalTarefas}</div><div class="cs-lbl">Total</div></div>
+                <div class="cs"><div class="cs-val" style="color:var(--green)">${p.concluidas}</div><div class="cs-lbl">Concluídas</div></div>
+                <div class="cs"><div class="cs-val" style="color:#1d4ed8">${p.emValidacao}</div><div class="cs-lbl">Validação</div></div>
+                <div class="cs"><div class="cs-val" style="color:var(--yellow)">${p.pendentes}</div><div class="cs-lbl">Pendentes</div></div>
+            </div>
+            ${p.ultimaMoviment ? `<div style="margin-top:10px;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">🕐 ${p.ultimaMoviment}</div>` : ''}
+        </div>`;
+    }).join('');
+}
+
+function renderTabela() {
+    if (!filtrado.length) {
+        $('tblBody').innerHTML = '<tr><td colspan="8"><div class="empty">🔍 Nenhum projeto encontrado</div></td></tr>';
+        return;
+    }
+    $('tblBody').innerHTML = filtrado.map(p => {
+        const cor = pctCor(p.pctConcluido);
+        return `<tr>
+            <td style="font-weight:700;min-width:200px">${p.nome}</td>
+            <td class="mono" style="text-align:center">${p.totalTarefas}</td>
+            <td class="mono" style="color:var(--green);font-weight:700;text-align:center">${p.concluidas}</td>
+            <td style="min-width:120px">
+                <div style="display:flex;align-items:center;gap:8px">
+                    <div style="flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)">
+                        <div style="height:100%;width:${Math.min(p.pctConcluido,100)}%;background:${cor};border-radius:3px"></div>
+                    </div>
+                    <span style="font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;color:${cor};white-space:nowrap">${p.pctConcluido.toFixed(1)}%</span>
+                </div>
+            </td>
+            <td class="mono" style="color:#1d4ed8;font-weight:700;text-align:center">${p.emValidacao}</td>
+            <td class="mono" style="color:var(--yellow);font-weight:700;text-align:center">${p.pendentes}</td>
+            <td class="mono" style="color:${p.atraso>0?'var(--red)':'var(--muted)'};font-weight:${p.atraso>0?'900':'400'};text-align:center">${p.atraso > 0 ? '🚨 '+p.atraso : '—'}</td>
+            <td class="mono" style="font-size:10px">${p.ultimaMoviment || '—'}</td>
+        </tr>`;
+    }).join('');
+}
+
+function setView(v) {
+    viewAtual = v;
+    $('vCards').classList.toggle('active', v === 'cards');
+    $('vTabela').classList.toggle('active', v === 'tabela');
+    $('viewCards').style.display  = v === 'cards'  ? '' : 'none';
+    $('viewTabela').style.display = v === 'tabela' ? '' : 'none';
+}
+
+function exportCSV() {
+    if (!filtrado.length) { toast('Sem dados para exportar'); return; }
+    const cols = ['Projeto','Total Tarefas','Concluidas','% Concluido','Em Validacao','Pendentes','Atraso','Ultima Movimentacao'];
+    const rows = filtrado.map(p => [
+        p.nome, p.totalTarefas, p.concluidas,
+        p.pctConcluido.toFixed(1)+'%',
+        p.emValidacao, p.pendentes, p.atraso, p.ultimaMoviment,
+    ].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
+    const blob = new Blob(['\uFEFF' + cols.join(',') + '\n' + rows.join('\n')], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `projetos_ti_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    toast(`📥 CSV exportado — ${filtrado.length} projetos`);
+}
+
+/* ── IA ───────────────────────────────────────────────────── */
+const $ia = id => document.getElementById(id);
+
+function toggleIA() {
+    $ia('iaJanela').classList.toggle('aberto');
+}
+
+function usarSugestao(txt) {
+    $ia('inputIA').value = txt;
+    $ia('inputIA').focus();
+}
+
+function addMsgIA(tipo, texto) {
+    const box = $ia('iaMsgs');
+    const div = document.createElement('div');
+    div.className = 'msg ' + tipo;
+    div.textContent = texto;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+}
+
+function montarContextoIA() {
+    const indicadores = [...document.querySelectorAll('.mc')].map(card => {
+        const label = card.querySelector('.mc-label')?.textContent?.trim() || 'Indicador';
+        const valor = card.querySelector('.mc-val')?.textContent?.trim() || '—';
+        const sub = card.querySelector('.mc-sub')?.textContent?.trim() || '';
+        return `- ${label}: ${valor}${sub ? ' | ' + sub : ''}`;
+    }).join('\n');
+
+    const filtros = [
+        `- Busca projeto: ${document.getElementById('fBusca')?.value?.trim() || 'vazio'}`,
+        `- Situação: ${document.getElementById('fSit')?.value?.trim() || 'Todos'}`,
+        `- Visualização: ${viewAtual}`
+    ].join('\n');
+
+    const cards = [...document.querySelectorAll('.proj-card')]
+        .slice(0, 20)
+        .map(card => {
+            const nome = card.querySelector('.proj-card-nome')?.textContent?.replace(/\s+/g,' ').trim() || 'Projeto';
+            const stats = [...card.querySelectorAll('.cs')]
+                .map(cs => {
+                    const v = cs.querySelector('.cs-val')?.textContent?.trim() || '';
+                    const l = cs.querySelector('.cs-lbl')?.textContent?.trim() || '';
+                    return `${l}: ${v}`;
+                }).join(' | ');
+            const prog = card.querySelector('.pbar-pct')?.textContent?.trim() || '';
+            return `- ${nome}${prog ? ' | Progresso: ' + prog : ''}${stats ? ' | ' + stats : ''}`;
+        })
+        .join('\n');
+
+    const linhas = [...document.querySelectorAll('#tblBody tr')]
+        .slice(0, 20)
+        .map(tr => [...tr.querySelectorAll('td')]
+            .map(td => td.textContent.trim().replace(/\s+/g, ' '))
+            .filter(Boolean)
+            .join(' | '))
+        .filter(Boolean)
+        .map(l => `- ${l}`)
+        .join('\n');
+
+    return `
+PÁGINA: Projetos T.I.
+
+INDICADORES:
+${indicadores || 'Sem indicadores visíveis'}
+
+FILTROS:
+${filtros}
+
+CARDS VISÍVEIS:
+${cards || 'Nenhum card visível'}
+
+LINHAS VISÍVEIS:
+${linhas || 'Nenhuma linha visível'}
+    `.trim();
+}
+
+async function perguntarIA() {
+    const pergunta = $ia('inputIA').value.trim();
+    if (!pergunta) return;
+
+    addMsgIA('user', pergunta);
+    $ia('inputIA').value = '';
+    $ia('btnIA').disabled = true;
+
+    const loading = addMsgIA('ai carregando', 'Analisando...');
+    try {
+        const r = await fetch('/ia-ti/perguntar', {
+            method:'POST',
+            headers:{ 'Content-Type':'application/json' },
+            credentials:'include',
+            body: JSON.stringify({
+                pergunta,
+                contexto: montarContextoIA(),
+                pagina: location.pathname
+            })
+        });
+
+        const d = await r.json();
+        loading.remove();
+
+        if (!d.ok) {
+            addMsgIA('ai', 'Erro: ' + (d.erro || 'Falha ao consultar a IA.'));
+            return;
+        }
+
+        addMsgIA('ai', d.resposta || 'Sem resposta.');
+    } catch (e) {
+        loading.remove();
+        addMsgIA('ai', 'Erro: ' + e.message);
+    } finally {
+        $ia('btnIA').disabled = false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const input = $ia('inputIA');
+    if (input) {
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') perguntarIA();
+        });
+    }
+});
+
+carregar();
+</script>
+</body>
+</html>

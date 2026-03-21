@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Links & Recursos — Divino Fogão T.I.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --red:#c8102e; --red-pale:#fff0f2;
+        --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+        --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+        --green:#16a34a; --green-pale:#f0fdf4;
+        --yellow:#d97706; --yellow-pale:#fffbeb;
+        --orange:#ea580c; --orange-pale:#fff7ed;
+        --ti:#0369a1; --ti-light:#0ea5e9; --ti-pale:#f0f9ff;
+        --ti2:#7c3aed; --ti2-pale:#f5f3ff;
+        --shadow:0 2px 12px rgba(0,0,0,.08);
+        --shadow-lg:0 8px 32px rgba(0,0,0,.14);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* ── HEADER ── */
+    header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+    .logo{padding:10px 0;}.logo img{height:48px;display:block;}
+    .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
+    .hd{width:1px;height:32px;background:var(--border);}
+    .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
+    nav{display:flex;gap:2px;margin-left:auto;}
+    .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+    .nav-btn:hover{color:var(--text);background:var(--bg3);}
+    .nav-btn.active{color:var(--ti2);border-bottom-color:var(--ti2);background:var(--ti2-pale);}
+
+    /* ── STATUS BAR ── */
+    #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+    .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+    .sdot.ready{background:var(--green);animation:none;}
+    .sdot.error{background:var(--red);animation:none;}
+    .sdot.syncing{background:var(--ti-light);animation:pulse .8s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .sheets-badge{display:flex;align-items:center;gap:5px;background:var(--green-pale);border:1px solid rgba(22,163,74,.3);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:800;color:var(--green);}
+
+    /* ── LAYOUT ── */
+    main{max-width:1300px;margin:0 auto;padding:28px 24px;}
+    .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap;}
+    .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
+    .page-sub{font-size:13px;color:var(--muted);}
+    .page-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+
+    /* ── BOTÕES ── */
+    .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+    .btn-ti{background:var(--ti);color:#fff;box-shadow:0 2px 8px rgba(3,105,161,.25);}
+    .btn-ti:hover{background:#075985;}
+    .btn-purple{background:var(--ti2);color:#fff;box-shadow:0 2px 8px rgba(124,58,237,.25);}
+    .btn-purple:hover{background:#6d28d9;}
+    .btn-green{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(22,163,74,.25);}
+    .btn-green:hover{background:#15803d;}
+    .btn-ghost{background:var(--bg2);color:var(--text);border:1.5px solid var(--border);}
+    .btn-ghost:hover{background:var(--bg3);border-color:var(--ti);}
+    .btn-red{background:#dc2626;color:#fff;}
+    .btn-red:hover{background:#b91c1c;}
+    .btn:disabled{opacity:.5;cursor:not-allowed;}
+    .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+    .spinner.dark{border:2px solid var(--border);border-top-color:var(--ti);}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── STATS BAR ── */
+    .stats-bar{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:24px;}
+    .stat-pill{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;text-align:center;transition:border-color .15s;}
+    .stat-pill:hover{border-color:var(--ti2);}
+    .stat-val{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px;}
+    .stat-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+
+    /* ── FILTROS ── */
+    .filtros-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+    .search-box{position:relative;flex:1;min-width:200px;}
+    .search-box input{width:100%;padding:9px 14px 9px 36px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;background:var(--bg3);color:var(--text);outline:none;transition:border-color .2s;}
+    .search-box input:focus{border-color:var(--ti2);background:var(--bg2);}
+    .search-box::before{content:'🔍';position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;}
+    .filtros-group{display:flex;gap:6px;flex-wrap:wrap;}
+    .filtro-tipo{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+    .filtro-tipo.active{color:#fff;border-color:transparent;background:var(--ti2);}
+    .filtro-tipo:hover:not(.active){border-color:var(--ti2);color:var(--ti2);}
+    .count-badge{background:rgba(255,255,255,.3);padding:1px 6px;border-radius:10px;font-size:10px;margin-left:3px;}
+
+    /* ── GRUPOS ── */
+    .grupos-container{display:flex;flex-direction:column;gap:18px;}
+    .grupo-section{}
+    .grupo-header{display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer;user-select:none;}
+    .grupo-header-left{display:flex;align-items:center;gap:10px;}
+    .grupo-arrow{font-size:12px;color:var(--muted);transition:transform .2s;flex-shrink:0;}
+    .grupo-arrow.aberto{transform:rotate(90deg);}
+    .grupo-title{font-size:13px;font-weight:800;color:var(--text);}
+    .grupo-count{background:var(--ti2-pale);border:1px solid rgba(124,58,237,.2);color:var(--ti2);font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;}
+    .grupo-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;padding-bottom:4px;}
+    .grupo-body.fechado{display:none;}
+
+    /* ── CARD LINK ── */
+    .link-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;transition:all .18s;position:relative;overflow:hidden;}
+    .link-card:hover{border-color:var(--ti2);box-shadow:var(--shadow);transform:translateY(-1px);}
+    .link-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0;opacity:0;transition:opacity .2s;}
+    .link-card:hover::before{opacity:1;}
+    .link-card.tipo-sistema::before{background:linear-gradient(90deg,var(--ti),var(--ti-light));}
+    .link-card.tipo-planilha::before{background:linear-gradient(90deg,var(--green),#4ade80);}
+    .link-card.tipo-manual::before{background:linear-gradient(90deg,var(--ti2),#a78bfa);}
+    .link-card.tipo-drive::before{background:linear-gradient(90deg,var(--yellow),#fbbf24);}
+    .link-card.tipo-apresentacao::before{background:linear-gradient(90deg,var(--orange),#fb923c);}
+    .link-card.tipo-formulario::before{background:linear-gradient(90deg,#0891b2,#22d3ee);}
+
+    .link-card-top{display:flex;align-items:flex-start;gap:10px;}
+    .link-tipo-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
+    .link-card-info{flex:1;min-width:0;}
+    .link-card-nome{font-size:13px;font-weight:800;line-height:1.3;margin-bottom:3px;color:var(--text);word-break:break-word;}
+    .link-card-desc{font-size:11px;color:var(--muted);font-weight:600;line-height:1.4;word-break:break-word;}
+    .link-card-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
+    .link-action-btn{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg3);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s;text-decoration:none;color:var(--text);}
+    .link-action-btn:hover{background:var(--bg2);border-color:var(--ti2);}
+    .link-action-btn.del:hover{background:#fee2e2;border-color:#dc2626;}
+
+    .link-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .link-tipo-badge{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:3px 8px;border-radius:6px;flex-shrink:0;}
+    .badge-sistema   {background:var(--ti-pale);color:var(--ti);}
+    .badge-planilha  {background:var(--green-pale);color:var(--green);}
+    .badge-manual    {background:var(--ti2-pale);color:var(--ti2);}
+    .badge-drive     {background:var(--yellow-pale);color:var(--yellow);}
+    .badge-apresentacao{background:var(--orange-pale);color:var(--orange);}
+    .badge-formulario{background:#ecfeff;color:#0891b2;}
+    .badge-link      {background:var(--bg3);color:var(--muted);}
+
+    .link-url-mini{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+
+    /* ── MODO LISTA ── */
+    .lista-wrap{display:flex;flex-direction:column;gap:6px;}
+    .lista-row{background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:12px;transition:all .15s;}
+    .lista-row:hover{border-color:var(--ti2);background:var(--bg3);}
+    .lista-icon{font-size:18px;flex-shrink:0;}
+    .lista-nome{font-size:13px;font-weight:700;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .lista-grupo{font-size:10px;color:var(--muted);font-weight:700;width:160px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .lista-actions{display:flex;gap:5px;flex-shrink:0;}
+
+    /* ── TOGGLE VISUALIZAÇÃO ── */
+    .view-toggle{display:flex;gap:0;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
+    .view-btn{padding:7px 12px;background:var(--bg3);border:none;cursor:pointer;font-size:14px;transition:background .15s;color:var(--muted);}
+    .view-btn.active{background:var(--ti2);color:#fff;}
+
+    /* ── MODAL ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--bg2);border-radius:18px;width:100%;max-width:480px;box-shadow:var(--shadow-lg);animation:modalIn .22s ease;}
+    @keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+    .modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between;}
+    .modal-title{font-size:16px;font-weight:800;}
+    .modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
+    .modal-close:hover{background:var(--bg);}
+    .modal-body{padding:20px 24px;}
+    .form-group{margin-bottom:16px;}
+    .form-label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;}
+    .form-input,.form-select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg3);outline:none;transition:border-color .2s;}
+    .form-input:focus,.form-select:focus{border-color:var(--ti2);background:var(--bg2);}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .modal-footer{padding:0 24px 20px;display:flex;gap:10px;justify-content:flex-end;}
+
+    /* ── EMPTY / LOADING ── */
+    .loading-msg{text-align:center;padding:32px;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .empty-state{text-align:center;padding:48px 24px;color:var(--muted);}
+    .empty-state-icon{font-size:48px;margin-bottom:12px;}
+    .empty-state-text{font-size:14px;font-weight:700;}
+    .empty-state-sub{font-size:12px;margin-top:6px;}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;white-space:nowrap;}
+    .toast.show{display:block;animation:fadeUp .3s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+    /* ── SHEETS INFO ── */
+    .sheets-info-bar{background:var(--green-pale);border:1.5px solid rgba(22,163,74,.25);border-radius:12px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;color:var(--green);}
+    .sheets-info-bar a{color:var(--green);font-weight:800;}
+    .sheets-info-bar a:hover{color:#15803d;}
+
+    @media(max-width:768px){
+        nav{display:none;}
+        .page-header{flex-direction:column;}
+        .stats-bar{grid-template-columns:repeat(2,1fr);}
+        .form-row{grid-template-columns:1fr;}
+        .lista-grupo{display:none;}
+    }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <span class="logo-fb">🍽️</span>
+    </div>
+    <div class="hd"></div>
+    <div class="h-title">Central de T.I.</div>
+ <nav>
+    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+    <button class="nav-btn active" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+</nav>
+</header>
+
+<div id="statusBar">
+    <div class="sdot" id="sdot"></div>
+    <span id="statusText">Carregando links...</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span class="sheets-badge" id="sheetsBadge" style="display:none">
+            <span>📊</span> Google Sheets
+        </span>
+        <span id="lastSync" style="font-size:11px;color:var(--muted)"></span>
+        <button class="btn btn-ti" id="btnSync" onclick="sincronizar()">🔄 Sincronizar</button>
+        <button class="btn btn-purple" onclick="abrirModal()">+ Novo Link</button>
+    </span>
+</div>
+
+<main>
+    <div class="page-header">
+        <div>
+            <div class="page-title">🔗 Links &amp; Recursos</div>
+            <div class="page-sub" id="pageSub">Sistemas, planilhas, manuais e portais externos</div>
+        </div>
+        <div class="page-actions">
+            <a href="https://docs.google.com/spreadsheets/d/1HCv-aizjWCU9AfA_cdmCXkSEd5Vtkwi7Ga-tmteJyZs/edit?gid=0#gid=0"
+               target="_blank" class="btn btn-green" style="font-size:12px">
+                📊 Abrir Planilha
+            </a>
+        </div>
+    </div>
+
+    <!-- Sheets info -->
+    <div class="sheets-info-bar" id="sheetsInfoBar" style="display:none">
+        <span>📊</span>
+        <span>Links sincronizados com o Google Sheets —
+            <a href="https://docs.google.com/spreadsheets/d/1HCv-aizjWCU9AfA_cdmCXkSEd5Vtkwi7Ga-tmteJyZs/edit?gid=0#gid=0"
+               target="_blank">abrir planilha LINKS_GERAL</a>
+        </span>
+        <span id="sheetsTotal" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px"></span>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar" id="statsBar">
+        <div class="loading-msg" style="grid-column:1/-1"><div class="spinner dark"></div></div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filtros-wrap">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Buscar links por nome, descrição ou URL..." oninput="filtrar()">
+        </div>
+        <div class="filtros-group" id="filtrosTipo">
+            <button class="filtro-tipo active" data-tipo="todos" onclick="setTipo('todos',this)">Todos</button>
+        </div>
+        <div class="view-toggle">
+            <button class="view-btn active" id="btnGrid" onclick="setView('grid')" title="Grade">⊞</button>
+            <button class="view-btn" id="btnList" onclick="setView('lista')" title="Lista">≡</button>
+        </div>
+    </div>
+
+    <!-- Conteúdo -->
+    <div id="conteudo">
+        <div class="loading-msg"><div class="spinner dark"></div> Carregando links...</div>
+    </div>
+</main>
+
+<!-- Modal novo/editar link -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)fecharModal()">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTitulo">Novo Link</div>
+            <button class="modal-close" onclick="fecharModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="editId">
+            <div class="form-group">
+                <label class="form-label">Nome do Link *</label>
+                <input type="text" class="form-input" id="fNome" placeholder="Ex: Manual de Implantação Loja Nova">
+            </div>
+            <div class="form-group">
+                <label class="form-label">URL *</label>
+                <input type="text" class="form-input" id="fUrl" placeholder="https://..." oninput="autoTipo()">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Tipo</label>
+                    <select class="form-select" id="fTipoSelect" onchange="onTipoSelectChange()">
+                        <option value="sistema">⚙️ Sistema</option>
+                        <option value="planilha">📊 Planilha</option>
+                        <option value="manual">📘 Manual</option>
+                        <option value="drive">📁 Drive</option>
+                        <option value="apresentacao">📑 Apresentação</option>
+                        <option value="formulario">📋 Formulário</option>
+                        <option value="link">🔗 Link</option>
+                        <option value="outros">✏️ Outro (digitar)...</option>
+                    </select>
+                    <input type="text" class="form-input" id="fTipoCustom"
+                           placeholder="Digite o tipo personalizado..."
+                           style="display:none;margin-top:6px">
+                    <input type="hidden" id="fTipo">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Grupo</label>
+                    <select class="form-select" id="fGrupoSelect" onchange="onGrupoSelectChange()">
+                        <option value="">Carregando grupos...</option>
+                    </select>
+                    <input type="text" class="form-input" id="fGrupoCustom"
+                           placeholder="Digite o nome do grupo..."
+                           style="display:none;margin-top:6px">
+                    <input type="hidden" id="fGrupo">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Descrição</label>
+                <input type="text" class="form-input" id="fDesc" placeholder="Breve descrição do link">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
+            <button class="btn btn-purple" id="btnSalvar" onclick="salvarLink()">💾 Salvar</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Helper fetch com tratamento de sessão expirada ────────────────────────────
+async function apiFetch(url, opts) {
+    opts = opts || {};
+    var r = await fetch(url, opts);
+    if (r.status === 401) {
+        alert('Sessão expirada. Você será redirecionado para o login.');
+        location.href = '/login';
+        return null;
+    }
+    return r.json();
+}
+
+// ── Estado global ──────────────────────────────────────────────────────────────
+var TODOS_LINKS  = [];
+var GRUPOS       = {};
+var tipoFiltro   = 'todos';
+var textoBusca   = '';
+var viewMode     = 'grid';
+var gruposAbertos = {};
+
+// ── Configuração tipos ─────────────────────────────────────────────────────────
+var TIPO_CFG = {
+    sistema:      { icon:'⚙️',  label:'Sistema',      badge:'badge-sistema'      },
+    planilha:     { icon:'📊',  label:'Planilha',     badge:'badge-planilha'     },
+    manual:       { icon:'📘',  label:'Manual',       badge:'badge-manual'       },
+    drive:        { icon:'📁',  label:'Drive',        badge:'badge-drive'        },
+    apresentacao: { icon:'📑',  label:'Apresentação', badge:'badge-apresentacao' },
+    formulario:   { icon:'📋',  label:'Formulário',   badge:'badge-formulario'   },
+    link:         { icon:'🔗',  label:'Link',         badge:'badge-link'         },
+};
+
+function tipoInfo(tipo) { return TIPO_CFG[tipo] || { icon:'🔗', label:tipo, badge:'badge-link' }; }
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+var toast = function(msg, ms) {
+    ms = ms || 2500;
+    var el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('show');
+    setTimeout(function(){ el.classList.remove('show'); }, ms);
+};
+var setStatus = function(cls, msg) {
+    var d = document.getElementById('sdot');
+    d.className = 'sdot ' + cls;
+    document.getElementById('statusText').textContent = msg;
+};
+function $(id){ return document.getElementById(id); }
+
+// ── Detecção automática de tipo ────────────────────────────────────────────────
+// ── Helpers Tipo ──────────────────────────────────────────────────────────────
+function onTipoSelectChange() {
+    var sel = $('fTipoSelect');
+    var custom = $('fTipoCustom');
+    if (sel.value === 'outros') {
+        custom.style.display = 'block';
+        custom.focus();
+        $('fTipo').value = '';
+    } else {
+        custom.style.display = 'none';
+        custom.value = '';
+        $('fTipo').value = sel.value;
+    }
+}
+// Sincroniza o hidden ao digitar no custom
+document.addEventListener('DOMContentLoaded', function() {
+    var c = $('fTipoCustom');
+    if (c) c.addEventListener('input', function(){ $('fTipo').value = c.value.trim().toLowerCase(); });
+    var gc = $('fGrupoCustom');
+    if (gc) gc.addEventListener('input', function(){ $('fGrupo').value = gc.value.trim(); });
+});
+
+// Detecta tipo pela URL automaticamente
+function autoTipo() {
+    var url = ($('fUrl').value || '').toLowerCase();
+    var sel = $('fTipoSelect');
+    if (!sel) return;
+    if (sel.value && sel.value !== 'link') return; // usuário já escolheu — não sobrescreve
+    if (url.includes('docs.google.com/spreadsheets'))      { sel.value = 'planilha';     }
+    else if (url.includes('docs.google.com/document'))     { sel.value = 'manual';       }
+    else if (url.includes('docs.google.com/presentation')) { sel.value = 'apresentacao'; }
+    else if (url.includes('docs.google.com/forms'))        { sel.value = 'formulario';   }
+    else if (url.includes('drive.google.com'))             { sel.value = 'drive';        }
+    onTipoSelectChange();
+}
+
+// ── Helpers Grupo ──────────────────────────────────────────────────────────────
+function onGrupoSelectChange() {
+    var sel    = $('fGrupoSelect');
+    var custom = $('fGrupoCustom');
+    if (sel.value === '__novo__') {
+        custom.style.display = 'block';
+        custom.focus();
+        $('fGrupo').value = '';
+    } else {
+        custom.style.display = 'none';
+        custom.value = '';
+        $('fGrupo').value = sel.value;
+    }
+}
+
+// ── Carregar dados ─────────────────────────────────────────────────────────────
+async function carregar() {
+    setStatus('syncing', 'Carregando links...');
+    try {
+        var d = await apiFetch('/links/');
+        if (!d) return; // sessão expirada — apiFetch já redirecionou
+        if (!d.ok) throw new Error(d.erro || 'Erro ao carregar');
+        TODOS_LINKS = d.links || [];
+        GRUPOS      = d.grupos || {};
+        Object.keys(GRUPOS).forEach(function(g){ gruposAbertos[g] = true; });
+        setStatus('ready', '✓ ' + TODOS_LINKS.length + ' links · planilha sincronizada');
+        $('sheetsBadge').style.display = 'flex';
+        $('sheetsInfoBar').style.display = 'flex';
+        $('sheetsTotal').textContent = TODOS_LINKS.length + ' links';
+        $('pageSub').textContent = TODOS_LINKS.length + ' links · ' + Object.keys(GRUPOS).length + ' grupos · Google Sheets';
+        $('lastSync').textContent = 'Atualizado: ' + new Date().toLocaleTimeString('pt-BR');
+        renderStats();
+        renderFiltros();
+        renderConteudo();
+        popularGruposSugestoes();
+    } catch(e) {
+        setStatus('error', '❌ ' + e.message);
+        $('conteudo').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">Erro ao carregar links</div><div class="empty-state-sub">' + e.message + '</div></div>';
+    }
+}
+
+// ── Stats ──────────────────────────────────────────────────────────────────────
+function renderStats() {
+    var conts = {};
+    TODOS_LINKS.forEach(function(l){ var t = l.tipo || 'link'; conts[t] = (conts[t]||0) + 1; });
+    var ordem = ['sistema','planilha','manual','drive','apresentacao','formulario','link'];
+    var html = '<div class="stat-pill" style="border-color:rgba(124,58,237,.3)"><div class="stat-val" style="color:var(--ti2)">' + TODOS_LINKS.length + '</div><div class="stat-lbl">Total</div></div>';
+    ordem.forEach(function(t){
+        if (!conts[t]) return;
+        var cfg = tipoInfo(t);
+        html += '<div class="stat-pill"><div class="stat-val" style="color:var(--ti2)">' + conts[t] + '</div><div class="stat-lbl">' + cfg.icon + ' ' + cfg.label + '</div></div>';
+    });
+    html += '<div class="stat-pill" style="border-color:rgba(22,163,74,.3)"><div class="stat-val" style="color:var(--green)">' + Object.keys(GRUPOS).length + '</div><div class="stat-lbl">Grupos</div></div>';
+    $('statsBar').innerHTML = html;
+}
+
+// ── Filtros de tipo ────────────────────────────────────────────────────────────
+function renderFiltros() {
+    var conts = {};
+    TODOS_LINKS.forEach(function(l){ var t = l.tipo || 'link'; conts[t] = (conts[t]||0) + 1; });
+    var el = $('filtrosTipo');
+    // Mantém o botão "Todos"
+    el.innerHTML = '<button class="filtro-tipo' + (tipoFiltro==='todos'?' active':'') + '" data-tipo="todos" onclick="setTipo(\'todos\',this)">Todos <span class="count-badge">' + TODOS_LINKS.length + '</span></button>';
+    var ordem = ['sistema','planilha','manual','drive','apresentacao','formulario'];
+    ordem.forEach(function(t){
+        if (!conts[t]) return;
+        var cfg = tipoInfo(t);
+        el.innerHTML += '<button class="filtro-tipo' + (tipoFiltro===t?' active':'') + '" data-tipo="' + t + '" onclick="setTipo(\'' + t + '\',this)">' + cfg.icon + ' ' + cfg.label + ' <span class="count-badge">' + conts[t] + '</span></button>';
+    });
+}
+
+function setTipo(tipo, btn) {
+    tipoFiltro = tipo;
+    document.querySelectorAll('.filtro-tipo').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    renderConteudo();
+}
+
+function filtrar() {
+    textoBusca = ($('searchInput').value || '').toLowerCase().trim();
+    renderConteudo();
+}
+
+// ── Renderização principal ─────────────────────────────────────────────────────
+function linksFiltrados() {
+    return TODOS_LINKS.filter(function(l){
+        var matchTipo  = tipoFiltro === 'todos' || l.tipo === tipoFiltro;
+        var matchBusca = !textoBusca ||
+            (l.nome      || '').toLowerCase().includes(textoBusca) ||
+            (l.descricao || '').toLowerCase().includes(textoBusca) ||
+            (l.url       || '').toLowerCase().includes(textoBusca) ||
+            (l.grupo     || '').toLowerCase().includes(textoBusca);
+        return matchTipo && matchBusca;
+    });
+}
+
+function renderConteudo() {
+    var lista = linksFiltrados();
+    if (!lista.length) {
+        $('conteudo').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><div class="empty-state-text">Nenhum link encontrado</div><div class="empty-state-sub">Tente outro filtro ou termo de busca</div></div>';
+        return;
+    }
+    if (viewMode === 'lista') { renderLista(lista); return; }
+    renderGrade(lista);
+}
+
+function renderGrade(lista) {
+    // Agrupa pela lista filtrada
+    var gruposVisiveis = {};
+    lista.forEach(function(l){ var g = l.grupo || 'Outros'; if (!gruposVisiveis[g]) gruposVisiveis[g] = []; gruposVisiveis[g].push(l); });
+    var html = '<div class="grupos-container">';
+    Object.keys(gruposVisiveis).sort().forEach(function(grupo){
+        var itens = gruposVisiveis[grupo];
+        var aberto = gruposAbertos[grupo] !== false;
+        html += '<div class="grupo-section">';
+        html += '<div class="grupo-header" onclick="toggleGrupo(\'' + esc(grupo) + '\')">';
+        html += '<div class="grupo-header-left">';
+        html += '<span class="grupo-arrow ' + (aberto ? 'aberto' : '') + '" id="arrow-' + esc(grupo) + '">▶</span>';
+        html += '<span class="grupo-title">' + esc(grupo) + '</span>';
+        html += '<span class="grupo-count">' + itens.length + '</span>';
+        html += '</div></div>';
+        html += '<div class="grupo-body ' + (aberto ? '' : 'fechado') + '" id="body-' + esc(grupo) + '">';
+        itens.forEach(function(l){ html += cardHtml(l); });
+        html += '</div></div>';
+    });
+    html += '</div>';
+    $('conteudo').innerHTML = html;
+}
+
+function renderLista(lista) {
+    var html = '<div class="lista-wrap">';
+    lista.forEach(function(l){
+        var cfg = tipoInfo(l.tipo || 'link');
+        html += '<div class="lista-row">';
+        html += '<span class="lista-icon">' + cfg.icon + '</span>';
+        html += '<span class="lista-nome" title="' + esc(l.nome) + '">' + esc(l.nome) + '</span>';
+        html += '<span class="lista-grupo">' + esc(l.grupo || 'Outros') + '</span>';
+        html += '<span class="link-tipo-badge ' + cfg.badge + '">' + cfg.label + '</span>';
+        html += '<div class="lista-actions">';
+        html += '<a href="' + esc(l.url) + '" target="_blank" class="link-action-btn" title="Abrir">🔗</a>';
+        html += '<button class="link-action-btn" onclick="copiarLink(\'' + esc(l.url) + '\')" title="Copiar URL">📋</button>';
+        html += '<button class="link-action-btn" onclick="abrirModalEditar(' + l.id + ')" title="Editar">✏️</button>';
+        html += '<button class="link-action-btn del" onclick="deletarLink(' + l.id + ')" title="Excluir">🗑️</button>';
+        html += '</div></div>';
+    });
+    html += '</div>';
+    $('conteudo').innerHTML = html;
+}
+
+function cardHtml(l) {
+    var cfg = tipoInfo(l.tipo || 'link');
+    var urlCurta = (l.url || '').replace(/^https?:\/\/(www\.)?/, '').substring(0, 48);
+    return '<div class="link-card tipo-' + (l.tipo||'link') + '">' +
+        '<div class="link-card-top">' +
+        '<span class="link-tipo-icon">' + cfg.icon + '</span>' +
+        '<div class="link-card-info">' +
+        '<div class="link-card-nome">' + esc(l.nome) + '</div>' +
+        (l.descricao ? '<div class="link-card-desc">' + esc(l.descricao) + '</div>' : '') +
+        '</div>' +
+        '<div class="link-card-actions">' +
+        '<a href="' + esc(l.url) + '" target="_blank" class="link-action-btn" title="Abrir link">🔗</a>' +
+        '<button class="link-action-btn" onclick="copiarLink(\'' + esc(l.url) + '\')" title="Copiar URL">📋</button>' +
+        '<button class="link-action-btn" onclick="abrirModalEditar(' + l.id + ')" title="Editar">✏️</button>' +
+        '<button class="link-action-btn del" onclick="deletarLink(' + l.id + ')" title="Excluir">🗑️</button>' +
+        '</div></div>' +
+        '<div class="link-card-footer">' +
+        '<span class="link-tipo-badge ' + cfg.badge + '">' + cfg.label + '</span>' +
+        '<span class="link-url-mini" title="' + esc(l.url) + '">' + esc(urlCurta) + '</span>' +
+        '</div></div>';
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+// ── Toggle grupos ──────────────────────────────────────────────────────────────
+function toggleGrupo(grupo) {
+    gruposAbertos[grupo] = !gruposAbertos[grupo];
+    var body  = document.getElementById('body-' + grupo);
+    var arrow = document.getElementById('arrow-' + grupo);
+    if (body)  body.classList.toggle('fechado', !gruposAbertos[grupo]);
+    if (arrow) arrow.classList.toggle('aberto', gruposAbertos[grupo]);
+}
+
+// ── Visualização grade / lista ─────────────────────────────────────────────────
+function setView(modo) {
+    viewMode = modo;
+    $('btnGrid').classList.toggle('active', modo === 'grid');
+    $('btnList').classList.toggle('active', modo === 'lista');
+    renderConteudo();
+}
+
+// ── Modal ──────────────────────────────────────────────────────────────────────
+function abrirModal() {
+    $('editId').value        = '';
+    $('fNome').value         = '';
+    $('fUrl').value          = '';
+    $('fTipo').value         = 'link';
+    $('fTipoSelect').value   = 'link';
+    $('fTipoCustom').value   = '';
+    $('fTipoCustom').style.display = 'none';
+    $('fGrupo').value        = '';
+    $('fGrupoCustom').value  = '';
+    $('fGrupoCustom').style.display = 'none';
+    popularGrupoSelect('');
+    $('fDesc').value         = '';
+    $('modalTitulo').textContent = 'Novo Link';
+    $('modalOverlay').classList.add('open');
+    setTimeout(function(){ $('fNome').focus(); }, 100);
+}
+function abrirModalEditar(id) {
+    var l = TODOS_LINKS.find(function(x){ return x.id === id; });
+    if (!l) return;
+    $('editId').value  = l.id;
+    $('fNome').value   = l.nome      || '';
+    $('fUrl').value    = l.url       || '';
+    $('fDesc').value   = l.descricao || '';
+
+    // Tipo — verifica se é um dos fixos ou custom
+    var tiposFixos = ['sistema','planilha','manual','drive','apresentacao','formulario','link'];
+    var tipoVal = (l.tipo || 'link').toLowerCase();
+    $('fTipo').value = tipoVal;
+    if (tiposFixos.includes(tipoVal)) {
+        $('fTipoSelect').value         = tipoVal;
+        $('fTipoCustom').value         = '';
+        $('fTipoCustom').style.display = 'none';
+    } else {
+        $('fTipoSelect').value         = 'outros';
+        $('fTipoCustom').value         = tipoVal;
+        $('fTipoCustom').style.display = 'block';
+    }
+
+    // Grupo — preenche select dinamicamente e marca o valor
+    popularGrupoSelect(l.grupo || '');
+    $('fGrupo').value = l.grupo || '';
+
+    $('modalTitulo').textContent = 'Editar Link';
+    $('modalOverlay').classList.add('open');
+    setTimeout(function(){ $('fNome').focus(); }, 100);
+}
+function fecharModal() { $('modalOverlay').classList.remove('open'); }
+
+function salvarLink() {
+    var nome = ($('fNome').value||'').trim();
+    var url  = ($('fUrl').value ||'').trim();
+    if (!nome || !url) { toast('⚠️ Nome e URL são obrigatórios'); return; }
+    var id   = $('editId').value;
+    var body = { nome: nome, url: url, tipo: ($('fTipo').value||'link').trim().toLowerCase(), grupo: ($('fGrupo').value||'Outros').trim(), descricao: ($('fDesc').value||'').trim() };
+    var btn  = $('btnSalvar');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Salvando...';
+    var method  = id ? 'PATCH' : 'POST';
+    var endpoint = id ? '/links/' + id : '/links/';
+    apiFetch(endpoint, { method: method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) })
+        .then(function(d){
+            if (!d) return; // sessão expirada
+            if (!d.ok) throw new Error(d.erro || 'Erro');
+            toast(id ? '✅ Link atualizado e salvo na planilha!' : '✅ Link criado e salvo na planilha!');
+            fecharModal();
+            carregar();
+        })
+        .catch(function(e){ toast('❌ ' + e.message); })
+        .finally(function(){ btn.disabled = false; btn.innerHTML = '💾 Salvar'; });
+}
+
+// ── Deletar ────────────────────────────────────────────────────────────────────
+function deletarLink(id) {
+    var l = TODOS_LINKS.find(function(x){ return x.id === id; });
+    if (!confirm('Excluir "' + (l ? l.nome : id) + '"? Isso também remove da planilha Google Sheets.')) return;
+    apiFetch('/links/' + id, { method: 'DELETE' })
+        .then(function(d){
+            if (!d) return; // sessão expirada
+            if (!d.ok) throw new Error(d.erro || 'Erro');
+            toast('🗑️ Link excluído e planilha atualizada');
+            carregar();
+        })
+        .catch(function(e){ toast('❌ ' + e.message); });
+}
+
+// ── Copiar URL ─────────────────────────────────────────────────────────────────
+function copiarLink(url) {
+    navigator.clipboard.writeText(url).then(function(){
+        toast('📋 URL copiada!', 1800);
+    }).catch(function(){
+        toast('❌ Não foi possível copiar');
+    });
+}
+
+// ── Sincronizar — grava na planilha e recarrega ────────────────────────────────
+async function sincronizar() {
+    var btn = $('btnSync');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Sincronizando...';
+    setStatus('syncing', '🔄 Sincronizando com Google Sheets...');
+    try {
+        var d = await apiFetch('/links/sincronizar', { method: 'POST' });
+        if (!d) return; // sessão expirada
+        toast('✅ ' + (d.msg || d.total + ' links na planilha'), 3500);
+        await carregar();
+    } catch(e) {
+        toast('❌ ' + e.message, 4000);
+        setStatus('error', '❌ Erro na sincronização');
+    } finally {
+        btn.disabled = false; btn.innerHTML = '🔄 Sincronizar';
+    }
+}
+
+// ── Datalist de grupos ─────────────────────────────────────────────────────────
+// Popula o <select> de grupo com os grupos existentes + "Novo grupo..."
+function popularGrupoSelect(valorAtual) {
+    var sel    = $('fGrupoSelect');
+    var grupos = Object.keys(GRUPOS).sort();
+    var html   = grupos.map(function(g){
+        var sel2 = (g === valorAtual) ? ' selected' : '';
+        return '<option value="' + esc(g) + '"' + sel2 + '>' + esc(g) + '</option>';
+    }).join('');
+    // Se o valor atual não está na lista (grupo novo ou em edição com grupo custom)
+    var isCustom = valorAtual && !grupos.includes(valorAtual);
+    html += '<option value="__novo__"' + (isCustom ? ' selected' : '') + '>✏️ Novo grupo (digitar)...</option>';
+    sel.innerHTML = html;
+
+    var custom = $('fGrupoCustom');
+    if (isCustom) {
+        custom.style.display = 'block';
+        custom.value = valorAtual;
+        $('fGrupo').value = valorAtual;
+    } else {
+        custom.style.display = 'none';
+        custom.value = '';
+        $('fGrupo').value = valorAtual || (grupos[0] || '');
+        if (!isCustom && grupos.length > 0 && !valorAtual) {
+            sel.value = grupos[0];
+            $('fGrupo').value = grupos[0];
+        }
+    }
+}
+
+function popularGruposSugestoes() {
+    // Atualiza select de grupo se modal estiver fechado (não interfere)
+    // Tipos customizados — adiciona ao select de tipo se necessário
+    var tiposFixos = ['sistema','planilha','manual','drive','apresentacao','formulario','link','outros'];
+    var tiposExistentes = TODOS_LINKS
+        .map(function(l){ return (l.tipo||'link').toLowerCase(); })
+        .filter(function(t, i, arr){ return arr.indexOf(t) === i && !tiposFixos.includes(t); })
+        .sort();
+    var sel = $('fTipoSelect');
+    // Remove opções custom antigas (antes da opção "outros")
+    var outrosIdx = Array.from(sel.options).findIndex(function(o){ return o.value === 'outros'; });
+    while (sel.options.length > outrosIdx + 1) sel.remove(outrosIdx + 1);
+    // Insere tipos custom antes da opção "outros"
+    tiposExistentes.forEach(function(t){
+        var opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = '🏷️ ' + t.charAt(0).toUpperCase() + t.slice(1);
+        sel.insertBefore(opt, sel.options[outrosIdx]);
+    });
+}
+
+// ── Teclado no modal ───────────────────────────────────────────────────────────
+document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') fecharModal();
+    if (e.key === 'Enter' && $('modalOverlay').classList.contains('open')) salvarLink();
+});
+
+// ── Init ───────────────────────────────────────────────────────────────────────
+carregar();
+</script>
+</body>
+</html>
