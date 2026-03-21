@@ -2449,7 +2449,7 @@
       "valorFormatado": "R$ 2.000,00",
       "assinatura": "15/02/2023",
       "distrato": "04/04/2024",
-      "obs": ""
+      "obs": "aaaaa"
     },
     {
       "rowIndex": 5,
@@ -2461,7 +2461,7 @@
       "valorFormatado": "R$ 1.900,00",
       "assinatura": "27/11/2023",
       "distrato": "02/07/2024",
-      "obs": ""
+      "obs": "wefwegwre"
     },
     {
       "rowIndex": 6,
@@ -3301,6 +3301,6 @@
       }
     ]
   },
-  "sincronizadoEm": "2026-03-21T19:31:47.315Z",
-  "_at": "2026-03-21T19:31:47.315Z"
+  "sincronizadoEm": "2026-03-21T20:34:34.762Z",
+  "_at": "2026-03-21T20:34:34.762Z"
 }
