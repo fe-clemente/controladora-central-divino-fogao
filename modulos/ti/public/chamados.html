@@ -33,6 +33,7 @@
         .sdot.ready{background:var(--green);animation:none;}
         .sdot.error{background:var(--red);animation:none;}
         .sdot.syncing{background:var(--ti-light);animation:pulse .8s infinite;}
+        .sdot.cache{background:var(--orange);animation:none;}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
         main{max-width:1260px;margin:0 auto;padding:28px 24px;}
         .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
@@ -169,6 +170,11 @@
         .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
         .toast.show{display:block;animation:fadeUp .3s ease;}
         @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+        /* Cache banner */
+        .cache-banner{background:var(--yellow-pale);border:1.5px solid rgba(217,119,6,.25);border-radius:10px;padding:8px 14px;font-size:11px;font-weight:700;color:var(--yellow);display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+        .cache-banner button{background:none;border:1.5px solid rgba(217,119,6,.4);border-radius:7px;padding:3px 10px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--yellow);cursor:pointer;}
+        .cache-banner button:hover{background:rgba(217,119,6,.1);}
     </style>
 </head>
 <body>
@@ -206,10 +212,17 @@
     <div class="page-title">📞 Chamados T.I.</div>
     <div class="page-sub" id="pageSub">Carregando chamados de Tecnologia &amp; Suporte...</div>
 
+    <!-- Banner de cache -->
+    <div class="cache-banner" id="cacheBanner" style="display:none">
+        ⚡ Dados carregados do cache local · <span id="cacheAge"></span>
+        <button onclick="sincronizar()">🔄 Atualizar agora</button>
+        <button onclick="document.getElementById('cacheBanner').style.display='none'" style="margin-left:auto">✕</button>
+    </div>
+
     <div class="year-bar">
         <span class="year-bar-label">📅 Período</span>
         <div class="year-tabs" id="yearTabs">
-            <button class="year-tab active" data-year="todos" onclick="setAno('todos',this)">Todos</button>
+            <button class="year-tab" data-year="todos" onclick="setAno('todos',this)">Todos</button>
         </div>
         <span id="yearInfo"></span>
     </div>
@@ -232,7 +245,6 @@
             <div class="mc-sub">% concluídos</div></div>
     </div>
 
-
     <!-- CARD OPERADOR -->
     <div id="cardOperador" style="display:none;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px;">
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;">
@@ -243,7 +255,6 @@
             <span id="opTotalBadge" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);"></span>
         </div>
         <div id="opDetalhes" style="display:none;">
-            <!-- Métricas do operador -->
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px;">
                 <div class="mc"><div class="mc-icon">📞</div><div class="mc-label">Total</div><div class="mc-val" style="color:var(--ti)" id="op-total">—</div><div class="mc-sub">chamados</div></div>
                 <div class="mc"><div class="mc-icon">🔴</div><div class="mc-label">Abertos</div><div class="mc-val" style="color:var(--red)" id="op-abertos">—</div><div class="mc-sub">novo / andamento</div></div>
@@ -252,14 +263,13 @@
                 <div class="mc"><div class="mc-icon">✅</div><div class="mc-label">Concluídos</div><div class="mc-val" style="color:var(--green)" id="op-fechados">—</div><div class="mc-sub">concluído/resolvido</div></div>
                 <div class="mc"><div class="mc-icon">🤝</div><div class="mc-label">Como Apoio</div><div class="mc-val" style="color:var(--muted)" id="op-apoio">—</div><div class="mc-sub">só apoio</div></div>
             </div>
-            <!-- Por ano -->
             <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:10px;">📅 Por Ano</div>
             <div id="opPorAno" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;"></div>
-            <!-- Por status detalhado -->
             <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:10px;">📊 Distribuição de Status</div>
             <div id="opBarrasStatus" style="max-width:600px;"></div>
         </div>
     </div>
+
     <div class="abertos-por-ano" id="cardAbertosPorAno" style="display:none">
         <div class="apa-header">
             <span class="apa-title">🔴 Chamados em aberto por ano</span>
@@ -415,10 +425,37 @@ const API = '/ti/api';
 const ANO_CORES  = ['#0369a1','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2'];
 const MES_LABELS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
+// ─── Cache ────────────────────────────────────────────────────────────────────
+const CACHE_KEY     = 'ti_chamados_cache_v2';
+const CACHE_MAX_MS  = 5 * 60 * 1000; // 5 minutos — considera cache válido para exibição imediata
+const ANO_PADRAO    = '2026';         // ← ANO PADRÃO AO ABRIR A PÁGINA
+
+function salvarCache(data) {
+    try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+    } catch(e) { /* localStorage cheio ou bloqueado */ }
+}
+
+function lerCache() {
+    try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    } catch(e) { return null; }
+}
+
+function idadeCache(ts) {
+    const diff = Date.now() - ts;
+    if (diff < 60000)    return `${Math.round(diff/1000)}s atrás`;
+    if (diff < 3600000)  return `${Math.round(diff/60000)} min atrás`;
+    return `${Math.round(diff/3600000)}h atrás`;
+}
+
+// ─── Estado ───────────────────────────────────────────────────────────────────
 let dadosBrutos       = null;
 let todosOsChamados   = [];
 let chamadosFiltrados = [];
-let anoSelecionado    = 'todos';
+let anoSelecionado    = ANO_PADRAO; // começa em 2026
 
 const toast = (msg, ms=2500) => {
     const el = document.getElementById('toast');
@@ -472,12 +509,10 @@ function renderBarras(containerId, items, keyLabel, keyVal, cor) {
     ).join('');
 }
 
-
 // ─── Card Operador ────────────────────────────────────────────────────────────
 function popularSelectOperador() {
     const sel = document.getElementById('selectOperador');
     const valorAtual = sel.value;
-    // Coleta todos os participantes de TODOS os chamados (sem filtro de ano)
     const todosParticipantes = new Set();
     todosOsChamados.forEach(c => {
         const parts = (c.participantes && c.participantes.length) ? c.participantes : [c.responsavel];
@@ -494,23 +529,17 @@ function renderCardOperador() {
     const det = document.getElementById('opDetalhes');
     if (!operador) { det.style.display='none'; document.getElementById('opTotalBadge').textContent=''; return; }
     det.style.display = '';
-
-    // Filtra chamados onde o operador é participante (responsavel ou apoio) — SEM filtro de ano
     const meus = todosOsChamados.filter(c => {
         const parts = (c.participantes && c.participantes.length) ? c.participantes : [c.responsavel];
         return parts.includes(operador);
     });
-
-    // Conta chamados onde é SOMENTE apoio (não responsável)
     const soApoio = meus.filter(c => c.responsavel !== operador && (c.apoio||[]).includes(operador)).length;
-
     const total      = meus.length;
     const fechados   = meus.filter(c => c.fechado).length;
     const abertos    = meus.filter(c => !c.fechado).length;
     const andamento  = meus.filter(c => !c.fechado && (c.status||'').includes('Andamento')).length;
     const aguardando = meus.filter(c => !c.fechado && (c.status||'').includes('Aguardando')).length;
     const novos      = meus.filter(c => !c.fechado && (c.status||'').includes('Novo')).length;
-
     document.getElementById('opTotalBadge').textContent = `${total} chamados encontrados`;
     document.getElementById('op-total').textContent     = total;
     document.getElementById('op-abertos').textContent   = abertos;
@@ -518,8 +547,6 @@ function renderCardOperador() {
     document.getElementById('op-aguardando').textContent= aguardando;
     document.getElementById('op-fechados').textContent  = fechados;
     document.getElementById('op-apoio').textContent     = soApoio;
-
-    // Por ano
     const porAnoMap = {};
     meus.forEach(c => {
         if (!c.dataCriacao) return;
@@ -549,8 +576,6 @@ function renderCardOperador() {
             <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:2px;">${pctFech}% resolvidos</div>
         </div>`;
     }).join('');
-
-    // Barras de status
     const statusItens = [
         { label:'✅ Concluídos/Resolvidos', val: fechados,   cor:'var(--green)' },
         { label:'🔵 Em Andamento',          val: andamento,  cor:'var(--ti)' },
@@ -567,13 +592,57 @@ function renderCardOperador() {
     ).join('');
 }
 
+// ─── Carregamento principal ───────────────────────────────────────────────────
 async function carregar() {
-    setStatus('syncing','Carregando chamados de TI...');
+    // 1. Tenta carregar do cache instantaneamente
+    const cached = lerCache();
+    if (cached && cached.data && cached.data.chamados?.length) {
+        aplicarDados(cached.data);
+        const idade = idadeCache(cached.ts);
+        document.getElementById('cacheAge').textContent = `sincronizado ${idade}`;
+        document.getElementById('cacheBanner').style.display = 'flex';
+        setStatus('cache', `⚡ Cache carregado (${idade}) · buscando atualizações...`);
+
+        // Se o cache for recente (< 5 min), não precisa buscar da API
+        if (Date.now() - cached.ts < CACHE_MAX_MS) {
+            setStatus('ready', `✓ ${cached.data.totalTI||0} chamados · cache recente`);
+            return;
+        }
+
+        // Cache antigo: busca em background sem travar a tela
+        buscarEmBackground();
+    } else {
+        // Sem cache — busca da API normalmente
+        setStatus('syncing', 'Carregando chamados de TI...');
+        await buscarDaAPI();
+    }
+}
+
+async function buscarEmBackground() {
     try {
-        const r = await fetch(API+'/chamados/dados');
+        const r = await fetch(API + '/chamados/dados');
+        const d = await r.json();
+        if (d.chamados?.length) {
+            salvarCache(d);
+            aplicarDados(d);
+            document.getElementById('cacheBanner').style.display = 'none';
+            setStatus('ready', `✓ ${d.totalTI||0} chamados · atualizado`);
+            if (d.sincronizadoEm)
+                document.getElementById('lastSync').textContent =
+                    'Sync: ' + new Date(d.sincronizadoEm).toLocaleString('pt-BR');
+        }
+    } catch(e) {
+        // Falhou silenciosamente — continua com o cache
+        setStatus('cache', '⚡ Usando cache · sem conexão com API');
+    }
+}
+
+async function buscarDaAPI() {
+    try {
+        const r = await fetch(API + '/chamados/dados');
         const d = await r.json();
         if (d.erro && !d.chamados?.length) {
-            setStatus('error','⚠️ '+d.erro);
+            setStatus('error', '⚠️ ' + d.erro);
             document.getElementById('tblBody').innerHTML =
                 `<tr><td colspan="8"><div class="empty"><div class="icon">📦</div>
                 <p>${d.erro}</p>
@@ -581,36 +650,72 @@ async function carregar() {
                 </div></td></tr>`;
             return;
         }
-        dadosBrutos     = d;
-        todosOsChamados = d.chamados||[];
-        buildYearTabs(d.anosDisponiveis||[]);
-        renderTudo();
-        document.getElementById('pageSub').textContent =
-            `${d.totalTI||0} chamados · Tecnologia & Suporte (depts 9 e 16)`;
-        setStatus('ready',`✓ ${d.totalTI||0} chamados de TI carregados`);
+        salvarCache(d);
+        aplicarDados(d);
+        setStatus('ready', `✓ ${d.totalTI||0} chamados de TI carregados`);
         if (d.sincronizadoEm)
             document.getElementById('lastSync').textContent =
-                'Sync: '+new Date(d.sincronizadoEm).toLocaleString('pt-BR');
+                'Sync: ' + new Date(d.sincronizadoEm).toLocaleString('pt-BR');
     } catch(e) {
-        setStatus('error','❌ '+e.message);
+        setStatus('error', '❌ ' + e.message);
         document.getElementById('tblBody').innerHTML =
             `<tr><td colspan="8"><div class="empty"><div class="icon">⚠️</div><p>${e.message}</p></div></td></tr>`;
     }
 }
 
+function aplicarDados(d) {
+    dadosBrutos     = d;
+    todosOsChamados = d.chamados || [];
+    buildYearTabs(d.anosDisponiveis || []);
+    renderTudo();
+    document.getElementById('pageSub').textContent =
+        `${d.totalTI || 0} chamados · Tecnologia & Suporte (depts 9 e 16)`;
+}
+
 function buildYearTabs(anos) {
     const c = document.getElementById('yearTabs');
-    [...c.querySelectorAll('[data-year]:not([data-year="todos"])')].forEach(b=>b.remove());
+    // Remove abas antigas (exceto "todos")
+    [...c.querySelectorAll('[data-year]:not([data-year="todos"])')].forEach(b => b.remove());
+
     anos.forEach(ano => {
         const btn = document.createElement('button');
-        btn.className='year-tab'; btn.dataset.year=ano; btn.textContent=ano;
-        btn.onclick = function(){ setAno(String(ano),this); };
+        btn.className = 'year-tab';
+        btn.dataset.year = ano;
+        btn.textContent = ano;
+        btn.onclick = function() { setAno(String(ano), this); };
         c.appendChild(btn);
     });
+
+    // Ativa o ano padrão (2026) se existir, senão ativa o mais recente
+    const todosBtn = c.querySelector('[data-year="todos"]');
+    const anoAlvo  = ANO_PADRAO;
+    const btnAlvo  = c.querySelector(`[data-year="${anoAlvo}"]`);
+
+    if (btnAlvo) {
+        // 2026 existe na lista → ativa
+        document.querySelectorAll('.year-tab').forEach(b => b.classList.remove('active'));
+        btnAlvo.classList.add('active');
+        anoSelecionado = anoAlvo;
+    } else if (anos.length > 0) {
+        // 2026 não existe → ativa o ano mais recente disponível
+        const maisRecente = String(Math.max(...anos.map(Number)));
+        const btnRecente  = c.querySelector(`[data-year="${maisRecente}"]`);
+        if (btnRecente) {
+            document.querySelectorAll('.year-tab').forEach(b => b.classList.remove('active'));
+            btnRecente.classList.add('active');
+            anoSelecionado = maisRecente;
+        }
+    } else {
+        // Nenhum ano disponível → ativa "todos"
+        document.querySelectorAll('.year-tab').forEach(b => b.classList.remove('active'));
+        todosBtn.classList.add('active');
+        anoSelecionado = 'todos';
+    }
 }
-function setAno(ano,el) {
-    anoSelecionado=ano;
-    document.querySelectorAll('.year-tab').forEach(b=>b.classList.remove('active'));
+
+function setAno(ano, el) {
+    anoSelecionado = ano;
+    document.querySelectorAll('.year-tab').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
     renderTudo();
 }
@@ -618,9 +723,9 @@ function setAno(ano,el) {
 function renderTudo() {
     const lista = filtrarPorAno(todosOsChamados);
     document.getElementById('yearInfo').textContent =
-        anoSelecionado==='todos' ? `${lista.length} chamados (todos os anos)` : `${lista.length} chamados em ${anoSelecionado}`;
+        anoSelecionado === 'todos' ? `${lista.length} chamados (todos os anos)` : `${lista.length} chamados em ${anoSelecionado}`;
     const st = calcStats(lista);
-    renderMetricas(st,lista);
+    renderMetricas(st, lista);
     renderAbertosPorAno();
     renderGraficoMes(st.porMes);
     renderComparativo();
@@ -636,19 +741,19 @@ function renderTudo() {
 }
 
 function renderAbertosPorAno() {
-    const porAno = dadosBrutos?.porAno||[];
-    const card=document.getElementById('cardAbertosPorAno');
-    const grid=document.getElementById('apaGrid');
-    const badge=document.getElementById('apaTotalBadge');
-    const anosComAbertos = porAno.filter(a=>a.abertos>0);
-    if (!anosComAbertos.length) { card.style.display='none'; return; }
-    card.style.display='';
-    const totalAbertos = anosComAbertos.reduce((s,a)=>s+a.abertos,0);
-    badge.textContent=`${totalAbertos} abertos no total`;
-    const maxAbertos = Math.max(...anosComAbertos.map(a=>a.abertos),1);
+    const porAno = dadosBrutos?.porAno || [];
+    const card = document.getElementById('cardAbertosPorAno');
+    const grid = document.getElementById('apaGrid');
+    const badge = document.getElementById('apaTotalBadge');
+    const anosComAbertos = porAno.filter(a => a.abertos > 0);
+    if (!anosComAbertos.length) { card.style.display = 'none'; return; }
+    card.style.display = '';
+    const totalAbertos = anosComAbertos.reduce((s, a) => s + a.abertos, 0);
+    badge.textContent = `${totalAbertos} abertos no total`;
+    const maxAbertos = Math.max(...anosComAbertos.map(a => a.abertos), 1);
     grid.innerHTML = anosComAbertos.map(a => {
-        const pct=Math.round(a.abertos/maxAbertos*100);
-        const taxaFech=a.total?Math.round(a.fechados/a.total*100):0;
+        const pct = Math.round(a.abertos / maxAbertos * 100);
+        const taxaFech = a.total ? Math.round(a.fechados / a.total * 100) : 0;
         return `<div class="apa-item" title="${a.ano}: ${a.abertos} abertos de ${a.total} total">
             <div class="apa-item-ano">${a.ano}</div>
             <div class="apa-item-val">${a.abertos}</div>
@@ -659,78 +764,78 @@ function renderAbertosPorAno() {
 }
 
 function calcStats(lista) {
-    const tipoMap={},mesMap={},respMap={},assuntoMap={},priorMap={};
-    let abertos=0,fechados=0;
+    const tipoMap = {}, mesMap = {}, respMap = {}, assuntoMap = {}, priorMap = {};
+    let abertos = 0, fechados = 0;
     lista.forEach(c => {
         if (c.fechado) fechados++; else abertos++;
-        const tipo=c.tipo||'—';
-        if (!tipoMap[tipo]) tipoMap[tipo]={tipo,abertos:0,fechados:0,total:0};
-        tipoMap[tipo].total++; c.fechado?tipoMap[tipo].fechados++:tipoMap[tipo].abertos++;
-        const assunto=c.assunto||'—';
-        if (!assuntoMap[assunto]) assuntoMap[assunto]={assunto,total:0};
+        const tipo = c.tipo || '—';
+        if (!tipoMap[tipo]) tipoMap[tipo] = { tipo, abertos:0, fechados:0, total:0 };
+        tipoMap[tipo].total++; c.fechado ? tipoMap[tipo].fechados++ : tipoMap[tipo].abertos++;
+        const assunto = c.assunto || '—';
+        if (!assuntoMap[assunto]) assuntoMap[assunto] = { assunto, total:0 };
         assuntoMap[assunto].total++;
-        const prior=c.prioridade||'Normal';
-        if (!priorMap[prior]) priorMap[prior]={prioridade:prior,total:0};
+        const prior = c.prioridade || 'Normal';
+        if (!priorMap[prior]) priorMap[prior] = { prioridade: prior, total:0 };
         priorMap[prior].total++;
         if (c.dataCriacao) {
-            const d=new Date(c.dataCriacao);
+            const d = new Date(c.dataCriacao);
             if (!isNaN(d)) {
-                const mes=d.getMonth()+1,ano=d.getFullYear();
-                const chave=`${String(mes).padStart(2,'0')}/${ano}`;
-                if (!mesMap[chave]) mesMap[chave]={chave,mes,ano,abertos:0,fechados:0,total:0};
-                mesMap[chave].total++; c.fechado?mesMap[chave].fechados++:mesMap[chave].abertos++;
+                const mes = d.getMonth() + 1, ano = d.getFullYear();
+                const chave = `${String(mes).padStart(2,'0')}/${ano}`;
+                if (!mesMap[chave]) mesMap[chave] = { chave, mes, ano, abertos:0, fechados:0, total:0 };
+                mesMap[chave].total++; c.fechado ? mesMap[chave].fechados++ : mesMap[chave].abertos++;
             }
         }
-        // ✅ Indexa por TODOS os participantes (responsavel + apoio)
-        const participantes = (c.participantes&&c.participantes.length) ? c.participantes : [c.responsavel||'—'];
+        const participantes = (c.participantes && c.participantes.length) ? c.participantes : [c.responsavel || '—'];
         participantes.forEach(nome => {
-            if (!nome||nome==='—') return;
-            if (!respMap[nome]) respMap[nome]={nome,abertos:0,fechados:0,total:0};
-            respMap[nome].total++; c.fechado?respMap[nome].fechados++:respMap[nome].abertos++;
+            if (!nome || nome === '—') return;
+            if (!respMap[nome]) respMap[nome] = { nome, abertos:0, fechados:0, total:0 };
+            respMap[nome].total++; c.fechado ? respMap[nome].fechados++ : respMap[nome].abertos++;
         });
     });
     return {
-        total:lista.length, abertos, fechados,
-        porTipo:        Object.values(tipoMap).sort((a,b)=>b.total-a.total),
-        porAssunto:     Object.values(assuntoMap).sort((a,b)=>b.total-a.total),
-        porPrioridade:  Object.values(priorMap).sort((a,b)=>b.total-a.total),
-        porMes:         Object.values(mesMap).sort((a,b)=>new Date(a.ano,a.mes-1)-new Date(b.ano,b.mes-1)),
-        porResponsavel: Object.values(respMap).sort((a,b)=>b.total-a.total),
+        total: lista.length, abertos, fechados,
+        porTipo:        Object.values(tipoMap).sort((a,b) => b.total - a.total),
+        porAssunto:     Object.values(assuntoMap).sort((a,b) => b.total - a.total),
+        porPrioridade:  Object.values(priorMap).sort((a,b) => b.total - a.total),
+        porMes:         Object.values(mesMap).sort((a,b) => new Date(a.ano, a.mes-1) - new Date(b.ano, b.mes-1)),
+        porResponsavel: Object.values(respMap).sort((a,b) => b.total - a.total),
     };
 }
 
-function renderMetricas(s,lista) {
-    document.getElementById('m-total').textContent   =s.total;
-    document.getElementById('m-abertos').textContent =s.abertos;
-    document.getElementById('m-fechados').textContent=s.fechados;
-    const pct=s.total?Math.round(s.fechados/s.total*100):0;
-    document.getElementById('m-pct').textContent  =pct+'% de resolução';
-    document.getElementById('m-taxa').textContent  =pct+'%';
-    document.getElementById('m-total-sub').textContent=
-        anoSelecionado==='todos'?'T&Suporte desde 2024':`total em ${anoSelecionado}`;
-    const meses=new Set(lista.map(c=>{
-        if(!c.dataCriacao) return null;
-        const d=new Date(c.dataCriacao); return isNaN(d)?null:`${d.getMonth()}/${d.getFullYear()}`;
+function renderMetricas(s, lista) {
+    document.getElementById('m-total').textContent    = s.total;
+    document.getElementById('m-abertos').textContent  = s.abertos;
+    document.getElementById('m-fechados').textContent = s.fechados;
+    const pct = s.total ? Math.round(s.fechados / s.total * 100) : 0;
+    document.getElementById('m-pct').textContent   = pct + '% de resolução';
+    document.getElementById('m-taxa').textContent   = pct + '%';
+    document.getElementById('m-total-sub').textContent =
+        anoSelecionado === 'todos' ? 'T&Suporte desde 2024' : `total em ${anoSelecionado}`;
+    const meses = new Set(lista.map(c => {
+        if (!c.dataCriacao) return null;
+        const d = new Date(c.dataCriacao);
+        return isNaN(d) ? null : `${d.getMonth()}/${d.getFullYear()}`;
     }).filter(Boolean));
-    const media=meses.size?Math.round(s.total/meses.size):s.total;
-    document.getElementById('m-media').textContent    =media;
-    document.getElementById('m-media-sub').textContent=`média mensal (${meses.size} meses)`;
+    const media = meses.size ? Math.round(s.total / meses.size) : s.total;
+    document.getElementById('m-media').textContent     = media;
+    document.getElementById('m-media-sub').textContent = `média mensal (${meses.size} meses)`;
 }
 
 function renderGraficoMes(porMes) {
-    document.getElementById('mesTitulo').textContent=
-        'Chamados por Mês'+(anoSelecionado==='todos'?' — Todos os anos':` — ${anoSelecionado}`);
-    document.getElementById('mesSub').textContent=
-        `${porMes.reduce((s,m)=>s+m.total,0)} chamados em ${porMes.length} meses`;
+    document.getElementById('mesTitulo').textContent =
+        'Chamados por Mês' + (anoSelecionado === 'todos' ? ' — Todos os anos' : ` — ${anoSelecionado}`);
+    document.getElementById('mesSub').textContent =
+        `${porMes.reduce((s,m) => s + m.total, 0)} chamados em ${porMes.length} meses`;
     if (!porMes.length) {
-        document.getElementById('chartMes').innerHTML=
+        document.getElementById('chartMes').innerHTML =
             '<div style="color:var(--muted);text-align:center;padding:30px;font-size:12px;font-weight:600">Sem dados para o período</div>';
         return;
     }
-    const maxM=Math.max(...porMes.map(m=>m.total),1),H=120;
-    const cols=porMes.map(m=>{
-        const ha=Math.max(m.abertos?3:0,Math.round(m.abertos/maxM*H));
-        const hf=Math.max(m.fechados?3:0,Math.round(m.fechados/maxM*H));
+    const maxM = Math.max(...porMes.map(m => m.total), 1), H = 120;
+    const cols = porMes.map(m => {
+        const ha = Math.max(m.abertos ? 3:0,  Math.round(m.abertos  / maxM * H));
+        const hf = Math.max(m.fechados ? 3:0, Math.round(m.fechados / maxM * H));
         return `<div class="vcol" title="${m.chave}: ${m.total} (${m.abertos} ab / ${m.fechados} conc)">
             <div class="vcol-num">${m.total}</div>
             <div class="vcol-bars" style="height:${ha+hf}px">
@@ -738,35 +843,35 @@ function renderGraficoMes(porMes) {
                 <div style="height:${ha}px;background:var(--ti)"></div>
             </div></div>`;
     }).join('');
-    const labels=porMes.map(m=>
+    const labels = porMes.map(m =>
         `<div class="vchart-label">${MES_LABELS[m.mes-1]}<br><span style="font-size:8px">${m.ano}</span></div>`
     ).join('');
-    document.getElementById('chartMes').innerHTML=
+    document.getElementById('chartMes').innerHTML =
         `<div class="vchart-wrap"><div class="vchart" style="height:${H+20}px">${cols}</div>
          <div class="vchart-labels">${labels}</div></div>`;
 }
 
 function renderComparativo() {
     if (!dadosBrutos?.comparativoMensal) return;
-    const anos=Object.keys(dadosBrutos.comparativoMensal).sort();
-    const secC=document.getElementById('secComp'),secT=document.getElementById('secCompTitle');
-    if (anos.length<2) { secC.style.display=secT.style.display='none'; return; }
-    secC.style.display=secT.style.display='';
-    const comp=dadosBrutos.comparativoMensal;
-    let maxV=1;
-    anos.forEach(a=>comp[a].forEach(v=>{if(v>maxV)maxV=v;}));
-    document.getElementById('compLegend').innerHTML=anos.map((a,i)=>
+    const anos = Object.keys(dadosBrutos.comparativoMensal).sort();
+    const secC = document.getElementById('secComp'), secT = document.getElementById('secCompTitle');
+    if (anos.length < 2) { secC.style.display = secT.style.display = 'none'; return; }
+    secC.style.display = secT.style.display = '';
+    const comp = dadosBrutos.comparativoMensal;
+    let maxV = 1;
+    anos.forEach(a => comp[a].forEach(v => { if (v > maxV) maxV = v; }));
+    document.getElementById('compLegend').innerHTML = anos.map((a,i) =>
         `<div class="legend-item"><div class="legend-dot" style="background:${ANO_CORES[i]}"></div>${a}</div>`
     ).join('');
-    const H=110,BW=Math.max(10,Math.min(20,Math.floor(180/anos.length)));
-    const grupos=MES_LABELS.map((ml,mi)=>{
-        const barras=anos.map((ano,ai)=>{
-            const v=comp[ano][mi]||0,h=v?Math.max(3,Math.round(v/maxV*H)):0;
+    const H = 110, BW = Math.max(10, Math.min(20, Math.floor(180 / anos.length)));
+    const grupos = MES_LABELS.map((ml, mi) => {
+        const barras = anos.map((ano, ai) => {
+            const v = comp[ano][mi] || 0, h = v ? Math.max(3, Math.round(v/maxV*H)) : 0;
             return `<div class="ccomp-bar" style="width:${BW}px;height:${h}px;background:${ANO_CORES[ai]}" title="${ano} ${ml}: ${v}"></div>`;
         }).join('');
         return `<div class="ccomp-grp" style="min-width:${BW*anos.length+6}px">${barras}</div>`;
     }).join('');
-    document.getElementById('chartComp').innerHTML=
+    document.getElementById('chartComp').innerHTML =
         `<div class="ccomp-wrap">
             <div class="ccomp" style="height:${H+10}px;gap:4px">${grupos}</div>
             <div class="ccomp-labels" style="gap:4px">${MES_LABELS.map(m=>`<div class="ccomp-label">${m}</div>`).join('')}</div>
@@ -774,40 +879,40 @@ function renderComparativo() {
 }
 
 function renderAnoAno() {
-    const porAno=dadosBrutos?.porAno||[];
+    const porAno = dadosBrutos?.porAno || [];
     if (!porAno.length) return;
-    const maxA=Math.max(...porAno.map(a=>a.total),1),H=120;
-    const grupos=porAno.map(a=>{
-        const ha=Math.max(a.abertos?3:0,Math.round(a.abertos/maxA*H));
-        const hf=Math.max(a.fechados?3:0,Math.round(a.fechados/maxA*H));
+    const maxA = Math.max(...porAno.map(a => a.total), 1), H = 120;
+    const grupos = porAno.map(a => {
+        const ha = Math.max(a.abertos  ? 3:0, Math.round(a.abertos  / maxA * H));
+        const hf = Math.max(a.fechados ? 3:0, Math.round(a.fechados / maxA * H));
         return `<div class="ano-grp" title="${a.ano}: ${a.total} (${a.abertos} ab / ${a.fechados} conc)">
             <div class="ano-bar" style="height:${ha}px;background:var(--ti);width:34px"></div>
             <div class="ano-bar" style="height:${hf}px;background:var(--green);width:34px"></div>
         </div>`;
     }).join('');
-    const labels=porAno.map(a=>
+    const labels = porAno.map(a =>
         `<div class="ano-label">${a.ano}<br><span style="font-size:10px;color:var(--ti)">${a.total}</span></div>`
     ).join('');
-    document.getElementById('chartAnoAno').innerHTML=
+    document.getElementById('chartAnoAno').innerHTML =
         `<div class="ano-chart">${grupos}</div><div class="ano-labels">${labels}</div>`;
 }
 
 function renderTipo(tipos) {
-    document.getElementById('tipoSub').textContent=anoSelecionado==='todos'?'Todos os anos':`Ano ${anoSelecionado}`;
-    renderBarras('chartTipo',tipos.slice(0,8),'tipo','total','linear-gradient(90deg,var(--ti),var(--ti-light))');
+    document.getElementById('tipoSub').textContent = anoSelecionado === 'todos' ? 'Todos os anos' : `Ano ${anoSelecionado}`;
+    renderBarras('chartTipo', tipos.slice(0,8), 'tipo', 'total', 'linear-gradient(90deg,var(--ti),var(--ti-light))');
 }
 function renderAssunto(assuntos) {
-    document.getElementById('assuntoSub').textContent=`${assuntos.length} assuntos`;
-    renderBarras('chartAssunto',assuntos.slice(0,10),'assunto','total','linear-gradient(90deg,var(--orange),#fb923c)');
+    document.getElementById('assuntoSub').textContent = `${assuntos.length} assuntos`;
+    renderBarras('chartAssunto', assuntos.slice(0,10), 'assunto', 'total', 'linear-gradient(90deg,var(--orange),#fb923c)');
 }
 function renderPrioridade(priors) {
-    document.getElementById('priorSub').textContent=`${priors.length} prioridades`;
-    const el=document.getElementById('chartPrior');
-    const CORES_PRIO={'Urgente':'var(--red)','Alta':'var(--orange)','Normal':'var(--ti)','Baixa':'var(--muted)'};
-    if (!priors.length) { el.innerHTML='<div style="color:var(--muted);text-align:center;padding:20px;font-size:12px">Sem dados</div>'; return; }
-    const max=priors[0].total||1;
-    el.innerHTML=priors.map(p=>{
-        const cor=CORES_PRIO[p.prioridade]||'var(--ti)';
+    document.getElementById('priorSub').textContent = `${priors.length} prioridades`;
+    const el = document.getElementById('chartPrior');
+    const CORES_PRIO = { 'Urgente':'var(--red)', 'Alta':'var(--orange)', 'Normal':'var(--ti)', 'Baixa':'var(--muted)' };
+    if (!priors.length) { el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px;font-size:12px">Sem dados</div>'; return; }
+    const max = priors[0].total || 1;
+    el.innerHTML = priors.map(p => {
+        const cor = CORES_PRIO[p.prioridade] || 'var(--ti)';
         return `<div class="bar-row">
             <div class="bar-label" title="${p.prioridade}">${p.prioridade}</div>
             <div class="bar-track"><div class="bar-fill" style="width:${Math.round(p.total/max*100)}%;background:${cor}"></div></div>
@@ -816,62 +921,59 @@ function renderPrioridade(priors) {
     }).join('');
 }
 function renderResp(resps) {
-    document.getElementById('respSub').textContent=anoSelecionado==='todos'?'Todos os anos':`Ano ${anoSelecionado}`;
-    const top=resps.slice(0,10);
-    if (!top.length) { document.getElementById('chartResp').innerHTML=''; return; }
-    const maxR=top[0].total||1,half=Math.ceil(top.length/2);
-    const mkCol=arr=>arr.map(r=>
+    document.getElementById('respSub').textContent = anoSelecionado === 'todos' ? 'Todos os anos' : `Ano ${anoSelecionado}`;
+    const top = resps.slice(0,10);
+    if (!top.length) { document.getElementById('chartResp').innerHTML = ''; return; }
+    const maxR = top[0].total || 1, half = Math.ceil(top.length / 2);
+    const mkCol = arr => arr.map(r =>
         `<div class="bar-row">
             <div class="bar-label" title="${r.nome}">${r.nome}</div>
             <div class="bar-track"><div class="bar-fill" style="width:${Math.round(r.total/maxR*100)}%;background:linear-gradient(90deg,var(--ti-light),#38bdf8)"></div></div>
             <div class="bar-count">${r.total}</div>
         </div>`
     ).join('');
-    document.getElementById('chartResp').innerHTML=
+    document.getElementById('chartResp').innerHTML =
         `<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-            <div>${mkCol(top.slice(0,half))}</div><div>${mkCol(top.slice(half))}</div>
+            <div>${mkCol(top.slice(0, half))}</div><div>${mkCol(top.slice(half))}</div>
         </div>`;
 }
 
-// ✅ populaFiltros — inclui responsável E apoio no select
 function populaFiltros(lista) {
-    const tipos   =[...new Set(lista.map(c=>c.tipo).filter(Boolean))].sort();
-    const assuntos=[...new Set(lista.map(c=>c.assunto).filter(v=>v&&v!=='—'))].sort();
-    // Inclui todos os participantes (responsável + apoio)
-    const respsSet=new Set();
-    lista.forEach(c=>{
-        const parts=(c.participantes&&c.participantes.length)?c.participantes:[c.responsavel];
-        parts.forEach(p=>{if(p&&p!=='—') respsSet.add(p);});
+    const tipos    = [...new Set(lista.map(c => c.tipo).filter(Boolean))].sort();
+    const assuntos = [...new Set(lista.map(c => c.assunto).filter(v => v && v !== '—'))].sort();
+    const respsSet = new Set();
+    lista.forEach(c => {
+        const parts = (c.participantes && c.participantes.length) ? c.participantes : [c.responsavel];
+        parts.forEach(p => { if (p && p !== '—') respsSet.add(p); });
     });
-    const resps=[...respsSet].sort();
-    document.getElementById('fTipo').innerHTML=
-        '<option value="">Todos os tipos</option>'+tipos.map(t=>`<option value="${t}">${t}</option>`).join('');
-    document.getElementById('fAssunto').innerHTML=
-        '<option value="">Todos os assuntos</option>'+assuntos.map(a=>`<option value="${a}">${a}</option>`).join('');
-    document.getElementById('fResp').innerHTML=
-        '<option value="">Todos</option>'+resps.map(r=>`<option value="${r}">${r}</option>`).join('');
+    const resps = [...respsSet].sort();
+    document.getElementById('fTipo').innerHTML =
+        '<option value="">Todos os tipos</option>' + tipos.map(t => `<option value="${t}">${t}</option>`).join('');
+    document.getElementById('fAssunto').innerHTML =
+        '<option value="">Todos os assuntos</option>' + assuntos.map(a => `<option value="${a}">${a}</option>`).join('');
+    document.getElementById('fResp').innerHTML =
+        '<option value="">Todos</option>' + resps.map(r => `<option value="${r}">${r}</option>`).join('');
 }
 
-// ✅ aplicarFiltros — filtra por participantes (responsavel + apoio)
 function aplicarFiltros() {
-    const busca  =document.getElementById('fBusca').value.toLowerCase().trim();
-    const status =document.getElementById('fStatus').value;
-    const tipo   =document.getElementById('fTipo').value;
-    const assunto=document.getElementById('fAssunto').value;
-    const resp   =document.getElementById('fResp').value;
-    const base   =filtrarPorAno(todosOsChamados);
-    chamadosFiltrados=base.filter(c=>{
-        if (status==='aberto'  &&  c.fechado) return false;
-        if (status==='fechado' && !c.fechado) return false;
-        if (tipo    && c.tipo!==tipo)         return false;
-        if (assunto && c.assunto!==assunto)   return false;
+    const busca   = document.getElementById('fBusca').value.toLowerCase().trim();
+    const status  = document.getElementById('fStatus').value;
+    const tipo    = document.getElementById('fTipo').value;
+    const assunto = document.getElementById('fAssunto').value;
+    const resp    = document.getElementById('fResp').value;
+    const base    = filtrarPorAno(todosOsChamados);
+    chamadosFiltrados = base.filter(c => {
+        if (status === 'aberto'  &&  c.fechado) return false;
+        if (status === 'fechado' && !c.fechado) return false;
+        if (tipo    && c.tipo    !== tipo)      return false;
+        if (assunto && c.assunto !== assunto)   return false;
         if (resp) {
-            const parts=(c.participantes&&c.participantes.length)?c.participantes:[c.responsavel];
+            const parts = (c.participantes && c.participantes.length) ? c.participantes : [c.responsavel];
             if (!parts.includes(resp)) return false;
         }
         if (busca) {
-            const apoioStr=(c.apoio||[]).join(' ');
-            const hay=`${c.titulo} ${c.responsavel} ${c.tipo} ${c.assunto} ${c.id} ${c.unidade} ${apoioStr}`.toLowerCase();
+            const apoioStr = (c.apoio || []).join(' ');
+            const hay = `${c.titulo} ${c.responsavel} ${c.tipo} ${c.assunto} ${c.id} ${c.unidade} ${apoioStr}`.toLowerCase();
             if (!hay.includes(busca)) return false;
         }
         return true;
@@ -880,38 +982,37 @@ function aplicarFiltros() {
 }
 
 function limparFiltros() {
-    ['fBusca','fStatus','fTipo','fAssunto','fResp'].forEach(id=>document.getElementById(id).value='');
+    ['fBusca','fStatus','fTipo','fAssunto','fResp'].forEach(id => document.getElementById(id).value = '');
     aplicarFiltros();
 }
 
 function renderTabela(lista) {
-    const base=filtrarPorAno(todosOsChamados);
-    document.getElementById('tableCount').textContent=
-        `${lista.length} chamado(s)${lista.length!==base.length?` (filtrado de ${base.length})`:''}`;
+    const base = filtrarPorAno(todosOsChamados);
+    document.getElementById('tableCount').textContent =
+        `${lista.length} chamado(s)${lista.length !== base.length ? ` (filtrado de ${base.length})` : ''}`;
     if (!lista.length) {
-        document.getElementById('tblBody').innerHTML=
+        document.getElementById('tblBody').innerHTML =
             '<tr><td colspan="8"><div class="empty"><div class="icon">🔍</div><p>Nenhum chamado encontrado</p></div></td></tr>';
         return;
     }
-    document.getElementById('tblBody').innerHTML=lista.map(c=>{
-        const sc=statusClass(c),sl=statusLabel(c);
-        const escAttr=s=>String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-        const cData={
-            id:c.id, titulo:escAttr(c.titulo), status:escAttr(c.status),
-            tipo:escAttr(c.tipo), assunto:escAttr(c.assunto),
-            responsavel:escAttr(c.responsavel), solicitante:escAttr(c.solicitante),
-            unidade:escAttr(c.unidade), departamento:escAttr(c.departamento),
-            prioridade:escAttr(c.prioridade), fechado:c.fechado,
-            dataCriacao:c.dataCriacao, dataConclusao:c.dataConclusao,
-            avaliacaoNota:c.avaliacaoNota,
-            apoio:(c.apoio||[]).map(escAttr),
+    document.getElementById('tblBody').innerHTML = lista.map(c => {
+        const sc = statusClass(c), sl = statusLabel(c);
+        const escAttr = s => String(s || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        const cData = {
+            id: c.id, titulo: escAttr(c.titulo), status: escAttr(c.status),
+            tipo: escAttr(c.tipo), assunto: escAttr(c.assunto),
+            responsavel: escAttr(c.responsavel), solicitante: escAttr(c.solicitante),
+            unidade: escAttr(c.unidade), departamento: escAttr(c.departamento),
+            prioridade: escAttr(c.prioridade), fechado: c.fechado,
+            dataCriacao: c.dataCriacao, dataConclusao: c.dataConclusao,
+            avaliacaoNota: c.avaliacaoNota,
+            apoio: (c.apoio || []).map(escAttr),
         };
-        const enc=encodeURIComponent(JSON.stringify(cData));
-        const acao=c.fechado
+        const enc = encodeURIComponent(JSON.stringify(cData));
+        const acao = c.fechado
             ? `<span style="font-size:10px;color:var(--green);font-weight:700">✅</span>`
             : `<button class="btn-concluir" onclick="event.stopPropagation();abrirModal('${enc}',true)">Concluir</button>`;
-        // ✅ Mostra apoio embaixo do responsável
-        const apoioHtml=(c.apoio&&c.apoio.length)
+        const apoioHtml = (c.apoio && c.apoio.length)
             ? `<br><span class="apoio-badge" title="Apoio: ${c.apoio.join(', ')}">+apoio: ${c.apoio.slice(0,2).join(', ')}${c.apoio.length>2?' …':''}</span>`
             : '';
         return `<tr onclick="abrirModal('${enc}',false)">
@@ -927,17 +1028,17 @@ function renderTabela(lista) {
     }).join('');
 }
 
-function abrirModal(enc,scrollParaConcluir) {
-    const c=JSON.parse(decodeURIComponent(enc));
-    const sc=statusClass(c),sl=statusLabel(c);
-    document.getElementById('modalTitulo').textContent=`#${c.id||''} — ${c.titulo||''}`;
-    const apoioHtml=(c.apoio&&c.apoio.length)
+function abrirModal(enc, scrollParaConcluir) {
+    const c = JSON.parse(decodeURIComponent(enc));
+    const sc = statusClass(c), sl = statusLabel(c);
+    document.getElementById('modalTitulo').textContent = `#${c.id||''} — ${c.titulo||''}`;
+    const apoioHtml = (c.apoio && c.apoio.length)
         ? `<div class="detail-row"><div class="detail-field" style="flex:2">
             <div class="detail-field-label">Apoio</div>
             <div class="detail-field-value">${c.apoio.join(', ')}</div>
            </div></div>`
         : '';
-    document.getElementById('modalBody').innerHTML=`
+    document.getElementById('modalBody').innerHTML = `
         <div class="detail-row">
             <div class="detail-field" style="flex:1.5">
                 <div class="detail-field-label">Status</div>
@@ -959,14 +1060,14 @@ function abrirModal(enc,scrollParaConcluir) {
         <div class="detail-row">
             <div class="detail-field"><div class="detail-field-label">Abertura</div><div class="detail-field-value">${fmtData(c.dataCriacao)}</div></div>
             <div class="detail-field"><div class="detail-field-label">Conclusão</div><div class="detail-field-value">${fmtData(c.dataConclusao)}</div></div>
-            ${c.avaliacaoNota?`<div class="detail-field"><div class="detail-field-label">Avaliação</div><div class="detail-field-value">${'⭐'.repeat(c.avaliacaoNota)} (${c.avaliacaoNota}/5)</div></div>`:''}
+            ${c.avaliacaoNota ? `<div class="detail-field"><div class="detail-field-label">Avaliação</div><div class="detail-field-value">${'⭐'.repeat(c.avaliacaoNota)} (${c.avaliacaoNota}/5)</div></div>` : ''}
         </div>
-        ${!c.fechado?renderConcluirForm(c):''}
+        ${!c.fechado ? renderConcluirForm(c) : ''}
     `;
     document.getElementById('modal').classList.add('open');
-    if (scrollParaConcluir) setTimeout(()=>{
-        const m=document.getElementById('modal'); m.scrollTop=m.scrollHeight;
-    },60);
+    if (scrollParaConcluir) setTimeout(() => {
+        const m = document.getElementById('modal'); m.scrollTop = m.scrollHeight;
+    }, 60);
 }
 
 function renderConcluirForm(c) {
@@ -994,74 +1095,88 @@ function renderConcluirForm(c) {
 }
 
 function setNota(n) {
-    document.getElementById('cNota').value=n;
-    document.querySelectorAll('.star-btn').forEach(b=>b.classList.toggle('on',parseInt(b.dataset.nota)<=n));
+    document.getElementById('cNota').value = n;
+    document.querySelectorAll('.star-btn').forEach(b => b.classList.toggle('on', parseInt(b.dataset.nota) <= n));
 }
 
 async function confirmarConcluir(id) {
-    const pessoaId=document.getElementById('cPessoaId')?.value?.trim();
+    const pessoaId = document.getElementById('cPessoaId')?.value?.trim();
     if (!pessoaId) { toast('⚠️ Informe o ID da pessoa'); return; }
-    const nota=document.getElementById('cNota')?.value;
-    const obs =document.getElementById('cObs')?.value?.trim();
-    const btn =document.getElementById('btnConcluir');
-    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Concluindo...';
+    const nota = document.getElementById('cNota')?.value;
+    const obs  = document.getElementById('cObs')?.value?.trim();
+    const btn  = document.getElementById('btnConcluir');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Concluindo...';
     try {
-        const r=await fetch(`${API}/chamados/${id}/concluir`,{
-            method:'PUT',headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({pessoaId:parseInt(pessoaId),nota:nota||null,observacao:obs||null}),
+        const r = await fetch(`${API}/chamados/${id}/concluir`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pessoaId: parseInt(pessoaId), nota: nota||null, observacao: obs||null }),
         });
-        const d=await r.json();
+        const d = await r.json();
         if (d.ok) {
-            toast('✅ Chamado #'+id+' concluído!');
+            toast('✅ Chamado #' + id + ' concluído!');
             document.getElementById('modal').classList.remove('open');
-            const idx=todosOsChamados.findIndex(c=>String(c.id)===String(id));
-            if (idx>=0) { todosOsChamados[idx].fechado=true; todosOsChamados[idx].status='Concluído'; todosOsChamados[idx].dataConclusao=new Date().toISOString(); }
+            const idx = todosOsChamados.findIndex(c => String(c.id) === String(id));
+            if (idx >= 0) {
+                todosOsChamados[idx].fechado = true;
+                todosOsChamados[idx].status = 'Concluído';
+                todosOsChamados[idx].dataConclusao = new Date().toISOString();
+            }
+            // Invalida o cache após concluir um chamado
+            try { localStorage.removeItem(CACHE_KEY); } catch(e) {}
             renderTudo();
-        } else { toast('❌ '+(d.erro||'Falha'),4000); btn.disabled=false; btn.innerHTML='✅ Confirmar Conclusão'; }
-    } catch(e) { toast('❌ '+e.message,4000); btn.disabled=false; btn.innerHTML='✅ Confirmar Conclusão'; }
+        } else { toast('❌ ' + (d.erro||'Falha'), 4000); btn.disabled = false; btn.innerHTML = '✅ Confirmar Conclusão'; }
+    } catch(e) { toast('❌ ' + e.message, 4000); btn.disabled = false; btn.innerHTML = '✅ Confirmar Conclusão'; }
 }
 
-function fecharModal(e) { if(e.target.id==='modal') document.getElementById('modal').classList.remove('open'); }
+function fecharModal(e) { if (e.target.id === 'modal') document.getElementById('modal').classList.remove('open'); }
 
 async function sincronizar() {
-    const btn=document.getElementById('btnSync');
-    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
-    setStatus('syncing','🔄 Buscando chamados na API SULTS...');
+    const btn = document.getElementById('btnSync');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Sincronizando...';
+    setStatus('syncing', '🔄 Buscando chamados na API SULTS...');
     try {
-        const r=await fetch(API+'/chamados/sincronizar',{method:'POST'});
-        const d=await r.json();
-        if (d.ok) { toast(`✅ Sincronizado! ${d.totalTI} chamados de TI`); await carregar(); }
-        else { toast('❌ '+(d.erro||'Falha'),4000); setStatus('error','❌ '+(d.erro||'Falha')); }
-    } catch(e) { toast('❌ '+e.message,4000); setStatus('error','❌ '+e.message); }
-    btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
+        const r = await fetch(API + '/chamados/sincronizar', { method: 'POST' });
+        const d = await r.json();
+        if (d.ok) {
+            toast(`✅ Sincronizado! ${d.totalTI} chamados de TI`);
+            // Invalida o cache para forçar busca fresca
+            try { localStorage.removeItem(CACHE_KEY); } catch(e) {}
+            await buscarDaAPI();
+            document.getElementById('cacheBanner').style.display = 'none';
+        } else { toast('❌ ' + (d.erro||'Falha'), 4000); setStatus('error', '❌ ' + (d.erro||'Falha')); }
+    } catch(e) { toast('❌ ' + e.message, 4000); setStatus('error', '❌ ' + e.message); }
+    btn.disabled = false; btn.innerHTML = '🔄 Sincronizar';
 }
 
 async function sincronizarCompleto() {
     if (!confirm('Isso vai rebuscar TODOS os chamados desde 2024. Pode demorar vários minutos. Continuar?')) return;
-    const btn=document.getElementById('btnSync');
-    btn.disabled=true;
-    setStatus('syncing','🔁 Sync completo em andamento...');
+    const btn = document.getElementById('btnSync');
+    btn.disabled = true;
+    setStatus('syncing', '🔁 Sync completo em andamento...');
     try {
-        const r=await fetch(API+'/chamados/sincronizar/completo',{method:'POST'});
-        const d=await r.json();
-        if (d.ok) { toast(`✅ Sync completo! ${d.totalTI} chamados`); await carregar(); }
-        else { toast('❌ '+(d.erro||'Falha'),4000); setStatus('error','❌ '+(d.erro||'Falha')); }
-    } catch(e) { toast('❌ '+e.message,4000); setStatus('error','❌ '+e.message); }
-    btn.disabled=false;
+        const r = await fetch(API + '/chamados/sincronizar/completo', { method: 'POST' });
+        const d = await r.json();
+        if (d.ok) {
+            toast(`✅ Sync completo! ${d.totalTI} chamados`);
+            try { localStorage.removeItem(CACHE_KEY); } catch(e) {}
+            await buscarDaAPI();
+        } else { toast('❌ ' + (d.erro||'Falha'), 4000); setStatus('error', '❌ ' + (d.erro||'Falha')); }
+    } catch(e) { toast('❌ ' + e.message, 4000); setStatus('error', '❌ ' + e.message); }
+    btn.disabled = false;
 }
 
 function exportCSV() {
     if (!chamadosFiltrados.length) { toast('Sem dados para exportar'); return; }
-    const cols=['ID','Título','Status','Tipo','Assunto','Prioridade','Responsável','Apoio','Solicitante','Unidade','Departamento','Data Abertura','Data Conclusão'];
-    const rows=chamadosFiltrados.map(c=>[
-        c.id,c.titulo,c.fechado?'Concluído':'Aberto',c.tipo,c.assunto,c.prioridade,
-        c.responsavel,(c.apoio||[]).join('; '),c.solicitante,c.unidade,c.departamento,
-        fmtData(c.dataCriacao),fmtData(c.dataConclusao)
-    ].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));
-    const blob=new Blob(['\uFEFF'+cols.join(',')+'\n'+rows.join('\n')],{type:'text/csv'});
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);
-    a.download=`chamados_ti_${anoSelecionado}_${new Date().toISOString().slice(0,10)}.csv`;
+    const cols = ['ID','Título','Status','Tipo','Assunto','Prioridade','Responsável','Apoio','Solicitante','Unidade','Departamento','Data Abertura','Data Conclusão'];
+    const rows = chamadosFiltrados.map(c => [
+        c.id, c.titulo, c.fechado?'Concluído':'Aberto', c.tipo, c.assunto, c.prioridade,
+        c.responsavel, (c.apoio||[]).join('; '), c.solicitante, c.unidade, c.departamento,
+        fmtData(c.dataCriacao), fmtData(c.dataConclusao)
+    ].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
+    const blob = new Blob(['\uFEFF' + cols.join(',') + '\n' + rows.join('\n')], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `chamados_ti_${anoSelecionado}_${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     toast(`📥 CSV exportado — ${chamadosFiltrados.length} registros`);
 }
