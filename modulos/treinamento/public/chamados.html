@@ -183,20 +183,6 @@
 <!-- ═══════════════════════════════════════════════════════════
      chamados.html — SUBSTITUIR o <header> atual por este
      ═══════════════════════════════════════════════════════════
-     APAGUE isto (de <header> até </header>):
-
-        <header>
-            ...
-            <nav>
-                <button class="nav-btn" onclick="location.href='/'">🔍 Busca</button>
-                <button class="nav-btn" onclick="location.href='/'">📊 Dashboard</button>
-                <button class="nav-btn" onclick="location.href='/sults'">🏪 Sults</button>
-                <button class="nav-btn active">📞 Chamados T&D</button>
-                <button class="nav-btn" onclick="location.href='/universidade'">🎓 Universidade</button>
-            </nav>
-        </header>
-
-     COLE este no lugar:
      ═══════════════════════════════════════════════════════════ -->
 
 <header>
@@ -207,26 +193,24 @@
     </div>
     <div class="hd"></div>
     <div class="header-title">Central de Treinamentos</div>
-    <nav>
-        <!-- 1 --> <button class="nav-btn" onclick="location.href='/'">📊 Dashboard</button>
-        <!-- 2 --> <button class="nav-btn" onclick="location.href='/'">🔔 Lembretes</button>
-        <!-- 3 --> <button class="nav-btn" onclick="location.href='/'">🔍 Busca</button>
-        <!-- 4 --> <button class="nav-btn" id="btnSults" onclick="location.href='/sults'">
-                       🏪 Sults <span id="sults-sub" style="font-size:10px;font-family:monospace;opacity:.7"></span>
-                   </button>
-        <!-- 5 --> <button class="nav-btn active">📞 Chamados T&D</button>
-        <!-- 6 --> <button class="nav-btn" onclick="location.href='/universidade'">🎓 Universidade</button>
-        <!-- 7 --> <button class="nav-btn" onclick="location.href='/'">🔄 Turnover</button>
-        <!-- 8 --> <button class="nav-btn" onclick="location.href='/'">➕ Cadastro</button>
-        <!-- 9 --> <button class="nav-btn" onclick="location.href='/'">📋 Histórico</button>
-    </nav>
+<nav>
+    <a href="/treinamento/"             class="tab-btn">📊 Dashboard</a>
+    <a href="/treinamento/"             class="tab-btn">🔔 Lembretes</a>
+    <a href="/treinamento/"             class="tab-btn">🔍 Busca</a>
+    <a href="/treinamento/sults"        class="tab-btn">🏪 Sults <span id="sults-sub" style="font-size:10px;font-family:monospace;opacity:.7"></span></a>
+    <a href="/treinamento/chamados"     class="tab-btn">📞 Chamados T&D</a>
+    <a href="/treinamento/universidade" class="tab-btn">🎓 Universidade</a>
+    <a href="/treinamento/turnover"     class="tab-btn active">🔄 Turnover</a>
+    <a href="/treinamento/"             class="tab-btn">➕ Cadastro</a>
+    <a href="/treinamento/"             class="tab-btn">📋 Histórico</a>
+</nav>
 </header>
 
 <!-- ═══════════════════════════════════════════════════════════
      ADICIONAR: cole antes do </script> final do chamados.html
      ═══════════════════════════════════════════════════════════ -->
 <script>
-fetch('/sults/resumo').then(r => r.json()).then(function(s) {
+fetch(API+'/sults/resumo').then(r => r.json()).then(function(s) {
     var el = document.getElementById('sults-sub');
     if (el) el.textContent = (s.totalUnidades||'—') + ' lojas · ' + (s.totalFuncionarios||'—') + ' func.';
 }).catch(function(){});
@@ -396,7 +380,7 @@ fetch('/sults/resumo').then(r => r.json()).then(function(s) {
 <div class="toast" id="toast"></div>
 
 <script>
-const API = '';
+const API = '/treinamento';
 const ANO_CORES  = ['#7c3aed','#2563eb','#16a34a','#d97706','#dc2626','#0891b2'];
 const MES_LABELS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
@@ -905,7 +889,7 @@ function exportCSV() {
 
 carregar();
 // Carrega subtítulo dinâmico do botão Sults
-fetch('/sults/resumo').then(r => r.json()).then(function(s) {
+fetch(API+'/sults/resumo').then(r => r.json()).then(function(s) {
     var el = document.getElementById('sults-sub');
     if (el) el.textContent = (s.totalUnidades||'—') + ' lojas · ' + (s.totalFuncionarios||'—') + ' func.';
 }).catch(function(){});

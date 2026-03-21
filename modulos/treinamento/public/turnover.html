@@ -121,17 +121,17 @@
     </div>
     <div class="header-divider"></div>
     <div class="header-title">Central de Treinamentos</div>
-    <nav>
-        <a href="/"             class="tab-btn">📊 Dashboard</a>
-        <a href="/"             class="tab-btn">🔔 Lembretes</a>
-        <a href="/"             class="tab-btn">🔍 Busca</a>
-        <a href="/sults"        class="tab-btn">🏪 Sults <span id="sults-sub" style="font-size:10px;font-family:monospace;opacity:.7"></span></a>
-        <a href="/chamados"     class="tab-btn">📞 Chamados T&D</a>
-        <a href="/universidade" class="tab-btn">🎓 Universidade</a>
-        <a href="/turnover"     class="tab-btn active">🔄 Turnover</a>
-        <a href="/"             class="tab-btn">➕ Cadastro</a>
-        <a href="/"             class="tab-btn">📋 Histórico</a>
-    </nav>
+<nav>
+    <a href="/treinamento/"             class="tab-btn">📊 Dashboard</a>
+    <a href="/treinamento/"             class="tab-btn">🔔 Lembretes</a>
+    <a href="/treinamento/"             class="tab-btn">🔍 Busca</a>
+    <a href="/treinamento/sults"        class="tab-btn">🏪 Sults <span id="sults-sub" style="font-size:10px;font-family:monospace;opacity:.7"></span></a>
+    <a href="/treinamento/chamados"     class="tab-btn">📞 Chamados T&D</a>
+    <a href="/treinamento/universidade" class="tab-btn">🎓 Universidade</a>
+    <a href="/treinamento/turnover"     class="tab-btn active">🔄 Turnover</a>
+    <a href="/treinamento/"             class="tab-btn">➕ Cadastro</a>
+    <a href="/treinamento/"             class="tab-btn">📋 Histórico</a>
+</nav>
 </header>
 
 <div id="statusBar">
@@ -309,7 +309,7 @@
 </div>
 
 <script>
-const API = const API = '';
+const API = '/treinamento';
 var _toData = null, _toFilt = [], _toRegistros = [], iaAberto = false;
 
 /* ── DEBUG ─────────────────────────────────────────────────────── */
@@ -741,7 +741,7 @@ async function perguntarIA(fixa) {
 }
 
 /* ── SULTS SUB ──────────────────────────────────────────────────── */
-fetch('/sults/resumo').then(function(r){ return r.json(); }).then(function(s) {
+fetch(API+'/sults/resumo').then(function(r){ return r.json(); }).then(function(s) {
     var el = document.getElementById('sults-sub');
     if (el) el.textContent = (s.totalUnidades || '—') + ' lojas · ' + (s.totalFuncionarios || '—') + ' func.';
 }).catch(function(){});

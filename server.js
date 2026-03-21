@@ -5,6 +5,11 @@
 
 require('dotenv').config();
 
+// ─── Google Application Credentials ─────────────────────────────────────────
+if (process.env.GOOGLE_KEY_FILE) {
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.GOOGLE_KEY_FILE;
+}
+
 const express  = require('express');
 const path     = require('path');
 const cors     = require('cors');
@@ -121,10 +126,19 @@ app.use('/master', exigirLogin, exigirMaster, masterRoutes);
 
 const modulos = ['ti', 'treinamento', 'suprimentos', 'marketing'];
 
-// ─── Rota raiz de cada módulo (/ti, /marketing, etc.) ────────
+// ─── Arquivo raiz de cada módulo (evita hardcode de index.html) ──
+const moduloIndex = {
+    ti:          'index.html',
+    treinamento: 'dashborard-treinamento.html',
+    suprimentos: 'index.html',
+    marketing:   'index.html',
+};
+
+// ─── Rota raiz de cada módulo (/ti, /treinamento, etc.) ──────
 modulos.forEach(mod => {
     app.get(`/${mod}`, exigirLogin, exigirModulo(mod), (req, res) => {
-        const file = path.join(__dirname, `modulos/${mod}/public`, 'index.html');
+        const arquivo = moduloIndex[mod] || 'index.html';
+        const file = path.join(__dirname, `modulos/${mod}/public`, arquivo);
         console.log(`\x1b[32m[MÓDULO] Servindo raiz /${mod} → ${file}\x1b[0m`);
         res.sendFile(file);
     });
@@ -135,6 +149,11 @@ const tiRoutes = require('./modulos/ti/routes');
 app.post('/ti/api/pix/sincronizar',              apenasLocal, (req, res, next) => { req.url = '/api/pix/sincronizar';              tiRoutes(req, res, next); });
 app.post('/ti/api/chamados/sincronizar',          apenasLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar';          tiRoutes(req, res, next); });
 app.post('/ti/api/chamados/sincronizar/completo', apenasLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar/completo'; tiRoutes(req, res, next); });
+
+app.post('/treinamento/sults/sincronizar',        apenasLocal, (req, res, next) => { req.url = '/sults/sincronizar';        treinamentoRoutes(req, res, next); });
+app.post('/treinamento/chamados/sincronizar',     apenasLocal, (req, res, next) => { req.url = '/chamados/sincronizar';     treinamentoRoutes(req, res, next); });
+app.post('/treinamento/turnover/sincronizar',     apenasLocal, (req, res, next) => { req.url = '/turnover/sincronizar';     treinamentoRoutes(req, res, next); });
+app.post('/treinamento/universidade/sincronizar', apenasLocal, (req, res, next) => { req.url = '/universidade/sincronizar'; treinamentoRoutes(req, res, next); });
 
 // ─── Rotas e APIs de cada módulo ─────────────────────────────
 for (const mod of modulos) {
@@ -180,4 +199,3 @@ const server = app.listen(PORT, () => {
 
 server.timeout = 120000;
 server.keepAliveTimeout = 120000;
-
