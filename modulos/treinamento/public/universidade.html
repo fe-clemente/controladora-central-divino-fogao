@@ -180,19 +180,17 @@
     </div>
     <div class="header-divider"></div>
     <div class="header-title">Central de Treinamentos</div>
-    <nav>
-        <!-- 1 --> <a href="/"             class="tab-btn">📊 Dashboard</a>
-        <!-- 2 --> <a href="/"             class="tab-btn">🔔 Lembretes</a>
-        <!-- 3 --> <a href="/"             class="tab-btn">🔍 Busca</a>
-        <!-- 4 --> <a href="/sults"        class="tab-btn" id="btnSults">
-                       🏪 Sults <span id="sults-sub" style="font-size:10px;font-family:monospace;opacity:.7"></span>
-                   </a>
-        <!-- 5 --> <a href="/chamados"     class="tab-btn">📞 Chamados T&D</a>
-        <!-- 6 --> <a href="/universidade" class="tab-btn active">🎓 Universidade</a>
-        <!-- 7 --> <a href="/"             class="tab-btn">🔄 Turnover</a>
-        <!-- 8 --> <a href="/"             class="tab-btn">➕ Cadastro</a>
-        <!-- 9 --> <a href="/"             class="tab-btn">📋 Histórico</a>
-    </nav>
+<nav>
+    <a href="/treinamento/"             class="tab-btn">📊 Dashboard</a>
+    <a href="/treinamento/"             class="tab-btn">🔔 Lembretes</a>
+    <a href="/treinamento/"             class="tab-btn">🔍 Busca</a>
+    <a href="/treinamento/sults"        class="tab-btn">🏪 Sults <span id="sults-sub" style="font-size:10px;font-family:monospace;opacity:.7"></span></a>
+    <a href="/treinamento/chamados"     class="tab-btn">📞 Chamados T&D</a>
+    <a href="/treinamento/universidade" class="tab-btn">🎓 Universidade</a>
+    <a href="/treinamento/turnover"     class="tab-btn active">🔄 Turnover</a>
+    <a href="/treinamento/"             class="tab-btn">➕ Cadastro</a>
+    <a href="/treinamento/"             class="tab-btn">📋 Histórico</a>
+</nav>
 </header>
  
 
@@ -340,7 +338,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const API = '';
+const API = '/treinamento';
 
 // ─── Estado ───────────────────────────────────────────────────────────────────
 var dadosBrutos      = null;   // array de linhas { unidade, formacao, curso, aberto, andamento, concluido, pendente, total }
@@ -845,7 +843,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') perguntarIA(); });
 });
 carregar();
-fetch('/sults/resumo').then(r => r.json()).then(function(s) {
+fetch(API +'/sults/resumo').then(r => r.json()).then(function(s) {
     var el = document.getElementById('sults-sub');
     if (el) el.textContent = (s.totalUnidades||'—') + ' lojas · ' + (s.totalFuncionarios||'—') + ' func.';
 }).catch(function(){});

@@ -270,11 +270,11 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
 🔔 Lembretes <span class="tab-badge" id="badgeLembretes">0</span>
 </button>
 <!-- 3 --> <button class="tab-btn" onclick="mudarTab('busca',this)">🔍 Busca</button>
-<!-- 4 --> <button class="tab-btn" id="btnSults" onclick="window.location.href='/sults'">
+<!-- 4 --> <button class="tab-btn" id="btnSults" onclick="window.location.href='/treinamento/sults'">
 🏪 Sults Lojas/Colab <span id="sults-sub" style="font-size:10px;font-family:monospace;color:inherit;opacity:.7"></span>
 </button>
-<!-- 5 --> <button class="tab-btn" onclick="window.location.href='/chamados'">📞 Chamados T&D</button>
-<!-- 6 --> <button class="tab-btn" onclick="window.location.href='/universidade'">🎓 Universidade</button>
+<!-- 5 --> <button class="tab-btn" onclick="window.location.href='/treinamento/chamados'">📞 Chamados T&D</button>
+<!-- 6 --> <button class="tab-btn" onclick="window.location.href='/treinamento/universidade'">🎓 Universidade</button>
  <a href="/turnover" class="tab-btn">🔄 Turnover</a>
 
 <!-- 8 --> <button class="tab-btn" onclick="mudarTab('cadastro',this)">➕ Cadastro</button>
@@ -290,8 +290,8 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
 <main>
 
     <!-- BUSCA -->
-    <div class="tab-content active" id="tab-busca">
-        <div class="section-header">
+<div class="tab-content" id="tab-busca">
+            <div class="section-header">
             <div>
                 <h2>Busca de Colaboradores</h2>
                 <p>Busca inteligente por nome usando Vertex AI Embeddings</p>
@@ -323,8 +323,8 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
     </div>
 
     <!-- DASHBOARD -->
-    <div class="tab-content" id="tab-dashboard">
-        <div class="section-header">
+<div class="tab-content active" id="tab-dashboard">
+            <div class="section-header">
             <div><h2>Dashboard</h2><p>Visão geral dos treinamentos, avaliações e financeiro</p></div>
             <button class="btn btn-secondary" onclick="carregarDashboard()">↻ Atualizar</button>
         </div>
@@ -544,7 +544,7 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
 <div id="debug"></div>
 
 <script>
-const API = '';
+const API = '/treinamento';
 const debugEl  = document.getElementById('debug');
 let timerInterval = null, timerSeg = 0;
 let iaAberto = false;
@@ -888,7 +888,7 @@ function renderDash(d, ano){
         '<div class="stat-sub" id="toCardSub">carregando…</div></div>';
     atualizarCardTurnoverDash();
 // Cards SULTS
-    fetch('/sults/resumo').then(r=>r.json()).then(function(s){
+    fetch(API+'/sults/resumo').then(r=>r.json()).then(function(s){
         var cardUnidades = '<div class="stat-card" style="border-top:3px solid #1565c0">'+
             '<div class="stat-label" style="color:#1565c0">🏪 Unidades Ativas</div>'+
             '<div class="stat-value" style="font-size:22px;color:#1565c0">'+(s.totalUnidades||'—')+'</div>'+
@@ -902,7 +902,7 @@ function renderDash(d, ano){
 
     
     // Cards Universidade (Tabela Dinâmica 10)
-    fetch('/universidade/dados').then(function(r){ return r.json(); }).then(function(u){
+    fetchAPI+('/universidade/dados').then(function(r){ return r.json(); }).then(function(u){
         var t = (u.totais) || {};
         var cardAndamento = '<div class="stat-card" style="border-top:3px solid var(--accent);cursor:pointer" onclick="window.location.href=\'/universidade\'">'+
             '<div class="stat-label" style="color:var(--accent)">⚙️ Andamento (Univ.)</div>'+
@@ -1575,7 +1575,12 @@ async function carregarHistorico() {
 }
 
 /* ── INIT ──────────────────────────────────────────────────────────────── */
+
+
 document.addEventListener('DOMContentLoaded',function(){
+    // Carrega dashboard como tab inicial
+    carregarDashboard();
+
     // Definir ano corrente no seletor (fallback: 2026)
     var anoCorrente = String(new Date().getFullYear());
     var selAno = document.getElementById('filtroAno');
@@ -1594,8 +1599,6 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 verificarStatus();
-
-
 
 
 /* ═══════════════════════════════════════════════════════════
