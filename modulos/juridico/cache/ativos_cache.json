@@ -2,7 +2,6 @@
   "ativos": [
     {
       "rowIndex": 3,
-      "aba": "Ativos",
       "comodatario": "TULIO DE BARROS VICENTINI",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO IDEAPAD 330 I3 4GB",
@@ -14,7 +13,6 @@
     },
     {
       "rowIndex": 4,
-      "aba": "Ativos",
       "comodatario": "ANDERSON BITENCOURT SANTANA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO IDEAPAD 3 – 15lML05, MODELO PE9031702004",
@@ -26,7 +24,6 @@
     },
     {
       "rowIndex": 5,
-      "aba": "Ativos",
       "comodatario": "ROBSON MAGALHÃES RODRIGUES",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG MODELO SM-A107 M/DS 32 GB",
@@ -38,7 +35,6 @@
     },
     {
       "rowIndex": 6,
-      "aba": "Ativos",
       "comodatario": "LILIANE CRISTINA SOUSA DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG GALAXY A12 64 GB, PRETO - IMEI 350039935827877",
@@ -50,7 +46,6 @@
     },
     {
       "rowIndex": 7,
-      "aba": "Ativos",
       "comodatario": "REINALDO AUGUSTO ZAMBONI",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG GALAXY M12 SM-M127FZKSZTO, IMEI: 352674/17/026949/8",
@@ -62,7 +57,6 @@
     },
     {
       "rowIndex": 8,
-      "aba": "Ativos",
       "comodatario": "KAIQUE FORTUOSO ARAUJO",
       "aparelho": "CELULAR",
       "modelo": "GALAXY SM-A035M/DS 64GB - IMEI 354985987722182",
@@ -74,7 +68,6 @@
     },
     {
       "rowIndex": 9,
-      "aba": "Ativos",
       "comodatario": "LILIANE CRISTINA SOUSA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "MARCA LENOVO, MODELO PE0D7GX8, V14 G4 - COR PRETA",
@@ -86,7 +79,6 @@
     },
     {
       "rowIndex": 10,
-      "aba": "Ativos",
       "comodatario": "DIANA PAULA WYSOCKI LEITE",
       "aparelho": "NOTEBOOK",
       "modelo": "ASUS, MODELO 9461NGW, IMEI N9N0B6027513399, NOVO",
@@ -98,7 +90,6 @@
     },
     {
       "rowIndex": 11,
-      "aba": "Ativos",
       "comodatario": "ADILMO PEREIRA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "ASUS, MODELO 9461NGW",
@@ -110,7 +101,6 @@
     },
     {
       "rowIndex": 12,
-      "aba": "Ativos",
       "comodatario": "APARECIDA MARIA DE LIMA SOUZA",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO IDEAPAD 3 15ITL6, S/N: PE0ADK24",
@@ -122,7 +112,6 @@
     },
     {
       "rowIndex": 13,
-      "aba": "Ativos",
       "comodatario": "MARCIO DIEGO ESTEVAM ELIAS",
       "aparelho": "CELULAR",
       "modelo": "CELULAR XIAOMI POCO X4 PRO, NOVO, Imei: 867035059290906",
@@ -134,7 +123,6 @@
     },
     {
       "rowIndex": 14,
-      "aba": "Ativos",
       "comodatario": "MARCIO DIEGO ESTEVAM ELIAS",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG, DESKTOP-8OBSSVR, Id do Dispositivo: 9EB19FD0-9B63-4D66-ACEC-6A86581CFB94",
@@ -146,7 +134,6 @@
     },
     {
       "rowIndex": 15,
-      "aba": "Ativos",
       "comodatario": "ALAIN JORDY GARCIA COSTOLA",
       "aparelho": "CELULAR",
       "modelo": "CELULAR XIAOMI POCO X4 PRO, NOVO, Imei: 863305065600842",
@@ -158,7 +145,6 @@
     },
     {
       "rowIndex": 16,
-      "aba": "Ativos",
       "comodatario": "RENÊ FERREIRA PINTO JUNIOR",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO, IDEAPAD 3 15ITL6, S/N: PE0ADJRB",
@@ -170,7 +156,6 @@
     },
     {
       "rowIndex": 17,
-      "aba": "Ativos",
       "comodatario": "RENÊ FERREIRA PINTO JUNIOR",
       "aparelho": "CELULAR",
       "modelo": "POCO X4 PRO, NOVO,IMEI: 867035059211423 + CHIP VIVO",
@@ -182,7 +167,6 @@
     },
     {
       "rowIndex": 18,
-      "aba": "Ativos",
       "comodatario": "ADILMO PEREIRA DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "POCO X4 PRO, NOVO,IMEI: 867631069042343",
@@ -194,7 +178,6 @@
     },
     {
       "rowIndex": 19,
-      "aba": "Ativos",
       "comodatario": "FABIO LUIZ DO NASCIMENTO",
       "aparelho": "CELULAR",
       "modelo": "POCO X4 PRO, NOVO,IMEI: 867631069024242",
@@ -206,7 +189,6 @@
     },
     {
       "rowIndex": 20,
-      "aba": "Ativos",
       "comodatario": "MARCOS GOMES DOS SANTOS",
       "aparelho": "CELULAR",
       "modelo": "CELULAR XIAOMI POCO X4 PRO, NOVO",
@@ -218,7 +200,6 @@
     },
     {
       "rowIndex": 21,
-      "aba": "Ativos",
       "comodatario": "MARIANE DE OLIVEIRA MENDONCA",
       "aparelho": "CELULAR",
       "modelo": "CELULAR XIAOMI POCO X4 PRO, NOVO",
@@ -230,7 +211,6 @@
     },
     {
       "rowIndex": 22,
-      "aba": "Ativos",
       "comodatario": "MATHEUS DE OLIVEIRA CARDOSO",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG A03 Core",
@@ -242,7 +222,6 @@
     },
     {
       "rowIndex": 23,
-      "aba": "Ativos",
       "comodatario": "FRANCISCO IRANDI MELO DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "POCO X5, VERDE, N/S 45013/S2ZS00311, NOVO",
@@ -254,7 +233,6 @@
     },
     {
       "rowIndex": 24,
-      "aba": "Ativos",
       "comodatario": "BRUNA ORMENIO FERNANDES CARUSO",
       "aparelho": "CELULAR",
       "modelo": "SMARTPHONE XIAOMI POCO X5 8G/256 NOVO, NÚMERO DE SÉRIE: 45035/S3RD02689",
@@ -266,7 +244,6 @@
     },
     {
       "rowIndex": 25,
-      "aba": "Ativos",
       "comodatario": "FELIPE DO VALE MENDES",
       "aparelho": "CELULAR",
       "modelo": "SMARTPHONE XIAOMI POCO X5 8G/256 NOVO, NÚMERO DE SÉRIE: 45035/S3RD02065",
@@ -278,7 +255,6 @@
     },
     {
       "rowIndex": 26,
-      "aba": "Ativos",
       "comodatario": "ANTONIO CARLOS BRAIANI DINIS JUNIOR",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO IDEAPAD S145-15IKB, MODELN NAME: 81XM, S/N: PE06RHER",
@@ -290,7 +266,6 @@
     },
     {
       "rowIndex": 27,
-      "aba": "Ativos",
       "comodatario": "MARCIO FERNANDES DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "samsung np550, novo",
@@ -302,7 +277,6 @@
     },
     {
       "rowIndex": 28,
-      "aba": "Ativos",
       "comodatario": "WANDERLEIA ALVES DE NOVAES",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO V14, S/N PE0AYWV0",
@@ -314,7 +288,6 @@
     },
     {
       "rowIndex": 29,
-      "aba": "Ativos",
       "comodatario": "CECILIA COELHO FERNANDES DE OLIVEIRA",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi Redmi 12 8/256, novo, IMEI1 846122063827841, IMEI2 864122063827858",
@@ -326,7 +299,6 @@
     },
     {
       "rowIndex": 30,
-      "aba": "Ativos",
       "comodatario": "JAQUELINE SANTOS GADELHA",
       "aparelho": "NOTEBOOK",
       "modelo": "ASUS, MODELO: X515J, USADO, S/N: N9N0B6028726393",
@@ -338,7 +310,6 @@
     },
     {
       "rowIndex": 31,
-      "aba": "Ativos",
       "comodatario": "MARCOS GOMES DOS SANTOS",
       "aparelho": "NOTEBOOK",
       "modelo": "Asus, model X515J, S/N: N9N086028918390,",
@@ -350,7 +321,6 @@
     },
     {
       "rowIndex": 32,
-      "aba": "Ativos",
       "comodatario": "CAROLLINE VITORIA DOS SANTOS SOBRAL",
       "aparelho": "NOTEBOOK",
       "modelo": "Samsung Book, 550XDA-KP3, novo, Cor: Cinza Chumbo, S/N: 0A289QCW804499",
@@ -362,7 +332,6 @@
     },
     {
       "rowIndex": 33,
-      "aba": "Ativos",
       "comodatario": "PRISCILA MARQUES DA SILVA ALVES",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO - V14 G4AMN – PEOD7GXR, Cor Preta.",
@@ -374,7 +343,6 @@
     },
     {
       "rowIndex": 34,
-      "aba": "Ativos",
       "comodatario": "AUGUSTO DA HORA",
       "aparelho": "CELULAR",
       "modelo": "Aparelho celular novo marca Xiaomi Modelo RedMi 12 8gb Ram 256GB Rom, IMEI1 868129060915046 e IMEI2 868129060915053",
@@ -386,7 +354,6 @@
     },
     {
       "rowIndex": 35,
-      "aba": "Ativos",
       "comodatario": "GRAZIELLI ALVES ARRUDA",
       "aparelho": "NOTEBOOK",
       "modelo": "ACER, A315-24P-R3TV, PURE SILVER, S/N: NXKHQAL003291AA919501",
@@ -398,7 +365,6 @@
     },
     {
       "rowIndex": 36,
-      "aba": "Ativos",
       "comodatario": "GABRIELA LORENA DA SILVA TAVARES",
       "aparelho": "NOTEBOOK",
       "modelo": "ACER, A315-24P-R3TV, PURE SILVER, S/N:",
@@ -410,7 +376,6 @@
     },
     {
       "rowIndex": 37,
-      "aba": "Ativos",
       "comodatario": "CRISTIANO FLAVIO DE MORAIS FREITAS",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi Poco X4 Pro 5G, Amarelo, novo",
@@ -422,7 +387,6 @@
     },
     {
       "rowIndex": 38,
-      "aba": "Ativos",
       "comodatario": "MARINA BRANCO POSSO LIMA",
       "aparelho": "NOTEBOOK",
       "modelo": "HP 240G3",
@@ -434,7 +398,6 @@
     },
     {
       "rowIndex": 39,
-      "aba": "Ativos",
       "comodatario": "MARINA BRANCO POSSO LIMA",
       "aparelho": "CELULAR",
       "modelo": "XIAOMI REDMI 10A, CHROME SILVER, N/S: 38895-62TT08986 , TEL: (11) 91680-7289",
@@ -446,7 +409,6 @@
     },
     {
       "rowIndex": 40,
-      "aba": "Ativos",
       "comodatario": "APARECIDA MARIA DE LIMA SOUZA",
       "aparelho": "CELULAR",
       "modelo": "Redmi Note 13 + linha vivo",
@@ -458,7 +420,6 @@
     },
     {
       "rowIndex": 41,
-      "aba": "Ativos",
       "comodatario": "VERA LUCIA SANTOS DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "REDMI NOTE 13 +",
@@ -470,7 +431,6 @@
     },
     {
       "rowIndex": 42,
-      "aba": "Ativos",
       "comodatario": "OSILENE DE FATIMA CONSTANTINO SALES",
       "aparelho": "CELULAR",
       "modelo": "Redmi Note 13, Imei: 860870074122503, SN: 52938/04NR03406",
@@ -482,7 +442,6 @@
     },
     {
       "rowIndex": 43,
-      "aba": "Ativos",
       "comodatario": "ALAIN JORDY GARCIA COSTOLA",
       "aparelho": "NOTEBOOK",
       "modelo": "Macbook Pro M3, S/n: JFGK1G9FXJ",
@@ -494,7 +453,6 @@
     },
     {
       "rowIndex": 44,
-      "aba": "Ativos",
       "comodatario": "ANTONIO CARLOS BRAIANI DINIS JUNIOR",
       "aparelho": "CELULAR",
       "modelo": "Poco M6 PRO 5G + linha telefônica 91680-7745.",
@@ -506,7 +464,6 @@
     },
     {
       "rowIndex": 45,
-      "aba": "Ativos",
       "comodatario": "BRUNA ORMENIO FERNANDES CARUSO",
       "aparelho": "NOTEBOOK",
       "modelo": "Macbook Pro M3, S/n: GY46YJJ44H",
@@ -518,7 +475,6 @@
     },
     {
       "rowIndex": 46,
-      "aba": "Ativos",
       "comodatario": "FELIPE DO VALE MENDES",
       "aparelho": "NOTEBOOK",
       "modelo": "Macbook Pro M3, S/n: F75LXG1WGT",
@@ -530,7 +486,6 @@
     },
     {
       "rowIndex": 47,
-      "aba": "Ativos",
       "comodatario": "LUCIANO GOUVEIA",
       "aparelho": "CELULAR",
       "modelo": "REDMI 13C, IMEI 862626076278505, S/N: 54301/64UF11438",
@@ -542,7 +497,6 @@
     },
     {
       "rowIndex": 48,
-      "aba": "Ativos",
       "comodatario": "DANIELE MARTINS",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi Redmi 13C Midnight Black, S/N: 51605/64TK09227, IMEI: 8605150077620587,",
@@ -554,7 +508,6 @@
     },
     {
       "rowIndex": 49,
-      "aba": "Ativos",
       "comodatario": "QUELAINE DA CRUZ LUNA",
       "aparelho": "CELULAR",
       "modelo": "xiaomi redmi, s/n: 54301/64UF11237, IMEI: 862626076286805",
@@ -566,7 +519,6 @@
     },
     {
       "rowIndex": 50,
-      "aba": "Ativos",
       "comodatario": "ANDERSON BITENCOURT SANTANA SILVA",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi POCO X6, s/n: 55646/F4S801066, IMEI 1: 861785066706205",
@@ -578,7 +530,6 @@
     },
     {
       "rowIndex": 51,
-      "aba": "Ativos",
       "comodatario": "TAINÁ PEREIRA DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi Redmi 13C Midnight Black, S/N: 51602/64UV01327, IMEI: 861798074515401",
@@ -590,7 +541,6 @@
     },
     {
       "rowIndex": 52,
-      "aba": "Ativos",
       "comodatario": "JAQUELINE SANTOS GADELHA",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi Redmi 13C Midnight Black, S/N: 50718/632H10345, IMEI: 864399074946147",
@@ -602,7 +552,6 @@
     },
     {
       "rowIndex": 53,
-      "aba": "Ativos",
       "comodatario": "BRUNO CLEMENTINO DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo IdeaPad 1  15IAU7, ID do Produto: 00342-43501-94325-AAOEM",
@@ -614,7 +563,6 @@
     },
     {
       "rowIndex": 54,
-      "aba": "Ativos",
       "comodatario": "FABIANA PINHEIRO LOTITO NATALI",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi Redmi 13C Midnight Black, S/N: 54301/64UF07782, IMEI: 862626076219947",
@@ -626,7 +574,6 @@
     },
     {
       "rowIndex": 55,
-      "aba": "Ativos",
       "comodatario": "QUELAINE DA CRUZ LUNA",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo Ideapad 1 115IAU7, s/n: PE008728",
@@ -638,7 +585,6 @@
     },
     {
       "rowIndex": 56,
-      "aba": "Ativos",
       "comodatario": "LISLEY GABRIELLE CAROLINO",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG, MODEL: NP300E5M-KD3BR, S/N: 080Z9QAJC002062",
@@ -650,7 +596,6 @@
     },
     {
       "rowIndex": 57,
-      "aba": "Ativos",
       "comodatario": "TAMIRES DA SILVA LIMA",
       "aparelho": "CELULAR",
       "modelo": "Samsung A03 Core, valor nominal R$ 600,00 (seiscentos reais) + linha telefônica (11) 91680-8270.",
@@ -662,7 +607,6 @@
     },
     {
       "rowIndex": 58,
-      "aba": "Ativos",
       "comodatario": "LISLEY GABRIELLE CAROLINO",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi Poco M6 Pro, Model: 23076P4BI, Part Nº: MZB0EPSIN",
@@ -674,7 +618,6 @@
     },
     {
       "rowIndex": 59,
-      "aba": "Ativos",
       "comodatario": "KAIQUE FORTUOSO ARAUJO",
       "aparelho": "NOTEBOOK",
       "modelo": "Samsung, Book - 16L7DFQDT7, Nº de série: 0AC99QCX401099V",
@@ -686,7 +629,6 @@
     },
     {
       "rowIndex": 60,
-      "aba": "Ativos",
       "comodatario": "ERIC VANSE OLIVEIRA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "MACBOOK PRO 14-INCH, MODEL Nº: A2992, PART Nº: MRX33LL/A, SERIAL Nº: K3WNTQFJH9",
@@ -698,7 +640,6 @@
     },
     {
       "rowIndex": 61,
-      "aba": "Ativos",
       "comodatario": "DANIELE MARTINS",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook Lenovo, n° de série: PE0CDZ21",
@@ -710,7 +651,6 @@
     },
     {
       "rowIndex": 62,
-      "aba": "Ativos",
       "comodatario": "Jéssica Martins Gonçalves",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook Lenovo V14 G4 amn, modelo PEODP5GJ, novo, Cor: Preta",
@@ -722,7 +662,6 @@
     },
     {
       "rowIndex": 63,
-      "aba": "Ativos",
       "comodatario": "HENRIQUE JUN MINAMI MACARI",
       "aparelho": "NOTEBOOK",
       "modelo": "ACER A315-34-C2BV, SN: NXHRNAL007217B2E5999501",
@@ -734,7 +673,6 @@
     },
     {
       "rowIndex": 64,
-      "aba": "Ativos",
       "comodatario": "BRUNO DE SOUZA",
       "aparelho": "NOTEBOOK",
       "modelo": "Marca Lenovo, Modelo LOQ 15IHR8, S/N: PE0BZM2K",
@@ -746,7 +684,6 @@
     },
     {
       "rowIndex": 65,
-      "aba": "Ativos",
       "comodatario": "FERNANDO MARTINS CLEMENTE",
       "aparelho": "CELULAR",
       "modelo": "Smartphone Redmi 13C, IMEI: 862805073524943, S/N: 54302/64S902409",
@@ -758,7 +695,6 @@
     },
     {
       "rowIndex": 66,
-      "aba": "Ativos",
       "comodatario": "TULIO DE BARROS VICENTINI",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi Redmi 13C, IMEI: 8628050735558925, S/N: 54302/64S901872",
@@ -770,7 +706,6 @@
     },
     {
       "rowIndex": 67,
-      "aba": "Ativos",
       "comodatario": "JAYNE DOS SANTOS NASCIMENTO",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG Book, 550XDA-KP3, N° DE SÉRIE: 0A289QCW8207094, CINZA CHUMBO",
@@ -782,7 +717,6 @@
     },
     {
       "rowIndex": 68,
-      "aba": "Ativos",
       "comodatario": "FABIANA PINHEIRO LOTITO NATALI",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG, ID: 65FE99A6-1455-4099-9BC7-6B0DD612AF56",
@@ -794,7 +728,6 @@
     },
     {
       "rowIndex": 69,
-      "aba": "Ativos",
       "comodatario": "TAINÁ PEREIRA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "Asus, numero de serie - n3n0b6013594124",
@@ -806,7 +739,6 @@
     },
     {
       "rowIndex": 70,
-      "aba": "Ativos",
       "comodatario": "THAINA RODRIGUES DE BRITO",
       "aparelho": "CELULAR",
       "modelo": "Redmi Note 14, Imei 8624410706813008-03, modelo: 24117RN76L",
@@ -818,7 +750,6 @@
     },
     {
       "rowIndex": 71,
-      "aba": "Ativos",
       "comodatario": "JORDY",
       "aparelho": "CELULAR",
       "modelo": "Samsung galaxy A12, IMEI: 359410825944125, N/S: RX8R50KHEMR + linha telefônica (11) 94334-6689",
@@ -830,7 +761,6 @@
     },
     {
       "rowIndex": 72,
-      "aba": "Ativos",
       "comodatario": "GABRIELLY DIAS FERREIRA",
       "aparelho": "CELULAR",
       "modelo": "Galaxy ao3 core, Número de serie - r9xrco17j8x",
@@ -842,7 +772,6 @@
     },
     {
       "rowIndex": 73,
-      "aba": "Ativos",
       "comodatario": "FABIO LUIZ DO NASCIMENTO",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO, N/S: pe0dn2xy",
@@ -854,7 +783,6 @@
     },
     {
       "rowIndex": 74,
-      "aba": "Ativos",
       "comodatario": "ELIANE",
       "aparelho": "CELULAR",
       "modelo": "redmi note 14, n/s - 61678w5p400448",
@@ -866,7 +794,6 @@
     },
     {
       "rowIndex": 75,
-      "aba": "Ativos",
       "comodatario": "Jonatan Luiz Costa",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook modelo - Acer, Nome do dispositivo - nna2no7",
@@ -878,7 +805,6 @@
     },
     {
       "rowIndex": 76,
-      "aba": "Ativos",
       "comodatario": "CECILIA COELHO FERNANDES DE OLIVEIRA",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, numero série - peodj8ak",
@@ -890,7 +816,6 @@
     },
     {
       "rowIndex": 77,
-      "aba": "Ativos",
       "comodatario": "EDINA",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, numero de serie - peod84k4",
@@ -902,7 +827,6 @@
     },
     {
       "rowIndex": 78,
-      "aba": "Ativos",
       "comodatario": "ELIANE",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, numero de serie - peodj89s",
@@ -914,7 +838,6 @@
     },
     {
       "rowIndex": 79,
-      "aba": "Ativos",
       "comodatario": "THAMIRES SANTANA DE SOUZA",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, loq 15irh8, S/N: pe0bzm2k",
@@ -926,7 +849,6 @@
     },
     {
       "rowIndex": 80,
-      "aba": "Ativos",
       "comodatario": "GABRIELLY DIAS FERREIRA",
       "aparelho": "NOTEBOOK",
       "modelo": "Galaxy book2, Modelo - np550xed, Número de série - 0ac99qcx401078d",
@@ -938,7 +860,6 @@
     },
     {
       "rowIndex": 81,
-      "aba": "Ativos",
       "comodatario": "ROBSON APARECIDO NOBRE",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, IdeaPad 1 15IAU7, S/N: PE0DJ8A8",
@@ -950,7 +871,6 @@
     },
     {
       "rowIndex": 82,
-      "aba": "Ativos",
       "comodatario": "FRANCISCO IRANDI MELO DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "Modelo - lenovo, numero de serie - pe0e6hb",
@@ -962,7 +882,6 @@
     },
     {
       "rowIndex": 83,
-      "aba": "Ativos",
       "comodatario": "JORDY",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, deapad 1 15iau7, Numero de serie - pe0dazw6",
@@ -974,7 +893,6 @@
     },
     {
       "rowIndex": 84,
-      "aba": "Ativos",
       "comodatario": "LAURA MARTINS MOREIRA",
       "aparelho": "CELULAR",
       "modelo": "Redmi 13c, numero de serie - 54302 64s905509 + linha telefônica (11) 999468564",
@@ -986,7 +904,6 @@
     },
     {
       "rowIndex": 85,
-      "aba": "Ativos",
       "comodatario": "ROBSON APARECIDO NOBRE",
       "aparelho": "CELULAR",
       "modelo": "Redmi Note 14, S/N: 61678/W5NM05037, IMEI1: 862378079684889",
@@ -998,7 +915,6 @@
     },
     {
       "rowIndex": 86,
-      "aba": "Ativos",
       "comodatario": "LAURA MARTINS MOREIRA",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook Lenovo Idea Pad 1 15IRU7, Número de série: PE0F2F89",
@@ -1010,7 +926,6 @@
     },
     {
       "rowIndex": 87,
-      "aba": "Ativos",
       "comodatario": "Guilherme dos Santos Cayres",
       "aparelho": "CELULAR",
       "modelo": "Redmi 14c, número de serie - 5858465ra04469",
@@ -1022,7 +937,6 @@
     },
     {
       "rowIndex": 88,
-      "aba": "Ativos",
       "comodatario": "LUANA OLIVEIRA CARDOSO",
       "aparelho": "CELULAR",
       "modelo": "Redmi 14C, cor preta, 256 GB, IMEI 1.868995072770623 e IMEI2: 868995072770631, linha telefônica (11)91680-7176,",
@@ -1034,7 +948,6 @@
     },
     {
       "rowIndex": 89,
-      "aba": "Ativos",
       "comodatario": "LUANA OLIVEIRA CARDOSO",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo V14 G4 AMN, 83GE000DBR, PEODP6G5, Cor Preta,  S/N:",
@@ -1046,7 +959,6 @@
     },
     {
       "rowIndex": 90,
-      "aba": "Ativos",
       "comodatario": "CRISTIANO FLAVIO DE MORAIS FREITAS",
       "aparelho": "NOTEBOOK",
       "modelo": "Novo notebook - lenovo, numero de serie - peoebgpq",
@@ -1058,7 +970,6 @@
     },
     {
       "rowIndex": 91,
-      "aba": "Ativos",
       "comodatario": "HELENA SARDE MARIA",
       "aparelho": "NoteBOOK",
       "modelo": "Notebook - Lenovo v14 g4 amn Cor - preta  Número de série - pe0dp6gg",
@@ -1070,7 +981,6 @@
     },
     {
       "rowIndex": 92,
-      "aba": "Ativos",
       "comodatario": "PAMELA CRISTINA FERREIRA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook - Lenovo v14 g4 amn,Cor - preta, Número de série - pe0dp6gv",
@@ -1082,7 +992,6 @@
     },
     {
       "rowIndex": 93,
-      "aba": "Ativos",
       "comodatario": "MARLEIDE MOTA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO V14 G4 AMN, PE0DP6GV, COR PRETA, S/N.",
@@ -1094,7 +1003,6 @@
     },
     {
       "rowIndex": 94,
-      "aba": "Ativos",
       "comodatario": "FERNANDO MARTINS CLEMENTE",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook Accer, Modelo: A515-A5G-R46X, S/N: NXAYEAL006229016619Z00",
@@ -1106,7 +1014,6 @@
     },
     {
       "rowIndex": 95,
-      "aba": "Ativos",
       "comodatario": "OSILENE DE FATIMA CONSTANTINO SALES",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook Lenovo, Modelo: IdeaPad 1 15AMN7, S/N:PE0DS7BV",
@@ -1118,7 +1025,6 @@
     },
     {
       "rowIndex": 96,
-      "aba": "Ativos",
       "comodatario": "KAREN OLIVEIRA DOS SANTOS",
       "aparelho": "NOTEBOOK",
       "modelo": "MODELO: LENOVO V14 G4 AMN, , N/S:  PE0D7GJK.",
@@ -1130,7 +1036,6 @@
     },
     {
       "rowIndex": 97,
-      "aba": "Ativos",
       "comodatario": "FELIPE PINHEIRO DOS SANTOS",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO IDEAPAD 1 15IRU7 - NUMERO DE SERIE - PE0F3NHM",
@@ -1142,7 +1047,6 @@
     },
     {
       "rowIndex": 98,
-      "aba": "Ativos",
       "comodatario": "FABIANA LIMA CORDEIRO",
       "aparelho": "CELULAR",
       "modelo": "CELULAR - POCOX5- NÚMERO DE SERIE - 45035S3RD02311-IMEI   868767061078064/01",
@@ -1154,7 +1058,6 @@
     },
     {
       "rowIndex": 99,
-      "aba": "Ativos",
       "comodatario": "LUCCA GIACOBELLI",
       "aparelho": "CELULAR",
       "modelo": "Marca  Xiaomi e modelo do celular Redmi A10, IMEI:  861994061417889/78, S/N: + linha telefônica (11) 91680-6988",
@@ -1166,7 +1069,6 @@
     },
     {
       "rowIndex": 100,
-      "aba": "Ativos",
       "comodatario": "LUIS GUSTAVO EUZEBIO DE ARAUJO",
       "aparelho": "CELULAR",
       "modelo": "Redmi 14C IMEI: 868995072721105/07 linha telefônica (11)932956956",
@@ -1178,7 +1080,6 @@
     },
     {
       "rowIndex": 101,
-      "aba": "Ativos",
       "comodatario": "LUIS GUSTAVO EUZEBIO DE ARAUJO",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo ideapad 1 15iru7: Número de série - pe0f3mr",
@@ -1190,7 +1091,6 @@
     },
     {
       "rowIndex": 102,
-      "aba": "Ativos",
       "comodatario": "LUCIANO DE AQUINO OLIVEIRA",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo Idea Pad 1 15IRU7, Número de série: PE0F2F89",
@@ -1202,7 +1102,6 @@
     },
     {
       "rowIndex": 103,
-      "aba": "Ativos",
       "comodatario": "THAINA RODRIGUES DE BRITO",
       "aparelho": "NOTEBOOK",
       "modelo": "Nitro ANV15-51 Número de série: NHQQDAL00250601F6F9Z00",
@@ -1214,7 +1113,6 @@
     },
     {
       "rowIndex": 104,
-      "aba": "Ativos",
       "comodatario": "MICHEL FELIPE DO NASCIMENTO SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook IDEAPAD 1 15AMN7  S/N: Número de Série. PEOF5HZ4",
@@ -1226,7 +1124,6 @@
     },
     {
       "rowIndex": 105,
-      "aba": "Ativos",
       "comodatario": "FRANCIELY NASCIMENTO SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook, Ideapad 1 15amn7, S/N: Número de série PE0FDOP,",
@@ -1238,7 +1135,6 @@
     },
     {
       "rowIndex": 106,
-      "aba": "Ativos",
       "comodatario": "LAURA OLIVEIRA LIMA",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook, IDEAPAD 1 15 AMN7, número de série - PEOF5HYZ S/N",
@@ -1250,7 +1146,6 @@
     },
     {
       "rowIndex": 107,
-      "aba": "Ativos",
       "comodatario": "MICHEL FELIPE DO NASCIMENTO SILVA",
       "aparelho": "CELULAR",
       "modelo": "REDMI NOTE 14 -Número de série - 61661w5uco1169",
@@ -1262,7 +1157,6 @@
     },
     {
       "rowIndex": 108,
-      "aba": "Ativos",
       "comodatario": "ANDERSON MAGALHAES RODRIGUES",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook Lenovo Ideapad 1 15AMN7, Serie PE0CDZ36, Novo",
@@ -1274,7 +1168,6 @@
     },
     {
       "rowIndex": 109,
-      "aba": "Ativos",
       "comodatario": "ANDERSON MAGALHAES RODRIGUES",
       "aparelho": "CELULAR",
       "modelo": "Celular marca Xiaomi modelo Redmi Note 13 Pro 8/256 5G, Serie: 50752/F4UJ00998, IMEI 1: 861769079088827, IMEI 2: 861769079088835",
@@ -1286,7 +1179,6 @@
     },
     {
       "rowIndex": 110,
-      "aba": "Ativos",
       "comodatario": "BRUNO CLEMENTINO DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "Moto G 05, IMEI: 35367936178175",
@@ -1298,7 +1190,6 @@
     },
     {
       "rowIndex": 111,
-      "aba": "Ativos",
       "comodatario": "CAROLLINE VITORIA DOS SANTOS SOBRAL",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi Redmi 13C Midnight Black, S/N: 51602/64UP12782, IMEI: 861798073631241",
@@ -1310,7 +1201,6 @@
     },
     {
       "rowIndex": 112,
-      "aba": "Ativos",
       "comodatario": "JÉSSICA BENAZZI DE AGUIAR",
       "aparelho": "CELULAR",
       "modelo": "—",
@@ -1322,7 +1212,6 @@
     },
     {
       "rowIndex": 113,
-      "aba": "Ativos",
       "comodatario": "MARIANE DE OLIVEIRA MENDONCA",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, Modelo: Ideapad 1 15IAU7, S/N: PE0DAZWO",
@@ -1334,7 +1223,6 @@
     },
     {
       "rowIndex": 114,
-      "aba": "Ativos",
       "comodatario": "RODRIGO FERREIRA DE ARAUJO",
       "aparelho": "CELULAR",
       "modelo": "Redmi Note 14, S/N: 61678/W5NM04885, IMEI 1: 862378079260862",
@@ -1346,7 +1234,6 @@
     },
     {
       "rowIndex": 115,
-      "aba": "Ativos",
       "comodatario": "RODRIGO FERREIRA DE ARAUJO",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, IdeaPad 1 15IAU7, S/N: PE0DJ89F",
@@ -1358,7 +1245,6 @@
     },
     {
       "rowIndex": 116,
-      "aba": "Ativos",
       "comodatario": "TAMIRES DA SILVA LIMA",
       "aparelho": "CELULAR",
       "modelo": "Lenovo LOQ 15IRH8",
@@ -1370,7 +1256,6 @@
     },
     {
       "rowIndex": 117,
-      "aba": "Ativos",
       "comodatario": "WILLIAN PAULO",
       "aparelho": "CELULAR",
       "modelo": "REDMI NOTE 14 NÚMERO DE SÉRIE-61661W5V801629 S/N:",
@@ -1382,7 +1267,6 @@
     },
     {
       "rowIndex": 118,
-      "aba": "Ativos",
       "comodatario": "ROBSON APARECIDO",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, modelo IdeaPad 1 15IRU7, número de série PE0F2KV2,",
@@ -1394,7 +1278,6 @@
     },
     {
       "rowIndex": 119,
-      "aba": "Ativos",
       "comodatario": "BRUNO ALBUQUERQUE DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "Acer, cor - prata, DESKTOP-N79JC0O, Processador AMD Ryzen 3 7320U with Radeon Graphics (2.40 GHz), RAM instalada \n4,00 GB (utilizável: 3,49 GB), ID do dispositivo -C575B23D-7566-4549-AEE9-7B4BE0A3622D, ID do Produto  00327-70000-00001-AA730,",
@@ -1406,7 +1289,6 @@
     },
     {
       "rowIndex": 120,
-      "aba": "Ativos",
       "comodatario": "LUIS GUSTAVO EUZEBIO DE ARAUJO",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo ideapad 1 15iru7: Número de série - pe0f3mrq",
@@ -1418,7 +1300,6 @@
     },
     {
       "rowIndex": 121,
-      "aba": "Ativos",
       "comodatario": "LUIS GUSTAVO EUZEBIO DE ARAUJO",
       "aparelho": "CELULAR",
       "modelo": "Redmi 14C IMEI: 868995072721105/07 linha telefônica (11)932956956,",
@@ -1430,7 +1311,6 @@
     },
     {
       "rowIndex": 122,
-      "aba": "Ativos",
       "comodatario": "LUCCA GIACOBELLI",
       "aparelho": "CELULAR",
       "modelo": "Xiaomi e modelo do celular Redmi A10, IMEI: 861994061417889/78, S/N: + linha telefônica (11) 91680-6988",
@@ -1442,7 +1322,6 @@
     },
     {
       "rowIndex": 123,
-      "aba": "Ativos",
       "comodatario": "FABIANA LIMA CORDEIRO",
       "aparelho": "CELULAR",
       "modelo": "POCOX5 Número de série - 45035s3rd02311 Nº da linha telefônica (11) 9 9997-4748, IMEI:868767061078064/0",
@@ -1454,7 +1333,6 @@
     },
     {
       "rowIndex": 124,
-      "aba": "Ativos",
       "comodatario": "GABRIELLY DIAS FERREIRA",
       "aparelho": "CELULAR",
       "modelo": "celular Redmi 14 C S/N: Número de série - 5858265tho1092,",
@@ -1466,7 +1344,6 @@
     },
     {
       "rowIndex": 125,
-      "aba": "Ativos",
       "comodatario": "MICHEL FELIPE DO NASCIMENTO SILVA",
       "aparelho": "CELULAR",
       "modelo": "REDMI NOTE 14 NÚMERO DE SÉRIE - 616615UCO1169,",
@@ -1478,7 +1355,6 @@
     },
     {
       "rowIndex": 126,
-      "aba": "Ativos",
       "comodatario": "FRANCIELY NASCIMENTO SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "Ideapad 1 15amn7, S/N: Número de série PE0FDOP",
@@ -1490,7 +1366,6 @@
     },
     {
       "rowIndex": 127,
-      "aba": "Ativos",
       "comodatario": "LEANDRO LANDIOSE BODRA",
       "aparelho": "NOTEBOOK",
       "modelo": "E1504GA, Número de Série: T9NOB601524736G7, S/N:",
@@ -1502,7 +1377,6 @@
     },
     {
       "rowIndex": 128,
-      "aba": "Ativos",
       "comodatario": "LUCIANO DE AQUINO OLIVEIRA",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook Lenovo Idea Pad 1 15IRU7, Número de série: PE0F2F89,",
@@ -1514,7 +1388,6 @@
     },
     {
       "rowIndex": 129,
-      "aba": "Ativos",
       "comodatario": "MICHEL FELIPE DO NASCIMENTO SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "IDEAPAD 1 15AMN7 S/N: Número de Série. PEOF5HZ4,",
@@ -1526,7 +1399,6 @@
     },
     {
       "rowIndex": 130,
-      "aba": "Ativos",
       "comodatario": "JAYNE DOS SANTOS NASCIMENTO",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo IdeaPad 1 15IRU7, Número de Série: PE0F2KTL, S/N:",
@@ -1538,7 +1410,6 @@
     },
     {
       "rowIndex": 131,
-      "aba": "Ativos",
       "comodatario": "JOELMA ARAÚJO DOS SANTOS",
       "aparelho": "CELULAR",
       "modelo": "Redmi note 14, Número de série - 616615v800644 S/N:",
@@ -1616,7 +1487,6 @@
   "distratados": [
     {
       "rowIndex": 3,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ADILMO PEREIRA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG, MODELO ESSENTIALS E34 INTEL CORE 13 4GB 1TB",
@@ -1629,7 +1499,6 @@
     },
     {
       "rowIndex": 4,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ADILMO PEREIRA DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "LG MODELO LGM700 (Q6)",
@@ -1642,7 +1511,6 @@
     },
     {
       "rowIndex": 5,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ADILMO PEREIRA DA SILVA",
       "aparelho": "TABLET",
       "modelo": "SAMSUNG, MODELO GALAXY 10' TAB/PRO, TELA DE 255.4 MM (10.1\") WQXGA TFT, ANDROID 4.4 KITKAT, MULTI JANELA",
@@ -1655,7 +1523,6 @@
     },
     {
       "rowIndex": 6,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ALEXANDRE TOMAZ DE LIMA",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG, MODELO ESSENTIALS E34 INTEL CORE 13 4GB 1TB, TELA LED FULL HD 15,6”, W10, PRETO",
@@ -1668,7 +1535,6 @@
     },
     {
       "rowIndex": 7,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ALEXANDRE TOMAZ DE LIMA",
       "aparelho": "CELULAR",
       "modelo": "MOTOROLA MOTO G7 POWER 32 GB",
@@ -1681,7 +1547,6 @@
     },
     {
       "rowIndex": 8,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ANA MARIA GOMES SOARES",
       "aparelho": "NOTEBOOK",
       "modelo": "MARCA HP, MODELO RMN/TPN-116",
@@ -1694,7 +1559,6 @@
     },
     {
       "rowIndex": 9,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ANDERSON BITENCOURT SANTANA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO B330",
@@ -1707,7 +1571,6 @@
     },
     {
       "rowIndex": 10,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ANDERSON BITENCOURT SANTANA SILVA",
       "aparelho": "CELULAR",
       "modelo": "MOTOROLA MOTO G7 POWER 32 GB XT1955",
@@ -1720,7 +1583,6 @@
     },
     {
       "rowIndex": 11,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ANDREIA GARCIA PACHECO CHIARELLA",
       "aparelho": "CELULAR",
       "modelo": "MARCA LG MODELO LGM700",
@@ -1733,7 +1595,6 @@
     },
     {
       "rowIndex": 12,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ANDREIA GARCIA PACHECO CHIARELLA",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG, MODELO ESSENTIALS E34 INTEL CORE 13 4GB 1TB, TELA LED FULL HD 15,6”, W10, PRETO",
@@ -1746,7 +1607,6 @@
     },
     {
       "rowIndex": 13,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ANDREIA GARCIA PACHECO CHIARELLA",
       "aparelho": "TABLET",
       "modelo": "SAMSUNG, MODELO GALAXY 10' TAB/PRO, TELA DE 255.4 MM (10.1\") WQXGA TFT, ANDROID 4.4 KITKAT, MULTI JANELA",
@@ -1759,7 +1619,6 @@
     },
     {
       "rowIndex": 14,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ANTONIO CARLOS BRAIANI DINIS JUNIOR",
       "aparelho": "NOTEBOOK",
       "modelo": "COMPAQ MODELO PRESARIO CQ-25",
@@ -1772,7 +1631,6 @@
     },
     {
       "rowIndex": 15,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "APARECIDA MARIA DE LIMA SOUZA",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG A12 SNA12M/DS, IMEI 359410825944125",
@@ -1785,7 +1643,6 @@
     },
     {
       "rowIndex": 16,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "APARECIDA MARIA DE LIMA SOUZA",
       "aparelho": "CELULAR",
       "modelo": "Modelo Galaxy J7 SM-G610M/DS, IMEI 354015/08/973966/8, IMEI2 354016/08/973966/6",
@@ -1798,7 +1655,6 @@
     },
     {
       "rowIndex": 17,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "APARECIDA MARIA DE LIMA SOUZA",
       "aparelho": "CELULAR",
       "modelo": "MODELO: SM-A013/DS, IMEI: 352898/49/108590-9,SEMINOVO,(11) 94334-6689",
@@ -1811,7 +1667,6 @@
     },
     {
       "rowIndex": 18,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "BRUNO CLEMENTINO DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG GALAXY A01 CORE 32GB IMEI",
@@ -1824,7 +1679,6 @@
     },
     {
       "rowIndex": 19,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "BRUNO CLEMENTINO DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG 300E, MODELO NP300E5L",
@@ -1837,7 +1691,6 @@
     },
     {
       "rowIndex": 20,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "CECILIA COELHO FERNANDES DE OLIVEIRA",
       "aparelho": "NOTEBOOK",
       "modelo": "Acer, ID do dispositivo: FD1B5925-66E6-4FE7-AEDF-6F5C832177FC",
@@ -1850,7 +1703,6 @@
     },
     {
       "rowIndex": 21,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "DANIELE MARTINS",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook Lenovo, modelo IDEAPAD 3 15IGL05, n° de série: PE09G5CB",
@@ -1863,7 +1715,6 @@
     },
     {
       "rowIndex": 22,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "DEBORA LUCIA DE FRANÇA",
       "aparelho": "NOTEBOOK",
       "modelo": "Marca Dell, Modelo: DESKTOP-L9PKEUK, ID Dispositivo F6C5D4F2 - 37B2 - 47SE - 8826 - 7AD9B2119D52",
@@ -1876,7 +1727,6 @@
     },
     {
       "rowIndex": 23,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "DIANA PAULA WYSOCKI LEITE",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO INTEL CORE I3-6006U 4GB  MODELO 81CC",
@@ -1889,7 +1739,6 @@
     },
     {
       "rowIndex": 24,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "DIANA PAULA WYSOCKI LEITE",
       "aparelho": "CELULAR",
       "modelo": "SMARTPHONE SAMSUNG GALAXY A01 CORE 32GB IMEI 352898/49/108590/9",
@@ -1902,7 +1751,6 @@
     },
     {
       "rowIndex": 25,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "DIEGO DA SILVA XAVIER",
       "aparelho": "CELULAR",
       "modelo": "GALAXY A12, IMEI: 3594108259468800, Nº DE SÉRIE: RX8R50KHPOW, USADO + LINHA TELEFONICA",
@@ -1915,7 +1763,6 @@
     },
     {
       "rowIndex": 26,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "EDINA CUCCOLO",
       "aparelho": "CELULAR",
       "modelo": "XIAOMI REDMI 10A, SKY BLUE, NOVO, N/S: 38913/62VA08835",
@@ -1928,7 +1775,6 @@
     },
     {
       "rowIndex": 27,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FABIANA PINHEIRO LOTITO NATALI",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG, MODELO NP300E5L, S/N: 03079QAK401595X, usado",
@@ -1941,7 +1787,6 @@
     },
     {
       "rowIndex": 28,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FABIANA PINHEIRO LOTITO NATALI",
       "aparelho": "CELULAR",
       "modelo": "Galaxy A10S, modelo: SM-A107M/DA, sob valor nominal de R$ 800,00",
@@ -1954,7 +1799,6 @@
     },
     {
       "rowIndex": 29,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FABIANA PINHEIRO LOTITO NATALI",
       "aparelho": "CELULAR",
       "modelo": "Galaxy J7 Prime, IMEI: 354015089739668, N° SÉRIE: RQ8J60HXPFF",
@@ -1967,7 +1811,6 @@
     },
     {
       "rowIndex": 30,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FABIO LUIZ DO NASCIMENTO",
       "aparelho": "NOTEBOOK",
       "modelo": "NOTEBOOK MARCA ULTRA MODELO UB420",
@@ -1980,7 +1823,6 @@
     },
     {
       "rowIndex": 31,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FÁBIO PEREIRA",
       "aparelho": "CELULAR",
       "modelo": "MARCA GALAXY E5 SME500",
@@ -1993,7 +1835,6 @@
     },
     {
       "rowIndex": 32,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FÁBIO PEREIRA",
       "aparelho": "NOTEBOOK",
       "modelo": "MARCA DELL INSPIRION 15' 3542",
@@ -2006,7 +1847,6 @@
     },
     {
       "rowIndex": 33,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FRANCISCO IRANDI MELO DA SILVA",
       "aparelho": "TABLET",
       "modelo": "SAMSUNG, MODELO GALAXY 10' TAB/PRO, TELA DE 255.4 MM (10.1\") WQXGA TFT, ANDROID 4.4 KITKAT, MULTI JANELA",
@@ -2019,7 +1859,6 @@
     },
     {
       "rowIndex": 34,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FRANCISCO IRANDI MELO DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "MARCA LG MODELO LGM700",
@@ -2032,7 +1871,6 @@
     },
     {
       "rowIndex": 35,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FRANCISCO IRANDI MELO DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "MARCA SAMSUNG, MODELO NP550XDA, N° DE SÉRIE:  09vp9qar903393",
@@ -2045,7 +1883,6 @@
     },
     {
       "rowIndex": 36,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "FRANCISCO IRANDI MELO DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "MARCA ASUS X451",
@@ -2058,7 +1895,6 @@
     },
     {
       "rowIndex": 37,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "GABRIELLY DIAS FERREIRA",
       "aparelho": "NOTEBOOK",
       "modelo": "—",
@@ -2071,7 +1907,6 @@
     },
     {
       "rowIndex": 38,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "GUSTAVO DIAS CARVALHO",
       "aparelho": "NOTEBOOK",
       "modelo": "Samsung, Book - 16L7DFQDT7, Nº de série: 0AC99QCX401099V",
@@ -2084,7 +1919,6 @@
     },
     {
       "rowIndex": 39,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "HENRIQUE PEREIRA SILVESTRE",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO IDEAPAD 3 15ITL6, S/N: PE0ADJRB",
@@ -2097,7 +1931,6 @@
     },
     {
       "rowIndex": 40,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "HENRIQUE PEREIRA SILVESTRE",
       "aparelho": "CELULAR",
       "modelo": "POCO X4 PRO, NOVO,IMEI: 867035059279347 + CHIP VIVO",
@@ -2110,7 +1943,6 @@
     },
     {
       "rowIndex": 41,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "JORDY",
       "aparelho": "NOTEBOOK",
       "modelo": "Samsung, ID do dispositivo: 5F19FF6C-2D90-4582-B84C-521A1753F9C0",
@@ -2123,7 +1955,6 @@
     },
     {
       "rowIndex": 42,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "KAIQUE FORTUOSO ARAUJO",
       "aparelho": "NOTEBOOK",
       "modelo": "NOTEBOOK ASUS X515 - NOVO - SÉRIE N3N0B6013602123",
@@ -2136,7 +1967,6 @@
     },
     {
       "rowIndex": 43,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "LEONARDO DELFINO REIGOTA",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG, MODELO ESSENTIALS E34 INTEL CORE 13 4GB 1TB",
@@ -2149,7 +1979,6 @@
     },
     {
       "rowIndex": 44,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "LEONARDO DELFINO REIGOTA",
       "aparelho": "TABLET",
       "modelo": "SAMSUNG, MODELO GALAXY 10' TAB/PRO, TELA DE 255.4 MM (10.1)\" WQXGA TFT, ANDROID 4.4 KITKAT, MULTI JANELA",
@@ -2162,7 +1991,6 @@
     },
     {
       "rowIndex": 45,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "LEONARDO DELFINO REIGOTA",
       "aparelho": "CELULAR",
       "modelo": "LG MODELO LGM700 (Q6)",
@@ -2175,7 +2003,6 @@
     },
     {
       "rowIndex": 46,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "LILIANE CRISTINA SOUSA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "MARCA HP, MODELO RMN/TPN-116",
@@ -2188,7 +2015,6 @@
     },
     {
       "rowIndex": 47,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "MARCIO DIEGO ESTEVAM ELIAS",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG SM-4032M/DS GALAXY A03 CORE, NOVO",
@@ -2201,7 +2027,6 @@
     },
     {
       "rowIndex": 48,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "MARCIO DIEGO ESTEVAM ELIAS",
       "aparelho": "CELULAR",
       "modelo": "SMARTPHONE GALAXY A01 CORE 32GB",
@@ -2214,7 +2039,6 @@
     },
     {
       "rowIndex": 49,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "MARCIO FERNANDES DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "SMARTPHONE GALAXY A01 CORE 32GB",
@@ -2227,7 +2051,6 @@
     },
     {
       "rowIndex": 50,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "MARCOS GOMES DOS SANTOS",
       "aparelho": "NOTEBOOK",
       "modelo": "IMEI 350210626548169, NOVO, COM CABO E CARREGADOR ORIGINAL",
@@ -2240,7 +2063,6 @@
     },
     {
       "rowIndex": 51,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "MARIANE DE OLIVEIRA MENDONCA",
       "aparelho": "NOTEBOOK",
       "modelo": "samsung np550, novo",
@@ -2253,7 +2075,6 @@
     },
     {
       "rowIndex": 52,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "NATALY VICTÓRIA RUAS PINTO",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG Book, 550XDA-KP3, N° DE SÉRIE: 0A289QCW8207094, CINZA CHUMBO",
@@ -2266,7 +2087,6 @@
     },
     {
       "rowIndex": 53,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "OSILENE DE FATIMA CONSTANTINO SALES",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG 300E, MODELO NP300E5L, USADO, CARREGADOR/FONTE ORIGINAL, BATERIA INTERNA COM PROBLEMAS PARA SEGURAR CARGA",
@@ -2279,7 +2099,6 @@
     },
     {
       "rowIndex": 54,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "OSILENE DE FATIMA CONSTANTINO SALES",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO IDEAPAD, S145, CARREGADOR/FONTE ORIGINAL",
@@ -2292,7 +2111,6 @@
     },
     {
       "rowIndex": 55,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "OSILENE DE FATIMA CONSTANTINO SALES",
       "aparelho": "NOTEBOOK",
       "modelo": "ACER, MODELO A315-34-C2BV, N° DE SÉRIE: NXHRNAL007217B31F09501",
@@ -2305,7 +2123,6 @@
     },
     {
       "rowIndex": 56,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "OSILENE DE FATIMA CONSTANTINO SALES",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG Book, ID do dispositivo: B63453C5-41B8-462C-93AC-E6DAAF3F0F2A",
@@ -2318,7 +2135,6 @@
     },
     {
       "rowIndex": 57,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "PRISCILA MARQUES DA SILVA ALVES",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO, Nº PE00BM8F",
@@ -2331,7 +2147,6 @@
     },
     {
       "rowIndex": 58,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "QUELAINE DA CRUZ LUNA",
       "aparelho": "NOTEBOOK",
       "modelo": "Notebook marca Acer modelo A515-45G-R46X Série NXAYEAL006229016619Z00",
@@ -2344,7 +2159,6 @@
     },
     {
       "rowIndex": 59,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "REINALDO AUGUSTO ZAMBONI",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG GALAXY A01 CORE 32GB",
@@ -2357,7 +2171,6 @@
     },
     {
       "rowIndex": 60,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ROBSON MAGALHÃES RODRIGUES",
       "aparelho": "NOTEBOOK",
       "modelo": "COMPAQ MODELO PRESARIO CQ-25",
@@ -2370,7 +2183,6 @@
     },
     {
       "rowIndex": 61,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "SELMA APARECIDA SANTOS DANGEBEL DE OLIVEIRA",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG GALAXY J6, MODELO: SM-J600GT, N/S: RQ8K80VN78A, IMEI 1: 358473095262116 e IMEI 2: 358474095262114",
@@ -2383,7 +2195,6 @@
     },
     {
       "rowIndex": 62,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "SELMA APARECIDA SANTOS DANGEBEL DE OLIVEIRA",
       "aparelho": "NOTEBOOK",
       "modelo": "DELL, DESKTOP-6CPD0QC, 24619416338",
@@ -2396,7 +2207,6 @@
     },
     {
       "rowIndex": 63,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "SELMA APARECIDA SANTOS DANGEBEL DE OLIVEIRA",
       "aparelho": "CELULAR",
       "modelo": "Galaxy A10s, Modelo: SM-A107M/DS, S/N: R9QN60AVAMB",
@@ -2409,7 +2219,6 @@
     },
     {
       "rowIndex": 64,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "SELMA APARECIDA SANTOS DANGEBEL DE OLIVEIRA",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG MODELO SM-A125/DS",
@@ -2422,7 +2231,6 @@
     },
     {
       "rowIndex": 65,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "TAINÁ PEREIRA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "MULTILASER ULTRA, MODELO UB420",
@@ -2435,7 +2243,6 @@
     },
     {
       "rowIndex": 66,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "TAINÁ PEREIRA DA SILVA",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG GALAXY A01 CORE 32GB",
@@ -2448,7 +2255,6 @@
     },
     {
       "rowIndex": 67,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "TAINÁ PEREIRA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "LENOVO B330",
@@ -2461,7 +2267,6 @@
     },
     {
       "rowIndex": 68,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "TULIO DE BARROS VICENTINI",
       "aparelho": "CELULAR",
       "modelo": "SAMSUNG GALAXY A01 CORE 32GB",
@@ -2474,7 +2279,6 @@
     },
     {
       "rowIndex": 69,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "TAINÁ PEREIRA DA SILVA",
       "aparelho": "NOTEBOOK",
       "modelo": "SAMSUNG NP550",
@@ -2487,7 +2291,6 @@
     },
     {
       "rowIndex": 70,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "WELLINGTON LUIZ DOS SANTOS RAMIREZ",
       "aparelho": "CELULAR",
       "modelo": "LG Q6 PLATINUM",
@@ -2500,7 +2303,6 @@
     },
     {
       "rowIndex": 71,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "WELLINGTON LUIZ DOS SANTOS RAMIREZ",
       "aparelho": "NOTEBOOK",
       "modelo": "Marca Vaio, Modelo:VJFE42F11X, I3, Nº DE SÉRIE: 89420825W",
@@ -2513,7 +2315,6 @@
     },
     {
       "rowIndex": 72,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "WELLINGTON LUIZ DOS SANTOS RAMIREZ",
       "aparelho": "NOTEBOOK",
       "modelo": "NOTEBOOK MARCA SAMSUNG, MODELO ESSENTIALS E34 INTEL CORE 13 4GB 1TB, TELA LED FULL HD 15,6\", W10, PRETO.",
@@ -2526,7 +2327,6 @@
     },
     {
       "rowIndex": 73,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "ELIANE RODRIGUES BARBOSA",
       "aparelho": "NOTEBOOK",
       "modelo": "Lenovo, numero de serie - peodj89s",
@@ -2539,7 +2339,6 @@
     },
     {
       "rowIndex": 74,
-      "aba": "DISTRATADOS - ATIVOS",
       "comodatario": "LUCCA GIACOBELLI,",
       "aparelho": "NOTEBOOK",
       "modelo": "—",
@@ -2618,7 +2417,6 @@
   "desligados": [
     {
       "rowIndex": 2,
-      "aba": "Desligados",
       "comodatario": "ANÍZIO DO NASCIMENTO JÚNIOR",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2631,7 +2429,6 @@
     },
     {
       "rowIndex": 3,
-      "aba": "Desligados",
       "comodatario": "ANDRESSA DOS ANJOS CATARINO",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -2644,7 +2441,6 @@
     },
     {
       "rowIndex": 4,
-      "aba": "Desligados",
       "comodatario": "ANDRESSA DOS ANJOS CATARINO",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2657,7 +2453,6 @@
     },
     {
       "rowIndex": 5,
-      "aba": "Desligados",
       "comodatario": "ALEXANDRE ANDRÉ CONCHON",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2670,7 +2465,6 @@
     },
     {
       "rowIndex": 6,
-      "aba": "Desligados",
       "comodatario": "ALINE DE SOUSA PEREIRA AVELINO",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2683,7 +2477,6 @@
     },
     {
       "rowIndex": 7,
-      "aba": "Desligados",
       "comodatario": "ALINE CRISTINA DA SILVA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2696,7 +2489,6 @@
     },
     {
       "rowIndex": 8,
-      "aba": "Desligados",
       "comodatario": "BIANCA COELHO ARAÚJO",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2709,7 +2501,6 @@
     },
     {
       "rowIndex": 9,
-      "aba": "Desligados",
       "comodatario": "BIANCA COELHO ARAÚJO",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -2722,7 +2513,6 @@
     },
     {
       "rowIndex": 10,
-      "aba": "Desligados",
       "comodatario": "CAMILA TITTON DOS SANTOS",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2735,7 +2525,6 @@
     },
     {
       "rowIndex": 11,
-      "aba": "Desligados",
       "comodatario": "CAMILA TITTON DOS SANTOS",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -2748,7 +2537,6 @@
     },
     {
       "rowIndex": 12,
-      "aba": "Desligados",
       "comodatario": "DIEGO DA SILVA XAVIER",
       "aparelho": "CELULAR",
       "numLinha": "(11) 99946-8564",
@@ -2761,7 +2549,6 @@
     },
     {
       "rowIndex": 13,
-      "aba": "Desligados",
       "comodatario": "DIEGO DA SILVA XAVIER",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2774,7 +2561,6 @@
     },
     {
       "rowIndex": 14,
-      "aba": "Desligados",
       "comodatario": "DEBORA LUCIA DE FRANÇA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2787,7 +2573,6 @@
     },
     {
       "rowIndex": 15,
-      "aba": "Desligados",
       "comodatario": "DEBORA LUCIA DE FRANÇA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -2800,7 +2585,6 @@
     },
     {
       "rowIndex": 16,
-      "aba": "Desligados",
       "comodatario": "EVELLYN PRISCILA SANTOS PEREIRA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2813,7 +2597,6 @@
     },
     {
       "rowIndex": 17,
-      "aba": "Desligados",
       "comodatario": "EVELLYN PRISCILA SANTOS PEREIRA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -2826,7 +2609,6 @@
     },
     {
       "rowIndex": 18,
-      "aba": "Desligados",
       "comodatario": "FÁBIO PEREIRA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -2839,7 +2621,6 @@
     },
     {
       "rowIndex": 19,
-      "aba": "Desligados",
       "comodatario": "FÁBIO PEREIRA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2852,7 +2633,6 @@
     },
     {
       "rowIndex": 20,
-      "aba": "Desligados",
       "comodatario": "FERNADO DIAS CAROLINO",
       "aparelho": "TABLET",
       "numLinha": "",
@@ -2865,7 +2645,6 @@
     },
     {
       "rowIndex": 21,
-      "aba": "Desligados",
       "comodatario": "FRANCISCO JOSÉ DA SILVA NETO",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -2878,7 +2657,6 @@
     },
     {
       "rowIndex": 22,
-      "aba": "Desligados",
       "comodatario": "GUSTAVO DIAS CARVALHO",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2891,7 +2669,6 @@
     },
     {
       "rowIndex": 23,
-      "aba": "Desligados",
       "comodatario": "GUSTAVO DIAS CARVALHO",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -2904,7 +2681,6 @@
     },
     {
       "rowIndex": 24,
-      "aba": "Desligados",
       "comodatario": "GUSTAVO HENRIQUE ROSSI",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2917,7 +2693,6 @@
     },
     {
       "rowIndex": 25,
-      "aba": "Desligados",
       "comodatario": "HELOA URBAN PAPADOPOLI",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2930,7 +2705,6 @@
     },
     {
       "rowIndex": 26,
-      "aba": "Desligados",
       "comodatario": "IGOR HENRIQUE VIEIRA LOPES",
       "aparelho": "CELULAR",
       "numLinha": "(11) 99945-7895",
@@ -2943,7 +2717,6 @@
     },
     {
       "rowIndex": 27,
-      "aba": "Desligados",
       "comodatario": "IGOR HENRIQUE VIEIRA LOPES",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2956,7 +2729,6 @@
     },
     {
       "rowIndex": 28,
-      "aba": "Desligados",
       "comodatario": "ISABELLA JUNQUEIRA REZENDE OLIVEIRA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2969,7 +2741,6 @@
     },
     {
       "rowIndex": 29,
-      "aba": "Desligados",
       "comodatario": "JHENIFFER DE SOUZA SANTOS",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -2982,7 +2753,6 @@
     },
     {
       "rowIndex": 30,
-      "aba": "Desligados",
       "comodatario": "KATIA NAMI KUDO",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -2995,7 +2765,6 @@
     },
     {
       "rowIndex": 31,
-      "aba": "Desligados",
       "comodatario": "KATIA NAMI KUDO",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3008,7 +2777,6 @@
     },
     {
       "rowIndex": 32,
-      "aba": "Desligados",
       "comodatario": "KATIA REGINA PEDREGOSA PETRONI",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3021,7 +2789,6 @@
     },
     {
       "rowIndex": 33,
-      "aba": "Desligados",
       "comodatario": "KATIA REGINA PEDREGOSA PETRONI",
       "aparelho": "CELULAR",
       "numLinha": "11) 94337-4044",
@@ -3034,7 +2801,6 @@
     },
     {
       "rowIndex": 34,
-      "aba": "Desligados",
       "comodatario": "KLEBSON GILBERTO CORREIA DA COSTA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3047,7 +2813,6 @@
     },
     {
       "rowIndex": 35,
-      "aba": "Desligados",
       "comodatario": "LEONARDO DELFINO REIGOTA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3060,7 +2825,6 @@
     },
     {
       "rowIndex": 36,
-      "aba": "Desligados",
       "comodatario": "LEONARDO DELFINO REIGOTA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3073,7 +2837,6 @@
     },
     {
       "rowIndex": 37,
-      "aba": "Desligados",
       "comodatario": "LIDIANE SIMÕES DE CARVALHO",
       "aparelho": "CELULAR",
       "numLinha": "(11) 94337-4044",
@@ -3086,7 +2849,6 @@
     },
     {
       "rowIndex": 38,
-      "aba": "Desligados",
       "comodatario": "LIDIANE SIMÕES DE CARVALHO",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3099,7 +2861,6 @@
     },
     {
       "rowIndex": 39,
-      "aba": "Desligados",
       "comodatario": "LIDIANE SIMÕES DE CARVALHO",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3112,7 +2873,6 @@
     },
     {
       "rowIndex": 40,
-      "aba": "Desligados",
       "comodatario": "LUCIANO GOUVEIA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3125,7 +2885,6 @@
     },
     {
       "rowIndex": 41,
-      "aba": "Desligados",
       "comodatario": "LUIZ CARLOS DOS SANTOS",
       "aparelho": "TABLET",
       "numLinha": "",
@@ -3138,7 +2897,6 @@
     },
     {
       "rowIndex": 42,
-      "aba": "Desligados",
       "comodatario": "LUIZ SALVADOR BASILIO",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3151,7 +2909,6 @@
     },
     {
       "rowIndex": 43,
-      "aba": "Desligados",
       "comodatario": "MARCELO SESSA JUAREZ",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3164,7 +2921,6 @@
     },
     {
       "rowIndex": 44,
-      "aba": "Desligados",
       "comodatario": "MARCELO SESSA JUAREZ",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3177,7 +2933,6 @@
     },
     {
       "rowIndex": 45,
-      "aba": "Desligados",
       "comodatario": "MARCOS PERRELA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3190,7 +2945,6 @@
     },
     {
       "rowIndex": 46,
-      "aba": "Desligados",
       "comodatario": "MARCOS PERRELA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3203,7 +2957,6 @@
     },
     {
       "rowIndex": 47,
-      "aba": "Desligados",
       "comodatario": "MARCOS PERRELA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3216,7 +2969,6 @@
     },
     {
       "rowIndex": 48,
-      "aba": "Desligados",
       "comodatario": "MARCOS PERRELA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3229,7 +2981,6 @@
     },
     {
       "rowIndex": 49,
-      "aba": "Desligados",
       "comodatario": "Maximiliano Hannibal Cáspio S. G.",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3242,7 +2993,6 @@
     },
     {
       "rowIndex": 50,
-      "aba": "Desligados",
       "comodatario": "NATALY VICTÓRIA RUAS PINTO",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3255,7 +3005,6 @@
     },
     {
       "rowIndex": 51,
-      "aba": "Desligados",
       "comodatario": "NATALY VICTÓRIA RUAS PINTO",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3268,7 +3017,6 @@
     },
     {
       "rowIndex": 52,
-      "aba": "Desligados",
       "comodatario": "NERISVALDO SOARES DA SILVA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3281,7 +3029,6 @@
     },
     {
       "rowIndex": 53,
-      "aba": "Desligados",
       "comodatario": "NERISVALDO SOARES DA SILVA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3294,7 +3041,6 @@
     },
     {
       "rowIndex": 54,
-      "aba": "Desligados",
       "comodatario": "PAULA DOS SANTOS SILVA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3307,7 +3053,6 @@
     },
     {
       "rowIndex": 55,
-      "aba": "Desligados",
       "comodatario": "RICARDO CARDOSO POUSA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3320,7 +3065,6 @@
     },
     {
       "rowIndex": 56,
-      "aba": "Desligados",
       "comodatario": "RICARDO CARDOSO POUSA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3333,7 +3077,6 @@
     },
     {
       "rowIndex": 57,
-      "aba": "Desligados",
       "comodatario": "RICARDO CARDOSO POUSA",
       "aparelho": "TABLET",
       "numLinha": "",
@@ -3346,7 +3089,6 @@
     },
     {
       "rowIndex": 58,
-      "aba": "Desligados",
       "comodatario": "SELMA APARECIDA SANTOS DANGEBEL DE OLIVEIRA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3359,7 +3101,6 @@
     },
     {
       "rowIndex": 59,
-      "aba": "Desligados",
       "comodatario": "SELMA APARECIDA SANTOS DANGEBEL DE OLIVEIRA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3372,7 +3113,6 @@
     },
     {
       "rowIndex": 60,
-      "aba": "Desligados",
       "comodatario": "VIVIANE CAMPOS DA SILVA GOMES",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3385,7 +3125,6 @@
     },
     {
       "rowIndex": 61,
-      "aba": "Desligados",
       "comodatario": "VIVIANE CAMPOS DA SILVA GOMES",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3398,7 +3137,6 @@
     },
     {
       "rowIndex": 62,
-      "aba": "Desligados",
       "comodatario": "VIVIANE CAMPOS DA SILVA GOMES",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3411,7 +3149,6 @@
     },
     {
       "rowIndex": 63,
-      "aba": "Desligados",
       "comodatario": "VIVIANE CAMPOS DA SILVA GOMES",
       "aparelho": "IMPRESSORA",
       "numLinha": "",
@@ -3424,7 +3161,6 @@
     },
     {
       "rowIndex": 64,
-      "aba": "Desligados",
       "comodatario": "ERIC VANSE OLIVEIRA DA SILVA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3437,7 +3173,6 @@
     },
     {
       "rowIndex": 65,
-      "aba": "Desligados",
       "comodatario": "PAMELA CRISTINA FERREIRA DA SILVA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3450,7 +3185,6 @@
     },
     {
       "rowIndex": 66,
-      "aba": "Desligados",
       "comodatario": "WELLINGTON OLIVEIRA E SOUZA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3463,7 +3197,6 @@
     },
     {
       "rowIndex": 67,
-      "aba": "Desligados",
       "comodatario": "WELLINGTON OLIVEIRA E SOUZA",
       "aparelho": "CELULAR",
       "numLinha": "",
@@ -3476,7 +3209,6 @@
     },
     {
       "rowIndex": 68,
-      "aba": "Desligados",
       "comodatario": "GIOVANNA SANTOS FRANÇA",
       "aparelho": "NOTEBOOK",
       "numLinha": "",
@@ -3489,7 +3221,6 @@
     },
     {
       "rowIndex": 69,
-      "aba": "Desligados",
       "comodatario": "GIOVANNA SANTOS FRANÇA",
       "aparelho": "CELULAR",
       "numLinha": "(11) 91680-9750",
@@ -3570,228 +3301,6 @@
       }
     ]
   },
-  "ti": [
-    {
-      "rowIndex": 2,
-      "aba": "T.I",
-      "numero": "1",
-      "equipamento": "TV",
-      "marca": "Samsung",
-      "modelo": "Samgung 75 Pol",
-      "local": "Sala Reunião",
-      "estado": "Bom",
-      "dtCompra": "",
-      "dtCompraOriginal": "",
-      "valor": 0,
-      "valorFormatado": "—",
-      "obs": ""
-    },
-    {
-      "rowIndex": 3,
-      "aba": "T.I",
-      "numero": "2",
-      "equipamento": "TV",
-      "marca": "Samsung",
-      "modelo": "Samgung 75 Pol",
-      "local": "Sala da Presidencia",
-      "estado": "Bom",
-      "dtCompra": "",
-      "dtCompraOriginal": "",
-      "valor": 0,
-      "valorFormatado": "—",
-      "obs": ""
-    },
-    {
-      "rowIndex": 4,
-      "aba": "T.I",
-      "numero": "3",
-      "equipamento": "Aparelho de video conferencia (Barra e Touch)",
-      "marca": "YLK",
-      "modelo": "YLK: VIDEOCONFENCIA A50-031",
-      "local": "Sala Reunião",
-      "estado": "Novo",
-      "dtCompra": "2026-02-12",
-      "dtCompraOriginal": "12/02/2026",
-      "valor": 26828.42,
-      "valorFormatado": "R$ 26.828,42",
-      "obs": ""
-    },
-    {
-      "rowIndex": 5,
-      "aba": "T.I",
-      "numero": "4",
-      "equipamento": "Aparelho de video conferencia (Wirelles)",
-      "marca": "YLK",
-      "modelo": "YLK: COMPARTILHADOR DE VIDEOCONF. WPP3",
-      "local": "Sala Reunião",
-      "estado": "Novo",
-      "dtCompra": "2026-02-12",
-      "dtCompraOriginal": "12/02/2026",
-      "valor": 2572.77,
-      "valorFormatado": "R$ 2.572,77",
-      "obs": ""
-    },
-    {
-      "rowIndex": 6,
-      "aba": "T.I",
-      "numero": "5",
-      "equipamento": "Aparelho de video conferencia (Microfone sem fio)",
-      "marca": "YLK",
-      "modelo": "YLK: MICROFONE VCM36-WIRELESS PACKAGE",
-      "local": "Sala Reunião",
-      "estado": "Novo",
-      "dtCompra": "2026-02-12",
-      "dtCompraOriginal": "12/02/2026",
-      "valor": 1786.63,
-      "valorFormatado": "R$ 1.786,63",
-      "obs": ""
-    },
-    {
-      "rowIndex": 7,
-      "aba": "T.I",
-      "numero": "6",
-      "equipamento": "Aparelho de video conferencia (compartilhamento de tela)",
-      "marca": "YLK",
-      "modelo": "YLK: ROOMCAST E2",
-      "local": "Sala Reunião",
-      "estado": "Novo",
-      "dtCompra": "2026-02-13",
-      "dtCompraOriginal": "13/02/2026",
-      "valor": 3376.73,
-      "valorFormatado": "R$ 3.376,73",
-      "obs": ""
-    },
-    {
-      "rowIndex": 8,
-      "aba": "T.I",
-      "numero": "7",
-      "equipamento": "Antena Wifi",
-      "marca": "Ubiquiti",
-      "modelo": "U7 Lite + Fonte Poe Ponto De Acesso Wifi 7",
-      "local": "Sala Reunião",
-      "estado": "Novo",
-      "dtCompra": "2026-02-09",
-      "dtCompraOriginal": "09/02/2026",
-      "valor": 1559.86,
-      "valorFormatado": "R$ 1.559,86",
-      "obs": ""
-    },
-    {
-      "rowIndex": 9,
-      "aba": "T.I",
-      "numero": "8",
-      "equipamento": "Antena Wifi",
-      "marca": "Ubiquiti",
-      "modelo": "U7 Lite + Fonte Poe Ponto De Acesso Wifi 7",
-      "local": "Sala da Presidencia",
-      "estado": "Novo",
-      "dtCompra": "2026-02-09",
-      "dtCompraOriginal": "09/02/2026",
-      "valor": 1559.86,
-      "valorFormatado": "R$ 1.559,86",
-      "obs": ""
-    },
-    {
-      "rowIndex": 10,
-      "aba": "T.I",
-      "numero": "9",
-      "equipamento": "Fonte para antena de Wifi",
-      "marca": "Ubiquiti",
-      "modelo": "Fonte Poe Ubiquiti 48v 0.5a Unifi Poe-48-24w Bivolt",
-      "local": "Sala da Presidencia",
-      "estado": "Novo",
-      "dtCompra": "2026-02-09",
-      "dtCompraOriginal": "09/02/2026",
-      "valor": 146.6,
-      "valorFormatado": "R$ 146,60",
-      "obs": ""
-    },
-    {
-      "rowIndex": 11,
-      "aba": "T.I",
-      "numero": "10",
-      "equipamento": "Fonte para antena de Wifi",
-      "marca": "Ubiquiti",
-      "modelo": "Fonte Poe Ubiquiti 48v 0.5a Unifi Poe-48-24w Bivolt",
-      "local": "Sala Reunião",
-      "estado": "Novo",
-      "dtCompra": "2026-02-09",
-      "dtCompraOriginal": "09/02/2026",
-      "valor": 146.6,
-      "valorFormatado": "R$ 146,60",
-      "obs": ""
-    }
-  ],
-  "statsTI": {
-    "total": 10,
-    "valorTotal": 37977.47,
-    "valorTotalFormatado": "R$ 37.977,47",
-    "emBomEstado": 10,
-    "porEquipamento": [
-      {
-        "tipo": "TV",
-        "qtd": 2
-      },
-      {
-        "tipo": "Antena Wifi",
-        "qtd": 2
-      },
-      {
-        "tipo": "Fonte para antena de Wifi",
-        "qtd": 2
-      },
-      {
-        "tipo": "Aparelho de video conferencia (Barra e Touch)",
-        "qtd": 1
-      },
-      {
-        "tipo": "Aparelho de video conferencia (Wirelles)",
-        "qtd": 1
-      },
-      {
-        "tipo": "Aparelho de video conferencia (Microfone sem fio)",
-        "qtd": 1
-      },
-      {
-        "tipo": "Aparelho de video conferencia (compartilhamento de tela)",
-        "qtd": 1
-      }
-    ],
-    "porLocal": [
-      {
-        "local": "Sala Reunião",
-        "qtd": 7
-      },
-      {
-        "local": "Sala da Presidencia",
-        "qtd": 3
-      }
-    ],
-    "porEstado": [
-      {
-        "estado": "Novo",
-        "qtd": 8,
-        "pct": 80
-      },
-      {
-        "estado": "Bom",
-        "qtd": 2,
-        "pct": 20
-      }
-    ],
-    "valorPorLocal": [
-      {
-        "local": "Sala Reunião",
-        "valor": 36271.01,
-        "valorFormatado": "R$ 36.271,01"
-      },
-      {
-        "local": "Sala da Presidencia",
-        "valor": 1706.4599999999998,
-        "valorFormatado": "R$ 1.706,46"
-      }
-    ]
-  },
-  "sincronizadoEm": "2026-03-21T19:33:18.132Z",
-  "_at": "2026-03-21T19:33:18.132Z"
+  "sincronizadoEm": "2026-03-21T19:31:47.315Z",
+  "_at": "2026-03-21T19:31:47.315Z"
 }

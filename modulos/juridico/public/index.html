@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurídico — Divino Fogão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:#c8102e;--red-pale:#fff0f2;
+            --bg:#f5f3ef;--bg2:#ffffff;--bg3:#faf8f5;
+            --border:#e8e2d9;--text:#1e1a16;--muted:#8a7f74;
+            --green:#16a34a;--green-pale:#f0fdf4;
+            --yellow:#d97706;--yellow-pale:#fffbeb;
+            --orange:#ea580c;--orange-pale:#fff7ed;
+            --jur:#7c3aed;--jur-light:#a78bfa;--jur-pale:#f5f3ff;
+            --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+        .logo{padding:10px 0;}.logo img{height:48px;display:block;}
+        .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
+        .hd{width:1px;height:32px;background:var(--border);}
+        .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
+        nav{display:flex;gap:2px;margin-left:auto;}
+        .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+        .nav-btn:hover{color:var(--text);background:var(--bg3);}
+        .nav-btn.active{color:var(--jur);border-bottom-color:var(--jur);background:var(--jur-pale);}
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;}
+        .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+        .sdot.ready{background:var(--green);animation:none;}
+        .sdot.error{background:var(--red);animation:none;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+        main{max-width:1100px;margin:0 auto;padding:32px 24px;}
+        .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
+        .page-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+        .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px;}
+        .card{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:var(--text);}
+        .card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);border-color:var(--jur);}
+        .card-icon{font-size:28px;margin-bottom:10px;}
+        .card-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;}
+        .card-val{font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
+        .card-sub{font-size:11px;color:var(--muted);margin-top:6px;font-weight:600;}
+        .quick{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);}
+        .quick-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px;}
+        .quick-links{display:flex;gap:10px;flex-wrap:wrap;}
+        .ql{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg3);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all .18s;text-decoration:none;}
+        .ql:hover{background:var(--jur-pale);border-color:var(--jur);color:var(--jur);}
+        .ql.primary{background:var(--jur);color:#fff;border-color:var(--jur);}
+        .ql.primary:hover{background:#6d28d9;}
+        .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--jur);border-radius:50%;animation:spin .7s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <span class="logo-fb">🍽️</span>
+    </div>
+    <div class="hd"></div>
+    <div class="h-title">Jurídico</div>
+    <nav>
+        <button class="nav-btn active" onclick="location.href='/juridico/'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/juridico/ativos'">📋 Ativos & Comodatos</button>
+    </nav>
+</header>
+
+<div id="statusBar">
+    <div class="sdot" id="sdot"></div>
+    <span id="statusText">Carregando...</span>
+</div>
+
+<main>
+    <div class="page-title">⚖️ Central Jurídica</div>
+    <div class="page-sub" id="pageSub">Divino Fogão — Gestão de Ativos & Comodatos</div>
+
+    <div class="cards">
+        <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--jur)">
+            <div class="card-icon">📱</div>
+            <div class="card-label">Comodatos Ativos</div>
+            <div class="card-val" style="color:var(--jur)" id="c-ativos">—</div>
+            <div class="card-sub">contratos vigentes</div>
+        </a>
+        <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--orange)">
+            <div class="card-icon">📋</div>
+            <div class="card-label">Distratados</div>
+            <div class="card-val" style="color:var(--orange)" id="c-dist">—</div>
+            <div class="card-sub">distratos realizados</div>
+        </a>
+        <a class="card" href="/juridico/ativos" style="border-top:3px solid #64748b">
+            <div class="card-icon">🔴</div>
+            <div class="card-label">Desligados</div>
+            <div class="card-val" style="color:#64748b" id="c-desl">—</div>
+            <div class="card-sub">colaboradores desligados</div>
+        </a>
+        <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--green)">
+            <div class="card-icon">💰</div>
+            <div class="card-label">Valor Total Ativos</div>
+            <div class="card-val" style="color:var(--green);font-size:18px" id="c-valor">—</div>
+            <div class="card-sub">patrimônio em comodato</div>
+        </a>
+    </div>
+
+    <div class="quick">
+        <div class="quick-title">🔗 Acesso Rápido</div>
+        <div class="quick-links">
+            <a class="ql primary" href="/juridico/ativos">📋 Ver Todos os Ativos & Comodatos</a>
+            <a class="ql" href="/juridico/ativos" onclick="setTimeout(()=>document.getElementById('btn-ativos')?.click(),500)">📱 Comodatos Ativos</a>
+            <a class="ql" href="/juridico/ativos" onclick="setTimeout(()=>document.getElementById('btn-distratados')?.click(),500)">📋 Distratados</a>
+            <a class="ql" href="/juridico/ativos" onclick="setTimeout(()=>document.getElementById('btn-desligados')?.click(),500)">🔴 Desligados</a>
+        </div>
+    </div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const setStatus = (cls, msg) => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
+
+async function carregar() {
+    setStatus('syncing', 'Carregando...');
+    try {
+        const r = await fetch('/juridico/api/ativos/');
+        const d = await r.json();
+        if (!d.ok) { setStatus('error', '⚠️ ' + (d.erro||'Erro')); return; }
+        $('c-ativos').textContent = (d.ativos||[]).length;
+        $('c-dist').textContent   = (d.distratados||[]).length;
+        $('c-desl').textContent   = (d.desligados||[]).length;
+        $('c-valor').textContent  = d.statsAtivos?.valorTotalFormatado || '—';
+        $('pageSub').textContent  = `${(d.ativos||[]).length} comodatos · ${(d.distratados||[]).length} distratados · ${(d.desligados||[]).length} desligados`;
+        setStatus('ready', '✓ Dados carregados' + (d.sincronizadoEm ? ' · Sync: ' + new Date(d.sincronizadoEm).toLocaleString('pt-BR') : ''));
+    } catch(e) {
+        setStatus('error', '❌ ' + e.message);
+    }
+}
+
+carregar();
+</script>
+</body>
+</html>

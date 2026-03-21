@@ -124,7 +124,7 @@ app.use('/master', exigirLogin, exigirMaster, masterRoutes);
 //  MÓDULOS
 // ═════════════════════════════════════════════════════════════
 
-const modulos = ['ti', 'treinamento', 'suprimentos', 'marketing'];
+const modulos = ['ti', 'treinamento', 'suprimentos', 'marketing', 'juridico'];
 
 // ─── Arquivo raiz de cada módulo (evita hardcode de index.html) ──
 const moduloIndex = {
@@ -132,6 +132,7 @@ const moduloIndex = {
     treinamento: 'dashborard-treinamento.html',
     suprimentos: 'index.html',
     marketing:   'index.html',
+    juridico:    'ativos.html',
 };
 
 // ─── Rota raiz de cada módulo (/ti, /treinamento, etc.) ──────
@@ -148,6 +149,7 @@ modulos.forEach(mod => {
 // FIX: declarar as variáveis aqui para uso nas rotas apenasLocal abaixo
 const tiRoutes          = require('./modulos/ti/routes');
 const treinamentoRoutes = require('./modulos/treinamento/routes');
+const juridicoRoutes    = require('./modulos/juridico/routes');
 
 // ─── Rotas de sync liberadas para localhost (ANTES do exigirLogin) ───
 app.post('/ti/api/pix/sincronizar',              apenasLocal, (req, res, next) => { req.url = '/api/pix/sincronizar';              tiRoutes(req, res, next); });
@@ -161,8 +163,8 @@ app.post('/treinamento/turnover/sincronizar',     apenasLocal, (req, res, next) 
 app.post('/treinamento/universidade/sincronizar', apenasLocal, (req, res, next) => { req.url = '/universidade/sincronizar'; treinamentoRoutes(req, res, next); });
 
 // ─── Rotas e APIs de cada módulo ─────────────────────────────
-// FIX: usa as variáveis já carregadas acima para ti e treinamento
-const rotasModulos = { ti: tiRoutes, treinamento: treinamentoRoutes };
+// FIX: usa as variáveis já carregadas acima para ti, treinamento e juridico
+const rotasModulos = { ti: tiRoutes, treinamento: treinamentoRoutes, juridico: juridicoRoutes };
 
 for (const mod of modulos) {
     try {
