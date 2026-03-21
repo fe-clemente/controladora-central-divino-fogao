@@ -6,7 +6,7 @@ const { getSultsConsolidado } = require('./sults');
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const CACHE_FILE      = path.join(__dirname, '../cache/sults_cache.json');
-const CHECK_INTERVAL  = 30 * 60 * 1000;   // verifica a cada 30min
+const CHECK_INTERVAL  = 30 * 60 * 1000;      // verifica a cada 30min
 const CACHE_MAX_AGE   = 24 * 60 * 60 * 1000; // força re-sync se cache > 24h
 
 // ─── Memória ──────────────────────────────────────────────────────────────────
@@ -66,7 +66,7 @@ async function sincronizarEAtualizar(motivo = '') {
     }
 
     syncEmAndamento = true;
-    console.log(`🔄 [SULTS] Iniciando sync completo${motivo ? ' — '+motivo : ''}...`);
+    console.log(`🔄 [SULTS] Iniciando sync completo${motivo ? ' — ' + motivo : ''}...`);
 
     try {
         const dados       = await getSultsConsolidado();
@@ -121,7 +121,7 @@ async function inicializar() {
 
         // Verifica mudanças em background após 10s (sem travar o boot)
         setTimeout(async () => {
-            try { await verificarMudancas(); } catch(e) {
+            try { await verificarMudancas(); } catch (e) {
                 console.warn('  [SULTS] Verificação background falhou:', e.message);
             }
         }, 10000);
@@ -129,7 +129,7 @@ async function inicializar() {
         console.log('  [SULTS] Sem cache — fazendo sync inicial (pode demorar ~40s)...');
         try {
             await sincronizarEAtualizar('primeira inicialização');
-        } catch(e) {
+        } catch (e) {
             console.error('❌ [SULTS] Sync inicial falhou:', e.message);
         }
     }
@@ -137,33 +137,45 @@ async function inicializar() {
     // Agenda verificações periódicas a cada 30min
     if (checkTimer) clearInterval(checkTimer);
     checkTimer = setInterval(async () => {
-        try { await verificarMudancas(); } catch(e) {
+        try { await verificarMudancas(); } catch (e) {
             console.warn('  [SULTS CACHE] Verificação periódica falhou:', e.message);
         }
     }, CHECK_INTERVAL);
 
-    console.log(`⏰ [SULTS] Verificação automática a cada ${CHECK_INTERVAL/60000} minutos`);
+    console.log(`⏰ [SULTS] Verificação automática a cada ${CHECK_INTERVAL / 60000} minutos`);
 }
 
 // ─── Acesso aos dados ─────────────────────────────────────────────────────────
+// FIX: se dadosEmMemoria for null (ex: crash ou boot falho),
+// tenta recarregar do arquivo JSON antes de retornar null
 function getDados() {
+    if (!dadosEmMemoria) {
+        const cache = lerCache();
+        if (cache && cache.dados) {
+            dadosEmMemoria    = cache.dados;
+            ultimaVerificacao = Date.now();
+            console.log('⚡ [SULTS] getDados() — recarregado do arquivo JSON automaticamente');
+        }
+    }
     return dadosEmMemoria;
 }
 
 function getStatus() {
     const cache = lerCache();
     return {
-        temCache:          !!dadosEmMemoria,
-        sincronizadoEm:    dadosEmMemoria?.sincronizadoEm || null,
-        totalUnidades:     dadosEmMemoria?.totalUnidades || 0,
-        totalFuncionarios: dadosEmMemoria?.totalFuncionarios || 0,
-        ultimaVerificacao: ultimaVerificacao ? new Date(ultimaVerificacao).toISOString() : null,
+        temCache:           !!dadosEmMemoria,
+        sincronizadoEm:     dadosEmMemoria?.sincronizadoEm || null,
+        totalUnidades:      dadosEmMemoria?.totalUnidades || 0,
+        totalFuncionarios:  dadosEmMemoria?.totalFuncionarios || 0,
+        ultimaVerificacao:  ultimaVerificacao ? new Date(ultimaVerificacao).toISOString() : null,
         syncEmAndamento,
         proximaVerificacao: ultimaVerificacao
             ? new Date(ultimaVerificacao + CHECK_INTERVAL).toISOString()
             : null,
-        cacheFile: CACHE_FILE,
-        idadeCache: cache ? Math.round((Date.now() - new Date(cache.sincronizadoEm).getTime()) / 60000) + ' min' : null,
+        cacheFile:  CACHE_FILE,
+        idadeCache: cache
+            ? Math.round((Date.now() - new Date(cache.sincronizadoEm).getTime()) / 60000) + ' min'
+            : null,
     };
 }
 
