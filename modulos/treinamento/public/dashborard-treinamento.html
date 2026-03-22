@@ -267,19 +267,20 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
 <nav>
 <!-- 1 --> <button class="tab-btn active" onclick="mudarTab('dashboard',this)">📊 Dashboard</button>
 <!-- 2 --> <button class="tab-btn" onclick="mudarTab('lembretes',this)">
-🔔 Lembretes <span class="tab-badge" id="badgeLembretes">0</span>
-</button>
+            🔔 Lembretes <span class="tab-badge" id="badgeLembretes">0</span>
+           </button>
 <!-- 3 --> <button class="tab-btn" onclick="mudarTab('busca',this)">🔍 Busca</button>
-<!-- 4 --> <button class="tab-btn" id="btnSults" onclick="window.location.href='/treinamento/sults'">
-🏪 Sults Lojas/Colab <span id="sults-sub" style="font-size:10px;font-family:monospace;color:inherit;opacity:.7"></span>
-</button>
+<!-- 4 --> <button class="tab-btn" onclick="window.location.href='/treinamento/sults'">
+            🏪 Sults Lojas/Colab <span id="sults-sub" style="font-size:10px;font-family:monospace;color:inherit;opacity:.7"></span>
+           </button>
 <!-- 5 --> <button class="tab-btn" onclick="window.location.href='/treinamento/chamados'">📞 Chamados T&D</button>
 <!-- 6 --> <button class="tab-btn" onclick="window.location.href='/treinamento/universidade'">🎓 Universidade</button>
- <a href="/turnover" class="tab-btn">🔄 Turnover</a>
-
+<!-- 7 --> <button class="tab-btn" onclick="window.location.href='/treinamento/turnover'">🔄 Turnover</button>
 <!-- 8 --> <button class="tab-btn" onclick="mudarTab('cadastro',this)">➕ Cadastro</button>
 <!-- 9 --> <button class="tab-btn" onclick="mudarTab('historico',this)">📋 Histórico</button>
+<!-- 10 --> <button class="tab-btn" onclick="window.location.href='/treinamento/uploads'">📁 Uploads</button>
 </nav>
+ 
 </header>
 
 <div id="statusBar">
@@ -918,6 +919,28 @@ function renderDash(d, ano){
             '<div class="stat-sub">'+(u.totalUnidades||0)+' unidades · '+(u.totalLinhas||0)+' linhas</div></div>';
         sr.innerHTML += cardAndamento + cardPendente + cardTotal;
     }).catch(function(){});
+
+    // Card Uploads — Google Drive
+    fetch(API+'/uploads/pastas').then(function(r){ return r.json(); }).then(function(u){
+        var totalPastas = (u.pastas||[]).length;
+        sr.innerHTML += '<div class="stat-card clickable" style="border-top:3px solid #0ea5e9;cursor:pointer" onclick="abrirModalUploads()">'+
+            '<div class="stat-label" style="color:#0ea5e9">📁 Arquivos no Drive</div>'+
+            '<div class="stat-value" style="font-size:22px;color:#0ea5e9" id="uploadCardTotal">—</div>'+
+            '<div class="stat-sub">'+totalPastas+' pasta(s) · <a href="/treinamento/uploads" onclick="event.stopPropagation()" style="color:#0ea5e9;font-weight:700;text-decoration:none">Ir para Uploads →</a></div>'+
+        '</div>';
+        // Buscar total de arquivos na raiz
+        fetch(API+'/uploads/arquivos').then(function(r){ return r.json(); }).then(function(d){
+            var el = document.getElementById('uploadCardTotal');
+            if (el) el.textContent = (d.arquivos||[]).length + ' arq.';
+        }).catch(function(){});
+    }).catch(function(){
+        sr.innerHTML += '<div class="stat-card" style="border-top:3px solid #0ea5e9">'+
+            '<div class="stat-label" style="color:#0ea5e9">📁 Arquivos no Drive</div>'+
+            '<div class="stat-value" style="font-size:22px;color:#0ea5e9">—</div>'+
+            '<div class="stat-sub"><a href="/treinamento/uploads" style="color:#0ea5e9;font-weight:700;text-decoration:none">Ir para Uploads →</a></div>'+
+        '</div>';
+    });
+
     /* ── GRÁFICOS ── */
     cs.innerHTML =
         buildSec('📊 Lojas Treinadas por Mês — '+ano, d.lojasTrinadasPorMes, 'lojas', 'red', ano)+
@@ -930,6 +953,87 @@ function renderDash(d, ano){
         buildPerfilSec('sec-perfilFuncao',
             '👤 Perfil do Treinando — Quantidade por Função (col F) — '+ano,
             d.perfilFuncao, d.allFuncoes, ano, true);
+}
+
+
+var CORES_PERFIL = ['#c8102e','#f59e0b','#16a34a','#2563eb','#7c3aed','#0891b2','#db2777','#65a30d'];
+
+/* ── MODAL UPLOADS ─────────────────────────────────────────────────────── */
+async function abrirModalUploads() {
+    document.getElementById('modalUploads').style.display = 'flex';
+    try {
+        var r = await fetch(API+'/uploads/pastas');
+        var d = await r.json();
+        var sel = document.getElementById('uploadModalPasta');
+        sel.innerHTML = '<option value="">📂 Raiz</option>';
+        (d.pastas||[]).forEach(function(p){
+            sel.innerHTML += '<option value="'+p.id+'">📁 '+p.nome+'</option>';
+        });
+    } catch(e){}
+    carregarArquivosModal('');
+}
+
+function fecharModalUploads() {
+    document.getElementById('modalUploads').style.display = 'none';
+}
+
+async function carregarArquivosModal(pastaId) {
+    var wrap = document.getElementById('uploadModalLista');
+    var cont = document.getElementById('uploadModalCount');
+    wrap.innerHTML = '<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<div class="spinner"></div> Carregando...</div>';
+    try {
+        var url = pastaId ? API+'/uploads/arquivos?pastaId='+pastaId : API+'/uploads/arquivos';
+        var r   = await fetch(url);
+        var d   = await r.json();
+        var arqs = d.arquivos || [];
+        if (cont) cont.textContent = arqs.length + ' arquivo(s)';
+        if (!arqs.length) {
+            wrap.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted)">'+
+                '<div style="font-size:36px;margin-bottom:10px">📂</div>'+
+                '<div style="font-size:13px;font-weight:600">Nenhum arquivo nesta pasta</div></div>';
+            return;
+        }
+        var icon = function(m){ m=m||'';
+            if(m.startsWith('image/'))  return '🖼️';
+            if(m.includes('pdf'))       return '📄';
+            if(m.includes('sheet')||m.includes('excel')||m.includes('csv')) return '📊';
+            if(m.includes('word')||m.includes('document')) return '📝';
+            if(m.includes('zip')||m.includes('rar'))       return '🗜️';
+            if(m.startsWith('video/'))  return '🎬';
+            if(m.startsWith('audio/'))  return '🎵';
+            return '📎';
+        };
+        var bytes = function(b){ var n=parseInt(b||0);
+            if(n<1024) return n+' B';
+            if(n<1048576) return (n/1024).toFixed(1)+' KB';
+            return (n/1048576).toFixed(1)+' MB';
+        };
+        var dt = function(iso){ if(!iso) return '—';
+            try{ return new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
+            catch(e){ return '—'; }
+        };
+        var linhas = arqs.map(function(f){
+            return '<tr onmouseover="this.style.background=\'var(--bg)\'" onmouseout="this.style.background=\'\'">'+
+                '<td style="padding:10px 14px;font-size:18px;width:36px">'+icon(f.tipo)+'</td>'+
+                '<td style="padding:10px 4px;font-size:13px;font-weight:700;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+f.nome+'">'+f.nome+'</td>'+
+                '<td style="padding:10px 14px;font-size:11px;font-family:\'JetBrains Mono\',monospace;color:var(--muted);white-space:nowrap">'+bytes(f.tamanho)+'</td>'+
+                '<td style="padding:10px 14px;font-size:11px;font-family:\'JetBrains Mono\',monospace;color:var(--muted);white-space:nowrap">'+dt(f.criadoEm)+'</td>'+
+                '<td style="padding:10px 14px;text-align:right">'+
+                (f.link?'<a href="'+f.link+'" target="_blank" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;text-decoration:none;color:var(--text)">🔗 Abrir</a>':'')+
+                '</td></tr>';
+        }).join('');
+        wrap.innerHTML = '<table style="width:100%;border-collapse:collapse">'+
+            '<thead><tr style="background:var(--bg)">'+
+            '<th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);width:36px"></th>'+
+            '<th style="padding:8px 4px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Nome</th>'+
+            '<th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Tamanho</th>'+
+            '<th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Data</th>'+
+            '<th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border)"></th>'+
+            '</tr></thead><tbody>'+linhas+'</tbody></table>';
+    } catch(e) {
+        wrap.innerHTML = '<div style="padding:30px;text-align:center;color:var(--red);font-size:13px;font-weight:600">❌ '+e.message+'</div>';
+    }
 }
 
 
@@ -2083,6 +2187,34 @@ function exportarTurnoverCSV() {
             <button class="modal-close" onclick="document.getElementById('modalLojas').classList.remove('open')">✕ Fechar</button>
         </div>
         <div id="modalConteudo"></div>
+    </div>
+</div>
+
+<!-- ═══ MODAL UPLOADS — colar antes do </body> ═══ -->
+<div id="modalUploads" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9992;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)fecharModalUploads()">
+    <div style="background:var(--bg2);border-radius:18px;padding:28px 30px;width:min(700px,96vw);max-height:88vh;overflow-y:auto;box-shadow:0 25px 80px rgba(0,0,0,.4)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div>
+                <div style="font-size:16px;font-weight:800">📁 Arquivos no Drive</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px">
+                    Google Drive — Treinamento &nbsp;·&nbsp;
+                    <a href="/treinamento/uploads" style="color:#0ea5e9;font-weight:700;text-decoration:none">Abrir página completa →</a>
+                </div>
+            </div>
+            <button onclick="fecharModalUploads()" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted)">✕ Fechar</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+            <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Pasta:</span>
+            <select id="uploadModalPasta"
+                style="padding:7px 14px;border-radius:9px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text);background:var(--bg2);outline:none;cursor:pointer;min-width:200px"
+                onchange="carregarArquivosModal(this.value)">
+                <option value="">📂 Raiz</option>
+            </select>
+            <span id="uploadModalCount" style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);margin-left:auto"></span>
+        </div>
+        <div id="uploadModalLista" style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden">
+            <div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;font-weight:600">Aguardando...</div>
+        </div>
     </div>
 </div>
 </body>
