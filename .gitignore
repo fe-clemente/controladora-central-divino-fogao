@@ -10,3 +10,7 @@ minha-chave.json
 
 # Node
 node_modules/
+
+# Cache
+**/cache/**
+!**/cache/**/*.js
