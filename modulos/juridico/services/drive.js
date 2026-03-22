@@ -18,7 +18,7 @@ function getDrive() {
 }
 
 // ⚠️  Defina JURIDICO_UPLOADS_PASTA_ID no .env com o ID da pasta do Drive do Jurídico
-const PASTA_RAIZ_ID = process.env.JURIDICO_UPLOADS_PASTA_ID || '';
+const PASTA_RAIZ_ID = process.env.UPLOADS_PASTA_ID_JURIDICO || '';
 
 const SD = {
   supportsAllDrives:         true,
@@ -26,7 +26,7 @@ const SD = {
 };
 
 async function listarPastas(pastaId = PASTA_RAIZ_ID) {
-  if (!pastaId) throw new Error('JURIDICO_UPLOADS_PASTA_ID não configurado no .env');
+  if (!pastaId) throw new Error('JURIDICO__PASTA_ID não configurado no .env');
   const drive = getDrive();
   const { data } = await drive.files.list({
     q:        `'${pastaId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,

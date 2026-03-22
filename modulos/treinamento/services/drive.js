@@ -21,7 +21,7 @@ function getDrive() {
 // ─── Pasta raiz ───────────────────────────────────────────────────────────────
 // ⚠️  Após mover a pasta para o Shared Drive, atualize UPLOADS_PASTA_ID no .env
 //     ou substitua o ID abaixo diretamente
-const PASTA_RAIZ_ID = process.env.UPLOADS_PASTA_ID || '113u6w3wxQZ3K8z_dlN1VER9a5PMyxzaP';
+const PASTA_RAIZ_ID = process.env.UPLOADS_PASTA_ID_TREINAMENTO || '';
 
 // Parâmetros obrigatórios para Shared Drive
 const SD = {
