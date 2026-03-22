@@ -14,6 +14,7 @@
             --yellow:#d97706;--yellow-pale:#fffbeb;
             --orange:#ea580c;--orange-pale:#fff7ed;
             --jur:#7c3aed;--jur-light:#a78bfa;--jur-pale:#f5f3ff;
+            --blue:#0ea5e9;--blue-pale:#f0f9ff;
             --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12);
         }
         *{margin:0;padding:0;box-sizing:border-box;}
@@ -42,6 +43,7 @@
         .card-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;}
         .card-val{font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
         .card-sub{font-size:11px;color:var(--muted);margin-top:6px;font-weight:600;}
+        .card-link{font-size:11px;font-weight:700;margin-top:8px;display:inline-flex;align-items:center;gap:4px;}
         .quick{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);}
         .quick-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px;}
         .quick-links{display:flex;gap:10px;flex-wrap:wrap;}
@@ -65,6 +67,7 @@
     <nav>
         <button class="nav-btn active" onclick="location.href='/juridico/'">📊 Dashboard</button>
         <button class="nav-btn" onclick="location.href='/juridico/ativos'">📋 Ativos & Comodatos</button>
+        <button class="nav-btn" onclick="location.href='/juridico/uploads'">📁 Uploads</button>
     </nav>
 </header>
 
@@ -78,29 +81,47 @@
     <div class="page-sub" id="pageSub">Divino Fogão — Gestão de Ativos & Comodatos</div>
 
     <div class="cards">
+        <!-- Comodatos Ativos -->
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--jur)">
             <div class="card-icon">📱</div>
             <div class="card-label">Comodatos Ativos</div>
             <div class="card-val" style="color:var(--jur)" id="c-ativos">—</div>
             <div class="card-sub">contratos vigentes</div>
         </a>
+
+        <!-- Distratados -->
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--orange)">
             <div class="card-icon">📋</div>
             <div class="card-label">Distratados</div>
             <div class="card-val" style="color:var(--orange)" id="c-dist">—</div>
             <div class="card-sub">distratos realizados</div>
         </a>
+
+        <!-- Desligados -->
         <a class="card" href="/juridico/ativos" style="border-top:3px solid #64748b">
             <div class="card-icon">🔴</div>
             <div class="card-label">Desligados</div>
             <div class="card-val" style="color:#64748b" id="c-desl">—</div>
             <div class="card-sub">colaboradores desligados</div>
         </a>
+
+        <!-- Valor Total -->
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--green)">
             <div class="card-icon">💰</div>
             <div class="card-label">Valor Total Ativos</div>
             <div class="card-val" style="color:var(--green);font-size:18px" id="c-valor">—</div>
             <div class="card-sub">patrimônio em comodato</div>
+        </a>
+
+        <!-- Uploads Drive -->
+        <a class="card" href="/juridico/uploads" style="border-top:3px solid var(--blue)" id="cardUploads">
+            <div class="card-icon">📁</div>
+            <div class="card-label">Arquivos no Drive</div>
+            <div class="card-val" style="color:var(--blue);font-size:28px" id="c-uploads">
+                <span class="spinner" style="border-top-color:var(--blue)"></span>
+            </div>
+            <div class="card-sub" id="c-uploads-sub">carregando...</div>
+            <div class="card-link" style="color:var(--blue)">Gerenciar arquivos →</div>
         </a>
     </div>
 
@@ -111,6 +132,7 @@
             <a class="ql" href="/juridico/ativos" onclick="setTimeout(()=>document.getElementById('btn-ativos')?.click(),500)">📱 Comodatos Ativos</a>
             <a class="ql" href="/juridico/ativos" onclick="setTimeout(()=>document.getElementById('btn-distratados')?.click(),500)">📋 Distratados</a>
             <a class="ql" href="/juridico/ativos" onclick="setTimeout(()=>document.getElementById('btn-desligados')?.click(),500)">🔴 Desligados</a>
+            <a class="ql" href="/juridico/uploads" style="border-color:rgba(14,165,233,.4);color:var(--blue)">📁 Uploads Drive</a>
         </div>
     </div>
 </main>
@@ -136,7 +158,42 @@ async function carregar() {
     }
 }
 
+async function carregarUploads() {
+    try {
+        const [rPastas, rArquivos] = await Promise.allSettled([
+            fetch('/juridico/uploads/pastas').then(r => r.json()),
+            fetch('/juridico/uploads/arquivos').then(r => r.json()),
+        ]);
+
+        const pastas   = rPastas.status   === 'fulfilled' && rPastas.value.ok   ? rPastas.value.pastas    || [] : [];
+        const arquivos = rArquivos.status === 'fulfilled' && rArquivos.value.ok ? rArquivos.value.arquivos || [] : [];
+
+        const totalArqs  = arquivos.length;
+        const totalBytes = arquivos.reduce((s, f) => s + parseInt(f.tamanho || 0), 0);
+
+        const fmtBytes = b => {
+            if (b < 1024)       return b + ' B';
+            if (b < 1048576)    return (b / 1024).toFixed(1) + ' KB';
+            if (b < 1073741824) return (b / 1048576).toFixed(1) + ' MB';
+            return (b / 1073741824).toFixed(1) + ' GB';
+        };
+
+        $('c-uploads').textContent     = totalArqs + ' arq.';
+        $('c-uploads-sub').textContent = pastas.length + ' pasta(s) · ' + fmtBytes(totalBytes);
+
+        // Hover do card muda se não tem arquivos
+        if (totalArqs === 0 && pastas.length === 0) {
+            $('c-uploads').textContent     = '—';
+            $('c-uploads-sub').textContent = 'Nenhum arquivo ainda';
+        }
+    } catch(e) {
+        $('c-uploads').textContent     = '—';
+        $('c-uploads-sub').textContent = 'Erro ao carregar';
+    }
+}
+
 carregar();
+carregarUploads();
 </script>
 </body>
 </html>
