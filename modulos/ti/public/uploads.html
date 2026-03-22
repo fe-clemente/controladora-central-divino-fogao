@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Uploads — TI · Divino Fogão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+    --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
+    --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+    --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+    --accent:#2563eb; --accent-pale:#eff6ff;
+    --green:#16a34a; --green-pale:#f0fdf4;
+    --yellow:#d97706; --yellow-pale:#fffbeb;
+    --blue:#0ea5e9; --blue-pale:#f0f9ff;
+    --shadow:0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── Header ─────────────────────────────────────────── */
+header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);overflow-x:auto;}
+.logo{padding:10px 0;flex-shrink:0;}
+.logo img{height:48px;width:auto;display:block;}
+.logo-fallback{font-size:18px;font-weight:900;color:var(--red);display:none;}
+.hd{width:1px;height:32px;background:var(--border);flex-shrink:0;}
+.header-title{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;}
+nav{display:flex;gap:2px;margin-left:auto;}
+.tab-btn{background:none;border:none;color:var(--muted);padding:18px 14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s;border-bottom:3px solid transparent;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;text-decoration:none;}
+.tab-btn:hover{color:var(--text);background:var(--bg3);}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--blue-pale);}
+
+/* ── Status bar ─────────────────────────────────────── */
+#statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+.sdot.ready{background:var(--green);animation:none;}
+.sdot.syncing{background:var(--accent);animation:pulse .8s infinite;}
+.sdot.error{background:var(--red);animation:none;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── Layout ─────────────────────────────────────────── */
+.page{display:flex;min-height:calc(100vh - 88px);}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+.sidebar{width:240px;flex-shrink:0;background:var(--bg2);border-right:2px solid var(--border);display:flex;flex-direction:column;padding:20px 0;}
+.sidebar-header{padding:0 18px 16px;border-bottom:1px solid var(--border);}
+.sidebar-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:4px;}
+.sidebar-sub{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.sidebar-section{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);padding:16px 18px 8px;}
+.folder-list{flex:1;overflow-y:auto;padding:0 8px;}
+.folder-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);transition:all .15s;user-select:none;}
+.folder-item:hover{background:var(--bg3);color:var(--text);}
+.folder-item.active{background:var(--blue-pale);color:var(--blue);}
+.folder-item-root{font-weight:800;}
+.folder-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-actions{padding:12px 8px;border-top:1px solid var(--border);}
+.btn-nova-pasta{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px;background:transparent;border:1.5px dashed var(--border);border-radius:9px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-nova-pasta:hover{border-color:var(--blue);color:var(--blue);}
+
+/* ── Main ────────────────────────────────────────────── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0;}
+.breadcrumb{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--muted);}
+.breadcrumb span{color:var(--text);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+
+/* ── Botões ──────────────────────────────────────────── */
+.btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(14,165,233,.3);}
+.btn-blue:hover{background:#0284c7;transform:translateY(-1px);}
+.btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+.btn-ghost:hover{background:var(--bg2);}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+.spinner.dark{border:2px solid var(--border);border-top-color:var(--blue);}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Drop zone ───────────────────────────────────────── */
+.drop-zone-wrapper{padding:20px 28px 0;flex-shrink:0;}
+.drop-zone{border:2px dashed var(--border);border-radius:14px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .2s;background:var(--bg3);position:relative;}
+.drop-zone:hover,.drop-zone.over{border-color:var(--blue);background:var(--blue-pale);}
+.drop-zone-icon{font-size:32px;transition:transform .2s;}
+.drop-zone:hover .drop-zone-icon,.drop-zone.over .drop-zone-icon{transform:translateY(-3px);}
+.drop-zone-text{font-size:14px;font-weight:700;color:var(--text);}
+.drop-zone-text span{color:var(--blue);}
+.drop-zone-sub{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+
+/* ── Queue ───────────────────────────────────────────── */
+.queue-wrapper{padding:0 28px;flex-shrink:0;}
+.queue{display:flex;flex-direction:column;gap:6px;margin-top:10px;max-height:180px;overflow-y:auto;}
+.queue-item{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:9px;padding:8px 12px;font-size:12px;animation:slideIn .2s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.queue-icon{font-size:16px;flex-shrink:0;}
+.queue-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;}
+.queue-size{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:11px;}
+.queue-remove{background:none;border:none;color:var(--muted);cursor:pointer;padding:3px 6px;border-radius:5px;font-size:13px;}
+.queue-remove:hover{color:var(--red);background:var(--red-pale);}
+.queue-ok{color:var(--green);font-weight:800;}
+.queue-err{color:var(--red);font-weight:800;}
+.progress-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:3px;}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;animation:prog 1.5s ease infinite;}
+@keyframes prog{0%{width:10%}50%{width:80%}100%{width:95%}}
+
+/* ── Files section ───────────────────────────────────── */
+.files-section{flex:1;overflow:hidden;display:flex;flex-direction:column;padding:20px 28px 28px;}
+.section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.files-count{font-size:11px;font-family:'JetBrains Mono',monospace;background:var(--bg3);border:1px solid var(--border);padding:2px 9px;border-radius:20px;color:var(--muted);}
+
+/* ── Tabela ───────────────────────────────────────────── */
+.table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);flex:1;}
+.tbl-scroll{overflow-y:auto;max-height:calc(100vh - 520px);}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:10px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
+tbody tr{transition:background .15s;}
+tbody tr:hover td{background:var(--bg3);}
+tbody td{padding:11px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+.file-icon{font-size:18px;}
+.file-name{font-weight:700;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-size,.file-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+.file-actions{display:flex;gap:6px;opacity:0;transition:opacity .15s;}
+tbody tr:hover .file-actions{opacity:1;}
+.file-action-btn{background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;padding:5px 9px;cursor:pointer;font-size:12px;font-weight:700;transition:all .15s;}
+.file-action-btn:hover{border-color:var(--blue);color:var(--blue);}
+.file-action-btn.del{color:var(--red);}
+.file-action-btn.del:hover{border-color:var(--red);background:var(--red-pale);}
+
+/* ── Estados ─────────────────────────────────────────── */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty .icon{font-size:48px;margin-bottom:12px;}
+.empty p{font-size:14px;font-weight:600;}
+.loading-msg{text-align:center;padding:40px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
+
+/* ── Confirm delete overlay ──────────────────────────── */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+.confirm-overlay.open{display:flex;}
+.confirm-box{background:var(--bg2);border-radius:14px;padding:28px 30px;width:min(420px,96vw);box-shadow:var(--shadow-lg);}
+.confirm-title{font-size:16px;font-weight:800;margin-bottom:8px;}
+.confirm-sub{font-size:13px;color:var(--muted);margin-bottom:20px;word-break:break-all;}
+.confirm-actions{display:flex;gap:8px;justify-content:flex-end;}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
+.btn-red:hover{background:var(--red-light);}
+
+/* ── Modal nova pasta ──────────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--bg2);border-radius:14px;padding:28px 30px;width:min(420px,96vw);box-shadow:var(--shadow-lg);}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:16px;}
+.modal-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;margin-bottom:16px;}
+.modal-input:focus{border-color:var(--blue);}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;}
+
+/* ── Toast ───────────────────────────────────────────── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
+.toast.show{display:block;animation:fadeInUp .3s ease;}
+@keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+@media(max-width:768px){
+    .sidebar{width:200px;}
+    .file-date{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão"
+             onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
+        <span class="logo-fallback">🍽️</span>
+    </div>
+    <div class="hd"></div>
+    <div class="header-title">TI — Divino Fogão</div>
+    <nav>
+        <a href="/ti/"          class="tab-btn">📊 Dashboard</a>
+        <a href="/ti/ativos"    class="tab-btn">🖥️ Ativos</a>
+        <a href="/ti/chamados"  class="tab-btn">📞 Chamados</a>
+        <a href="/ti/projetos"  class="tab-btn">📋 Projetos</a>
+        <a href="/ti/migracao"  class="tab-btn">🔄 Migração</a>
+        <a href="/ti/pix"       class="tab-btn">💳 Pix TEF</a>
+        <a href="/ti/uploads"   class="tab-btn active">📁 Uploads</a>
+    </nav>
+</header>
+
+<!-- ═══ STATUS BAR ═══════════════════════════════════════════ -->
+<div id="statusBar">
+    <div class="sdot" id="sdot"></div>
+    <span id="statusText">Carregando...</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span id="lastSync" style="font-size:11px;color:var(--muted)"></span>
+        <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="recarregar()">🔄 Atualizar</button>
+        <button class="btn btn-blue" id="btnEnviar" disabled onclick="enviarArquivos()">⬆ Enviar arquivos</button>
+    </span>
+</div>
+
+<!-- ═══ PAGE ═════════════════════════════════════════════════ -->
+<div class="page">
+
+    <!-- ═══ SIDEBAR ═════════════════════════════════════════ -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">📁 Uploads</div>
+            <div class="sidebar-sub">Google Drive — TI</div>
+        </div>
+        <p class="sidebar-section">Pastas</p>
+        <div class="folder-list" id="folderList">
+            <div class="folder-item folder-item-root active" data-id="ROOT" data-name="Raiz">
+                📂 <span class="folder-name">Raiz</span>
+            </div>
+        </div>
+        <div class="sidebar-actions">
+            <button class="btn-nova-pasta" id="btnNovaPasta">＋ Nova pasta</button>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN ════════════════════════════════════════════ -->
+    <div class="main">
+
+        <div class="topbar">
+            <div class="breadcrumb">📁 <span>/</span> <span id="breadcrumbName">Raiz</span></div>
+        </div>
+
+        <!-- Drop zone -->
+        <div class="drop-zone-wrapper">
+            <div class="drop-zone" id="dropZone">
+                <div class="drop-zone-icon">☁️</div>
+                <div class="drop-zone-text"><span>Clique para selecionar</span> ou arraste arquivos aqui</div>
+                <div class="drop-zone-sub">Máximo 50 MB por arquivo · Múltiplos arquivos permitidos</div>
+                <input type="file" id="fileInput" multiple>
+            </div>
+        </div>
+
+        <!-- Queue -->
+        <div class="queue-wrapper">
+            <div class="queue" id="queue"></div>
+        </div>
+
+        <!-- Files -->
+        <div class="files-section">
+            <div class="section-title">
+                Arquivos na pasta
+                <span class="files-count" id="filesCount">0 arquivos</span>
+            </div>
+            <div class="table-wrap">
+                <div class="tbl-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:40px"></th>
+                                <th>Nome</th>
+                                <th>Tamanho</th>
+                                <th>Data</th>
+                                <th style="width:120px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="filesList">
+                            <tr><td colspan="5"><div class="loading-msg"><div class="spinner dark"></div> Carregando...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal nova pasta -->
+<div class="modal-overlay" id="modalNovaPasta" onclick="if(event.target===this)fecharModal()">
+    <div class="modal-box">
+        <div class="modal-title">📁 Nova pasta</div>
+        <input class="modal-input" id="inputNomePasta" type="text" placeholder="Nome da pasta..." maxlength="80" autocomplete="off">
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
+            <button class="btn btn-blue" id="btnConfirmarPasta" onclick="confirmarNovaPasta()">Criar pasta</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm excluir -->
+<div class="confirm-overlay" id="confirmExcluir" onclick="if(event.target===this)fecharConfirm()">
+    <div class="confirm-box">
+        <div class="confirm-title">🗑 Excluir arquivo?</div>
+        <div class="confirm-sub" id="confirmNome"></div>
+        <div class="confirm-actions">
+            <button class="btn btn-ghost" onclick="fecharConfirm()">Cancelar</button>
+            <button class="btn btn-red" id="btnConfirmarExcluir">Excluir</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '/ti/uploads';
+let pastaSelecionadaId   = 'ROOT';
+let pastaSelecionadaNome = 'Raiz';
+let filasUpload = [];
+let _pendingDeleteId = null;
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+function pastaIdReal() { return pastaSelecionadaId === 'ROOT' ? '' : pastaSelecionadaId; }
+
+function setStatus(cls, msg) {
+    document.getElementById('sdot').className = 'sdot ' + cls;
+    document.getElementById('statusText').textContent = msg;
+}
+
+function toast(msg, ms = 2500) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), ms);
+}
+
+function formatBytes(b) {
+    if (!b) return '—';
+    const n = parseInt(b);
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n/1024).toFixed(1) + ' KB';
+    return (n/1048576).toFixed(1) + ' MB';
+}
+
+function formatDate(iso) {
+    if (!iso) return '—';
+    try { return new Date(iso).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+    catch { return '—'; }
+}
+
+function fileIcon(mime = '') {
+    if (mime.startsWith('image/'))   return '🖼️';
+    if (mime.includes('pdf'))        return '📄';
+    if (mime.includes('sheet') || mime.includes('excel') || mime.includes('csv')) return '📊';
+    if (mime.includes('word') || mime.includes('document')) return '📝';
+    if (mime.includes('zip') || mime.includes('rar'))       return '🗜️';
+    if (mime.startsWith('video/'))   return '🎬';
+    if (mime.startsWith('audio/'))   return '🎵';
+    return '📎';
+}
+
+// ── Pastas ─────────────────────────────────────────────────────────────────────
+async function carregarPastas() {
+    try {
+        const r = await fetch(`${API}/pastas`);
+        const d = await r.json();
+        if (!d.ok) throw new Error(d.erro);
+
+        const list = document.getElementById('folderList');
+        list.innerHTML = `<div class="folder-item folder-item-root${pastaSelecionadaId==='ROOT'?' active':''}" data-id="ROOT" data-name="Raiz">
+            📂 <span class="folder-name">Raiz</span></div>`;
+
+        (d.pastas || []).forEach(p => {
+            const el = document.createElement('div');
+            el.className = 'folder-item' + (p.id === pastaSelecionadaId ? ' active' : '');
+            el.dataset.id   = p.id;
+            el.dataset.name = p.nome;
+            el.innerHTML    = `📁 <span class="folder-name">${p.nome}</span>`;
+            list.appendChild(el);
+        });
+
+        list.querySelectorAll('.folder-item').forEach(el =>
+            el.addEventListener('click', () => selecionarPasta(el.dataset.id, el.dataset.name))
+        );
+    } catch(e) { toast('Erro ao carregar pastas: ' + e.message); }
+}
+
+function selecionarPasta(id, nome) {
+    pastaSelecionadaId   = id;
+    pastaSelecionadaNome = nome;
+    document.getElementById('breadcrumbName').textContent = nome;
+    document.querySelectorAll('.folder-item').forEach(el =>
+        el.classList.toggle('active', el.dataset.id === id)
+    );
+    carregarArquivos();
+}
+
+// ── Nova pasta ─────────────────────────────────────────────────────────────────
+document.getElementById('btnNovaPasta').addEventListener('click', () => {
+    document.getElementById('inputNomePasta').value = '';
+    document.getElementById('modalNovaPasta').classList.add('open');
+    setTimeout(() => document.getElementById('inputNomePasta').focus(), 100);
+});
+
+document.getElementById('inputNomePasta').addEventListener('keydown', e => {
+    if (e.key === 'Enter')  confirmarNovaPasta();
+    if (e.key === 'Escape') fecharModal();
+});
+
+function fecharModal() { document.getElementById('modalNovaPasta').classList.remove('open'); }
+
+async function confirmarNovaPasta() {
+    const nome = document.getElementById('inputNomePasta').value.trim();
+    if (!nome) return;
+    const btn = document.getElementById('btnConfirmarPasta');
+    btn.disabled = true; btn.textContent = 'Criando...';
+    try {
+        const r = await fetch(`${API}/pastas`, {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ nome, pastaId: pastaIdReal() }),
+        });
+        const d = await r.json();
+        if (!d.ok) throw new Error(d.erro);
+        fecharModal();
+        toast(`✅ Pasta "${nome}" criada`);
+        await carregarPastas();
+        selecionarPasta(d.pasta.id, d.pasta.nome);
+    } catch(e) { toast('❌ ' + e.message); }
+    finally    { btn.disabled = false; btn.textContent = 'Criar pasta'; }
+}
+
+// ── Arquivos ───────────────────────────────────────────────────────────────────
+async function carregarArquivos() {
+    const tbody = document.getElementById('filesList');
+    tbody.innerHTML = '<tr><td colspan="5"><div class="loading-msg"><div class="spinner dark"></div> Carregando arquivos...</div></td></tr>';
+    setStatus('syncing', 'Carregando arquivos...');
+    try {
+        const pid = pastaIdReal();
+        const url = pid ? `${API}/arquivos?pastaId=${pid}` : `${API}/arquivos`;
+        const r   = await fetch(url);
+        const d   = await r.json();
+        if (!d.ok) throw new Error(d.erro);
+        renderArquivos(d.arquivos);
+        setStatus('ready', `✓ ${d.arquivos.length} arquivo(s) carregado(s)`);
+        document.getElementById('lastSync').textContent = 'Atualizado: ' + new Date().toLocaleTimeString('pt-BR');
+    } catch(e) {
+        tbody.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="icon">⚠️</div><p>${e.message}</p></div></td></tr>`;
+        setStatus('error', '❌ ' + e.message);
+    }
+}
+
+function renderArquivos(arquivos) {
+    const tbody = document.getElementById('filesList');
+    document.getElementById('filesCount').textContent = `${arquivos.length} arquivo${arquivos.length!==1?'s':''}`;
+
+    if (!arquivos.length) {
+        tbody.innerHTML = `<tr><td colspan="5"><div class="empty">
+            <div class="icon">📂</div>
+            <p>Nenhum arquivo nesta pasta</p>
+        </div></td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = arquivos.map(f => `
+        <tr>
+            <td class="file-icon">${fileIcon(f.tipo)}</td>
+            <td class="file-name" title="${f.nome}">${f.nome}</td>
+            <td class="file-size">${formatBytes(f.tamanho)}</td>
+            <td class="file-date">${formatDate(f.criadoEm)}</td>
+            <td>
+                <div class="file-actions">
+                    <button class="file-action-btn" onclick="window.open('${f.link}','_blank')">🔗 Abrir</button>
+                    <button class="file-action-btn del" onclick="pedirExcluir('${f.id}','${f.nome.replace(/'/g,"\\'")}')">🗑 Excluir</button>
+                </div>
+            </td>
+        </tr>`).join('');
+}
+
+// ── Excluir com confirmação ────────────────────────────────────────────────────
+function pedirExcluir(id, nome) {
+    _pendingDeleteId = id;
+    document.getElementById('confirmNome').textContent = nome;
+    document.getElementById('confirmExcluir').classList.add('open');
+}
+
+function fecharConfirm() {
+    _pendingDeleteId = null;
+    document.getElementById('confirmExcluir').classList.remove('open');
+}
+
+document.getElementById('btnConfirmarExcluir').addEventListener('click', async () => {
+    if (!_pendingDeleteId) return;
+    const id   = _pendingDeleteId;
+    const nome = document.getElementById('confirmNome').textContent;
+    const btn  = document.getElementById('btnConfirmarExcluir');
+    btn.disabled = true; btn.textContent = 'Excluindo...';
+    try {
+        const r = await fetch(`${API}/arquivos/${id}`, { method: 'DELETE' });
+        const d = await r.json();
+        if (!d.ok) throw new Error(d.erro);
+        fecharConfirm();
+        toast(`🗑 "${nome}" excluído`);
+        carregarArquivos();
+    } catch(e) {
+        toast('❌ ' + e.message);
+    } finally {
+        btn.disabled = false; btn.textContent = 'Excluir';
+    }
+});
+
+// ── Upload ─────────────────────────────────────────────────────────────────────
+const dropZone  = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const btnEnviar = document.getElementById('btnEnviar');
+
+fileInput.addEventListener('change', e => adicionarFilas(Array.from(e.target.files)));
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
+dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('over');
+    adicionarFilas(Array.from(e.dataTransfer.files));
+});
+
+function adicionarFilas(files) {
+    files.forEach(f => {
+        if (filasUpload.find(x => x.file.name===f.name && x.file.size===f.size)) return;
+        filasUpload.push({ file: f, id: Date.now()+Math.random(), status: 'pending' });
+    });
+    renderQueue();
+    btnEnviar.disabled = !filasUpload.filter(x=>x.status==='pending').length;
+    fileInput.value = '';
+}
+
+function renderQueue() {
+    const el = document.getElementById('queue');
+    if (!filasUpload.length) { el.innerHTML = ''; return; }
+    el.innerHTML = filasUpload.map(item => {
+        const statusHtml =
+            item.status==='ok'      ? `<span class="queue-ok">✓</span>` :
+            item.status==='erro'    ? `<span class="queue-err">✕</span>` :
+            item.status==='sending' ? `<div class="spinner dark"></div>` :
+            `<button class="queue-remove" onclick="removerDaFila('${item.id}')">✕</button>`;
+        return `<div class="queue-item">
+            <span class="queue-icon">${fileIcon(item.file.type)}</span>
+            <div style="flex:1;min-width:0">
+                <div class="queue-name">${item.file.name}</div>
+                ${item.status==='sending'?'<div class="progress-bar"><div class="progress-fill"></div></div>':''}
+            </div>
+            <span class="queue-size">${formatBytes(item.file.size)}</span>
+            ${statusHtml}
+        </div>`;
+    }).join('');
+}
+
+function removerDaFila(id) {
+    filasUpload = filasUpload.filter(x => x.id.toString() !== id.toString());
+    renderQueue();
+    btnEnviar.disabled = !filasUpload.filter(x=>x.status==='pending').length;
+}
+
+async function enviarArquivos() {
+    const pendentes = filasUpload.filter(x => x.status==='pending');
+    if (!pendentes.length) return;
+    btnEnviar.disabled = true;
+
+    const form = new FormData();
+    pendentes.forEach(item => { item.status='sending'; form.append('arquivos', item.file); });
+    const pid = pastaIdReal();
+    if (pid) form.append('pastaId', pid);
+    renderQueue();
+
+    try {
+        const r = await fetch(`${API}/arquivo`, { method:'POST', body:form });
+        const d = await r.json();
+
+        pendentes.forEach(item => {
+            const err = (d.erros||[]).find(e=>e.nome===item.file.name);
+            item.status = err ? 'erro' : 'ok';
+        });
+        renderQueue();
+
+        if (d.enviados > 0) {
+            toast(`✅ ${d.enviados} arquivo(s) enviado(s) com sucesso`);
+            carregarArquivos();
+        }
+        if (d.erros?.length) toast(`❌ ${d.erros.length} arquivo(s) falharam`, 4000);
+
+        setTimeout(() => {
+            filasUpload = filasUpload.filter(x => x.status!=='ok');
+            renderQueue();
+            btnEnviar.disabled = !filasUpload.filter(x=>x.status==='pending').length;
+        }, 2000);
+
+    } catch(e) {
+        pendentes.forEach(item => item.status='erro');
+        renderQueue();
+        toast('❌ Erro no upload: ' + e.message, 4000);
+        btnEnviar.disabled = false;
+    }
+}
+
+function recarregar() { carregarPastas(); carregarArquivos(); }
+
+// ── Init ───────────────────────────────────────────────────────────────────────
+(async () => {
+    setStatus('syncing', 'Conectando ao Drive...');
+    await carregarPastas();
+    await carregarArquivos();
+})();
+</script>
+</body>
+</html>
