@@ -849,7 +849,7 @@ async function perguntarIATi(fixa) {
     var ma=document.createElement('div'); ma.className='iati-msg ai carregando'; ma.innerHTML='<span style="opacity:.6">⏳ Analisando…</span>'; box.appendChild(ma); box.scrollTop=box.scrollHeight;
     var btn=$('iaTiBtnEnviar'); if(btn) btn.disabled=true;
     try {
-        var resp=await fetch('/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q,contexto:_montarContextoTIFront()})});
+        var resp=await fetch('/ti/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q,contexto:_montarContextoTIFront()})});
         if (!resp.ok) throw new Error('HTTP '+resp.status);
         var json=await resp.json(), txt=json.resposta||json.erro||'Sem resposta.';
         ma.className='iati-msg ai';

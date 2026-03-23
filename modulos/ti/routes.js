@@ -24,6 +24,8 @@ const chamadosCache  = require('./services/chamadosTiCache');
 const pixRoutes      = require('./services/pixService');
 const linksRoutes    = require('./services/linksexternosservice');
 const tiUploadsCache = require('./services/uploadsCache');
+const { perguntarTI } = require('./services/iaTiService');
+
 const {
     listarPastas,
     criarPasta,
@@ -77,14 +79,14 @@ function servirHtml(nomeArquivo) {
 router.get('/',           servirHtml('index.html'));
 router.get('/index.html', servirHtml('index.html'));
 
-router.get('/ativos',                 servirHtml('ativos.html'));
-router.get('/controle-equipamentos',  servirHtml('controle-equipamentos.html'));
-router.get('/migracao',               servirHtml('migracao.html'));
-router.get('/projetos',               servirHtml('projetos.html'));
-router.get('/chamados',               servirHtml('chamados.html'));
-router.get('/pix',                    servirHtml('pix.html'));
-router.get('/linkexterno',            servirHtml('linkexterno.html'));
-router.get('/uploads',                servirHtml('uploads.html'));   // ← NOVO
+router.get('/ativos',                servirHtml('ativos.html'));
+router.get('/controle-equipamentos', servirHtml('controle-equipamentos.html'));
+router.get('/migracao',              servirHtml('migracao.html'));
+router.get('/projetos',              servirHtml('projetos.html'));
+router.get('/chamados',              servirHtml('chamados.html'));
+router.get('/pix',                   servirHtml('pix.html'));
+router.get('/linkexterno',           servirHtml('linkexterno.html'));
+router.get('/uploads',               servirHtml('uploads.html'));
 
 router.get('/ativos.html',                servirHtml('ativos.html'));
 router.get('/controle-equipamentos.html', servirHtml('controle-equipamentos.html'));
@@ -93,7 +95,7 @@ router.get('/projetos.html',              servirHtml('projetos.html'));
 router.get('/chamados.html',              servirHtml('chamados.html'));
 router.get('/pix.html',                   servirHtml('pix.html'));
 router.get('/linkexterno.html',           servirHtml('linkexterno.html'));
-router.get('/uploads.html',               servirHtml('uploads.html'));  // ← NOVO
+router.get('/uploads.html',               servirHtml('uploads.html'));
 
 // ═══════════════════════════════════════════════════════════════
 // APIs EXISTENTES
@@ -104,7 +106,7 @@ router.use('/api/migracao',  migracaoRoutes);
 router.use('/api/ativos',    ativosRoutes);
 router.use('/api/links',     linksRoutes);
 
-// ─── Pix ────────────────────────────────────────────────────
+// ─── Pix ─────────────────────────────────────────────────────
 router.post('/api/pix/sincronizar', apenasLocal, async (req, res) => {
     req.url = '/sincronizar';
     pixRoutes(req, res, (err) => {
@@ -113,7 +115,7 @@ router.post('/api/pix/sincronizar', apenasLocal, async (req, res) => {
 });
 router.use('/api/pix', pixRoutes);
 
-// ─── Controle de equipamentos ────────────────────────────────
+// ─── Controle de equipamentos ─────────────────────────────────
 try {
     const controleEquipamentosRoutes = require('./services/controleEquipamentosService');
     router.use('/api/controle-equipamentos', controleEquipamentosRoutes);
@@ -170,12 +172,10 @@ router.put('/api/chamados/:id/concluir', async (req, res) => {
 // UPLOADS — Google Drive (TI)
 // ═══════════════════════════════════════════════════════════════
 
-// Status do cache
 router.get('/uploads/status', (req, res) => {
     res.json({ ok: true, ...tiUploadsCache.getStatus() });
 });
 
-// Re-sincronizar cache de pastas
 router.post('/uploads/sincronizar', async (req, res) => {
     try {
         const dados = await tiUploadsCache.sincronizarEAtualizar('manual');
@@ -185,7 +185,6 @@ router.post('/uploads/sincronizar', async (req, res) => {
     }
 });
 
-// Listar pastas — cache para raiz, Drive ao vivo para subpastas
 router.get('/uploads/pastas', async (req, res) => {
     try {
         const { pastaId } = req.query;
@@ -203,7 +202,6 @@ router.get('/uploads/pastas', async (req, res) => {
     }
 });
 
-// Criar nova pasta
 router.post('/uploads/pastas', async (req, res) => {
     try {
         const { nome, pastaId } = req.body;
@@ -217,7 +215,6 @@ router.post('/uploads/pastas', async (req, res) => {
     }
 });
 
-// Listar arquivos de uma pasta
 router.get('/uploads/arquivos', async (req, res) => {
     try {
         const { pastaId } = req.query;
@@ -229,7 +226,6 @@ router.get('/uploads/arquivos', async (req, res) => {
     }
 });
 
-// Upload de arquivos
 router.post('/uploads/arquivo', upload.array('arquivos', 20), async (req, res) => {
     try {
         if (!req.files || req.files.length === 0)
@@ -268,13 +264,33 @@ router.post('/uploads/arquivo', upload.array('arquivos', 20), async (req, res) =
     }
 });
 
-// Deletar arquivo
 router.delete('/uploads/arquivos/:fileId', async (req, res) => {
     try {
         await deletarArquivo(req.params.fileId);
         res.json({ ok: true });
     } catch (e) {
         console.error('[TI-UPLOADS] Erro ao deletar:', e.message);
+        res.status(500).json({ ok: false, erro: e.message });
+    }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// IA TI — Gemini
+// ═══════════════════════════════════════════════════════════════
+router.post('/ia-ti/perguntar', async (req, res) => {
+    try {
+        const { pergunta, contexto } = req.body;
+        const usuario = req.user?.nome || req.user?.email || '';
+
+        if (!pergunta) {
+            return res.status(400).json({ ok: false, erro: 'Campo "pergunta" é obrigatório.' });
+        }
+
+        const resposta = await perguntarTI({ pergunta, contexto, usuario });
+        res.json({ ok: true, resposta });
+
+    } catch (e) {
+        console.error('[IA-TI] Erro:', e.message);
         res.status(500).json({ ok: false, erro: e.message });
     }
 });

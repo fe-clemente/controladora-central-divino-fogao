@@ -1117,7 +1117,7 @@ async function perguntarIA(fixa){
     box.appendChild(ma);box.scrollTop=box.scrollHeight;
     const btn=$('btnIA');if(btn)btn.disabled=true;
     try{
-        const resp=await fetch('/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q,contexto:montarContextoIA()})});
+        const resp=await fetch('/ti/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q,contexto:montarContextoIA()})});
         if(!resp.ok)throw new Error('HTTP '+resp.status);
         const json=await resp.json();
         const txt=json.resposta||json.erro||'Sem resposta.';

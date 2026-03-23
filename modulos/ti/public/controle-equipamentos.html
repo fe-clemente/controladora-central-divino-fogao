@@ -1482,7 +1482,7 @@ async function perguntarIA(){
   addMsg('user',pergunta); $('inputIA').value=''; $('btnIA').disabled=true;
   const loading=addMsg('ai carregando','Analisando...');
   try {
-    const r=await fetch('/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({pergunta,contexto:montarContextoIA()})});
+    const r=await fetch('/ti/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({pergunta,contexto:montarContextoIA()})});
     const d=await r.json(); loading.remove();
     if(!d.ok){addMsg('ai','Erro: '+(d.erro||'Falha.'));return;}
     addMsg('ai',d.resposta||'Sem resposta.');
