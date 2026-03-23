@@ -754,7 +754,7 @@ async function perguntarIA(fixa) {
     try {
         // Monta contexto com os dados em memória
         var ctx = montarContextoIA();
-        var r = await fetch('/ia/analisar', {
+        var r = await fetch(API + '/ia/analisar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ pergunta: ctx + '\n\nPergunta do usuário: ' + q, ano: String(new Date().getFullYear()) })
