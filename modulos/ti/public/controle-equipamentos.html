@@ -29,7 +29,7 @@
     .sdot.error{background:var(--red);animation:none}
     .sdot.syncing{background:var(--ti);animation:pulse .8s infinite}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-    main{max-width:1400px;margin:0 auto;padding:28px 24px}
+    main{max-width:1500px;margin:0 auto;padding:28px 24px}
     .page-title{font-size:24px;font-weight:800;margin-bottom:4px}
     .page-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
     .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
@@ -42,6 +42,7 @@
     .btn-sec{background:#fff;border:1.5px solid var(--border);color:var(--text)}
     .btn-green{background:#16a34a;color:#fff}
     .btn-orange{background:#ea580c;color:#fff}
+    .btn-sm{padding:6px 10px;font-size:11px;border-radius:7px}
     .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
     .card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
     .card.destaque{border-color:#d97706;background:#fffbeb}
@@ -52,13 +53,6 @@
     .panel-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg3)}
     .panel-title{font-size:14px;font-weight:800}
     .panel-sub{font-size:11px;color:var(--muted)}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;text-align:left;vertical-align:middle}
-    th{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:900;background:#fcfbf9;white-space:nowrap}
-    tbody tr:hover{background:#fffdfa}
-    .mono{font-family:'JetBrains Mono',monospace}
-    .nome-link{color:var(--ti);font-weight:700;cursor:pointer;border-bottom:1px dashed var(--ti)}
-    .nome-link:hover{color:#024f7a}
     .tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;white-space:nowrap}
     .tag.ok{background:#f0fdf4;color:#166534}
     .tag.warn{background:#fff7ed;color:#9a3412}
@@ -70,10 +64,33 @@
     .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
+    /* ── TABELA AGRUPADA ── */
+    table{width:100%;border-collapse:collapse}
+    th{padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:900;background:#fcfbf9;white-space:nowrap;text-align:left}
+    td{padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+    .tr-func{background:#fafaf8;cursor:pointer}
+    .tr-func:hover{background:#f0f9ff}
+    .tr-func td{border-bottom:none;padding-top:12px;padding-bottom:4px}
+    .tr-equip td{background:#fff;padding-top:6px;padding-bottom:6px}
+    .tr-equip td:first-child{padding-left:36px}
+    .tr-equip:last-of-type td{border-bottom:2px solid var(--border)}
+    .tr-equip:hover td{background:#f8fbff}
+    .tr-sep{height:6px;background:var(--bg);}
+    .tr-sep td{border:none;padding:0}
+    .func-nome{font-size:13px;font-weight:800;color:var(--ti);cursor:pointer}
+    .func-nome:hover{color:#024f7a}
+    .func-meta{font-size:11px;color:var(--muted);margin-top:2px}
+    .equip-chip{display:inline-flex;align-items:center;gap:5px;background:#f0f9ff;border:1px solid #bfdbfe;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;color:#1e40af;margin-right:4px}
+    .mono{font-family:'JetBrains Mono',monospace}
+    .add-equip-btn{background:#f0fdf4;border:1.5px dashed #86efac;color:#166534;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s}
+    .add-equip-btn:hover{background:#dcfce7;border-style:solid}
+
+    /* ── OVERLAYS / MODAIS ── */
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center;padding:16px}
     .overlay.open{display:flex}
-    .modal{background:#fff;border-radius:20px;width:100%;max-width:760px;max-height:94vh;overflow-y:auto;box-shadow:var(--shadow-lg);display:flex;flex-direction:column}
-    .modal.sm{max-width:480px}
+    .modal{background:#fff;border-radius:20px;width:100%;max-width:820px;max-height:94vh;overflow-y:auto;box-shadow:var(--shadow-lg);display:flex;flex-direction:column}
+    .modal.sm{max-width:520px}
+    .modal.xs{max-width:440px}
     .modal-head{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:#fff;z-index:2}
     .modal-nome{font-size:18px;font-weight:800;line-height:1.2}
     .modal-sub{font-size:12px;color:var(--muted);margin-top:3px}
@@ -97,16 +114,30 @@
     .outro-input{margin-top:6px;display:none}
     .outro-input.visivel{display:block}
 
-    .equip-card{border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px;position:relative}
+    /* ── CARDS DE EQUIPAMENTO NO MODAL ── */
+    .equip-card{border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;position:relative;transition:all .15s}
     .equip-card.ativo{border-color:#bbf7d0;background:#f0fdf4}
-    .equip-card.devolvido{border-color:#fecaca;background:#fff5f5;opacity:.85}
+    .equip-card.devolvido{border-color:#fecaca;background:#fff5f5;opacity:.8}
+    .equip-card.selecionado{border-color:var(--ti);box-shadow:0 0 0 2px #bfdbfe;background:#f0f9ff}
     .equip-card-badge{position:absolute;top:10px;right:12px;font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px}
     .equip-card-badge.ativo{background:#bbf7d0;color:#166534}
     .equip-card-badge.devolvido{background:#fecaca;color:#991b1b}
-    .equip-card-titulo{font-size:14px;font-weight:800;margin-bottom:6px}
-    .equip-card-linha{font-size:12px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;margin-top:4px}
+    .equip-card-titulo{font-size:14px;font-weight:800;margin-bottom:6px;padding-right:80px}
+    .equip-card-linha{font-size:12px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
     .equip-card-linha strong{color:var(--text)}
+    .equip-card-acoes{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 
+    /* ── SELETOR DE EQUIPAMENTO ── */
+    .equip-select-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+    .equip-select-item{border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px}
+    .equip-select-item:hover{border-color:var(--ti);background:#f0f9ff}
+    .equip-select-item.sel{border-color:var(--ti);background:#f0f9ff;box-shadow:0 0 0 2px #bfdbfe}
+    .equip-select-radio{width:16px;height:16px;accent-color:var(--ti);flex-shrink:0}
+    .equip-select-info{flex:1}
+    .equip-select-nome{font-size:13px;font-weight:800}
+    .equip-select-meta{font-size:11px;color:var(--muted);margin-top:2px}
+
+    /* ── IA ── */
     #iaWidget{position:fixed;right:24px;bottom:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
     #iaToggle{width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;color:#fff;font-size:26px;background:linear-gradient(135deg,#0369a1,#075985);box-shadow:0 6px 24px rgba(3,105,161,.35)}
     #iaJanela{width:390px;max-width:calc(100vw - 32px);height:560px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden}
@@ -135,18 +166,17 @@
   </div>
   <div class="hd"></div>
   <div class="h-title">Central T.I.</div>
-<nav>
+  <nav>
     <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+    <button class="nav-btn active" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos</button>
     <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
     <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
     <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-    <button class="nav-btn active" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
     <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
     <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
     <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
-    
-</nav>
+  </nav>
 </header>
 
 <div id="statusBar">
@@ -160,18 +190,22 @@
 
 <main>
   <div class="page-title">🖥️ Controle de Equipamentos</div>
-  <div class="page-sub">Clique no nome do funcionário para gerenciar equipamentos e ver histórico.</div>
+  <div class="page-sub">Cada funcionário pode ter múltiplos equipamentos. Clique no nome para gerenciar.</div>
 
   <div class="toolbar">
-    <input id="q" class="input" placeholder="Buscar por funcionário, etiqueta, setor, status, modelo..." oninput="renderTabela()">
+    <input id="q" class="input" placeholder="Buscar por funcionário, etiqueta, setor, modelo..." oninput="renderTabela()">
     <input id="arquivo" class="file-input" type="file" accept=".xlsx,.xls">
     <button class="btn btn-red" id="btnImportar" onclick="importarArquivo()">⬆️ Importar colaboradores</button>
-    <button class="btn btn-green" onclick="abrirModalNovo()">➕ Novo funcionário</button>
+    <button class="btn btn-green" onclick="abrirModalNovoFuncionario()">➕ Novo funcionário</button>
+    <a class="btn btn-sec" href="https://docs.google.com/spreadsheets/d/1aqS-In7hzRP3jay6QbLOq5SLH9Q434vi5qZjOKo1tnI/edit?gid=2018185642#gid=2018185642" target="_blank" rel="noopener" title="Abrir planilha no Google Sheets">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Planilha
+    </a>
   </div>
 
   <div class="cards">
-    <div class="card"><div class="val" id="vTotal">0</div><div class="lbl">Total</div></div>
-    <div class="card"><div class="val" id="vEmUso">0</div><div class="lbl">Ativos / Sem equip.</div></div>
+    <div class="card"><div class="val" id="vTotal">0</div><div class="lbl">Funcionários</div></div>
+    <div class="card"><div class="val" id="vEquips">0</div><div class="lbl">Equipamentos ativos</div></div>
     <div class="card"><div class="val" id="vManut">0</div><div class="lbl">Manutenção</div></div>
     <div class="card"><div class="val" id="vDeslig">0</div><div class="lbl">Desligados</div></div>
     <div class="card"><div class="val" id="vValor">—</div><div class="lbl">Valor total</div></div>
@@ -184,251 +218,227 @@
         <div class="panel-title">Colaboradores / Equipamentos</div>
         <div class="panel-sub" id="subTabela">Carregando...</div>
       </div>
-      <div class="panel-sub">Clique no nome para editar · Use ➕ para cadastrar manualmente</div>
+      <div class="panel-sub">Clique no nome para abrir o perfil · ➕ para adicionar equipamento</div>
     </div>
     <div style="overflow:auto">
       <table>
         <thead>
           <tr>
-            <th>Linha</th><th>Etiqueta / ID</th><th>Funcionário</th><th>Setor</th>
-            <th>Contato</th><th>Status</th><th>Tipo</th><th>Modelo</th>
-            <th>Local</th><th>Entrega</th><th>Nº Série</th><th>Valor</th>
+            <th style="width:180px">Funcionário</th>
+            <th>Equipamento</th>
+            <th>Etiqueta</th>
+            <th>Modelo</th>
+            <th>Nº Série</th>
+            <th>Status</th>
+            <th>Local</th>
+            <th>Entrega</th>
+            <th>Valor</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody id="tbody">
-          <tr><td colspan="12" class="empty">Carregando...</td></tr>
+          <tr><td colspan="10" class="empty">Carregando...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </main>
 
-<div class="overlay" id="overlayNovo" onclick="fecharNovoFora(event)">
-  <div class="modal sm" id="modalNovo">
-    <div class="modal-head">
-      <div>
-        <div class="modal-nome">➕ Novo Funcionário</div>
-        <div class="modal-sub">Cadastro manual — inserido na última linha da planilha</div>
-      </div>
-      <button class="modal-close" onclick="fecharNovo()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group span2">
-          <label class="form-label">Nome completo <span class="req">*</span></label>
-          <input class="form-control" id="nNome" placeholder="Ex: João Silva" autocomplete="off">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Setor / Cargo</label>
-          <input class="form-control" id="nSetor" placeholder="Ex: Consultor de Campo">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Contato / Telefone</label>
-          <input class="form-control" id="nContato" placeholder="Ex: 11999999999">
-        </div>
-        <div class="form-group span2">
-          <label class="form-label">Unidade / Local de trabalho</label>
-          <input class="form-control" id="nUnidade" placeholder="Ex: Franqueadora, Loja Centro...">
-        </div>
-
-        <div class="form-group span2" style="margin-top:4px">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:700">
-            <input type="checkbox" id="nAtribuirEquip" onchange="toggleAtribuirEquip(this.checked)" style="width:16px;height:16px;cursor:pointer">
-            Já atribuir um equipamento agora
-          </label>
-        </div>
-
-        <div id="nEquipSection" style="display:none;grid-column:1/-1">
-          <div style="background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-top:4px">
-            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px">🖥️ Equipamento</div>
-            <div class="form-grid">
-              <div class="form-group">
-                <label class="form-label">Nº Etiqueta / ID</label>
-                <input class="form-control" id="nEtiqueta" placeholder="Ex: TI-001">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Tipo de Aparelho</label>
-                <select class="form-control" id="nTipo">
-                  <option value="">— Selecione —</option>
-                  <option>Celular</option><option>Notebook</option><option>Computador</option>
-                  <option>Monitor</option><option>Tablet</option><option>Impressora</option>
-                  <option>Roteador</option><option>Headset</option><option>Teclado</option>
-                  <option>Mouse</option><option>HD Externo</option><option>Pendrive</option>
-                  <option>Nobreak</option><option>Outro</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Modelo / Marca</label>
-                <input class="form-control" id="nModelo" placeholder="Ex: iPhone 14">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Nº de Série / IMEI</label>
-                <input class="form-control" id="nNumSerie" placeholder="Nº de série">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Valor (R$)</label>
-                <input class="form-control" id="nValor" placeholder="Ex: 1500,00">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Assinou Comodato?</label>
-                <select class="form-control" id="nComodato">
-                  <option value="Não">Não</option><option value="Sim">Sim</option>
-                </select>
-              </div>
-              <div class="form-group span2">
-                <label class="form-label">Observação</label>
-                <input class="form-control" id="nObs" placeholder="Observações...">
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-sec" onclick="fecharNovo()">Cancelar</button>
-      <button class="btn btn-green" id="btnSalvarNovo" onclick="salvarNovoFuncionario()">💾 Cadastrar na planilha</button>
-    </div>
-  </div>
-</div>
-
-<div class="overlay" id="overlay" onclick="fecharModalFora(event)">
-  <div class="modal" id="modal">
+<!-- ════════════════════════════════════════════
+     MODAL PRINCIPAL — PERFIL DO FUNCIONÁRIO
+════════════════════════════════════════════ -->
+<div class="overlay" id="overlayPerfil" onclick="fecharPerfilFora(event)">
+  <div class="modal" id="modalPerfil">
     <div class="modal-head">
       <div>
         <div class="modal-nome" id="mNome">—</div>
         <div class="modal-sub" id="mSub">—</div>
       </div>
-      <button class="modal-close" onclick="fecharModal()">✕</button>
+      <button class="modal-close" onclick="fecharPerfil()">✕</button>
     </div>
-
     <div class="modal-body">
       <div class="tabs">
-        <button class="tab active" onclick="mudarTab('equipamentos',this)">🖥️ Equipamentos</button>
-        <button class="tab" onclick="mudarTab('editar',this)">✏️ Editar</button>
-        <button class="tab" onclick="mudarTab('entrega',this)">📦 Entrega</button>
-        <button class="tab" onclick="mudarTab('devolucao',this)">↩️ Devolução</button>
-        <button class="tab" onclick="mudarTab('trocar',this)">🔄 Trocar</button>
+        <button class="tab active" id="tabEquipBtn" onclick="mudarTab('equipamentos',this)">🖥️ Equipamentos</button>
+        <button class="tab" onclick="mudarTab('editar',this)">✏️ Dados do funcionário</button>
       </div>
 
+      <!-- ABA EQUIPAMENTOS -->
       <div class="tab-pane active" id="tab-equipamentos">
         <div id="equipamentosConteudo"><div class="empty">Carregando...</div></div>
+        <div style="margin-top:14px">
+          <button class="add-equip-btn" onclick="abrirModalAddEquip()">➕ Adicionar equipamento</button>
+        </div>
       </div>
 
+      <!-- ABA EDITAR FUNCIONÁRIO -->
       <div class="tab-pane" id="tab-editar">
         <div class="form-grid">
-          <div class="form-group"><label class="form-label">Nº Etiqueta / ID</label><input class="form-control" id="fEtiqueta" placeholder="Ex: TI-001"></div>
-          <div class="form-group"><label class="form-label">Tipo de Aparelho</label>
-            <select class="form-control" id="fTipo">
-              <option value="">— Selecione —</option>
-              <option>Celular</option><option>Notebook</option><option>Computador</option>
-              <option>Monitor</option><option>Tablet</option><option>Impressora</option>
-              <option>Roteador</option><option>Headset</option><option>Teclado</option>
-              <option>Mouse</option><option>HD Externo</option><option>Pendrive</option>
-              <option>Nobreak</option><option>Outro</option>
-            </select>
-          </div>
-          <div class="form-group"><label class="form-label">Modelo / Marca</label><input class="form-control" id="fModelo" placeholder="Ex: iPhone 14, Dell Inspiron..."></div>
-          <div class="form-group"><label class="form-label">Nº de Série / IMEI</label><input class="form-control" id="fNumSerie"></div>
-          <div class="form-group">
-            <label class="form-label">Local atual</label>
-            <select class="form-control" id="fLocal" onchange="toggleOutro('fLocal','fLocalOutro')">
-              <option value="">— Selecione —</option>
-              <option>Com o funcionário</option><option>Armário T.I.</option><option>Sala de Reunião</option>
-              <option>Sala da Diretoria</option><option>Armário Suprimentos</option><option>Armário Marketing</option>
-              <option>Armário RH</option><option>Franqueadora</option><option>Manutenção externa</option>
-              <option>Descarte</option><option>Outro</option>
-            </select>
-            <input class="form-control outro-input" id="fLocalOutro" placeholder="Digite o local...">
+          <div class="form-group span2">
+            <label class="form-label">Nome completo</label>
+            <input class="form-control" id="eFuncNome" placeholder="Nome do funcionário">
           </div>
           <div class="form-group">
-            <label class="form-label">Status Atual</label>
-            <select class="form-control" id="fStatus" onchange="toggleOutro('fStatus','fStatusOutro')">
-              <option value="Sem equipamento">Sem equipamento</option>
-              <option value="Funcionando">Funcionando</option>
-              <option value="Em manutenção">Em manutenção</option>
-              <option value="Aguardando descarte">Aguardando descarte</option>
-              <option value="Desligado">Desligado</option>
-              <option value="Sucata">Sucata</option>
-              <option value="Outro">Outro</option>
-            </select>
-            <input class="form-control outro-input" id="fStatusOutro" placeholder="Digite o status...">
+            <label class="form-label">Setor / Cargo</label>
+            <input class="form-control" id="eFuncSetor" placeholder="Ex: Consultor de Campo">
           </div>
-          <div class="form-group"><label class="form-label">Valor do equipamento (R$)</label><input class="form-control" id="fValor" placeholder="Ex: 1500,00"></div>
-          <div class="form-group"><label class="form-label">Assinou Comodato?</label>
-            <select class="form-control" id="fComodato"><option value="Não">Não</option><option value="Sim">Sim</option></select>
-          </div>
-          <div class="form-group span2"><label class="form-label">Observações</label><input class="form-control" id="fObs" placeholder="Observações gerais..."></div>
-        </div>
-      </div>
-
-      <div class="tab-pane" id="tab-entrega">
-        <div class="form-grid">
-          <div class="form-group"><label class="form-label">Data de Entrega</label><input class="form-control" id="fDtEntrega" type="date"></div>
           <div class="form-group">
-            <label class="form-label">Estado na Entrega</label>
-            <select class="form-control" id="fEstadoEntrega" onchange="toggleOutro('fEstadoEntrega','fEstadoEntregaOutro')">
-              <option value="">— Selecione —</option>
-              <option>Novo</option><option>Usado</option><option>Ruim</option><option>Quebrado</option><option>Faltando peça</option><option>Outro</option>
-            </select>
-            <input class="form-control outro-input" id="fEstadoEntregaOutro" placeholder="Descreva o estado...">
+            <label class="form-label">Contato / Telefone</label>
+            <input class="form-control" id="eFuncContato" placeholder="Ex: 11999999999">
+          </div>
+          <div class="form-group span2">
+            <label class="form-label">Unidade / Local de trabalho</label>
+            <input class="form-control" id="eFuncUnidade" placeholder="Ex: Franqueadora, Loja Centro...">
           </div>
         </div>
-      </div>
-
-      <div class="tab-pane" id="tab-devolucao">
-        <div class="form-grid">
-          <div class="form-group"><label class="form-label">Data de Devolução</label><input class="form-control" id="fDtDevolucao" type="date"></div>
-          <div class="form-group">
-            <label class="form-label">Estado na Devolução</label>
-            <select class="form-control" id="fEstadoDevolucao" onchange="toggleOutro('fEstadoDevolucao','fEstadoDevolucaoOutro')">
-              <option value="">— Selecione —</option>
-              <option>Bom</option><option>Ruim</option><option>Faltando peça</option><option>Não funciona</option><option>Outro</option>
-            </select>
-            <input class="form-control outro-input" id="fEstadoDevolucaoOutro" placeholder="Descreva o estado...">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Motivo da Devolução</label>
-            <select class="form-control" id="fMotivo" onchange="toggleOutro('fMotivo','fMotivoOutro')">
-              <option value="">— Selecione —</option>
-              <option>Troca</option><option>Desligamento</option><option>Depreciado</option><option>Manutenção</option><option>Transferência</option><option>Outro</option>
-            </select>
-            <input class="form-control outro-input" id="fMotivoOutro" placeholder="Descreva o motivo...">
-          </div>
-          <div class="form-group"><label class="form-label">Valor Cobrado (R$)</label><input class="form-control" id="fValorCobrado" placeholder="Ex: 300,00"></div>
-          <div class="form-group span2" style="margin-top:8px">
-            <button class="btn btn-red" onclick="confirmarDevolucao()" style="width:100%;justify-content:center">↩️ Confirmar devolução e limpar equipamento</button>
-          </div>
+        <div style="margin-top:16px">
+          <button class="btn btn-green" onclick="salvarDadosFuncionario()">💾 Salvar dados</button>
         </div>
       </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sec" onclick="fecharPerfil()">Fechar</button>
+    </div>
+  </div>
+</div>
 
-      <div class="tab-pane" id="tab-trocar">
-        <div style="background:#fff5f5;border:1.5px solid #fecaca;border-radius:12px;padding:14px 16px;margin-bottom:16px">
-          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#991b1b;margin-bottom:10px">📦 Equipamento que será devolvido</div>
+<!-- ════════════════════════════════════════════
+     MODAL ADICIONAR / EDITAR EQUIPAMENTO
+════════════════════════════════════════════ -->
+<div class="overlay" id="overlayEquip" onclick="fecharEquipFora(event)">
+  <div class="modal sm" id="modalEquip">
+    <div class="modal-head">
+      <div>
+        <div class="modal-nome" id="equipModalTitulo">🖥️ Equipamento</div>
+        <div class="modal-sub" id="equipModalSub">—</div>
+      </div>
+      <button class="modal-close" onclick="fecharEquip()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Nº Etiqueta / ID</label>
+          <input class="form-control" id="eEtiqueta" placeholder="Ex: TI-001">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de Aparelho</label>
+          <select class="form-control" id="eTipo">
+            <option value="">— Selecione —</option>
+            <option>Celular</option><option>Notebook</option><option>Computador</option>
+            <option>Monitor</option><option>Tablet</option><option>Impressora</option>
+            <option>Roteador</option><option>Headset</option><option>Teclado</option>
+            <option>Mouse</option><option>HD Externo</option><option>Pendrive</option>
+            <option>Nobreak</option><option>Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Modelo / Marca</label>
+          <input class="form-control" id="eModelo" placeholder="Ex: iPhone 14">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nº de Série / IMEI</label>
+          <input class="form-control" id="eNumSerie" placeholder="Nº de série">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Valor (R$)</label>
+          <input class="form-control" id="eValor" placeholder="Ex: 1500,00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assinou Comodato?</label>
+          <select class="form-control" id="eComodato">
+            <option value="Não">Não</option><option value="Sim">Sim</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Local atual</label>
+          <select class="form-control" id="eLocal" onchange="toggleOutroId('eLocal','eLocalOutro')">
+            <option value="Com o funcionário">Com o funcionário</option>
+            <option>Armário T.I.</option><option>Sala de Reunião</option>
+            <option>Sala da Diretoria</option><option>Armário Suprimentos</option>
+            <option>Armário Marketing</option><option>Armário RH</option>
+            <option>Franqueadora</option><option>Manutenção externa</option>
+            <option>Descarte</option><option>Outro</option>
+          </select>
+          <input class="form-control outro-input" id="eLocalOutro" placeholder="Digite o local...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estado na Entrega</label>
+          <select class="form-control" id="eEstadoEntrega">
+            <option value="">— Selecione —</option>
+            <option>Novo</option><option>Usado</option><option>Ruim</option>
+            <option>Quebrado</option><option>Faltando peça</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Data de Entrega</label>
+          <input class="form-control" id="eDtEntrega" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-control" id="eStatus">
+            <option value="Funcionando">Funcionando</option>
+            <option value="Em manutenção">Em manutenção</option>
+            <option value="Aguardando descarte">Aguardando descarte</option>
+            <option value="Sucata">Sucata</option>
+          </select>
+        </div>
+        <div class="form-group span2">
+          <label class="form-label">Observações</label>
+          <input class="form-control" id="eObs" placeholder="Observações...">
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sec" onclick="fecharEquip()">Cancelar</button>
+      <button class="btn btn-green" id="btnSalvarEquip" onclick="salvarEquipamento()">💾 Salvar equipamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     MODAL TROCAR EQUIPAMENTO
+════════════════════════════════════════════ -->
+<div class="overlay" id="overlayTrocar" onclick="fecharTrocarFora(event)">
+  <div class="modal" id="modalTrocar">
+    <div class="modal-head">
+      <div>
+        <div class="modal-nome">🔄 Trocar Equipamento</div>
+        <div class="modal-sub" id="trocarSub">—</div>
+      </div>
+      <button class="modal-close" onclick="fecharTrocar()">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Seletor de qual equipamento trocar (se mais de um) -->
+      <div id="trocarSeletorWrap" style="display:none;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Qual equipamento será trocado?</div>
+        <div class="equip-select-list" id="trocarSeletorLista"></div>
+      </div>
+
+      <div style="display:grid;gap:16px">
+        <div style="background:#fff5f5;border:1.5px solid #fecaca;border-radius:12px;padding:14px 16px">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#991b1b;margin-bottom:10px">📦 Devolvendo</div>
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">Estado na Devolução</label>
-              <select class="form-control" id="tEstadoDev" onchange="toggleOutro('tEstadoDev','tEstadoDevOutro')">
+              <select class="form-control" id="tEstadoDev">
                 <option value="">— Selecione —</option>
                 <option>Bom</option><option>Ruim</option><option>Faltando peça</option><option>Não funciona</option><option>Outro</option>
               </select>
-              <input class="form-control outro-input" id="tEstadoDevOutro" placeholder="Descreva o estado...">
             </div>
             <div class="form-group">
               <label class="form-label">Motivo da Troca</label>
-              <select class="form-control" id="tMotivo" onchange="toggleOutro('tMotivo','tMotivoOutro')">
+              <select class="form-control" id="tMotivo">
                 <option value="">— Selecione —</option>
-                <option>Troca</option><option>Upgrade</option><option>Depreciado</option><option>Defeito</option><option>Perda</option><option>Outro</option>
+                <option>Upgrade</option><option>Defeito</option><option>Depreciado</option><option>Perda</option><option>Transferência</option><option>Outro</option>
               </select>
-              <input class="form-control outro-input" id="tMotivoOutro" placeholder="Descreva o motivo...">
             </div>
             <div class="form-group"><label class="form-label">Valor cobrado do funcionário (R$)</label><input class="form-control" id="tValorCobrado" placeholder="0,00 se não cobrou"></div>
             <div class="form-group"><label class="form-label">Funcionário pagou?</label>
               <select class="form-control" id="tPagou"><option value="Não">Não</option><option value="Sim">Sim</option></select>
             </div>
-            <div class="form-group span2"><label class="form-label">Observação da devolução</label><input class="form-control" id="tObsDev" placeholder="Ex: aparelho com tela trincada..."></div>
+            <div class="form-group span2"><label class="form-label">Observação</label><input class="form-control" id="tObsDev" placeholder="Ex: tela trincada..."></div>
           </div>
         </div>
+
         <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:14px 16px">
           <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#166534;margin-bottom:10px">🆕 Novo equipamento</div>
           <div class="form-grid">
@@ -438,45 +448,130 @@
                 <option value="">— Selecione —</option>
                 <option>Celular</option><option>Notebook</option><option>Computador</option>
                 <option>Monitor</option><option>Tablet</option><option>Impressora</option>
-                <option>Headset</option><option>Mouse</option><option>Teclado</option>
-                <option>Nobreak</option><option>Outro</option>
+                <option>Headset</option><option>Mouse</option><option>Teclado</option><option>Nobreak</option><option>Outro</option>
               </select>
             </div>
             <div class="form-group"><label class="form-label">Modelo / Marca</label><input class="form-control" id="tNovoModelo" placeholder="Ex: MacBook Air M2"></div>
             <div class="form-group"><label class="form-label">Nº de Série / IMEI</label><input class="form-control" id="tNovoNumSerie"></div>
-            <div class="form-group">
-              <label class="form-label">Local</label>
-              <select class="form-control" id="tNovoLocal" onchange="toggleOutro('tNovoLocal','tNovoLocalOutro')">
-                <option value="Com o funcionário">Com o funcionário</option>
-                <option>Armário T.I.</option><option>Sala de Reunião</option><option>Sala da Diretoria</option><option>Outro</option>
-              </select>
-              <input class="form-control outro-input" id="tNovoLocalOutro" placeholder="Digite o local...">
-            </div>
-            <div class="form-group"><label class="form-label">Valor do novo equip. (R$)</label><input class="form-control" id="tNovoValor" placeholder="Ex: 3000,00"></div>
+            <div class="form-group"><label class="form-label">Valor (R$)</label><input class="form-control" id="tNovoValor" placeholder="Ex: 3000,00"></div>
             <div class="form-group"><label class="form-label">Estado na Entrega</label>
-              <select class="form-control" id="tNovoEstadoEntrega"><option value="Novo">Novo</option><option>Usado</option><option>Recondicionado</option></select>
+              <select class="form-control" id="tNovoEstado"><option>Novo</option><option>Usado</option><option>Recondicionado</option></select>
+            </div>
+            <div class="form-group"><label class="form-label">Local</label>
+              <select class="form-control" id="tNovoLocal"><option value="Com o funcionário">Com o funcionário</option><option>Armário T.I.</option><option>Sala de Reunião</option><option>Outro</option></select>
             </div>
             <div class="form-group"><label class="form-label">Assinou Comodato?</label>
               <select class="form-control" id="tNovoComodato"><option value="Não">Não</option><option value="Sim">Sim</option></select>
             </div>
-            <div class="form-group span2"><label class="form-label">Observação</label><input class="form-control" id="tNovaObs" placeholder="Observações sobre o novo equipamento..."></div>
+            <div class="form-group span2"><label class="form-label">Observação</label><input class="form-control" id="tNovaObs" placeholder="Observações..."></div>
           </div>
-        </div>
-        <div style="margin-top:16px">
-          <button class="btn btn-orange" id="btnConfirmarTroca" onclick="confirmarTroca()" style="width:100%;justify-content:center;padding:14px">
-            🔄 Confirmar troca — registrar histórico e vincular novo equipamento
-          </button>
         </div>
       </div>
     </div>
-
     <div class="modal-foot">
-      <button class="btn btn-sec" onclick="fecharModal()">Fechar</button>
-      <button class="btn btn-green" id="btnSalvar" onclick="salvarModal()">💾 Salvar edição</button>
+      <button class="btn btn-sec" onclick="fecharTrocar()">Cancelar</button>
+      <button class="btn btn-orange" id="btnConfTroca" onclick="confirmarTroca()">🔄 Confirmar troca</button>
     </div>
   </div>
 </div>
 
+<!-- ════════════════════════════════════════════
+     MODAL DEVOLUÇÃO
+════════════════════════════════════════════ -->
+<div class="overlay" id="overlayDevolver" onclick="fecharDevolverFora(event)">
+  <div class="modal sm" id="modalDevolver">
+    <div class="modal-head">
+      <div>
+        <div class="modal-nome">↩️ Registrar Devolução</div>
+        <div class="modal-sub" id="devolverSub">—</div>
+      </div>
+      <button class="modal-close" onclick="fecharDevolver()">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Seletor de qual equipamento devolver (se mais de um) -->
+      <div id="devolverSeletorWrap" style="display:none;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Qual equipamento será devolvido?</div>
+        <div class="equip-select-list" id="devolverSeletorLista"></div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Data de Devolução</label>
+          <input class="form-control" id="dDtDevolucao" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estado na Devolução</label>
+          <select class="form-control" id="dEstadoDevolucao">
+            <option value="">— Selecione —</option>
+            <option>Bom</option><option>Ruim</option><option>Faltando peça</option><option>Não funciona</option><option>Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Motivo da Devolução</label>
+          <select class="form-control" id="dMotivo">
+            <option value="">— Selecione —</option>
+            <option>Troca</option><option>Desligamento</option><option>Depreciado</option><option>Manutenção</option><option>Transferência</option><option>Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Valor Cobrado (R$)</label>
+          <input class="form-control" id="dValorCobrado" placeholder="Ex: 300,00">
+        </div>
+        <div class="form-group span2">
+          <label class="form-label">Observação</label>
+          <input class="form-control" id="dObs" placeholder="Observações...">
+        </div>
+        <div class="form-group span2">
+          <button class="btn btn-red" onclick="confirmarDevolucao()" style="width:100%;justify-content:center">↩️ Confirmar devolução</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sec" onclick="fecharDevolver()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     MODAL NOVO FUNCIONÁRIO
+════════════════════════════════════════════ -->
+<div class="overlay" id="overlayNovoFunc" onclick="fecharNovoFuncFora(event)">
+  <div class="modal sm" id="modalNovoFunc">
+    <div class="modal-head">
+      <div>
+        <div class="modal-nome">➕ Novo Funcionário</div>
+        <div class="modal-sub">Cadastro manual na planilha</div>
+      </div>
+      <button class="modal-close" onclick="fecharNovoFunc()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group span2">
+          <label class="form-label">Nome completo <span class="req">*</span></label>
+          <input class="form-control" id="nfNome" placeholder="Ex: João Silva" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Setor / Cargo</label>
+          <input class="form-control" id="nfSetor" placeholder="Ex: Consultor de Campo">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contato / Telefone</label>
+          <input class="form-control" id="nfContato" placeholder="Ex: 11999999999">
+        </div>
+        <div class="form-group span2">
+          <label class="form-label">Unidade / Local de trabalho</label>
+          <input class="form-control" id="nfUnidade" placeholder="Ex: Franqueadora, Loja Centro...">
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sec" onclick="fecharNovoFunc()">Cancelar</button>
+      <button class="btn btn-green" id="btnSalvarNovoFunc" onclick="salvarNovoFuncionario()">💾 Cadastrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- IA Widget -->
 <div id="iaWidget">
   <div id="iaJanela">
     <div class="ia-topo">
@@ -505,416 +600,681 @@
 <script>
 const $ = id => document.getElementById(id);
 const API_BASE = '/ti/api/controle-equipamentos';
-let DADOS = { equipamentos: [], stats: {} };
-let _itemAtual = null;
 
-const OUTRO_PARES = {
-  fLocal:'fLocalOutro', fStatus:'fStatusOutro',
-  fEstadoEntrega:'fEstadoEntregaOutro', fEstadoDevolucao:'fEstadoDevolucaoOutro',
-  fMotivo:'fMotivoOutro', tEstadoDev:'tEstadoDevOutro',
-  tMotivo:'tMotivoOutro', tNovoLocal:'tNovoLocalOutro',
-};
-function toggleOutro(selectId, inputId) {
-  const sel=$(selectId), inp=$(inputId);
-  if (!sel||!inp) return;
-  const mostrar = sel.value==='Outro';
-  inp.classList.toggle('visivel', mostrar);
-  if (mostrar) inp.focus(); else inp.value='';
-}
-function valorCampo(selectId) {
-  const outroCampo=OUTRO_PARES[selectId], sel=$(selectId);
-  if (!sel) return '';
-  if (sel.value==='Outro'&&outroCampo) return $(outroCampo)?.value?.trim()||'Outro';
-  return sel.value;
-}
-function preencherSelect(selectId, valor) {
-  const sel=$(selectId), outroCampo=OUTRO_PARES[selectId];
-  if (!sel) return;
-  if (!valor) { sel.value=sel.options[0]?.value||''; if(outroCampo) $(outroCampo).classList.remove('visivel'); return; }
-  const opcoes=Array.from(sel.options).map(o=>o.value);
-  if (opcoes.includes(valor)) { sel.value=valor; if(outroCampo) $(outroCampo).classList.remove('visivel'); }
-  else { sel.value='Outro'; if(outroCampo){$(outroCampo).value=valor;$(outroCampo).classList.add('visivel');} }
-}
+// ── ESTADO GLOBAL ──
+// DADOS.funcionarios = [ { funcionario, setor, contato, local, equipamentos: [{rowIndex, etiqueta, ...}] } ]
+let DADOS = { funcionarios: [], stats: {} };
+let _funcAtual = null;   // objeto do funcionário aberto no modal
+let _equipAtual = null;  // rowIndex do equipamento em edição/troca/devolução
+let _modoEquip = 'novo'; // 'novo' | 'editar'
 
-function toast(msg, ms=3500) {
+// ── UTILS ──
+const toast = (msg, ms=3500) => {
   const el=$('toast'); el.textContent=msg; el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),ms);
+};
+const setStatus = (cls,msg) => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
+const autenticar = r => { if(r.status===401){window.location.href='/login';return false;} return true; };
+const hoje = () => new Date().toLocaleDateString('pt-BR');
+const hojeISO = () => new Date().toISOString().split('T')[0];
+
+function toggleOutroId(selId, inpId) {
+  const sel=$(selId), inp=$(inpId);
+  if(!sel||!inp) return;
+  const show=sel.value==='Outro';
+  inp.classList.toggle('visivel',show);
+  if(show) inp.focus(); else inp.value='';
 }
-function setStatus(cls, msg) {
-  $('sdot').className='sdot '+cls; $('statusText').textContent=msg;
+function getLocalVal(selId, inpId) {
+  const sel=$(selId);
+  if(!sel) return '';
+  if(sel.value==='Outro') return $(inpId)?.value?.trim()||'Outro';
+  return sel.value;
 }
-function autenticar(r) {
-  if (r.status===401) { window.location.href='/login'; return false; }
-  return true;
+function tagStatus(st) {
+  const n=(st||'').toLowerCase();
+  if(n.includes('deslig')) return `<span class="tag off">${st}</span>`;
+  if(n.includes('manut'))  return `<span class="tag warn">${st}</span>`;
+  if(n.includes('sem equipam')||!st) return `<span class="tag sem">Sem equipamento</span>`;
+  if(n.includes('aguardando')) return `<span class="tag warn">${st}</span>`;
+  return `<span class="tag ok">${st||'—'}</span>`;
+}
+function tipoEmoji(tipo) {
+  const m={'Celular':'📱','Notebook':'💻','Computador':'🖥️','Monitor':'🖥️','Tablet':'📱',
+    'Impressora':'🖨️','Roteador':'📡','Headset':'🎧','Teclado':'⌨️','Mouse':'🖱️',
+    'HD Externo':'💾','Pendrive':'🔌','Nobreak':'⚡'};
+  return m[tipo]||'📦';
 }
 
+// ── CARREGAMENTO ──
 async function carregar() {
   setStatus('syncing','Carregando...');
   try {
-    const r = await fetch(API_BASE, { credentials:'include' });
-    if (!autenticar(r)) return;
+    const r = await fetch(API_BASE, {credentials:'include'});
+    if(!autenticar(r)) return;
     const d = await r.json();
-    if (!d.ok) throw new Error(d.erro||'Falha');
-    DADOS = d;
-    renderResumo(); renderTabela();
+    if(!d.ok) throw new Error(d.erro||'Falha');
+    // Agrupar equipamentos por funcionário
+    DADOS = agruparPorFuncionario(d.equipamentos||[], d.stats||{});
+    DADOS._sincronizadoEm = d.sincronizadoEm;
+    renderResumo();
+    renderTabela();
     $('lastSync').textContent = d.sincronizadoEm ? 'Sync: '+new Date(d.sincronizadoEm).toLocaleString('pt-BR') : '';
     setStatus('ready','✓ Carregado');
     carregarStatsHistorico();
   } catch(e) {
     setStatus('error','❌ '+e.message);
-    $('tbody').innerHTML=`<tr><td colspan="12" class="empty">Erro: ${e.message}</td></tr>`;
+    $('tbody').innerHTML=`<tr><td colspan="10" class="empty">Erro: ${e.message}</td></tr>`;
   }
 }
+
+// Agrupa array flat de equipamentos por funcionário
+function agruparPorFuncionario(equipamentos, stats) {
+  const map = new Map();
+  for(const eq of equipamentos) {
+    const nome = eq.funcionario||'(sem nome)';
+    if(!map.has(nome)) {
+      map.set(nome, {
+        funcionario: nome,
+        setor: eq.setor||'',
+        contato: eq.contato||'',
+        local: eq.local||'',
+        equipamentos: [],
+      });
+    }
+    const g = map.get(nome);
+    // Atualiza metadados do funcionário com o mais recente não-vazio
+    if(eq.setor) g.setor = eq.setor;
+    if(eq.contato) g.contato = eq.contato;
+    // Só adiciona se tiver equipamento real, ou se for a única linha (funcionário sem equipamento)
+    const temEquip = eq.tipoAparelho||eq.modelo||eq.etiqueta;
+    if(temEquip) {
+      g.equipamentos.push(eq);
+    } else if(g.equipamentos.length===0) {
+      // Guarda a linha de referência (rowIndex base do funcionário) para poder adicionar equipamento depois
+      g.rowIndexBase = eq.rowIndex;
+      g.statusAtual = eq.statusAtual||'Sem equipamento';
+    }
+  }
+  return { funcionarios: [...map.values()], stats };
+}
+
 async function carregarStatsHistorico() {
   try {
     const r=await fetch(`${API_BASE}/historico-stats`,{credentials:'include'});
-    if (!r.ok) return;
+    if(!r.ok) return;
     const d=await r.json();
-    if (d.ok) $('vRestituido').textContent=d.totalRestituidoFormatado||'—';
+    if(d.ok) $('vRestituido').textContent=d.totalRestituidoFormatado||'—';
   } catch{}
 }
+
 function renderResumo() {
   const s=DADOS.stats||{};
-  $('vTotal').textContent  = s.total ?? 0;
-  $('vEmUso').textContent  = s.emUso ?? 0;
-  $('vManut').textContent  = s.manutencao ?? 0;
-  $('vDeslig').textContent = s.desligados ?? 0;
-  $('vValor').textContent  = s.valorTotalFormatado || '—';
-  $('subTabela').textContent=`${(DADOS.equipamentos||[]).length} linha(s) carregada(s)`;
-}
-function tagStatus(st) {
-  const n=(st||'').toLowerCase();
-  if (n.includes('deslig')) return `<span class="tag off">${st}</span>`;
-  if (n.includes('manut')) return `<span class="tag warn">${st}</span>`;
-  if (n.includes('sem equipam')) return `<span class="tag sem">${st}</span>`;
-  if (n.includes('aguardando')) return `<span class="tag warn">${st}</span>`;
-  return `<span class="tag ok">${st||'—'}</span>`;
-}
-function renderTabela() {
-  const q=($('q').value||'').trim().toLowerCase();
-  let lista=DADOS.equipamentos||[];
-  if (q) lista=lista.filter(i=>[i.funcionario,i.etiqueta,i.setor,i.contato,i.statusAtual,i.tipoAparelho,i.modelo,i.local,i.numSerie].some(v=>(v||'').toLowerCase().includes(q)));
-  if (!lista.length) { $('tbody').innerHTML=`<tr><td colspan="12" class="empty">Nenhum registro encontrado.</td></tr>`; return; }
-  $('tbody').innerHTML=lista.map(i=>`
-    <tr>
-      <td class="mono" style="color:var(--muted);font-size:11px">${i.rowIndex}</td>
-      <td class="mono" style="font-size:11px;color:var(--ti);font-weight:700">${i.etiqueta||'—'}</td>
-      <td><span class="nome-link" onclick="abrirModal(${i.rowIndex})">${i.funcionario}</span></td>
-      <td style="font-size:11px">${i.setor||'—'}</td>
-      <td class="mono" style="font-size:11px">${i.contato||'—'}</td>
-      <td>${tagStatus(i.statusAtual)}</td>
-      <td style="font-size:11px">${i.tipoAparelho||'—'}</td>
-      <td style="font-size:11px">${i.modelo||'—'}</td>
-      <td style="font-size:11px">${i.local||'—'}</td>
-      <td style="font-size:11px">${i.dtEntregaOriginal||'—'}</td>
-      <td class="mono" style="font-size:11px">${i.numSerie||'—'}</td>
-      <td style="font-size:11px">${i.valorFormatado||'—'}</td>
-    </tr>`).join('');
+  const funcs = DADOS.funcionarios||[];
+  const totalEquips = funcs.reduce((acc,f)=>acc+f.equipamentos.length,0);
+  $('vTotal').textContent  = funcs.length;
+  $('vEquips').textContent = totalEquips;
+  $('vManut').textContent  = s.manutencao??0;
+  $('vDeslig').textContent = s.desligados??0;
+  $('vValor').textContent  = s.valorTotalFormatado||'—';
+  $('subTabela').textContent=`${funcs.length} funcionário(s) · ${totalEquips} equipamento(s) ativo(s)`;
 }
 
+function renderTabela() {
+  const q=($('q').value||'').trim().toLowerCase();
+  let lista=DADOS.funcionarios||[];
+
+  if(q) lista=lista.filter(f=>{
+    const matchFunc=[f.funcionario,f.setor,f.contato].some(v=>(v||'').toLowerCase().includes(q));
+    const matchEquip=f.equipamentos.some(e=>[e.etiqueta,e.tipoAparelho,e.modelo,e.numSerie,e.statusAtual,e.local].some(v=>(v||'').toLowerCase().includes(q)));
+    return matchFunc||matchEquip;
+  });
+
+  if(!lista.length){
+    $('tbody').innerHTML=`<tr><td colspan="10" class="empty">Nenhum registro encontrado.</td></tr>`;
+    return;
+  }
+
+  let html='';
+  for(const f of lista) {
+    const equips=f.equipamentos;
+    const totalEquips=equips.length;
+    const rowspan=Math.max(totalEquips,1);
+
+    if(totalEquips===0) {
+      // Funcionário sem equipamento
+      html+=`<tr class="tr-func">
+        <td rowspan="1" style="vertical-align:top;border-right:2px solid var(--border)">
+          <div class="func-nome" onclick="abrirPerfil('${esc(f.funcionario)}')">${f.funcionario}</div>
+          <div class="func-meta">${f.setor||'—'}</div>
+          <div class="func-meta mono" style="margin-top:2px">${f.contato||''}</div>
+        </td>
+        <td colspan="8" style="color:var(--muted);font-style:italic;font-size:12px">Sem equipamento</td>
+        <td>
+          <button class="add-equip-btn btn-sm" onclick="abrirPerfilComAddEquip('${esc(f.funcionario)}')">➕</button>
+        </td>
+      </tr><tr class="tr-sep"><td colspan="10"></td></tr>`;
+      continue;
+    }
+
+    for(let i=0;i<equips.length;i++) {
+      const eq=equips[i];
+      if(i===0) {
+        html+=`<tr class="tr-func tr-equip">
+          <td rowspan="${rowspan}" style="vertical-align:top;border-right:2px solid var(--border);padding-top:12px">
+            <div class="func-nome" onclick="abrirPerfil('${esc(f.funcionario)}')">${f.funcionario}</div>
+            <div class="func-meta">${f.setor||'—'}</div>
+            <div class="func-meta mono" style="margin-top:2px">${f.contato||''}</div>
+            <div style="margin-top:8px">
+              <button class="add-equip-btn btn-sm" onclick="abrirPerfilComAddEquip('${esc(f.funcionario)}')">➕ Equip.</button>
+            </div>
+          </td>`;
+      } else {
+        html+=`<tr class="tr-equip">`;
+      }
+      html+=`
+          <td><span class="equip-chip">${tipoEmoji(eq.tipoAparelho)} ${eq.tipoAparelho||'—'}</span></td>
+          <td class="mono" style="font-size:11px;color:var(--ti);font-weight:700">${eq.etiqueta||'—'}</td>
+          <td style="font-size:11px">${eq.modelo||'—'}</td>
+          <td class="mono" style="font-size:11px">${eq.numSerie||'—'}</td>
+          <td>${tagStatus(eq.statusAtual)}</td>
+          <td style="font-size:11px">${eq.local||'—'}</td>
+          <td style="font-size:11px">${eq.dtEntregaOriginal||'—'}</td>
+          <td style="font-size:11px">${eq.valorFormatado||'—'}</td>
+          <td>
+            <div style="display:flex;gap:5px;flex-wrap:wrap">
+              <button class="btn btn-sec btn-sm" onclick="abrirEditarEquip(${eq.rowIndex},'${esc(f.funcionario)}')">✏️</button>
+              <button class="btn btn-orange btn-sm" onclick="abrirTrocar('${esc(f.funcionario)}',${eq.rowIndex})">🔄</button>
+              <button class="btn btn-red btn-sm" onclick="abrirDevolver('${esc(f.funcionario)}',${eq.rowIndex})">↩️</button>
+            </div>
+          </td>
+        </tr>`;
+    }
+    html+=`<tr class="tr-sep"><td colspan="10"></td></tr>`;
+  }
+  $('tbody').innerHTML=html;
+}
+
+function esc(s){ return (s||'').replace(/'/g,"\\'"); }
+
+// ── SINCRONIZAR ──
 async function sincronizar() {
   setStatus('syncing','Sincronizando...');
   try {
     const r=await fetch(`${API_BASE}/sincronizar`,{method:'POST',credentials:'include'});
-    if (!autenticar(r)) return;
+    if(!autenticar(r)) return;
     const d=await r.json();
-    if (!d.ok) throw new Error(d.erro||'Falha');
+    if(!d.ok) throw new Error(d.erro||'Falha');
     await carregar(); setStatus('ready','✓ Sincronizado'); toast('Sincronizado com sucesso');
-  } catch(e) { setStatus('error','❌ '+e.message); toast('Erro: '+e.message); }
+  } catch(e){ setStatus('error','❌ '+e.message); toast('Erro: '+e.message); }
 }
 
 async function importarArquivo() {
   const file=$('arquivo').files[0];
-  if (!file) return toast('Selecione um arquivo .xlsx primeiro');
+  if(!file) return toast('Selecione um arquivo .xlsx primeiro');
   const btn=$('btnImportar');
   btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Importando...';
   setStatus('syncing','Importando...');
   try {
     const fd=new FormData(); fd.append('arquivo',file);
     const r=await fetch(`${API_BASE}/importar-colaboradores`,{method:'POST',body:fd,credentials:'include'});
-    if (!autenticar(r)) return;
+    if(!autenticar(r)) return;
     const d=await r.json();
-    if (!d.ok) throw new Error(d.erro||'Falha');
-    DADOS={equipamentos:d.equipamentos||[],stats:d.stats||{}};
+    if(!d.ok) throw new Error(d.erro||'Falha');
+    DADOS=agruparPorFuncionario(d.equipamentos||[],d.stats||{});
     renderResumo(); renderTabela();
-    $('lastSync').textContent=d.sincronizadoEm?'Sync: '+new Date(d.sincronizadoEm).toLocaleString('pt-BR'):'';
-    toast(`✓ ${d.adicionados} adicionados · ${d.jaExistiam} já existiam — histórico preservado`,5000);
+    toast(`✓ ${d.adicionados} adicionados · ${d.jaExistiam} já existiam`,5000);
     setStatus('ready','✓ Importação concluída');
-  } catch(e) { setStatus('error','❌ '+e.message); toast('Erro: '+e.message,5000); }
-  finally { btn.disabled=false; btn.innerHTML='⬆️ Importar colaboradores'; }
+  } catch(e){ setStatus('error','❌ '+e.message); toast('Erro: '+e.message,5000); }
+  finally{ btn.disabled=false; btn.innerHTML='⬆️ Importar colaboradores'; }
 }
 
-function abrirModalNovo() {
-  ['nNome','nSetor','nContato','nUnidade','nEtiqueta','nModelo','nNumSerie','nValor','nObs'].forEach(id=>{ if($(id)) $(id).value=''; });
-  if($('nTipo')) $('nTipo').value='';
-  if($('nComodato')) $('nComodato').value='Não';
-  if($('nAtribuirEquip')) $('nAtribuirEquip').checked=false;
-  if($('nEquipSection')) $('nEquipSection').style.display='none';
-  document.querySelectorAll('#modalNovo .erro').forEach(el=>el.classList.remove('erro'));
-  $('overlayNovo').classList.add('open');
-  setTimeout(()=>$('nNome')?.focus(), 100);
-}
-function fecharNovo() { $('overlayNovo').classList.remove('open'); }
-function fecharNovoFora(e) { if(e.target===$('overlayNovo')) fecharNovo(); }
-function toggleAtribuirEquip(checked) {
-  $('nEquipSection').style.display = checked ? 'block' : 'none';
-}
-
-async function salvarNovoFuncionario() {
-  const nome = ($('nNome').value||'').trim();
-  if (!nome) {
-    $('nNome').classList.add('erro');
-    $('nNome').focus();
-    return toast('Informe o nome do funcionário');
-  }
-  $('nNome').classList.remove('erro');
-
-  const normNome = nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  const jaExiste = (DADOS.equipamentos||[]).some(i =>
-    i.funcionario.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'') === normNome
-  );
-  if (jaExiste) {
-    if (!confirm(`"${nome}" já existe na base.\nDeseja cadastrar mesmo assim?`)) return;
-  }
-
-  const btn=$('btnSalvarNovo');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Salvando...';
-
-  const atribuir = $('nAtribuirEquip')?.checked;
-  const hoje = new Date().toLocaleDateString('pt-BR');
-
-  const body = {
-    etiqueta: atribuir ? ($('nEtiqueta').value.trim()||'') : '',
-    funcionario: nome,
-    setor: ($('nSetor').value||'').trim(),
-    contato: ($('nContato').value||'').trim(),
-    local: ($('nUnidade').value||'').trim(),
-    tipoAparelho: atribuir ? ($('nTipo').value||'') : '',
-    modelo: atribuir ? ($('nModelo').value.trim()||'') : '',
-    numSerie: atribuir ? ($('nNumSerie').value.trim()||'') : '',
-    valor: atribuir ? ($('nValor').value.trim()||'') : '',
-    estadoEntrega: '',
-    assinouComodato: atribuir ? ($('nComodato').value||'Não') : 'Não',
-    statusAtual: atribuir && $('nTipo').value ? 'Funcionando' : 'Sem equipamento',
-    dtEntrega: atribuir && $('nTipo').value ? hoje : '',
-    dtDevolucao: '',
-    estadoDevolucao: '',
-    valorCobrado: '',
-    motivoDevTroca: '',
-    obs: atribuir ? ($('nObs').value.trim()||'') : '',
-    dtImportacao: hoje,
-  };
-
-  try {
-    const r = await fetch(`${API_BASE}/inserir`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(body),
-    });
-    if (!autenticar(r)) return;
-    const d = await r.json();
-    if (!d.ok) throw new Error(d.erro||'Falha ao cadastrar');
-
-    fecharNovo();
-    setStatus('syncing','Atualizando...');
-    await carregar();
-    setStatus('ready','✓ Funcionário cadastrado');
-    toast(`✓ ${nome} cadastrado na linha ${d.linha} da planilha`, 5000);
-  } catch(e) {
-    toast('Erro: '+e.message, 5000);
-  } finally {
-    btn.disabled=false; btn.innerHTML='💾 Cadastrar na planilha';
-  }
+// ══════════════════════════════════════════════════════
+// MODAL PERFIL DO FUNCIONÁRIO
+// ══════════════════════════════════════════════════════
+function abrirPerfil(nomeFuncionario) {
+  _funcAtual = (DADOS.funcionarios||[]).find(f=>f.funcionario===nomeFuncionario);
+  if(!_funcAtual) return;
+  $('mNome').textContent = _funcAtual.funcionario;
+  $('mSub').textContent = [_funcAtual.setor, _funcAtual.contato].filter(Boolean).join(' · ');
+  $('eFuncNome').value    = _funcAtual.funcionario;
+  $('eFuncSetor').value   = _funcAtual.setor||'';
+  $('eFuncContato').value = _funcAtual.contato||'';
+  $('eFuncUnidade').value = _funcAtual.local||'';
+  mudarTab('equipamentos', document.querySelector('#modalPerfil .tab'));
+  renderEquipamentosModal();
+  $('overlayPerfil').classList.add('open');
 }
 
-async function abrirModal(rowIndex) {
-  const item=(DADOS.equipamentos||[]).find(i=>i.rowIndex===rowIndex);
-  if (!item) return;
-  _itemAtual=item;
-  $('mNome').textContent=item.funcionario;
-  $('mSub').textContent=[item.setor,item.contato].filter(Boolean).join(' · ');
-  $('fEtiqueta').value=item.etiqueta||'';
-  $('fTipo').value=item.tipoAparelho||'';
-  $('fModelo').value=item.modelo||'';
-  $('fNumSerie').value=item.numSerie||'';
-  $('fValor').value=item.valor>0?item.valor:'';
-  $('fComodato').value=item.assinouComodato||'Não';
-  $('fObs').value=item.obs||'';
-  $('fDtEntrega').value=item.dtEntrega||'';
-  $('fDtDevolucao').value=item.dtDevolucao||'';
-  $('fValorCobrado').value=item.valorCobrado>0?item.valorCobrado:'';
-  preencherSelect('fLocal',item.local||'');
-  preencherSelect('fStatus',item.statusAtual||'Sem equipamento');
-  preencherSelect('fEstadoEntrega',item.estadoEntrega||'');
-  preencherSelect('fEstadoDevolucao',item.estadoDevolucao||'');
-  preencherSelect('fMotivo',item.motivoDevTroca||'');
-  ['tEstadoDev','tMotivo','tNovoLocal'].forEach(id=>preencherSelect(id,''));
-  ['tValorCobrado','tObsDev','tNovaEtiqueta','tNovoModelo','tNovoNumSerie','tNovaObs','tNovoValor'].forEach(id=>{if($(id))$(id).value='';});
-  if($('tNovoTipo'))$('tNovoTipo').value='';
-  if($('tPagou'))$('tPagou').value='Não';
-  if($('tNovoComodato'))$('tNovoComodato').value='Não';
-  if($('tNovoEstadoEntrega'))$('tNovoEstadoEntrega').value='Novo';
-  mudarTab('equipamentos',document.querySelector('.tab'));
-  await renderEquipamentosModal(item);
-  $('overlay').classList.add('open');
+function abrirPerfilComAddEquip(nome) {
+  abrirPerfil(nome);
+  setTimeout(()=>abrirModalAddEquip(),200);
 }
 
-async function renderEquipamentosModal(item) {
-  const box=$('equipamentosConteudo');
-  box.innerHTML='<div class="empty">Carregando histórico...</div>';
-  let htmlAtual='';
-  if (item.tipoAparelho||item.modelo||item.etiqueta) {
-    htmlAtual=`<div class="equip-card ativo"><span class="equip-card-badge ativo">✓ Ativo</span>
-      <div class="equip-card-titulo">${[item.tipoAparelho,item.modelo].filter(Boolean).join(' — ')||'Equipamento atual'}</div>
-      <div class="equip-card-linha">
-        ${item.etiqueta?`<span>🏷️ <strong>${item.etiqueta}</strong></span>`:''}
-        ${item.numSerie?`<span>🔢 <strong>${item.numSerie}</strong></span>`:''}
-        ${item.local?`<span>📍 <strong>${item.local}</strong></span>`:''}
-        ${item.dtEntregaOriginal?`<span>📅 Entrega: <strong>${item.dtEntregaOriginal}</strong></span>`:''}
-        ${item.valorFormatado?`<span>💰 <strong>${item.valorFormatado}</strong></span>`:''}
-        ${item.assinouComodato==='Sim'?`<span>✅ Comodato</span>`:`<span style="color:#dc2626">❌ Sem comodato</span>`}
-      </div>
-      ${item.estadoEntrega?`<div style="font-size:11px;color:var(--muted);margin-top:6px">Estado na entrega: <strong>${item.estadoEntrega}</strong></div>`:''}
-      ${item.obs?`<div style="font-size:11px;color:var(--muted);margin-top:4px">Obs: ${item.obs}</div>`:''}
-    </div>`;
-  } else {
-    htmlAtual=`<div class="equip-card" style="border-style:dashed;opacity:.6"><div class="equip-card-titulo" style="color:var(--muted)">Sem equipamento cadastrado</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:6px">Use a aba <strong>Editar</strong> para atribuir um equipamento.</div></div>`;
-  }
-  let htmlHist='';
-  try {
-    const r=await fetch(`${API_BASE}/historico/${encodeURIComponent(item.funcionario)}`,{credentials:'include'});
-    const d=await r.json();
-    if (d.ok&&d.itens?.length) {
-      const totalFuncionario=d.itens.reduce((s,h)=>s+(h.valorCobrado||0),0);
-      const totalFormatado=totalFuncionario>0?'R$ '+totalFuncionario.toLocaleString('pt-BR',{minimumFractionDigits:2}):null;
-      htmlHist=`<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
-        📋 Histórico de equipamentos (${d.itens.length})
-        ${totalFormatado?`<span style="float:right;color:#d97706">💰 Total restituído: ${totalFormatado}</span>`:''}
-      </div>`;
-      htmlHist+=d.itens.sort((a,b)=>b.rowIndex-a.rowIndex).map(h=>`
-        <div class="equip-card devolvido"><span class="equip-card-badge devolvido">Devolvido</span>
-          <div class="equip-card-titulo">${[h.tipoAparelho,h.modelo].filter(Boolean).join(' — ')||'Equipamento'}</div>
-          <div class="equip-card-linha">
-            ${h.etiqueta?`<span>🏷️ <strong>${h.etiqueta}</strong></span>`:''}
-            ${h.numSerie?`<span>🔢 <strong>${h.numSerie}</strong></span>`:''}
-            ${h.dtEntrega?`<span>📅 Entrega: <strong>${h.dtEntrega}</strong></span>`:''}
-            ${h.dtDevolucao?`<span>↩️ Devolução: <strong>${h.dtDevolucao}</strong></span>`:''}
-            ${h.valorFormatado?`<span>💰 Valor: <strong>${h.valorFormatado}</strong></span>`:''}
-            ${h.valorCobradoFormatado?`<span style="color:#d97706">💳 Cobrado: <strong>${h.valorCobradoFormatado}</strong></span>`:''}
-            ${h.pagoPeloFuncionario==='Sim'?`<span style="color:#16a34a">✅ Pago</span>`:''}
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:16px;flex-wrap:wrap">
-            ${h.motivo?`<span>Motivo: <strong>${h.motivo}</strong></span>`:''}
-            ${h.estadoDevolucao?`<span>Estado: <strong>${h.estadoDevolucao}</strong></span>`:''}
-            ${h.obs?`<span>Obs: ${h.obs}</span>`:''}
-          </div>
-        </div>`).join('');
-    }
-  } catch {}
-  box.innerHTML=htmlAtual+htmlHist;
-}
-
-function fecharModal() { $('overlay').classList.remove('open'); _itemAtual=null; }
-function fecharModalFora(e) { if(e.target===$('overlay')) fecharModal(); }
-function mudarTab(nome, btn) {
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+function fecharPerfil(){ $('overlayPerfil').classList.remove('open'); _funcAtual=null; }
+function fecharPerfilFora(e){ if(e.target===$('overlayPerfil')) fecharPerfil(); }
+function mudarTab(nome,btn){
+  document.querySelectorAll('#modalPerfil .tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#modalPerfil .tab').forEach(b=>b.classList.remove('active'));
   $('tab-'+nome).classList.add('active');
   if(btn) btn.classList.add('active');
 }
 
-async function salvarModal() {
-  if (!_itemAtual) return;
-  const btn=$('btnSalvar');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Salvando...';
-  const body={
-    etiqueta:$('fEtiqueta').value.trim(), tipoAparelho:$('fTipo').value,
-    modelo:$('fModelo').value.trim(), numSerie:$('fNumSerie').value.trim(),
-    local:valorCampo('fLocal'), statusAtual:valorCampo('fStatus'),
-    valor:$('fValor').value.trim(), assinouComodato:$('fComodato').value,
-    obs:$('fObs').value.trim(), dtEntrega:$('fDtEntrega').value,
-    estadoEntrega:valorCampo('fEstadoEntrega'), dtDevolucao:$('fDtDevolucao').value,
-    estadoDevolucao:valorCampo('fEstadoDevolucao'), motivoDevTroca:valorCampo('fMotivo'),
-    valorCobrado:$('fValorCobrado').value.trim(),
-  };
-  try {
-    const r=await fetch(`${API_BASE}/${_itemAtual.rowIndex}`,{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body)});
-    if (!autenticar(r)) return;
-    const d=await r.json();
-    if (!d.ok) throw new Error(d.erro||'Falha');
-    const idx=DADOS.equipamentos.findIndex(i=>i.rowIndex===_itemAtual.rowIndex);
-    if (idx>=0) {
-      Object.assign(DADOS.equipamentos[idx],body);
-      const v=parseFloat((body.valor||'0').replace(/\./g,'').replace(',','.'));
-      DADOS.equipamentos[idx].valor=isNaN(v)?0:v;
-      DADOS.equipamentos[idx].valorFormatado=v>0?'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2}):'';
-      DADOS.equipamentos[idx].dtEntregaOriginal=body.dtEntrega?body.dtEntrega.split('-').reverse().join('/'):'';
+async function renderEquipamentosModal() {
+  if(!_funcAtual) return;
+  const box=$('equipamentosConteudo');
+  box.innerHTML='<div class="empty">Carregando...</div>';
+
+  let html='';
+  const equips=_funcAtual.equipamentos||[];
+
+  if(equips.length===0) {
+    html=`<div class="equip-card" style="border-style:dashed;opacity:.6">
+      <div class="equip-card-titulo" style="color:var(--muted)">Sem equipamento cadastrado</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">Use o botão ➕ abaixo para atribuir um equipamento.</div>
+    </div>`;
+  } else {
+    for(const eq of equips) {
+      html+=`<div class="equip-card ativo">
+        <span class="equip-card-badge ativo">✓ Ativo</span>
+        <div class="equip-card-titulo">${tipoEmoji(eq.tipoAparelho)} ${[eq.tipoAparelho,eq.modelo].filter(Boolean).join(' — ')||'Equipamento'}</div>
+        <div class="equip-card-linha">
+          ${eq.etiqueta?`<span>🏷️ <strong>${eq.etiqueta}</strong></span>`:''}
+          ${eq.numSerie?`<span>🔢 <strong>${eq.numSerie}</strong></span>`:''}
+          ${eq.local?`<span>📍 <strong>${eq.local}</strong></span>`:''}
+          ${eq.dtEntregaOriginal?`<span>📅 Entrega: <strong>${eq.dtEntregaOriginal}</strong></span>`:''}
+          ${eq.valorFormatado?`<span>💰 <strong>${eq.valorFormatado}</strong></span>`:''}
+          ${eq.assinouComodato==='Sim'?`<span>✅ Comodato</span>`:`<span style="color:#dc2626">❌ Sem comodato</span>`}
+        </div>
+        ${eq.obs?`<div style="font-size:11px;color:var(--muted);margin-top:4px">Obs: ${eq.obs}</div>`:''}
+        <div class="equip-card-acoes">
+          <button class="btn btn-sec btn-sm" onclick="abrirEditarEquip(${eq.rowIndex},'${esc(_funcAtual.funcionario)}')">✏️ Editar</button>
+          <button class="btn btn-orange btn-sm" onclick="fecharPerfil();abrirTrocar('${esc(_funcAtual.funcionario)}',${eq.rowIndex})">🔄 Trocar</button>
+          <button class="btn btn-red btn-sm" onclick="fecharPerfil();abrirDevolver('${esc(_funcAtual.funcionario)}',${eq.rowIndex})">↩️ Devolver</button>
+        </div>
+      </div>`;
     }
-    renderTabela(); toast('✓ Salvo com sucesso'); fecharModal();
-  } catch(e) { toast('Erro: '+e.message,5000); }
-  finally { btn.disabled=false; btn.innerHTML='💾 Salvar edição'; }
+  }
+
+  // Histórico
+  try {
+    const r=await fetch(`${API_BASE}/historico/${encodeURIComponent(_funcAtual.funcionario)}`,{credentials:'include'});
+    const d=await r.json();
+    if(d.ok&&d.itens?.length) {
+      const total=d.itens.reduce((s,h)=>s+(h.valorCobrado||0),0);
+      const totalFmt=total>0?'R$ '+total.toLocaleString('pt-BR',{minimumFractionDigits:2}):null;
+      html+=`<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+        📋 Histórico (${d.itens.length})
+        ${totalFmt?`<span style="float:right;color:#d97706">💰 Restituído: ${totalFmt}</span>`:''}
+      </div>`;
+      html+=d.itens.sort((a,b)=>b.rowIndex-a.rowIndex).map(h=>`
+        <div class="equip-card devolvido">
+          <span class="equip-card-badge devolvido">Devolvido</span>
+          <div class="equip-card-titulo">${tipoEmoji(h.tipoAparelho)} ${[h.tipoAparelho,h.modelo].filter(Boolean).join(' — ')||'Equipamento'}</div>
+          <div class="equip-card-linha">
+            ${h.etiqueta?`<span>🏷️ <strong>${h.etiqueta}</strong></span>`:''}
+            ${h.dtEntrega?`<span>📅 Entrega: <strong>${h.dtEntrega}</strong></span>`:''}
+            ${h.dtDevolucao?`<span>↩️ Devolução: <strong>${h.dtDevolucao}</strong></span>`:''}
+            ${h.valorFormatado?`<span>💰 <strong>${h.valorFormatado}</strong></span>`:''}
+            ${h.valorCobradoFormatado?`<span style="color:#d97706">💳 Cobrado: <strong>${h.valorCobradoFormatado}</strong></span>`:''}
+            ${h.pagoPeloFuncionario==='Sim'?`<span style="color:#16a34a">✅ Pago</span>`:''}
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">
+            ${h.motivo?`Motivo: <strong>${h.motivo}</strong> · `:''}
+            ${h.estadoDevolucao?`Estado: <strong>${h.estadoDevolucao}</strong>`:''}
+          </div>
+        </div>`).join('');
+    }
+  } catch{}
+  box.innerHTML=html;
 }
 
-async function confirmarDevolucao() {
-  if (!_itemAtual) return;
-  if (!confirm(`Confirmar devolução do equipamento de ${_itemAtual.funcionario}?\n\nO equipamento será registrado no histórico.`)) return;
+// ── SALVAR DADOS DO FUNCIONÁRIO (atualiza todas as linhas dele) ──
+async function salvarDadosFuncionario() {
+  if(!_funcAtual) return;
+  const nome   = $('eFuncNome').value.trim();
+  const setor  = $('eFuncSetor').value.trim();
+  const contato= $('eFuncContato').value.trim();
+  const local  = $('eFuncUnidade').value.trim();
+  if(!nome) return toast('Informe o nome');
+
+  // Atualiza todas as linhas desse funcionário
+  const linhas = [
+    ..._funcAtual.equipamentos.map(e=>e.rowIndex),
+    ...(_funcAtual.rowIndexBase?[_funcAtual.rowIndexBase]:[]),
+  ];
+  if(!linhas.length) return toast('Nenhuma linha encontrada para este funcionário');
+
   try {
-    const r=await fetch(`${API_BASE}/${_itemAtual.rowIndex}/devolver`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({estadoDevolucao:valorCampo('fEstadoDevolucao'),motivo:valorCampo('fMotivo'),valorCobrado:$('fValorCobrado').value.trim(),obs:$('fObs').value.trim()})});
-    if (!autenticar(r)) return;
-    const d=await r.json();
-    if (!d.ok) throw new Error(d.erro||'Falha');
-    await carregar(); toast('✓ Devolução registrada no histórico'); fecharModal();
-  } catch(e) { toast('Erro: '+e.message,5000); }
+    for(const row of linhas) {
+      await fetch(`${API_BASE}/${row}`,{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({funcionario:nome,setor,contato,local})});
+    }
+    toast('✓ Dados atualizados');
+    await carregar();
+    fecharPerfil();
+  } catch(e){ toast('Erro: '+e.message); }
 }
+
+// ══════════════════════════════════════════════════════
+// MODAL ADICIONAR / EDITAR EQUIPAMENTO
+// ══════════════════════════════════════════════════════
+function limparFormEquip() {
+  ['eEtiqueta','eModelo','eNumSerie','eValor','eObs'].forEach(id=>{ if($(id)) $(id).value=''; });
+  if($('eTipo')) $('eTipo').value='';
+  if($('eComodato')) $('eComodato').value='Não';
+  if($('eLocal')) $('eLocal').value='Com o funcionário';
+  if($('eEstadoEntrega')) $('eEstadoEntrega').value='';
+  if($('eStatus')) $('eStatus').value='Funcionando';
+  if($('eDtEntrega')) $('eDtEntrega').value=hojeISO();
+  $('eLocalOutro').classList.remove('visivel');
+}
+
+function abrirModalAddEquip() {
+  if(!_funcAtual) return;
+  _modoEquip='novo';
+  _equipAtual=null;
+  limparFormEquip();
+  $('equipModalTitulo').textContent='➕ Adicionar Equipamento';
+  $('equipModalSub').textContent=_funcAtual.funcionario;
+  $('overlayEquip').classList.add('open');
+}
+
+function abrirEditarEquip(rowIndex, nomeFuncionario) {
+  // Garante que _funcAtual está carregado
+  if(!_funcAtual || _funcAtual.funcionario!==nomeFuncionario) {
+    _funcAtual = (DADOS.funcionarios||[]).find(f=>f.funcionario===nomeFuncionario);
+  }
+  if(!_funcAtual) return;
+  const eq = _funcAtual.equipamentos.find(e=>e.rowIndex===rowIndex);
+  if(!eq) return;
+  _modoEquip='editar';
+  _equipAtual=rowIndex;
+  limparFormEquip();
+  $('eEtiqueta').value  = eq.etiqueta||'';
+  $('eTipo').value      = eq.tipoAparelho||'';
+  $('eModelo').value    = eq.modelo||'';
+  $('eNumSerie').value  = eq.numSerie||'';
+  $('eValor').value     = eq.valor>0?eq.valor:'';
+  $('eComodato').value  = eq.assinouComodato||'Não';
+  $('eObs').value       = eq.obs||'';
+  $('eDtEntrega').value = eq.dtEntrega||'';
+  $('eStatus').value    = eq.statusAtual||'Funcionando';
+  // Local
+  const locais = Array.from($('eLocal').options).map(o=>o.value);
+  if(locais.includes(eq.local||'')) { $('eLocal').value=eq.local||'Com o funcionário'; }
+  else { $('eLocal').value='Outro'; $('eLocalOutro').value=eq.local||''; $('eLocalOutro').classList.add('visivel'); }
+  if($('eEstadoEntrega')) $('eEstadoEntrega').value=eq.estadoEntrega||'';
+
+  $('equipModalTitulo').textContent='✏️ Editar Equipamento';
+  $('equipModalSub').textContent=`${_funcAtual.funcionario} · ${eq.tipoAparelho||''} ${eq.modelo||''}`;
+  $('overlayEquip').classList.add('open');
+}
+
+function fecharEquip(){ $('overlayEquip').classList.remove('open'); }
+function fecharEquipFora(e){ if(e.target===$('overlayEquip')) fecharEquip(); }
+
+async function salvarEquipamento() {
+  if(!_funcAtual) return;
+  const btn=$('btnSalvarEquip');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Salvando...';
+
+  const body = {
+    etiqueta:        $('eEtiqueta').value.trim(),
+    tipoAparelho:    $('eTipo').value,
+    modelo:          $('eModelo').value.trim(),
+    numSerie:        $('eNumSerie').value.trim(),
+    valor:           $('eValor').value.trim(),
+    assinouComodato: $('eComodato').value,
+    local:           getLocalVal('eLocal','eLocalOutro'),
+    estadoEntrega:   $('eEstadoEntrega').value,
+    dtEntrega:       $('eDtEntrega').value,
+    statusAtual:     $('eStatus').value||'Funcionando',
+    obs:             $('eObs').value.trim(),
+  };
+
+  try {
+    if(_modoEquip==='novo') {
+      // Inserir nova linha com o mesmo funcionário
+      const hoje_ = hoje();
+      const novaLinha = {
+        funcionario:     _funcAtual.funcionario,
+        setor:           _funcAtual.setor||'',
+        contato:         _funcAtual.contato||'',
+        local:           body.local||_funcAtual.local||'',
+        dtImportacao:    hoje_,
+        dtEntrega:       body.dtEntrega ? body.dtEntrega.split('-').reverse().join('/') : hoje_,
+        ...body,
+      };
+      const r=await fetch(`${API_BASE}/inserir`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(novaLinha)});
+      if(!autenticar(r)) return;
+      const d=await r.json();
+      if(!d.ok) throw new Error(d.erro||'Falha');
+      toast(`✓ Equipamento adicionado (linha ${d.linha})`);
+    } else {
+      // Editar linha existente
+      const r=await fetch(`${API_BASE}/${_equipAtual}`,{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body)});
+      if(!autenticar(r)) return;
+      const d=await r.json();
+      if(!d.ok) throw new Error(d.erro||'Falha');
+      toast('✓ Equipamento atualizado');
+    }
+    fecharEquip();
+    await carregar();
+    // Reabre o perfil atualizado
+    const nomeFunc=_funcAtual?.funcionario;
+    if(nomeFunc) {
+      _funcAtual=(DADOS.funcionarios||[]).find(f=>f.funcionario===nomeFunc);
+      if(_funcAtual && $('overlayPerfil').classList.contains('open')) renderEquipamentosModal();
+    }
+  } catch(e){ toast('Erro: '+e.message,5000); }
+  finally{ btn.disabled=false; btn.innerHTML='💾 Salvar equipamento'; }
+}
+
+// ══════════════════════════════════════════════════════
+// MODAL TROCAR
+// ══════════════════════════════════════════════════════
+function abrirTrocar(nomeFuncionario, rowIndexFoco) {
+  _funcAtual = (DADOS.funcionarios||[]).find(f=>f.funcionario===nomeFuncionario);
+  if(!_funcAtual) return;
+  const equips=_funcAtual.equipamentos||[];
+
+  $('trocarSub').textContent=_funcAtual.funcionario;
+  // Pré-seleciona o equipamento
+  _equipAtual = rowIndexFoco || (equips[0]?.rowIndex||null);
+
+  // Limpar campos
+  ['tValorCobrado','tObsDev','tNovaEtiqueta','tNovoModelo','tNovoNumSerie','tNovaObs','tNovoValor'].forEach(id=>{if($(id))$(id).value='';});
+  ['tEstadoDev','tMotivo','tNovoTipo'].forEach(id=>{if($(id))$(id).value='';});
+  $('tPagou').value='Não'; $('tNovoComodato').value='Não'; $('tNovoEstado').value='Novo'; $('tNovoLocal').value='Com o funcionário';
+
+  // Seletor visual
+  if(equips.length>1) {
+    $('trocarSeletorWrap').style.display='block';
+    $('trocarSeletorLista').innerHTML=equips.map(eq=>`
+      <div class="equip-select-item ${eq.rowIndex===_equipAtual?'sel':''}" onclick="selecionarEquipTroca(${eq.rowIndex},this)">
+        <input type="radio" class="equip-select-radio" ${eq.rowIndex===_equipAtual?'checked':''}>
+        <div class="equip-select-info">
+          <div class="equip-select-nome">${tipoEmoji(eq.tipoAparelho)} ${[eq.tipoAparelho,eq.modelo].filter(Boolean).join(' — ')||'Equipamento'}</div>
+          <div class="equip-select-meta">${eq.etiqueta||''} ${eq.numSerie?'· '+eq.numSerie:''}</div>
+        </div>
+      </div>`).join('');
+  } else {
+    $('trocarSeletorWrap').style.display='none';
+  }
+
+  $('overlayTrocar').classList.add('open');
+}
+function selecionarEquipTroca(rowIndex, el) {
+  _equipAtual=rowIndex;
+  document.querySelectorAll('#trocarSeletorLista .equip-select-item').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  el.querySelector('input[type=radio]').checked=true;
+}
+function fecharTrocar(){ $('overlayTrocar').classList.remove('open'); }
+function fecharTrocarFora(e){ if(e.target===$('overlayTrocar')) fecharTrocar(); }
 
 async function confirmarTroca() {
-  if (!_itemAtual) return;
-  if (!confirm(`Confirmar troca de equipamento de ${_itemAtual.funcionario}?\n\nO equipamento atual irá para o histórico e o novo será vinculado.`)) return;
-  const btn=$('btnConfirmarTroca');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Registrando troca...';
+  if(!_funcAtual||!_equipAtual) return toast('Selecione um equipamento');
+  if(!confirm(`Confirmar troca de equipamento de ${_funcAtual.funcionario}?`)) return;
+  const btn=$('btnConfTroca');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Registrando...';
   try {
     const body={
-      motivoDevolucao:valorCampo('tMotivo'), estadoDevolucao:valorCampo('tEstadoDev'),
-      valorCobrado:$('tValorCobrado').value.trim(), pagoPeloFuncionario:$('tPagou').value,
-      obsDevolucao:$('tObsDev').value.trim(),
-      novaEtiqueta:$('tNovaEtiqueta').value.trim(), novoTipo:$('tNovoTipo').value,
-      novoModelo:$('tNovoModelo').value.trim(), novoNumSerie:$('tNovoNumSerie').value.trim(),
-      novoLocal:valorCampo('tNovoLocal'), novoValor:$('tNovoValor').value.trim(),
-      novoEstadoEntrega:$('tNovoEstadoEntrega').value, novoAssinouComodato:$('tNovoComodato').value,
-      novaObs:$('tNovaObs').value.trim(),
+      motivoDevolucao:   $('tMotivo').value,
+      estadoDevolucao:   $('tEstadoDev').value,
+      valorCobrado:      $('tValorCobrado').value.trim(),
+      pagoPeloFuncionario: $('tPagou').value,
+      obsDevolucao:      $('tObsDev').value.trim(),
+      novaEtiqueta:      $('tNovaEtiqueta').value.trim(),
+      novoTipo:          $('tNovoTipo').value,
+      novoModelo:        $('tNovoModelo').value.trim(),
+      novoNumSerie:      $('tNovoNumSerie').value.trim(),
+      novoLocal:         $('tNovoLocal').value,
+      novoValor:         $('tNovoValor').value.trim(),
+      novoEstadoEntrega: $('tNovoEstado').value,
+      novoAssinouComodato: $('tNovoComodato').value,
+      novaObs:           $('tNovaObs').value.trim(),
     };
-    const r=await fetch(`${API_BASE}/${_itemAtual.rowIndex}/trocar`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body)});
-    if (!autenticar(r)) return;
+    const r=await fetch(`${API_BASE}/${_equipAtual}/trocar`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body)});
+    if(!autenticar(r)) return;
     const d=await r.json();
-    if (!d.ok) throw new Error(d.erro||'Falha');
-    await carregar(); carregarStatsHistorico();
-    toast('✓ Troca registrada! Histórico atualizado.',5000); fecharModal();
-  } catch(e) { toast('Erro: '+e.message,5000); }
-  finally { btn.disabled=false; btn.innerHTML='🔄 Confirmar troca — registrar histórico e vincular novo equipamento'; }
+    if(!d.ok) throw new Error(d.erro||'Falha');
+    fecharTrocar(); await carregar(); carregarStatsHistorico();
+    toast('✓ Troca registrada! Histórico atualizado.',5000);
+  } catch(e){ toast('Erro: '+e.message,5000); }
+  finally{ btn.disabled=false; btn.innerHTML='🔄 Confirmar troca'; }
 }
 
-function toggleIA() { $('iaJanela').classList.toggle('aberto'); }
-function usarSugestao(txt) { $('inputIA').value=txt; $('inputIA').focus(); }
-function addMsg(tipo, texto) {
+// ══════════════════════════════════════════════════════
+// MODAL DEVOLUÇÃO
+// ══════════════════════════════════════════════════════
+function abrirDevolver(nomeFuncionario, rowIndexFoco) {
+  _funcAtual = (DADOS.funcionarios||[]).find(f=>f.funcionario===nomeFuncionario);
+  if(!_funcAtual) return;
+  const equips=_funcAtual.equipamentos||[];
+
+  $('devolverSub').textContent=_funcAtual.funcionario;
+  _equipAtual=rowIndexFoco||(equips[0]?.rowIndex||null);
+
+  ['dValorCobrado','dObs'].forEach(id=>{if($(id))$(id).value='';});
+  ['dEstadoDevolucao','dMotivo'].forEach(id=>{if($(id))$(id).value='';});
+  $('dDtDevolucao').value=hojeISO();
+
+  if(equips.length>1) {
+    $('devolverSeletorWrap').style.display='block';
+    $('devolverSeletorLista').innerHTML=equips.map(eq=>`
+      <div class="equip-select-item ${eq.rowIndex===_equipAtual?'sel':''}" onclick="selecionarEquipDevolver(${eq.rowIndex},this)">
+        <input type="radio" class="equip-select-radio" ${eq.rowIndex===_equipAtual?'checked':''}>
+        <div class="equip-select-info">
+          <div class="equip-select-nome">${tipoEmoji(eq.tipoAparelho)} ${[eq.tipoAparelho,eq.modelo].filter(Boolean).join(' — ')||'Equipamento'}</div>
+          <div class="equip-select-meta">${eq.etiqueta||''} ${eq.numSerie?'· '+eq.numSerie:''}</div>
+        </div>
+      </div>`).join('');
+  } else {
+    $('devolverSeletorWrap').style.display='none';
+  }
+
+  $('overlayDevolver').classList.add('open');
+}
+function selecionarEquipDevolver(rowIndex, el) {
+  _equipAtual=rowIndex;
+  document.querySelectorAll('#devolverSeletorLista .equip-select-item').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  el.querySelector('input[type=radio]').checked=true;
+}
+function fecharDevolver(){ $('overlayDevolver').classList.remove('open'); }
+function fecharDevolverFora(e){ if(e.target===$('overlayDevolver')) fecharDevolver(); }
+
+async function confirmarDevolucao() {
+  if(!_funcAtual||!_equipAtual) return toast('Selecione um equipamento');
+  if(!confirm(`Confirmar devolução do equipamento de ${_funcAtual.funcionario}?`)) return;
+  try {
+    const body={
+      estadoDevolucao: $('dEstadoDevolucao').value,
+      motivo:          $('dMotivo').value,
+      valorCobrado:    $('dValorCobrado').value.trim(),
+      obs:             $('dObs').value.trim(),
+    };
+    const r=await fetch(`${API_BASE}/${_equipAtual}/devolver`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body)});
+    if(!autenticar(r)) return;
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.erro||'Falha');
+    fecharDevolver(); await carregar(); carregarStatsHistorico();
+    toast('✓ Devolução registrada no histórico');
+  } catch(e){ toast('Erro: '+e.message,5000); }
+}
+
+// ══════════════════════════════════════════════════════
+// MODAL NOVO FUNCIONÁRIO
+// ══════════════════════════════════════════════════════
+function abrirModalNovoFuncionario() {
+  ['nfNome','nfSetor','nfContato','nfUnidade'].forEach(id=>{ if($(id)) $(id).value=''; });
+  $('overlayNovoFunc').classList.add('open');
+  setTimeout(()=>$('nfNome')?.focus(),100);
+}
+function fecharNovoFunc(){ $('overlayNovoFunc').classList.remove('open'); }
+function fecharNovoFuncFora(e){ if(e.target===$('overlayNovoFunc')) fecharNovoFunc(); }
+
+async function salvarNovoFuncionario() {
+  const nome=($('nfNome').value||'').trim();
+  if(!nome){ $('nfNome').classList.add('erro'); return toast('Informe o nome'); }
+  $('nfNome').classList.remove('erro');
+
+  const jaExiste=(DADOS.funcionarios||[]).some(f=>
+    f.funcionario.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')===
+    nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+  );
+  if(jaExiste && !confirm(`"${nome}" já existe. Cadastrar mesmo assim?`)) return;
+
+  const btn=$('btnSalvarNovoFunc');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Salvando...';
+  const hoje_=hoje();
+  const body={
+    etiqueta:'', funcionario:nome,
+    setor:($('nfSetor').value||'').trim(),
+    contato:($('nfContato').value||'').trim(),
+    local:($('nfUnidade').value||'').trim(),
+    tipoAparelho:'', modelo:'', numSerie:'',
+    dtEntrega:'', estadoEntrega:'', assinouComodato:'Não',
+    statusAtual:'Sem equipamento', dtDevolucao:'',
+    estadoDevolucao:'', valor:'', valorCobrado:'',
+    motivoDevTroca:'', obs:'', dtImportacao:hoje_,
+  };
+  try {
+    const r=await fetch(`${API_BASE}/inserir`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body)});
+    if(!autenticar(r)) return;
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.erro||'Falha ao cadastrar');
+    fecharNovoFunc(); await carregar();
+    toast(`✓ ${nome} cadastrado (linha ${d.linha})`,5000);
+  } catch(e){ toast('Erro: '+e.message,5000); }
+  finally{ btn.disabled=false; btn.innerHTML='💾 Cadastrar'; }
+}
+
+// ── IA ──
+function toggleIA(){ $('iaJanela').classList.toggle('aberto'); }
+function usarSugestao(txt){ $('inputIA').value=txt; $('inputIA').focus(); }
+function addMsg(tipo,texto){
   const box=$('iaMsgs'), div=document.createElement('div');
   div.className='msg '+tipo; div.textContent=texto;
   box.appendChild(div); box.scrollTop=box.scrollHeight; return div;
 }
-function montarContextoIA() {
+function montarContextoIA(){
   const s=DADOS.stats||{};
-  const amostra=(DADOS.equipamentos||[]).slice(0,40).map(i=>`- ${i.funcionario} | ${i.setor} | ${i.statusAtual} | ${i.tipoAparelho||'sem tipo'} | ${i.modelo||'sem modelo'}`).join('\n');
-  return `CONTROLE T.I.\nTotal: ${s.total||0}\nEm uso: ${s.emUso||0}\nManutenção: ${s.manutencao||0}\nDesligados: ${s.desligados||0}\nValor: ${s.valorTotalFormatado||'—'}\n\nAMOSTRA:\n${amostra||'Sem dados'}`.trim();
+  const amostra=(DADOS.funcionarios||[]).slice(0,30).map(f=>{
+    const eq=f.equipamentos.map(e=>`${e.tipoAparelho||'?'} ${e.modelo||''}`).join(', ')||'sem equipamento';
+    return `- ${f.funcionario} | ${f.setor} | ${eq}`;
+  }).join('\n');
+  return `CONTROLE T.I.\nFuncionários: ${(DADOS.funcionarios||[]).length}\nEquipamentos: ${(DADOS.funcionarios||[]).reduce((a,f)=>a+f.equipamentos.length,0)}\nValor: ${s.valorTotalFormatado||'—'}\n\nAMOSTRA:\n${amostra||'Sem dados'}`;
 }
-async function perguntarIA() {
+async function perguntarIA(){
   const pergunta=$('inputIA').value.trim(); if(!pergunta) return;
   addMsg('user',pergunta); $('inputIA').value=''; $('btnIA').disabled=true;
   const loading=addMsg('ai carregando','Analisando...');
   try {
     const r=await fetch('/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({pergunta,contexto:montarContextoIA()})});
     const d=await r.json(); loading.remove();
-    if (!d.ok){addMsg('ai','Erro: '+(d.erro||'Falha.'));return;}
+    if(!d.ok){addMsg('ai','Erro: '+(d.erro||'Falha.'));return;}
     addMsg('ai',d.resposta||'Sem resposta.');
   } catch(e){loading.remove();addMsg('ai','Erro: '+e.message);}
   finally{$('btnIA').disabled=false;}
@@ -922,7 +1282,11 @@ async function perguntarIA() {
 
 document.addEventListener('DOMContentLoaded',()=>{
   $('inputIA').addEventListener('keydown',e=>{if(e.key==='Enter')perguntarIA();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'){fecharModal();fecharNovo();}});
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){
+      fecharEquip(); fecharTrocar(); fecharDevolver(); fecharNovoFunc(); fecharPerfil();
+    }
+  });
   carregar();
 });
 </script>

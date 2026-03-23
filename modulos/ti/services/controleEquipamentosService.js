@@ -1,4 +1,5 @@
 // services/controleEquipamentosService.js — Divino Fogão T.I.
+// MULTI-EQUIPAMENTO: cada funcionário pode ter N linhas na planilha (uma por equipamento)
 'use strict';
 
 const express    = require('express');
@@ -12,37 +13,39 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 
 
 const SHEET_ID = process.env.ATIVOS_SHEET_ID || 'SEU_SHEET_ID_AQUI';
 
-// ─── Abas ─────────────────────────────────────────────────────────────────────
+// ─── Configuração da aba CONTROLE T.I ────────────────────────────────────────
+// Cada linha = um equipamento. Funcionário pode repetir em múltiplas linhas.
+// Linha 1 = cabeçalho. Dados a partir da linha 2.
 const ABA = {
     nome:   'CONTROLE T.I',
     inicio: 2,
     colunas: {
-        etiqueta:        0,
-        funcionario:     1,
-        setor:           2,
-        contato:         3,
-        tipoAparelho:    4,
-        modelo:          5,
-        local:           6,
-        dtEntrega:       7,
-        valor:           8,
-        estadoEntrega:   9,
-        assinouComodato: 10,
-        numSerie:        11,
-        statusAtual:     12,
-        dtDevolucao:     13,
-        estadoDevolucao: 14,
-        valorCobrado:    15,
-        motivoDevTroca:  16,
-        obs:             17,
-        dtImportacao:    19,
+        etiqueta:        0,   // A
+        funcionario:     1,   // B
+        setor:           2,   // C
+        contato:         3,   // D
+        tipoAparelho:    4,   // E
+        modelo:          5,   // F
+        local:           6,   // G
+        dtEntrega:       7,   // H
+        valor:           8,   // I
+        estadoEntrega:   9,   // J
+        assinouComodato: 10,  // K
+        numSerie:        11,  // L
+        statusAtual:     12,  // M
+        dtDevolucao:     13,  // N
+        estadoDevolucao: 14,  // O
+        valorCobrado:    15,  // P
+        motivoDevTroca:  16,  // Q
+        obs:             17,  // R
+        dtImportacao:    19,  // T
     },
 };
 
+// ─── Configuração da aba HISTORICO ───────────────────────────────────────────
 const ABA_HIST = {
     nome:   'CONTROLE T.I HISTORICO',
     inicio: 2,
-    // Colunas A–P (cabeçalho na linha 1)
     // A=dataRegistro B=funcionario C=setor D=etiqueta E=tipo F=modelo
     // G=numSerie H=local I=dtEntrega J=dtDevolucao K=estadoDevolucao
     // L=motivo M=valorEquipamento N=valorCobrado O=pagoPeloFuncionario P=obs
@@ -71,9 +74,9 @@ const COL_MAP = {
 };
 
 // ─── Cache ────────────────────────────────────────────────────────────────────
-const CACHE_DIR      = path.join(__dirname, '../cache');
-const CACHE_FILE     = path.join(CACHE_DIR, 'controle_equipamentos_cache.json');
-const CACHE_HIST     = path.join(CACHE_DIR, 'controle_historico_cache.json');
+const CACHE_DIR  = path.join(__dirname, '../cache');
+const CACHE_FILE = path.join(CACHE_DIR, 'controle_equipamentos_cache.json');
+const CACHE_HIST = path.join(CACHE_DIR, 'controle_historico_cache.json');
 let _mem = null;
 let _memHist = null;
 
@@ -109,7 +112,7 @@ function salvarCacheHist(dados) {
     } catch (e) { console.error('[historico] cache write error:', e.message); }
 }
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
+// ─── Auth Google Sheets ───────────────────────────────────────────────────────
 async function getSheets() {
     const auth = new google.auth.GoogleAuth({
         keyFile: process.env.GOOGLE_KEY_FILE || 'minha-chave.json',
@@ -138,14 +141,13 @@ function parseData(v) {
     }
     return v;
 }
-const get = (row, idx) =>
-    (idx !== undefined && row[idx] !== undefined) ? row[idx].toString().trim() : '';
+const get  = (row, idx) => (idx !== undefined && row[idx] !== undefined) ? row[idx].toString().trim() : '';
 const norm = s => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 
-// ─── Parser CONTROLE T.I ──────────────────────────────────────────────────────
+// ─── Parser principal — CONTROLE T.I ─────────────────────────────────────────
+// Retorna array FLAT: cada item = uma linha da planilha = um equipamento (ou linha de func sem equip)
 function parseEquipamentos(rows) {
     if (!rows || !rows.length) return [];
-    console.log(`[controleEquip] Total linhas brutas: ${rows.length} | Início: linha ${ABA.inicio}`);
     const linhasUteis = rows.slice(ABA.inicio - 1);
     let descartadas = 0;
     const resultado = linhasUteis.map((row, i) => {
@@ -182,7 +184,7 @@ function parseEquipamentos(rows) {
             dtImportacao:        get(row, c.dtImportacao)      || '',
         };
     }).filter(Boolean);
-    console.log(`[controleEquip] Descartadas: ${descartadas} | Aproveitadas: ${resultado.length}`);
+    console.log(`[controleEquip] Linhas úteis: ${resultado.length} | Descartadas: ${descartadas}`);
     return resultado;
 }
 
@@ -190,7 +192,7 @@ function parseEquipamentos(rows) {
 function parseHistorico(rows) {
     if (!rows || rows.length < 2) return [];
     return rows.slice(1).map((row, i) => {
-        if (!get(row, 1)) return null; // precisa ter funcionário
+        if (!get(row, 1)) return null;
         const valor        = parseValor(get(row, 12));
         const valorCobrado = parseValor(get(row, 13));
         return {
@@ -217,42 +219,32 @@ function parseHistorico(rows) {
     }).filter(Boolean);
 }
 
-// ─── Stats ────────────────────────────────────────────────────────────────────
+// ─── Stats (baseado no array flat) ───────────────────────────────────────────
 function calcStats(lista) {
     const total      = lista.length;
     const valorTotal = lista.reduce((s, i) => s + (i.valor || 0), 0);
-    const valorRestituido = lista.reduce((s, i) => s + (i.valorCobrado || 0), 0);
-    const porTipo = {}, porLocal = {}, porStatus = {}, porSetor = {};
-    lista.forEach(i => {
-        const tipo  = i.tipoAparelho || 'Sem tipo';
-        const local = i.local        || 'Não informado';
-        const stat  = i.statusAtual  || 'Não informado';
-        const setor = i.setor        || 'Não informado';
-        porTipo[tipo]   = (porTipo[tipo]   || 0) + 1;
-        porLocal[local] = (porLocal[local] || 0) + 1;
-        porStatus[stat] = (porStatus[stat] || 0) + 1;
-        porSetor[setor] = (porSetor[setor] || 0) + 1;
-    });
+
+    // Contar funcionários únicos
+    const funcsUnicos = new Set(lista.map(i => norm(i.funcionario))).size;
+
+    // Contar equipamentos ativos (com tipo ou modelo preenchidos)
+    const equipAtivos = lista.filter(i => (i.tipoAparelho || i.modelo) && !norm(i.statusAtual).includes('deslig')).length;
+
     const n = s => norm(s);
     return {
         total,
+        funcsUnicos,
+        equipAtivos,
         valorTotal,
         valorTotalFormatado: fmtValor(valorTotal) || '—',
-        valorRestituido,
-        valorRestituidoFormatado: fmtValor(valorRestituido) || '—',
         emUso:       lista.filter(i => ['funcionando','novo','em uso','sem equipamento'].includes(n(i.statusAtual))).length,
         manutencao:  lista.filter(i => n(i.statusAtual).includes('manut')).length,
         desligados:  lista.filter(i => n(i.statusAtual).includes('deslig')).length,
-        semComodato: lista.filter(i => i.assinouComodato !== 'Sim').length,
-        devolvidos:  lista.filter(i => !!i.dtDevolucao).length,
-        porTipo:   Object.entries(porTipo).sort((a,b)=>b[1]-a[1]).map(([tipo,qtd])=>({tipo,qtd,pct:+((qtd/total)*100).toFixed(1)})),
-        porLocal:  Object.entries(porLocal).sort((a,b)=>b[1]-a[1]).map(([local,qtd])=>({local,qtd})),
-        porStatus: Object.entries(porStatus).sort((a,b)=>b[1]-a[1]).map(([status,qtd])=>({status,qtd})),
-        porSetor:  Object.entries(porSetor).sort((a,b)=>b[1]-a[1]).map(([setor,qtd])=>({setor,qtd})),
+        semComodato: lista.filter(i => i.assinouComodato !== 'Sim' && (i.tipoAparelho || i.modelo)).length,
     };
 }
 
-// ─── Sincronizar controle ─────────────────────────────────────────────────────
+// ─── Sincronizar CONTROLE T.I ─────────────────────────────────────────────────
 async function sincronizar() {
     console.log('[controleEquip] Sincronizando aba:', ABA.nome);
     const sheets = await getSheets();
@@ -263,13 +255,13 @@ async function sincronizar() {
     const rows         = r.data.values || [];
     const equipamentos = parseEquipamentos(rows);
     const stats        = calcStats(equipamentos);
-    console.log(`[controleEquip] ${equipamentos.length} registros carregados`);
+    console.log(`[controleEquip] ${equipamentos.length} linhas carregadas`);
     const dados = { equipamentos, stats, sincronizadoEm: new Date().toISOString() };
     salvarCache(dados);
     return dados;
 }
 
-// ─── Sincronizar histórico ────────────────────────────────────────────────────
+// ─── Sincronizar HISTORICO ────────────────────────────────────────────────────
 async function sincronizarHistorico() {
     console.log('[historico] Sincronizando aba:', ABA_HIST.nome);
     const sheets = await getSheets();
@@ -278,7 +270,7 @@ async function sincronizarHistorico() {
             spreadsheetId: SHEET_ID,
             range: `'${ABA_HIST.nome}'`,
         });
-        const rows     = r.data.values || [];
+        const rows      = r.data.values || [];
         const historico = parseHistorico(rows);
         console.log(`[historico] ${historico.length} registros`);
         const dados = { historico, sincronizadoEm: new Date().toISOString() };
@@ -290,7 +282,8 @@ async function sincronizarHistorico() {
     }
 }
 
-// ─── Inserir linha CONTROLE T.I ───────────────────────────────────────────────
+// ─── Inserir linha na planilha ────────────────────────────────────────────────
+// Cada chamada = uma nova linha = um equipamento (ou funcionário sem equipamento)
 async function inserirLinha(body) {
     const sheets = await getSheets();
     const r = await sheets.spreadsheets.values.get({
@@ -300,26 +293,26 @@ async function inserirLinha(body) {
     const rows         = r.data.values || [];
     const proximaLinha = Math.max(rows.length + 1, ABA.inicio);
     const valores = [
-        body.etiqueta        || '',
-        body.funcionario     || '',
-        body.setor           || '',
-        body.contato         || '',
-        body.tipoAparelho    || '',
-        body.modelo          || '',
-        body.local           || '',
-        body.dtEntrega       || '',
-        body.valor           || '',
-        body.estadoEntrega   || '',
-        body.assinouComodato || 'Não',
-        body.numSerie        || '',
-        body.statusAtual     || 'Sem equipamento',
-        body.dtDevolucao     || '',
-        body.estadoDevolucao || '',
-        body.valorCobrado    || '',
-        body.motivoDevTroca  || '',
-        body.obs             || '',
-        '',
-        body.dtImportacao    || '',
+        body.etiqueta        || '',  // A
+        body.funcionario     || '',  // B
+        body.setor           || '',  // C
+        body.contato         || '',  // D
+        body.tipoAparelho    || '',  // E
+        body.modelo          || '',  // F
+        body.local           || '',  // G
+        body.dtEntrega       || '',  // H
+        body.valor           || '',  // I
+        body.estadoEntrega   || '',  // J
+        body.assinouComodato || 'Não', // K
+        body.numSerie        || '',  // L
+        body.statusAtual     || 'Sem equipamento', // M
+        body.dtDevolucao     || '',  // N
+        body.estadoDevolucao || '',  // O
+        body.valorCobrado    || '',  // P
+        body.motivoDevTroca  || '',  // Q
+        body.obs             || '',  // R
+        '',                          // S (reservado)
+        body.dtImportacao    || '',  // T
     ];
     await sheets.spreadsheets.values.update({
         spreadsheetId: SHEET_ID,
@@ -327,11 +320,11 @@ async function inserirLinha(body) {
         valueInputOption: 'USER_ENTERED',
         requestBody: { values: [valores] },
     });
-    console.log(`[controleEquip] Inserido linha ${proximaLinha}: ${body.funcionario}`);
+    console.log(`[controleEquip] Inserido linha ${proximaLinha}: ${body.funcionario} | ${body.tipoAparelho || 'sem equip'}`);
     return proximaLinha;
 }
 
-// ─── Atualizar linha CONTROLE T.I ─────────────────────────────────────────────
+// ─── Atualizar campos de uma linha existente ──────────────────────────────────
 async function atualizarLinha(rowIndex, body) {
     const sheets = await getSheets();
     const data = Object.entries(COL_MAP)
@@ -351,7 +344,6 @@ async function atualizarLinha(rowIndex, body) {
 // ─── Inserir no HISTORICO ─────────────────────────────────────────────────────
 async function inserirHistorico(item, motivo, valorCobrado, pagoPeloFuncionario, obs) {
     const sheets = await getSheets();
-    // descobre próxima linha livre no histórico
     let proximaLinha = 2;
     try {
         const r = await sheets.spreadsheets.values.get({
@@ -360,40 +352,38 @@ async function inserirHistorico(item, motivo, valorCobrado, pagoPeloFuncionario,
         });
         proximaLinha = Math.max((r.data.values || []).length + 1, 2);
     } catch (e) {
-        console.warn('[historico] Não foi possível ler aba para descobrir próxima linha:', e.message);
+        console.warn('[historico] não foi possível determinar próxima linha:', e.message);
     }
-
     const hoje = new Date().toLocaleDateString('pt-BR');
     const valores = [
-        hoje,                              // A dataRegistro
-        item.funcionario      || '',       // B
-        item.setor            || '',       // C
-        item.etiqueta         || '',       // D
-        item.tipoAparelho     || '',       // E
-        item.modelo           || '',       // F
-        item.numSerie         || '',       // G
-        item.local            || '',       // H
-        item.dtEntregaOriginal|| '',       // I
-        hoje,                              // J dtDevolucao
-        item.estadoDevolucao  || '',       // K
-        motivo                || '',       // L
-        item.valor > 0 ? item.valorFormatado : '', // M valorEquipamento
-        valorCobrado          || '',       // N
-        pagoPeloFuncionario   || 'Não',   // O
-        obs                   || '',       // P
+        hoje,
+        item.funcionario       || '',
+        item.setor             || '',
+        item.etiqueta          || '',
+        item.tipoAparelho      || '',
+        item.modelo            || '',
+        item.numSerie          || '',
+        item.local             || '',
+        item.dtEntregaOriginal || '',
+        hoje,
+        item.estadoDevolucao   || '',
+        motivo                 || '',
+        item.valor > 0 ? item.valorFormatado : '',
+        valorCobrado           || '',
+        pagoPeloFuncionario    || 'Não',
+        obs                    || '',
     ];
-
     await sheets.spreadsheets.values.update({
         spreadsheetId: SHEET_ID,
         range: `'${ABA_HIST.nome}'!A${proximaLinha}`,
         valueInputOption: 'USER_ENTERED',
         requestBody: { values: [valores] },
     });
-    console.log(`[historico] Registrado linha ${proximaLinha}: ${item.funcionario} — ${item.modelo || item.tipoAparelho}`);
+    console.log(`[historico] Linha ${proximaLinha}: ${item.funcionario} — ${item.modelo || item.tipoAparelho}`);
     return proximaLinha;
 }
 
-// ─── Patch cache ──────────────────────────────────────────────────────────────
+// ─── Patch no cache (atualiza objeto em memória) ───────────────────────────────
 function patchCache(rowIndex, campos) {
     const c = lerCache();
     if (!c || !c.equipamentos) return;
@@ -402,15 +392,21 @@ function patchCache(rowIndex, campos) {
     Object.assign(c.equipamentos[idx], campos);
     if (campos.valor !== undefined) {
         const v = parseValor(campos.valor);
-        c.equipamentos[idx].valor         = v;
+        c.equipamentos[idx].valor          = v;
         c.equipamentos[idx].valorFormatado = fmtValor(v);
     }
     c.stats = calcStats(c.equipamentos);
     salvarCache(c);
 }
 
+// ─── Remover do cache (linha foi "zerada" / devolvida) ────────────────────────
+// Na devolução, a linha existe mas fica sem equipamento — apenas atualiza status
+function patchCacheDevolvido(rowIndex, campos) {
+    patchCache(rowIndex, campos);
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
-// SULTS
+// SULTS (importação de colaboradores pelo sistema externo)
 // ══════════════════════════════════════════════════════════════════════════════
 const SULTS_BASE       = 'https://api.sults.com.br/v1';
 const SULTS_TOKEN      = process.env.SULTS_TOKEN || 'SEU_TOKEN_AQUI';
@@ -439,13 +435,20 @@ function salvarCacheSults(dados) {
 }
 function normalizarPessoa(p) {
     const empresa = (p.empresa || []).find(e => e.id === DIVINO_FOGAO_ID) || (p.empresa || [])[0] || {};
-    const celular = (p.celular || [])[0] || (p.telefone || [])[0] || '';
-    return { id: p.id, nome: p.nome || '', thumbnail: p.thumbnail || '', cargo: empresa.cargo?.nome || '', unidade: empresa.nomeFantasia || '', setor: empresa.cargo?.nome || '', contato: celular, celular, email: (p.email || [])[0] || '' };
+    const celular  = (p.celular || [])[0] || (p.telefone || [])[0] || '';
+    return {
+        id: p.id, nome: p.nome || '', thumbnail: p.thumbnail || '',
+        cargo: empresa.cargo?.nome || '', unidade: empresa.nomeFantasia || '',
+        setor: empresa.cargo?.nome || '', contato: celular, celular,
+        email: (p.email || [])[0] || '',
+    };
 }
 async function sincronizarSults() {
     const todas = []; let page = 0, continua = true;
     while (continua) {
-        const res = await fetch(`${SULTS_BASE}/pessoas?start=${page}&limit=${SULTS_LIMIT}`, { headers: { 'Authorization': SULTS_TOKEN } });
+        const res = await fetch(`${SULTS_BASE}/pessoas?start=${page}&limit=${SULTS_LIMIT}`, {
+            headers: { 'Authorization': SULTS_TOKEN },
+        });
         if (!res.ok) throw new Error(`SULTS ${res.status}`);
         const lote = await res.json();
         if (!Array.isArray(lote) || !lote.length) { continua = false; }
@@ -489,11 +492,17 @@ function parsePessoasXlsx(buffer) {
 // ══════════════════════════════════════════════════════════════════════════════
 
 // GET /controle-equipamentos
+// Retorna array flat de equipamentos (frontend agrupa por funcionário)
 router.get('/', (req, res) => {
     try {
         const c = lerCache();
         if (!c) return res.json({ ok: false, erro: 'Sem dados. Clique em Sincronizar.' });
-        res.json({ ok: true, equipamentos: c.equipamentos || [], stats: c.stats || {}, sincronizadoEm: c.sincronizadoEm });
+        res.json({
+            ok: true,
+            equipamentos: c.equipamentos || [],
+            stats: c.stats || {},
+            sincronizadoEm: c.sincronizadoEm,
+        });
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
@@ -506,20 +515,20 @@ router.post('/sincronizar', async (req, res) => {
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-// GET /controle-equipamentos/historico/:funcionario — histórico de um funcionário
+// GET /controle-equipamentos/historico/:funcionario
 router.get('/historico/:funcionario', (req, res) => {
     try {
-        const c = lerCacheHist();
-        const q = norm(req.params.funcionario);
+        const c    = lerCacheHist();
+        const q    = norm(req.params.funcionario);
         const itens = (c.historico || []).filter(i => norm(i.funcionario).includes(q));
         res.json({ ok: true, funcionario: req.params.funcionario, itens, total: itens.length });
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-// GET /controle-equipamentos/historico-stats — stats do histórico para o card
+// GET /controle-equipamentos/historico-stats
 router.get('/historico-stats', (req, res) => {
     try {
-        const c = lerCacheHist();
+        const c    = lerCacheHist();
         const hist = c.historico || [];
         const totalRestituido = hist.reduce((s, i) => s + (i.valorCobrado || 0), 0);
         const pagos    = hist.filter(i => i.pagoPeloFuncionario === 'Sim').length;
@@ -528,81 +537,18 @@ router.get('/historico-stats', (req, res) => {
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-// GET /controle-equipamentos/funcionario/:nome
-router.get('/funcionario/:nome', (req, res) => {
-    try {
-        const c = lerCache();
-        if (!c) return res.json({ ok: false, erro: 'Sem dados.' });
-        const q     = norm(req.params.nome);
-        const itens = c.equipamentos.filter(i => norm(i.funcionario).includes(q));
-        res.json({ ok: true, funcionario: req.params.nome, itens, total: itens.length });
-    } catch (e) { res.json({ ok: false, erro: e.message }); }
-});
-
 // POST /controle-equipamentos/inserir
+// Insere UMA nova linha (um equipamento ou um funcionário sem equipamento)
 router.post('/inserir', async (req, res) => {
     try {
         const linha = await inserirLinha(req.body);
-        _mem = null;
+        _mem = null; // invalida cache para próxima sincronização
         res.json({ ok: true, linha });
     } catch (e) { res.status(500).json({ ok: false, erro: e.message }); }
 });
 
-// POST /controle-equipamentos/sults/...
-router.get('/sults/pessoas', (req, res) => {
-    try {
-        const pessoas = buscarPessoasLocal(req.query.q || '');
-        res.json({ ok: true, pessoas, total: pessoas.length });
-    } catch (e) { res.json({ ok: false, erro: e.message }); }
-});
-router.post('/sults/sincronizar', async (req, res) => {
-    try { const pessoas = await sincronizarSults(); res.json({ ok: true, total: pessoas.length }); }
-    catch (e) { res.json({ ok: false, erro: e.message }); }
-});
-router.get('/sults/status', (req, res) => {
-    const c = lerCacheSults();
-    res.json({ ok: !!c, total: c?.total || 0, sincronizadoEm: c?.sincronizadoEm || null });
-});
-router.post('/sults/upload', upload.single('arquivo'), (req, res) => {
-    try {
-        if (!req.file) return res.status(400).json({ ok: false, erro: 'Nenhum arquivo enviado.' });
-        const ext = path.extname(req.file.originalname).toLowerCase();
-        if (!['.xlsx', '.xls'].includes(ext)) return res.status(400).json({ ok: false, erro: 'Envie .xlsx ou .xls.' });
-        const pessoas = parsePessoasXlsx(req.file.buffer);
-        if (!pessoas.length) return res.status(400).json({ ok: false, erro: 'Nenhuma pessoa encontrada.' });
-        salvarCacheSults({ pessoas, total: pessoas.length, sincronizadoEm: new Date().toISOString(), fonte: 'xlsx_upload', arquivo: req.file.originalname });
-        res.json({ ok: true, total: pessoas.length });
-    } catch (e) { res.status(500).json({ ok: false, erro: e.message }); }
-});
-
-// POST /controle-equipamentos/importar-colaboradores
-router.post('/importar-colaboradores', upload.single('arquivo'), async (req, res) => {
-    try {
-        if (!req.file) return res.status(400).json({ ok: false, erro: 'Nenhum arquivo enviado.' });
-        const ext = path.extname(req.file.originalname).toLowerCase();
-        if (!['.xlsx', '.xls'].includes(ext)) return res.status(400).json({ ok: false, erro: 'Envie .xlsx ou .xls.' });
-        const pessoasNovas = parsePessoasXlsx(req.file.buffer);
-        if (!pessoasNovas.length) return res.status(400).json({ ok: false, erro: 'Nenhuma pessoa encontrada.' });
-        _mem = null;
-        const dadosAtuais     = await sincronizar();
-        const listaAtual      = dadosAtuais.equipamentos || [];
-        const nomesNaPlanilha = new Set(listaAtual.map(i => norm(i.funcionario)));
-        const novos           = pessoasNovas.filter(p => !nomesNaPlanilha.has(norm(p.nome)));
-        const hoje            = new Date().toLocaleDateString('pt-BR');
-        for (const p of novos) {
-            await inserirLinha({ etiqueta: '', funcionario: p.nome, setor: p.setor || p.cargo || '', contato: p.contato || '', local: p.unidade || '', tipoAparelho: '', modelo: '', numSerie: '', dtEntrega: '', estadoEntrega: '', assinouComodato: 'Não', statusAtual: 'Sem equipamento', dtDevolucao: '', estadoDevolucao: '', valor: '', valorCobrado: '', motivoDevTroca: '', obs: '', dtImportacao: hoje });
-        }
-        salvarCacheSults({ pessoas: pessoasNovas, total: pessoasNovas.length, sincronizadoEm: new Date().toISOString(), fonte: 'xlsx_upload', arquivo: req.file.originalname });
-        _mem = null;
-        const dadosFinais = await sincronizar();
-        res.json({ ok: true, adicionados: novos.length, jaExistiam: listaAtual.length, total: pessoasNovas.length, sincronizadoEm: dadosFinais.sincronizadoEm, equipamentos: dadosFinais.equipamentos, stats: dadosFinais.stats });
-    } catch (e) {
-        console.error('[importar-colaboradores] erro:', e.message);
-        res.status(500).json({ ok: false, erro: e.message });
-    }
-});
-
-// ── PATCH /:rowIndex — atualizar campos
+// PATCH /controle-equipamentos/:rowIndex
+// Atualiza campos de uma linha existente
 router.patch('/:rowIndex', async (req, res) => {
     try {
         const row = parseInt(req.params.rowIndex);
@@ -613,30 +559,29 @@ router.patch('/:rowIndex', async (req, res) => {
     } catch (e) { res.status(500).json({ ok: false, erro: e.message }); }
 });
 
-// POST /:rowIndex/trocar — registra histórico e atualiza linha com novo equipamento
+// POST /controle-equipamentos/:rowIndex/trocar
+// Registra o equipamento atual no histórico e atualiza a linha com o novo
 router.post('/:rowIndex/trocar', async (req, res) => {
     try {
         const row = parseInt(req.params.rowIndex);
         if (isNaN(row) || row < ABA.inicio) return res.status(400).json({ ok: false, erro: 'rowIndex inválido.' });
 
         const {
-            // Dados da devolução do equipamento atual
             motivoDevolucao, estadoDevolucao, valorCobrado, pagoPeloFuncionario, obsDevolucao,
-            // Dados do novo equipamento
             novaEtiqueta, novoTipo, novoModelo, novoNumSerie, novoLocal,
             novoValor, novoEstadoEntrega, novoAssinouComodato, novaObs,
         } = req.body;
 
-        // 1. Busca o item atual no cache
-        const cache = lerCache();
+        // 1. Busca item atual no cache
+        const cache     = lerCache();
         const itemAtual = (cache?.equipamentos || []).find(i => i.rowIndex === row);
         if (!itemAtual) return res.status(404).json({ ok: false, erro: 'Registro não encontrado.' });
 
-        // 2. Registra o equipamento atual no HISTÓRICO (apenas se tiver equipamento)
+        // 2. Registra equipamento atual no histórico (se tiver equipamento)
         if (itemAtual.tipoAparelho || itemAtual.modelo || itemAtual.etiqueta) {
             itemAtual.estadoDevolucao = estadoDevolucao || '';
             await inserirHistorico(itemAtual, motivoDevolucao, valorCobrado, pagoPeloFuncionario, obsDevolucao);
-            _memHist = null; // limpa cache do histórico
+            _memHist = null;
         }
 
         // 3. Atualiza a linha com o novo equipamento
@@ -668,29 +613,35 @@ router.post('/:rowIndex/trocar', async (req, res) => {
     }
 });
 
-// POST /:rowIndex/devolver
+// POST /controle-equipamentos/:rowIndex/devolver
+// Registra devolução no histórico e limpa os campos do equipamento na linha
 router.post('/:rowIndex/devolver', async (req, res) => {
     try {
-        const row    = parseInt(req.params.rowIndex);
-        const cache  = lerCache();
+        const row   = parseInt(req.params.rowIndex);
+        const cache = lerCache();
         const itemAtual = (cache?.equipamentos || []).find(i => i.rowIndex === row);
 
-        // Registra no histórico se tiver equipamento
         if (itemAtual && (itemAtual.tipoAparelho || itemAtual.modelo)) {
             itemAtual.estadoDevolucao = req.body.estadoDevolucao || '';
-            await inserirHistorico(itemAtual, req.body.motivo, req.body.valorCobrado, req.body.pagoPeloFuncionario, req.body.obs);
+            await inserirHistorico(
+                itemAtual,
+                req.body.motivo,
+                req.body.valorCobrado,
+                req.body.pagoPeloFuncionario,
+                req.body.obs,
+            );
             _memHist = null;
         }
 
-        const hoje   = new Date().toLocaleDateString('pt-BR');
+        const hoje  = new Date().toLocaleDateString('pt-BR');
         const campos = {
             dtDevolucao:     hoje,
             estadoDevolucao: req.body.estadoDevolucao || '',
             motivoDevTroca:  req.body.motivo          || '',
             valorCobrado:    req.body.valorCobrado     || '',
-            statusAtual:     'Aguardando descarte',
+            statusAtual:     'Sem equipamento',
             obs:             req.body.obs             || '',
-            // Limpa os campos do equipamento pois foi devolvido
+            // Limpa campos do equipamento
             tipoAparelho:    '',
             modelo:          '',
             numSerie:        '',
@@ -698,12 +649,94 @@ router.post('/:rowIndex/devolver', async (req, res) => {
             local:           '',
             dtEntrega:       '',
             valor:           '',
+            estadoEntrega:   '',
+            assinouComodato: 'Não',
         };
         await atualizarLinha(row, campos);
-        patchCache(row, campos);
+        patchCacheDevolvido(row, campos);
         res.json({ ok: true, dtDevolucao: hoje });
     } catch (e) {
         console.error('[controleEquip] devolver:', e.message);
+        res.status(500).json({ ok: false, erro: e.message });
+    }
+});
+
+// ── SULTS routes ───────────────────────────────────────────────────────────────
+router.get('/sults/pessoas', (req, res) => {
+    try {
+        const pessoas = buscarPessoasLocal(req.query.q || '');
+        res.json({ ok: true, pessoas, total: pessoas.length });
+    } catch (e) { res.json({ ok: false, erro: e.message }); }
+});
+router.post('/sults/sincronizar', async (req, res) => {
+    try { const pessoas = await sincronizarSults(); res.json({ ok: true, total: pessoas.length }); }
+    catch (e) { res.json({ ok: false, erro: e.message }); }
+});
+router.get('/sults/status', (req, res) => {
+    const c = lerCacheSults();
+    res.json({ ok: !!c, total: c?.total || 0, sincronizadoEm: c?.sincronizadoEm || null });
+});
+router.post('/sults/upload', upload.single('arquivo'), (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ ok: false, erro: 'Nenhum arquivo enviado.' });
+        const ext = path.extname(req.file.originalname).toLowerCase();
+        if (!['.xlsx', '.xls'].includes(ext)) return res.status(400).json({ ok: false, erro: 'Envie .xlsx ou .xls.' });
+        const pessoas = parsePessoasXlsx(req.file.buffer);
+        if (!pessoas.length) return res.status(400).json({ ok: false, erro: 'Nenhuma pessoa encontrada.' });
+        salvarCacheSults({ pessoas, total: pessoas.length, sincronizadoEm: new Date().toISOString(), fonte: 'xlsx_upload', arquivo: req.file.originalname });
+        res.json({ ok: true, total: pessoas.length });
+    } catch (e) { res.status(500).json({ ok: false, erro: e.message }); }
+});
+
+// POST /controle-equipamentos/importar-colaboradores
+// Importa colaboradores de um .xlsx e adiciona UMA linha por pessoa (sem equipamento) se não existir
+router.post('/importar-colaboradores', upload.single('arquivo'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ ok: false, erro: 'Nenhum arquivo enviado.' });
+        const ext = path.extname(req.file.originalname).toLowerCase();
+        if (!['.xlsx', '.xls'].includes(ext)) return res.status(400).json({ ok: false, erro: 'Envie .xlsx ou .xls.' });
+
+        const pessoasNovas = parsePessoasXlsx(req.file.buffer);
+        if (!pessoasNovas.length) return res.status(400).json({ ok: false, erro: 'Nenhuma pessoa encontrada.' });
+
+        _mem = null;
+        const dadosAtuais     = await sincronizar();
+        const listaAtual      = dadosAtuais.equipamentos || [];
+
+        // Nomes já na planilha (normalizados)
+        const nomesNaPlanilha = new Set(listaAtual.map(i => norm(i.funcionario)));
+
+        // Apenas insere quem ainda não tem nenhuma linha
+        const novos = pessoasNovas.filter(p => !nomesNaPlanilha.has(norm(p.nome)));
+
+        const hoje = new Date().toLocaleDateString('pt-BR');
+        for (const p of novos) {
+            await inserirLinha({
+                etiqueta: '', funcionario: p.nome,
+                setor: p.setor || p.cargo || '', contato: p.contato || '',
+                local: p.unidade || '', tipoAparelho: '', modelo: '', numSerie: '',
+                dtEntrega: '', estadoEntrega: '', assinouComodato: 'Não',
+                statusAtual: 'Sem equipamento', dtDevolucao: '', estadoDevolucao: '',
+                valor: '', valorCobrado: '', motivoDevTroca: '', obs: '',
+                dtImportacao: hoje,
+            });
+        }
+
+        salvarCacheSults({
+            pessoas: pessoasNovas, total: pessoasNovas.length,
+            sincronizadoEm: new Date().toISOString(),
+            fonte: 'xlsx_upload', arquivo: req.file.originalname,
+        });
+
+        _mem = null;
+        const dadosFinais = await sincronizar();
+        res.json({
+            ok: true, adicionados: novos.length, jaExistiam: listaAtual.length,
+            total: pessoasNovas.length, sincronizadoEm: dadosFinais.sincronizadoEm,
+            equipamentos: dadosFinais.equipamentos, stats: dadosFinais.stats,
+        });
+    } catch (e) {
+        console.error('[importar-colaboradores] erro:', e.message);
         res.status(500).json({ ok: false, erro: e.message });
     }
 });
