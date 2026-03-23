@@ -277,33 +277,29 @@ router.post('/enviar-lembrete', async (req, res) => {
     const f = req.body;
     if (f.rowIndex === undefined) return res.status(400).json({ erro: 'rowIndex obrigatório' });
 
-    const erros = [];
     const baseUrl       = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
     const linkAvaliacao = gerarLinkAvaliacao(f.rowIndex, baseUrl);
-    console.log(`🔗 Link de avaliação gerado: ${linkAvaliacao}`);
 
+    // ✅ Responde imediatamente
+    res.json({ sucesso: true });
+
+    // ✅ Executa em background
     if (f.telefone) {
-      try { await enviarWhatsAppLembrete({ ...f, diffDias: f.diffDias ?? 0 }); }
-      catch (e) { erros.push('WhatsApp: ' + e.message); }
+      enviarWhatsAppLembrete({ ...f, diffDias: f.diffDias ?? 0 })
+        .catch(e => console.error('[LEMBRETE] WhatsApp:', e.message));
     }
 
     if (f.email) {
-      try {
-        await enviarEmailLembrete(f, linkAvaliacao);
-        console.log(`✅ Email lembrete enviado → ${f.email}`);
-        await marcarEmailAvaliacaoEnviado(f.rowIndex);
-      } catch (e) {
-        console.error('❌ Email falhou:', e.message);
-        erros.push('Email: ' + e.message);
-      }
-    } else {
-      console.warn(`⚠️ Sem email para ${f.nome}`);
-      erros.push('Email: campo vazio na planilha');
+      enviarEmailLembrete(f, linkAvaliacao)
+        .then(() => marcarEmailAvaliacaoEnviado(f.rowIndex))
+        .catch(e => console.error('[LEMBRETE] Email:', e.message));
     }
 
     await marcarLembreteEnviado(f.rowIndex);
-    res.json({ sucesso: true, erros: erros.length ? erros : undefined });
-  } catch (e) { res.status(500).json({ erro: e.message }); }
+
+  } catch (e) {
+    if (!res.headersSent) res.status(500).json({ erro: e.message });
+  }
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════

@@ -12,16 +12,16 @@
             --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
             --green:#16a34a; --green-pale:#f0fdf4;
             --yellow:#d97706; --yellow-pale:#fffbeb;
-            --orange:#ea580c; --orange-pale:#fff7ed;
-            --ti:#0369a1; --ti-light:#0ea5e9; --ti-pale:#f0f9ff;
+            --orange:#ea580c;
+            --ti:#0369a1; --ti-pale:#f0f9ff;
             --ti2:#7c3aed; --ti2-pale:#f5f3ff;
+            --pause:#6b7280; --pause-pale:#f3f4f6;
             --shadow:0 2px 12px rgba(0,0,0,.08);
             --shadow-lg:0 8px 32px rgba(0,0,0,.13);
         }
         *{margin:0;padding:0;box-sizing:border-box;}
         body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-        /* ── HEADER ── */
         header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
         .logo{padding:10px 0;}
         .logo img{height:48px;display:block;}
@@ -33,7 +33,6 @@
         .nav-btn:hover{color:var(--text);background:var(--bg3);}
         .nav-btn.active{color:var(--ti2);border-bottom-color:var(--ti2);background:var(--ti2-pale);}
 
-        /* ── STATUS BAR ── */
         #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
         .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.4s infinite;flex-shrink:0;}
         .sdot.ok{background:var(--green);animation:none;}
@@ -42,7 +41,6 @@
 
         main{max-width:1300px;margin:0 auto;padding:28px 24px;}
 
-        /* ── MÉTRICAS ── */
         .metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:22px;}
         .mc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:15px 18px;box-shadow:var(--shadow);}
         .mc-icon{font-size:20px;margin-bottom:5px;}
@@ -50,7 +48,6 @@
         .mc-val{font-size:28px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
         .mc-sub{font-size:10px;color:var(--muted);margin-top:3px;font-weight:600;}
 
-        /* ── TOOLBAR ── */
         .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
         .section-title{font-size:14px;font-weight:900;}
         .btn-planilha{background:var(--ti2);color:#fff;border:none;padding:8px 16px;border-radius:9px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(124,58,237,.3);transition:all .18s;}
@@ -64,7 +61,6 @@
         .vbtn{padding:7px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg3);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .18s;}
         .vbtn.active{background:var(--ti2);color:#fff;border-color:var(--ti2);}
 
-        /* ── BOTÕES ── */
         .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;}
         .btn-ti2{background:var(--ti2);color:#fff;}
         .btn-ti2:hover{background:#6d28d9;}
@@ -75,12 +71,56 @@
         .spinner.dark{border:2px solid var(--border);border-top-color:var(--ti2);}
         @keyframes spin{to{transform:rotate(360deg)}}
 
+        /* ── SEÇÕES RECOLHÍVEIS ── */
+        .proj-section{margin-bottom:20px;}
+        .proj-section-hdr{
+            display:flex;align-items:center;gap:10px;
+            padding:10px 16px;border-radius:12px;cursor:pointer;
+            user-select:none;transition:background .15s;
+            border:1.5px solid var(--border);background:var(--bg2);
+            box-shadow:var(--shadow);
+        }
+        .proj-section-hdr:hover{background:var(--bg3);}
+        .proj-section-hdr.secao-ativa{background:var(--ti2-pale);border-color:var(--ti2);}
+        .proj-section-hdr.secao-pausada{background:#fef3c7;border-color:#f59e0b;}
+        .proj-section-hdr.secao-concluida{background:var(--green-pale);border-color:var(--green);}
+        .sec-chevron{font-size:12px;transition:transform .25s;display:inline-block;}
+        .sec-chevron.aberto{transform:rotate(90deg);}
+        .sec-titulo{font-size:13px;font-weight:900;flex:1;}
+        .sec-badge{
+            padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;
+        }
+        .badge-ativo{background:var(--ti2-pale);color:var(--ti2);}
+        .badge-pausado{background:#fef3c7;color:#92400e;}
+        .badge-concluido{background:var(--green-pale);color:var(--green);}
+        .proj-section-body{display:none;padding-top:12px;}
+        .proj-section-body.aberto{display:block;}
+
         /* ── CARDS ── */
-        .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:24px;}
+        .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:8px;}
         .proj-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow);transition:all .2s;position:relative;overflow:hidden;}
-        .proj-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--ti2);}
+        .proj-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
         .proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:16px 16px 0 0;background:linear-gradient(90deg,var(--ti2),#a78bfa);}
         .proj-card.atraso::before{background:linear-gradient(90deg,var(--red),#f87171);}
+        .proj-card.concluido::before{background:linear-gradient(90deg,var(--green),#4ade80);}
+
+        /* Card pausado — listrado + banner chamativo */
+        .proj-card.pausado{
+            background: repeating-linear-gradient(-45deg,#fff,#fff 8px,#f9fafb 8px,#f9fafb 16px);
+            border-color:#d1d5db;opacity:.9;
+        }
+        .proj-card.pausado::before{background:linear-gradient(90deg,#6b7280,#9ca3af);}
+        .proj-card.pausado:hover{border-color:#6b7280;}
+        .pausado-banner{
+            background:linear-gradient(90deg,#f59e0b,#fbbf24);
+            color:#78350f;
+            font-size:11px;font-weight:900;
+            padding:5px 12px;
+            margin:-20px -20px 14px -20px;
+            display:flex;align-items:center;gap:6px;
+            letter-spacing:.4px;
+        }
+
         .proj-card-nome{font-size:14px;font-weight:900;margin-bottom:14px;line-height:1.3;padding-top:4px;}
         .pbar-wrap{margin-bottom:14px;}
         .pbar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
@@ -98,160 +138,49 @@
         .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
         .table-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
         .tbl-scroll{overflow-x:auto;}
-        table{width:100%;border-collapse:collapse;min-width:800px;}
+        table{width:100%;border-collapse:collapse;min-width:860px;}
         thead th{padding:10px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
         tbody tr{transition:background .13s;}
         tbody tr:hover td{background:var(--ti2-pale);}
+        tbody tr.tr-pausado td{background:#fef9c3 !important;color:#78350f;}
+        tbody tr.tr-pausado:hover td{background:#fef08a !important;}
+        tbody tr.tr-concluido td{background:var(--green-pale) !important;}
         tbody td{padding:10px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
         tbody tr:last-child td{border-bottom:none;}
         .mono{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
         .empty{text-align:center;padding:50px;color:var(--muted);}
 
-        /* ── TOAST ── */
+        /* status badges na tabela */
+        .status-ativo{background:#ede9fe;color:#6d28d9;border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800;white-space:nowrap;}
+        .status-pausado{background:#fef3c7;color:#92400e;border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800;white-space:nowrap;border:1.5px solid #f59e0b;}
+        .status-concluido{background:var(--green-pale);color:var(--green);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800;white-space:nowrap;}
+        .status-atraso{background:#fee2e2;color:#b91c1c;border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800;white-space:nowrap;}
+
         .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1410;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;white-space:nowrap;}
         .toast.show{display:block;animation:fadeUp .3s ease;}
         @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
         /* ── IA ── */
-        #iaWidget{
-            position:fixed;
-            right:24px;
-            bottom:24px;
-            z-index:4000;
-            display:flex;
-            flex-direction:column;
-            align-items:flex-end;
-            gap:12px;
-        }
-        #iaToggle{
-            width:58px;
-            height:58px;
-            border-radius:50%;
-            border:none;
-            cursor:pointer;
-            color:#fff;
-            font-size:26px;
-            background:linear-gradient(135deg,#0369a1,#075985);
-            box-shadow:0 6px 24px rgba(3,105,161,.35);
-        }
-        #iaJanela{
-            width:390px;
-            max-width:calc(100vw - 32px);
-            height:560px;
-            background:#fff;
-            border:1px solid var(--border);
-            border-radius:18px;
-            box-shadow:var(--shadow-lg);
-            display:none;
-            flex-direction:column;
-            overflow:hidden;
-        }
+        #iaWidget{position:fixed;right:24px;bottom:24px;z-index:4000;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+        #iaToggle{width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;color:#fff;font-size:26px;background:linear-gradient(135deg,#0369a1,#075985);box-shadow:0 6px 24px rgba(3,105,161,.35);}
+        #iaJanela{width:390px;max-width:calc(100vw - 32px);height:560px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;}
         #iaJanela.aberto{display:flex}
-        .ia-topo{
-            background:linear-gradient(135deg,#0369a1,#075985);
-            color:#fff;
-            padding:14px 16px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-        }
+        .ia-topo{background:linear-gradient(135deg,#0369a1,#075985);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
         .ia-topo-titulo{font-size:14px;font-weight:800}
         .ia-topo-sub{font-size:11px;opacity:.85}
-        .ia-fechar{
-            background:rgba(255,255,255,.15);
-            border:none;
-            color:#fff;
-            width:28px;
-            height:28px;
-            border-radius:8px;
-            cursor:pointer;
-        }
-        .ia-sugs{
-            padding:10px 12px;
-            display:flex;
-            flex-wrap:wrap;
-            gap:6px;
-            background:#faf8f5;
-            border-bottom:1px solid var(--border);
-        }
-        .ia-sug{
-            border:1px solid var(--border);
-            background:#fff;
-            color:#6b7280;
-            border-radius:16px;
-            padding:6px 10px;
-            font-size:11px;
-            font-weight:700;
-            cursor:pointer;
-        }
-        .ia-msgs{
-            flex:1;
-            overflow-y:auto;
-            padding:14px;
-            display:flex;
-            flex-direction:column;
-            gap:10px;
-        }
-        .msg{
-            max-width:88%;
-            padding:10px 14px;
-            border-radius:12px;
-            font-size:13px;
-            line-height:1.6;
-            white-space:pre-wrap;
-            word-break:break-word;
-        }
-        .msg.user{
-            align-self:flex-end;
-            background:#0369a1;
-            color:#fff;
-            border-bottom-right-radius:4px;
-        }
-        .msg.ai{
-            align-self:flex-start;
-            background:#faf8f5;
-            color:#1f2937;
-            border:1px solid var(--border);
-            border-bottom-left-radius:4px;
-        }
-        .msg.ai.carregando{
-            color:#6b7280;
-            font-style:italic;
-        }
-        .ia-rodape{
-            display:flex;
-            gap:8px;
-            padding:12px;
-            background:#faf8f5;
-            border-top:1px solid var(--border);
-        }
-        .ia-input{
-            flex:1;
-            border:1px solid var(--border);
-            border-radius:10px;
-            padding:10px 12px;
-            outline:none;
-            font-size:13px;
-            font-family:'Nunito',sans-serif;
-        }
-        .ia-enviar{
-            width:38px;
-            height:38px;
-            border:none;
-            border-radius:10px;
-            background:#0369a1;
-            color:#fff;
-            cursor:pointer;
-            font-size:18px;
-        }
+        .ia-fechar{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;}
+        .ia-sugs{padding:10px 12px;display:flex;flex-wrap:wrap;gap:6px;background:#faf8f5;border-bottom:1px solid var(--border);}
+        .ia-sug{border:1px solid var(--border);background:#fff;color:#6b7280;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;}
+        .ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+        .msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;}
+        .msg.user{align-self:flex-end;background:#0369a1;color:#fff;border-bottom-right-radius:4px;}
+        .msg.ai{align-self:flex-start;background:#faf8f5;color:#1f2937;border:1px solid var(--border);border-bottom-left-radius:4px;}
+        .msg.ai.carregando{color:#6b7280;font-style:italic;}
+        .ia-rodape{display:flex;gap:8px;padding:12px;background:#faf8f5;border-top:1px solid var(--border);}
+        .ia-input{flex:1;border:1px solid var(--border);border-radius:10px;padding:10px 12px;outline:none;font-size:13px;font-family:'Nunito',sans-serif;}
+        .ia-enviar{width:38px;height:38px;border:none;border-radius:10px;background:#0369a1;color:#fff;cursor:pointer;font-size:18px;}
 
-        @media (max-width: 760px){
-            nav{overflow:auto}
-            #iaJanela{
-                width:calc(100vw - 20px);
-                height:70vh;
-            }
-        }
+        @media(max-width:760px){nav{overflow:auto}#iaJanela{width:calc(100vw - 20px);height:70vh;}}
     </style>
 </head>
 <body>
@@ -263,18 +192,17 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
-<nav>
-    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
-    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
-    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-    <button class="nav-btn active" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
-    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
-    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
-    <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
-    
-</nav>
+    <nav>
+        <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+        <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+        <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+        <button class="nav-btn active" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+        <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+        <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+        <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+        <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
+    </nav>
 </header>
 
 <div id="statusBar">
@@ -299,6 +227,8 @@
             <div class="mc-val" style="color:var(--yellow)" id="k-pend">—</div><div class="mc-sub">a realizar</div></div>
         <div class="mc"><div class="mc-icon">🚨</div><div class="mc-label">Em Atraso</div>
             <div class="mc-val" style="color:var(--red)" id="k-atraso">—</div><div class="mc-sub">tarefas atrasadas</div></div>
+        <div class="mc"><div class="mc-icon">⏸️</div><div class="mc-label">Pausados</div>
+            <div class="mc-val" style="color:var(--pause)" id="k-pausado">—</div><div class="mc-sub">congelados</div></div>
         <div class="mc"><div class="mc-icon">📊</div><div class="mc-label">Progresso Médio</div>
             <div class="mc-val" style="color:var(--ti2)" id="k-prog">—</div><div class="mc-sub">% médio geral</div></div>
     </div>
@@ -313,9 +243,7 @@
         </div>
         <a class="btn-planilha"
            href="https://docs.google.com/spreadsheets/d/1O0dCvn7vs6PevBIKhEJeerh0h2pLz0izZ9dZIGuZZVs/edit?gid=368710133#gid=368710133"
-           target="_blank" rel="noopener">
-            📊 Abrir Planilha ↗
-        </a>
+           target="_blank" rel="noopener">📊 Abrir Planilha ↗</a>
     </div>
 
     <div class="toolbar">
@@ -323,13 +251,15 @@
             <label>🔍 Buscar projeto</label>
             <input type="text" class="fc" id="fBusca" placeholder="Nome do projeto…" oninput="aplicarFiltros()">
         </div>
-        <div class="fg" style="max-width:180px">
+        <div class="fg" style="max-width:200px">
             <label>Situação</label>
             <select class="fc" id="fSit" onchange="aplicarFiltros()">
                 <option value="">Todos</option>
+                <option value="ativo">▶️ Ativos</option>
                 <option value="atraso">🚨 Com atraso</option>
                 <option value="validacao">🔍 Em validação</option>
                 <option value="concluido">✅ 100% concluído</option>
+                <option value="pausado">⏸️ Pausado/Congelado</option>
             </select>
         </div>
         <div style="display:flex;gap:8px;align-items:flex-end">
@@ -337,14 +267,50 @@
         </div>
     </div>
 
+    <!-- VIEW CARDS -->
     <div id="viewCards">
-        <div class="proj-grid" id="projGrid">
-            <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px">
-                <div class="spinner dark"></div> Carregando projetos...
+        <!-- Seção Ativos -->
+        <div class="proj-section">
+            <div class="proj-section-hdr secao-ativa" onclick="toggleSecao('secAtivos')">
+                <span class="sec-chevron aberto" id="chevAtivos">▶</span>
+                <span class="sec-titulo">▶️ Projetos Ativos</span>
+                <span class="sec-badge badge-ativo" id="badgeAtivos">0</span>
+            </div>
+            <div class="proj-section-body aberto" id="secAtivos">
+                <div class="proj-grid" id="gridAtivos">
+                    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px">
+                        <div class="spinner dark"></div> Carregando...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção Pausados -->
+        <div class="proj-section" id="secPausadaWrap" style="display:none">
+            <div class="proj-section-hdr secao-pausada" onclick="toggleSecao('secPausados')">
+                <span class="sec-chevron" id="chevPausados">▶</span>
+                <span class="sec-titulo">⏸️ Projetos Pausados / Congelados</span>
+                <span class="sec-badge badge-pausado" id="badgePausados">0</span>
+            </div>
+            <div class="proj-section-body" id="secPausados">
+                <div class="proj-grid" id="gridPausados"></div>
+            </div>
+        </div>
+
+        <!-- Seção Concluídos -->
+        <div class="proj-section" id="secConcluidaWrap" style="display:none">
+            <div class="proj-section-hdr secao-concluida" onclick="toggleSecao('secConcluidos')">
+                <span class="sec-chevron" id="chevConcluidos">▶</span>
+                <span class="sec-titulo">✅ Projetos Concluídos (100%)</span>
+                <span class="sec-badge badge-concluido" id="badgeConcluidos">0</span>
+            </div>
+            <div class="proj-section-body" id="secConcluidos">
+                <div class="proj-grid" id="gridConcluidos"></div>
             </div>
         </div>
     </div>
 
+    <!-- VIEW TABELA -->
     <div id="viewTabela" style="display:none">
         <div class="table-wrap">
             <div class="table-head">
@@ -355,7 +321,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Projeto</th><th>Total</th><th>Concluídas</th>
+                            <th>Projeto</th><th>Status</th><th>Total</th><th>Concluídas</th>
                             <th>% Concluído</th><th>Validação</th><th>Pendentes</th>
                             <th>Atraso</th><th>Última Movimentação</th>
                         </tr>
@@ -371,30 +337,24 @@
 <div id="iaWidget">
     <div id="iaJanela">
         <div class="ia-topo">
-            <div>
-                <div class="ia-topo-titulo">🤖 IA — Projetos</div>
-                <div class="ia-topo-sub">Leitura da tela atual</div>
-            </div>
+            <div><div class="ia-topo-titulo">🤖 IA — Projetos</div><div class="ia-topo-sub">Leitura da tela atual</div></div>
             <button class="ia-fechar" onclick="toggleIA()">✕</button>
         </div>
-
         <div class="ia-sugs">
             <button class="ia-sug" onclick="usarSugestao('Me dê um resumo executivo dos projetos.')">Resumo</button>
             <button class="ia-sug" onclick="usarSugestao('Quais projetos exigem atenção imediata?')">Atenção</button>
             <button class="ia-sug" onclick="usarSugestao('Quais gargalos e atrasos você identifica?')">Gargalos</button>
+            <button class="ia-sug" onclick="usarSugestao('Quais projetos estão pausados e devo retomar?')">Pausados</button>
             <button class="ia-sug" onclick="usarSugestao('Quais ações você recomenda agora?')">Ações</button>
         </div>
-
         <div class="ia-msgs" id="iaMsgs">
             <div class="msg ai">Olá. Posso analisar os indicadores, filtros e projetos visíveis desta página.</div>
         </div>
-
         <div class="ia-rodape">
             <input type="text" id="inputIA" class="ia-input" placeholder="Pergunte sobre os projetos desta tela...">
             <button class="ia-enviar" id="btnIA" onclick="perguntarIA()">➤</button>
         </div>
     </div>
-
     <button id="iaToggle" onclick="toggleIA()">🤖</button>
 </div>
 
@@ -416,7 +376,28 @@ const setStatus = (cls, msg) => {
     $('sdot').className = 'sdot ' + (cls || '');
     $('statusTxt').textContent = msg;
 };
-const pctCor = p => p >= 90 ? 'var(--green)' : p >= 50 ? '#2563eb' : p >= 25 ? 'var(--yellow)' : 'var(--red)';
+
+const statusDe = p => {
+    if (p.pausado)          return 'pausado';
+    if (p.pctConcluido >= 100) return 'concluido';
+    return 'ativo';
+};
+
+const pctCor = (p, status) => {
+    if (status === 'pausado')   return '#9ca3af';
+    if (status === 'concluido') return 'var(--green)';
+    return p >= 90 ? 'var(--green)' : p >= 50 ? '#2563eb' : p >= 25 ? 'var(--yellow)' : 'var(--red)';
+};
+
+// ── Seções recolhíveis
+function toggleSecao(id) {
+    const body = $(id);
+    const chevId = 'chev' + id.replace('sec','').replace(/^\w/, c => c.toUpperCase().replace('Ativos','Ativos').replace('Pausados','Pausados').replace('Concluidos','Concluidos'));
+    const chevMap = { secAtivos:'chevAtivos', secPausados:'chevPausados', secConcluidos:'chevConcluidos' };
+    const chev = $(chevMap[id]);
+    body.classList.toggle('aberto');
+    if (chev) chev.classList.toggle('aberto', body.classList.contains('aberto'));
+}
 
 async function carregar() {
     setStatus('', 'Carregando projetos...');
@@ -451,6 +432,7 @@ function atualizarKPIs() {
     const totalVal  = projetos.reduce((s, p) => s + p.emValidacao, 0);
     const totalPend = projetos.reduce((s, p) => s + p.pendentes, 0);
     const totalAtr  = projetos.reduce((s, p) => s + p.atraso, 0);
+    const totalPaus = projetos.filter(p => p.pausado).length;
     const progMed   = projetos.length
         ? Math.round(projetos.reduce((s, p) => s + p.pctConcluido, 0) / projetos.length) : 0;
     $('k-total').textContent     = projetos.length;
@@ -459,6 +441,7 @@ function atualizarKPIs() {
     $('k-valid').textContent     = totalVal;
     $('k-pend').textContent      = totalPend;
     $('k-atraso').textContent    = totalAtr;
+    $('k-pausado').textContent   = totalPaus;
     $('k-prog').textContent      = progMed + '%';
 }
 
@@ -467,9 +450,12 @@ function aplicarFiltros() {
     const sit   = $('fSit').value;
     filtrado = projetos.filter(p => {
         if (busca && !p.nome.toLowerCase().includes(busca)) return false;
+        const st = statusDe(p);
+        if (sit === 'ativo'     && st !== 'ativo')       return false;
+        if (sit === 'pausado'   && st !== 'pausado')     return false;
+        if (sit === 'concluido' && st !== 'concluido')   return false;
         if (sit === 'atraso'    && p.atraso === 0)       return false;
         if (sit === 'validacao' && p.emValidacao === 0)  return false;
-        if (sit === 'concluido' && p.pctConcluido < 100) return false;
         return true;
     });
     $('tblCount').textContent = `${filtrado.length} projeto(s)`;
@@ -482,45 +468,84 @@ function limparFiltros() {
     aplicarFiltros();
 }
 
+function cardHtml(p) {
+    const st  = statusDe(p);
+    const cor = pctCor(p.pctConcluido, st);
+    const clss = ['proj-card', st === 'pausado' ? 'pausado' : st === 'concluido' ? 'concluido' : (p.atraso > 0 ? 'atraso' : '')].filter(Boolean).join(' ');
+
+    const banner = st === 'pausado'
+        ? `<div class="pausado-banner">⏸️ PROJETO PAUSADO / CONGELADO</div>`
+        : '';
+    const atrasoTag = p.atraso > 0 && st !== 'pausado'
+        ? ` <span class="atraso-badge">🚨 ${p.atraso} em atraso</span>` : '';
+
+    return `<div class="${clss}">
+        ${banner}
+        <div class="proj-card-nome">${p.nome}${atrasoTag}</div>
+        <div class="pbar-wrap">
+            <div class="pbar-top">
+                <span class="pbar-lbl">Progresso</span>
+                <span class="pbar-pct" style="color:${cor}">${p.pctConcluido.toFixed(1)}%</span>
+            </div>
+            <div class="pbar"><div class="pbar-fill" style="width:${Math.min(p.pctConcluido,100)}%;background:${cor}"></div></div>
+        </div>
+        <div class="card-stats">
+            <div class="cs"><div class="cs-val" style="color:var(--muted)">${p.totalTarefas}</div><div class="cs-lbl">Total</div></div>
+            <div class="cs"><div class="cs-val" style="color:var(--green)">${p.concluidas}</div><div class="cs-lbl">Concluídas</div></div>
+            <div class="cs"><div class="cs-val" style="color:#1d4ed8">${p.emValidacao}</div><div class="cs-lbl">Validação</div></div>
+            <div class="cs"><div class="cs-val" style="color:var(--yellow)">${p.pendentes}</div><div class="cs-lbl">Pendentes</div></div>
+        </div>
+        ${p.ultimaMoviment ? `<div style="margin-top:10px;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">🕐 ${p.ultimaMoviment}</div>` : ''}
+    </div>`;
+}
+
 function renderCards() {
-    const grid = $('projGrid');
-    if (!filtrado.length) {
-        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--muted)">🔍 Nenhum projeto encontrado</div>';
-        return;
-    }
-    grid.innerHTML = filtrado.map(p => {
-        const cor = pctCor(p.pctConcluido);
-        return `<div class="proj-card${p.atraso > 0 ? ' atraso' : ''}">
-            <div class="proj-card-nome">${p.nome}${p.atraso > 0 ? ' <span class="atraso-badge">🚨 '+p.atraso+' em atraso</span>' : ''}</div>
-            <div class="pbar-wrap">
-                <div class="pbar-top">
-                    <span class="pbar-lbl">Progresso</span>
-                    <span class="pbar-pct" style="color:${cor}">${p.pctConcluido.toFixed(1)}%</span>
-                </div>
-                <div class="pbar"><div class="pbar-fill" style="width:${Math.min(p.pctConcluido,100)}%;background:${cor}"></div></div>
-            </div>
-            <div class="card-stats">
-                <div class="cs"><div class="cs-val" style="color:var(--muted)">${p.totalTarefas}</div><div class="cs-lbl">Total</div></div>
-                <div class="cs"><div class="cs-val" style="color:var(--green)">${p.concluidas}</div><div class="cs-lbl">Concluídas</div></div>
-                <div class="cs"><div class="cs-val" style="color:#1d4ed8">${p.emValidacao}</div><div class="cs-lbl">Validação</div></div>
-                <div class="cs"><div class="cs-val" style="color:var(--yellow)">${p.pendentes}</div><div class="cs-lbl">Pendentes</div></div>
-            </div>
-            ${p.ultimaMoviment ? `<div style="margin-top:10px;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">🕐 ${p.ultimaMoviment}</div>` : ''}
-        </div>`;
-    }).join('');
+    const ativos     = filtrado.filter(p => statusDe(p) === 'ativo');
+    const pausados   = filtrado.filter(p => statusDe(p) === 'pausado');
+    const concluidos = filtrado.filter(p => statusDe(p) === 'concluido');
+
+    // Ativos
+    $('badgeAtivos').textContent = ativos.length;
+    $('gridAtivos').innerHTML = ativos.length
+        ? ativos.map(cardHtml).join('')
+        : '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--muted)">Nenhum projeto ativo</div>';
+
+    // Pausados
+    $('secPausadaWrap').style.display = pausados.length ? '' : 'none';
+    $('badgePausados').textContent = pausados.length;
+    $('gridPausados').innerHTML = pausados.map(cardHtml).join('');
+
+    // Concluídos
+    $('secConcluidaWrap').style.display = concluidos.length ? '' : 'none';
+    $('badgeConcluidos').textContent = concluidos.length;
+    $('gridConcluidos').innerHTML = concluidos.map(cardHtml).join('');
 }
 
 function renderTabela() {
     if (!filtrado.length) {
-        $('tblBody').innerHTML = '<tr><td colspan="8"><div class="empty">🔍 Nenhum projeto encontrado</div></td></tr>';
+        $('tblBody').innerHTML = '<tr><td colspan="9"><div class="empty">🔍 Nenhum projeto encontrado</div></td></tr>';
         return;
     }
-    $('tblBody').innerHTML = filtrado.map(p => {
-        const cor = pctCor(p.pctConcluido);
-        return `<tr>
+
+    // Ordena: ativos → pausados → concluídos
+    const ordem = { ativo:0, pausado:1, concluido:2 };
+    const sorted = [...filtrado].sort((a,b) => ordem[statusDe(a)] - ordem[statusDe(b)]);
+
+    $('tblBody').innerHTML = sorted.map(p => {
+        const st  = statusDe(p);
+        const cor = pctCor(p.pctConcluido, st);
+        const trCls = st === 'pausado' ? 'tr-pausado' : st === 'concluido' ? 'tr-concluido' : '';
+
+        let statusBadge = `<span class="status-ativo">▶️ Ativo</span>`;
+        if (st === 'pausado')   statusBadge = `<span class="status-pausado">⏸️ Pausado</span>`;
+        if (st === 'concluido') statusBadge = `<span class="status-concluido">✅ Concluído</span>`;
+        else if (p.atraso > 0 && st === 'ativo') statusBadge = `<span class="status-atraso">🚨 Atraso</span>`;
+
+        return `<tr class="${trCls}">
             <td style="font-weight:700;min-width:200px">${p.nome}</td>
-            <td class="mono" style="text-align:center">${p.totalTarefas}</td>
-            <td class="mono" style="color:var(--green);font-weight:700;text-align:center">${p.concluidas}</td>
+            <td style="white-space:nowrap">${statusBadge}</td>
+            <td class="mono" style="text-align:center">${p.totalTarefas || '—'}</td>
+            <td class="mono" style="color:var(--green);font-weight:700;text-align:center">${p.concluidas || '—'}</td>
             <td style="min-width:120px">
                 <div style="display:flex;align-items:center;gap:8px">
                     <div style="flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)">
@@ -529,8 +554,8 @@ function renderTabela() {
                     <span style="font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;color:${cor};white-space:nowrap">${p.pctConcluido.toFixed(1)}%</span>
                 </div>
             </td>
-            <td class="mono" style="color:#1d4ed8;font-weight:700;text-align:center">${p.emValidacao}</td>
-            <td class="mono" style="color:var(--yellow);font-weight:700;text-align:center">${p.pendentes}</td>
+            <td class="mono" style="color:#1d4ed8;font-weight:700;text-align:center">${p.emValidacao || '—'}</td>
+            <td class="mono" style="color:var(--yellow);font-weight:700;text-align:center">${p.pendentes || '—'}</td>
             <td class="mono" style="color:${p.atraso>0?'var(--red)':'var(--muted)'};font-weight:${p.atraso>0?'900':'400'};text-align:center">${p.atraso > 0 ? '🚨 '+p.atraso : '—'}</td>
             <td class="mono" style="font-size:10px">${p.ultimaMoviment || '—'}</td>
         </tr>`;
@@ -547,10 +572,10 @@ function setView(v) {
 
 function exportCSV() {
     if (!filtrado.length) { toast('Sem dados para exportar'); return; }
-    const cols = ['Projeto','Total Tarefas','Concluidas','% Concluido','Em Validacao','Pendentes','Atraso','Ultima Movimentacao'];
+    const cols = ['Projeto','Status','Total Tarefas','Concluidas','% Concluido','Em Validacao','Pendentes','Atraso','Ultima Movimentacao'];
     const rows = filtrado.map(p => [
-        p.nome, p.totalTarefas, p.concluidas,
-        p.pctConcluido.toFixed(1)+'%',
+        p.nome, statusDe(p) === 'pausado' ? 'Pausado' : statusDe(p) === 'concluido' ? 'Concluído' : 'Ativo',
+        p.totalTarefas, p.concluidas, p.pctConcluido.toFixed(1)+'%',
         p.emValidacao, p.pendentes, p.atraso, p.ultimaMoviment,
     ].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
     const blob = new Blob(['\uFEFF' + cols.join(',') + '\n' + rows.join('\n')], {type:'text/csv'});
@@ -561,18 +586,10 @@ function exportCSV() {
     toast(`📥 CSV exportado — ${filtrado.length} projetos`);
 }
 
-/* ── IA ───────────────────────────────────────────────────── */
+/* ── IA ── */
 const $ia = id => document.getElementById(id);
-
-function toggleIA() {
-    $ia('iaJanela').classList.toggle('aberto');
-}
-
-function usarSugestao(txt) {
-    $ia('inputIA').value = txt;
-    $ia('inputIA').focus();
-}
-
+function toggleIA() { $ia('iaJanela').classList.toggle('aberto'); }
+function usarSugestao(txt) { $ia('inputIA').value = txt; $ia('inputIA').focus(); }
 function addMsgIA(tipo, texto) {
     const box = $ia('iaMsgs');
     const div = document.createElement('div');
@@ -582,108 +599,37 @@ function addMsgIA(tipo, texto) {
     box.scrollTop = box.scrollHeight;
     return div;
 }
-
 function montarContextoIA() {
     const indicadores = [...document.querySelectorAll('.mc')].map(card => {
-        const label = card.querySelector('.mc-label')?.textContent?.trim() || 'Indicador';
-        const valor = card.querySelector('.mc-val')?.textContent?.trim() || '—';
-        const sub = card.querySelector('.mc-sub')?.textContent?.trim() || '';
-        return `- ${label}: ${valor}${sub ? ' | ' + sub : ''}`;
+        const l = card.querySelector('.mc-label')?.textContent?.trim() || '';
+        const v = card.querySelector('.mc-val')?.textContent?.trim() || '—';
+        return `- ${l}: ${v}`;
     }).join('\n');
-
-    const filtros = [
-        `- Busca projeto: ${document.getElementById('fBusca')?.value?.trim() || 'vazio'}`,
-        `- Situação: ${document.getElementById('fSit')?.value?.trim() || 'Todos'}`,
-        `- Visualização: ${viewAtual}`
-    ].join('\n');
-
-    const cards = [...document.querySelectorAll('.proj-card')]
-        .slice(0, 20)
-        .map(card => {
-            const nome = card.querySelector('.proj-card-nome')?.textContent?.replace(/\s+/g,' ').trim() || 'Projeto';
-            const stats = [...card.querySelectorAll('.cs')]
-                .map(cs => {
-                    const v = cs.querySelector('.cs-val')?.textContent?.trim() || '';
-                    const l = cs.querySelector('.cs-lbl')?.textContent?.trim() || '';
-                    return `${l}: ${v}`;
-                }).join(' | ');
-            const prog = card.querySelector('.pbar-pct')?.textContent?.trim() || '';
-            return `- ${nome}${prog ? ' | Progresso: ' + prog : ''}${stats ? ' | ' + stats : ''}`;
-        })
-        .join('\n');
-
-    const linhas = [...document.querySelectorAll('#tblBody tr')]
-        .slice(0, 20)
-        .map(tr => [...tr.querySelectorAll('td')]
-            .map(td => td.textContent.trim().replace(/\s+/g, ' '))
-            .filter(Boolean)
-            .join(' | '))
-        .filter(Boolean)
-        .map(l => `- ${l}`)
-        .join('\n');
-
-    return `
-PÁGINA: Projetos T.I.
-
-INDICADORES:
-${indicadores || 'Sem indicadores visíveis'}
-
-FILTROS:
-${filtros}
-
-CARDS VISÍVEIS:
-${cards || 'Nenhum card visível'}
-
-LINHAS VISÍVEIS:
-${linhas || 'Nenhuma linha visível'}
-    `.trim();
+    const ativos   = projetos.filter(p => statusDe(p) === 'ativo').map(p => `- ${p.nome} | ${p.pctConcluido.toFixed(1)}%`).join('\n');
+    const pausados = projetos.filter(p => statusDe(p) === 'pausado').map(p => `- ${p.nome}`).join('\n');
+    return `PÁGINA: Projetos T.I.\n\nINDICADORES:\n${indicadores}\n\nATIVOS:\n${ativos||'nenhum'}\n\nPAUSADOS:\n${pausados||'nenhum'}`.trim();
 }
-
 async function perguntarIA() {
     const pergunta = $ia('inputIA').value.trim();
     if (!pergunta) return;
-
     addMsgIA('user', pergunta);
     $ia('inputIA').value = '';
     $ia('btnIA').disabled = true;
-
     const loading = addMsgIA('ai carregando', 'Analisando...');
     try {
         const r = await fetch('/ia-ti/perguntar', {
-            method:'POST',
-            headers:{ 'Content-Type':'application/json' },
-            credentials:'include',
-            body: JSON.stringify({
-                pergunta,
-                contexto: montarContextoIA(),
-                pagina: location.pathname
-            })
+            method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+            body: JSON.stringify({ pergunta, contexto: montarContextoIA(), pagina: location.pathname })
         });
-
         const d = await r.json();
         loading.remove();
-
-        if (!d.ok) {
-            addMsgIA('ai', 'Erro: ' + (d.erro || 'Falha ao consultar a IA.'));
-            return;
-        }
-
-        addMsgIA('ai', d.resposta || 'Sem resposta.');
-    } catch (e) {
-        loading.remove();
-        addMsgIA('ai', 'Erro: ' + e.message);
-    } finally {
-        $ia('btnIA').disabled = false;
-    }
+        addMsgIA('ai', d.ok ? (d.resposta || 'Sem resposta.') : 'Erro: ' + (d.erro || 'Falha.'));
+    } catch (e) { loading.remove(); addMsgIA('ai', 'Erro: ' + e.message); }
+    finally { $ia('btnIA').disabled = false; }
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     const input = $ia('inputIA');
-    if (input) {
-        input.addEventListener('keydown', e => {
-            if (e.key === 'Enter') perguntarIA();
-        });
-    }
+    if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') perguntarIA(); });
 });
 
 carregar();
