@@ -15,6 +15,7 @@
         --orange:#ea580c; --orange-pale:#fff7ed;
         --ti:#0369a1; --ti-light:#0ea5e9; --ti-pale:#f0f9ff;
         --ti2:#7c3aed; --ti2-pale:#f5f3ff;
+        --pause:#6b7280; --pause-pale:#f3f4f6;
         --shadow:0 2px 12px rgba(0,0,0,.08);
         --shadow-lg:0 8px 32px rgba(0,0,0,.12);
     }
@@ -93,7 +94,7 @@
     .hm.green{border-color:rgba(22,163,74,.3);}  .hm.orange{border-color:rgba(234,88,12,.3);}
     .hm.yellow{border-color:rgba(217,119,6,.3);} .hm.red{border-color:rgba(200,16,46,.3);}
     .hm.ti{border-color:rgba(3,105,161,.3);}     .hm.purple{border-color:rgba(124,58,237,.3);}
-    .hm.muted{border-color:rgba(139,146,184,.2);}
+    .hm.muted{border-color:rgba(139,146,184,.2);} .hm.pause{border-color:rgba(107,114,128,.3);}
 
     .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
     .bar-label{font-size:12px;font-weight:600;color:var(--text);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -113,7 +114,18 @@
     .link-tipo-count{font-size:20px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ti2);line-height:1;}
     .link-tipo-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
 
-    /* ── CARD GESTÃO ATIVOS ── */
+    /* ── PROJ LISTA ── */
+    .proj-lista-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color .15s;position:relative;overflow:hidden;}
+    .proj-lista-item:hover{border-color:var(--ti2);}
+    .proj-lista-item.pausado{
+        background: repeating-linear-gradient(-45deg,#f9fafb,#f9fafb 6px,#fff 6px,#fff 12px);
+        border-color:#d1d5db;opacity:.85;
+    }
+    .proj-lista-item.pausado:hover{border-color:var(--pause);}
+    .proj-lista-item.concluido{background:var(--green-pale);border-color:rgba(22,163,74,.3);}
+    .proj-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+    /* ── GA ── */
     .ga-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px;}
     .ga-metric{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
     .ga-metric-val{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px;}
@@ -181,18 +193,17 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
-<nav>
-    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
-    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
-    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-    <button class="nav-btn active" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
-    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
-    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
-    <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
-    
-</nav>
+    <nav>
+        <button class="nav-btn active" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+        <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+        <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+        <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+        <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+        <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+        <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+        <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
+    </nav>
 </header>
 
 <div id="statusBar">
@@ -444,29 +455,16 @@
 </div>
 
 <script>
-// ── Utilitários globais (DEVEM vir antes de qualquer uso) ──────────────────────
 const $ = id => document.getElementById(id);
 const set = (id, v) => { const el=$(id); if(el) el.textContent=(v??'—'); };
 const pct = (v,t) => (!t?0:Math.min(100,+((v/t)*100).toFixed(1)));
 const toast = (msg, ms=2500) => { const el=$('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),ms); };
 const setStatus = (cls, msg) => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
 
-// ── Estado global ──────────────────────────────────────────────────────────────
 const G = { cham: { todos: null, anoSel: 'todos' } };
 window._tiDados = {};
-
 const CORES = ['var(--ti)','var(--ti2)','var(--orange)','var(--green)','var(--yellow)','#0891b2','#db2777','#65a30d'];
-const TIPO_CFG = {
-    sistema:     { icon:'⚙️',  label:'Sistemas' },
-    planilha:    { icon:'📊',  label:'Planilhas' },
-    manual:      { icon:'📘',  label:'Manuais' },
-    apresentacao:{ icon:'📑',  label:'Apresentações' },
-    formulario:  { icon:'📋',  label:'Formulários' },
-    drive:       { icon:'📁',  label:'Drive' },
-    link:        { icon:'🔗',  label:'Links' },
-};
 
-// ── Helpers de UI ──────────────────────────────────────────────────────────────
 function miniCards(containerId, cards) {
     const el=$(containerId); if(!el) return;
     el.innerHTML = cards.map(c=>`<div class="hm ${c.cls||''}"><div class="hm-val" style="color:${c.cor||'var(--text)'}">${c.val??'—'}</div><div class="hm-lbl">${c.lbl}</div></div>`).join('');
@@ -496,7 +494,7 @@ function setAno(ano, btnEl) {
     renderChamados(ano);
 }
 
-// ── Card Projetos ──────────────────────────────────────────────────────────────
+// ── Card Projetos — ATUALIZADO com status pausado/concluído ──────────────────
 async function carregarProjetos() {
     try {
         const r = await fetch('/ti/api/projetos/dados');
@@ -507,68 +505,123 @@ async function carregarProjetos() {
         }
         const lista = d.projetos || [];
         const total = lista.length;
-        const totalConc     = lista.reduce((s,p) => s + (p.concluidas    || 0), 0);
-        const totalAtraso   = lista.reduce((s,p) => s + (p.atraso        || 0), 0);
-        const totalPend     = lista.reduce((s,p) => s + (p.pendentes     || 0), 0);
-        const totalValid    = lista.reduce((s,p) => s + (p.emValidacao   || 0), 0);
-        const projConc100   = lista.filter(p => p.pctConcluido >= 100).length;
-        const projComAtraso = lista.filter(p => p.atraso > 0).length;
-        const progMedio     = total ? Math.round(lista.reduce((s,p) => s + (p.pctConcluido||0), 0) / total) : 0;
+
+        // Classifica cada projeto
+        const statusDe = p => {
+            if (p.pausado)             return 'pausado';
+            if (p.pctConcluido >= 100) return 'concluido';
+            return 'ativo';
+        };
+
+        const ativos     = lista.filter(p => statusDe(p) === 'ativo');
+        const pausados   = lista.filter(p => statusDe(p) === 'pausado');
+        const concluidos = lista.filter(p => statusDe(p) === 'concluido');
+
+        // KPIs — só conta ativos nas métricas de tarefas (pausados têm 0)
+        const totalConc   = lista.reduce((s,p) => s + (p.concluidas  || 0), 0);
+        const totalAtraso = lista.reduce((s,p) => s + (p.atraso      || 0), 0);
+        const totalPend   = lista.reduce((s,p) => s + (p.pendentes   || 0), 0);
+        const totalValid  = lista.reduce((s,p) => s + (p.emValidacao || 0), 0);
+        const progMedio   = ativos.length
+            ? Math.round(ativos.reduce((s,p) => s + (p.pctConcluido||0), 0) / ativos.length) : 0;
 
         miniCards('projMetrics', [
-            { val:total,         lbl:'Projetos',           cor:'var(--ti2)',    cls:'purple' },
-            { val:projConc100,   lbl:'100% Concluídos',    cor:'var(--green)',  cls:'green'  },
-            { val:totalConc,     lbl:'Tarefas Concluídas', cor:'var(--green)',  cls:'green'  },
-            { val:totalValid,    lbl:'Em Validação',       cor:'#1d4ed8',       cls:'ti'     },
-            { val:totalPend,     lbl:'Pendentes',          cor:'var(--yellow)', cls:'yellow' },
-            { val:totalAtraso,   lbl:'Em Atraso',          cor:'#dc2626',       cls:'red'    },
+            { val:total,          lbl:'Projetos',           cor:'var(--ti2)',    cls:'purple' },
+            { val:concluidos.length, lbl:'100% Concluídos', cor:'var(--green)',  cls:'green'  },
+            { val:totalConc,      lbl:'Tarefas Concluídas', cor:'var(--green)',  cls:'green'  },
+            { val:totalValid,     lbl:'Em Validação',       cor:'#1d4ed8',       cls:'ti'     },
+            { val:totalPend,      lbl:'Pendentes',          cor:'var(--yellow)', cls:'yellow' },
+            { val:totalAtraso,    lbl:'Em Atraso',          cor:'#dc2626',       cls:'red'    },
+            { val:pausados.length, lbl:'Pausados',          cor:'var(--pause)',  cls:'pause'  },
         ]);
 
         const bar=$('proj-bar'); if(bar) bar.style.width=progMedio+'%';
         set('proj-pct', progMedio+'%');
-        set('proj-prog-sub', `${projConc100} de ${total} projetos a 100% · ${projComAtraso} com atraso · progresso médio ${progMedio}%`);
+        set('proj-prog-sub',
+            `${concluidos.length} de ${total} projetos a 100% · ${ativos.filter(p=>p.atraso>0).length} com atraso · ${pausados.length} pausados · progresso médio ${progMedio}%`
+        );
 
-        const pctCor = p => p>=100?'var(--green)':p>=70?'#2563eb':p>=40?'var(--yellow)':'var(--red)';
-        const projHtml = lista.map(p => {
-            const cor = pctCor(p.pctConcluido||0);
-            const atrasoTag = p.atraso>0
-                ? `<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:1px 6px;font-size:9px;font-weight:800;margin-left:4px">🚨 ${p.atraso}</span>`
-                : '';
-            return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color .15s" onmouseover="this.style.borderColor='var(--ti2)'" onmouseout="this.style.borderColor='var(--border)'">
-              <div style="flex:1;min-width:0">
-                <div style="font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.nome}${atrasoTag}</div>
-                <div style="display:flex;align-items:center;gap:6px;margin-top:5px">
-                  <div style="flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)">
-                    <div style="height:100%;width:${Math.min(p.pctConcluido||0,100)}%;background:${cor};border-radius:3px;transition:width .8s ease"></div>
-                  </div>
-                  <span style="font-size:10px;font-weight:900;font-family:'JetBrains Mono',monospace;color:${cor};white-space:nowrap">${(p.pctConcluido||0).toFixed(0)}%</span>
+        // ── Lista detalhada com seções: Ativos → Pausados → Concluídos
+        const pctCor = (p, st) => {
+            if (st === 'pausado')   return '#9ca3af';
+            if (st === 'concluido') return 'var(--green)';
+            return p>=90?'var(--green)':p>=50?'#2563eb':p>=25?'var(--yellow)':'var(--red)';
+        };
+
+        const itemHtml = p => {
+            const st  = statusDe(p);
+            const cor = pctCor(p.pctConcluido||0, st);
+            const dotCor = st==='pausado'?'#9ca3af':st==='concluido'?'var(--green)':p.atraso>0?'var(--red)':'var(--ti2)';
+            const atrasoTag = p.atraso>0 && st==='ativo'
+                ? `<span style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:1px 6px;font-size:9px;font-weight:800;margin-left:4px">🚨${p.atraso}</span>` : '';
+            const pausaTag = st==='pausado'
+                ? `<span style="background:#fef3c7;color:#92400e;border-radius:6px;padding:1px 6px;font-size:9px;font-weight:800;margin-left:4px">⏸️Pausado</span>` : '';
+
+            return `<div class="proj-lista-item ${st}">
+                <div class="proj-status-dot" style="background:${dotCor}"></div>
+                <div style="flex:1;min-width:0">
+                    <div style="font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.nome}${atrasoTag}${pausaTag}</div>
+                    <div style="display:flex;align-items:center;gap:6px;margin-top:5px">
+                        <div style="flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)">
+                            <div style="height:100%;width:${Math.min(p.pctConcluido||0,100)}%;background:${cor};border-radius:3px;transition:width .8s ease"></div>
+                        </div>
+                        <span style="font-size:10px;font-weight:900;font-family:'JetBrains Mono',monospace;color:${cor};white-space:nowrap">${(p.pctConcluido||0).toFixed(0)}%</span>
+                    </div>
                 </div>
-              </div>
-              <div style="display:flex;gap:6px;flex-shrink:0">
-                <div style="text-align:center">
-                  <div style="font-size:13px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--green)">${p.concluidas||0}</div>
-                  <div style="font-size:8px;font-weight:800;text-transform:uppercase;color:var(--muted)">Conc.</div>
+                <div style="display:flex;gap:6px;flex-shrink:0">
+                    <div style="text-align:center">
+                        <div style="font-size:13px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--green)">${p.concluidas||0}</div>
+                        <div style="font-size:8px;font-weight:800;text-transform:uppercase;color:var(--muted)">Conc.</div>
+                    </div>
+                    <div style="text-align:center">
+                        <div style="font-size:13px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--yellow)">${p.pendentes||0}</div>
+                        <div style="font-size:8px;font-weight:800;text-transform:uppercase;color:var(--muted)">Pend.</div>
+                    </div>
                 </div>
-                <div style="text-align:center">
-                  <div style="font-size:13px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--yellow)">${p.pendentes||0}</div>
-                  <div style="font-size:8px;font-weight:800;text-transform:uppercase;color:var(--muted)">Pend.</div>
-                </div>
-              </div>
             </div>`;
-        }).join('');
+        };
+
+        // Monta seções com separadores visuais
+        let html = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">`;
+
+        if (ativos.length) {
+            html += ativos.map(itemHtml).join('');
+        }
+
+        if (pausados.length) {
+            html += `</div>
+            <div style="margin:12px 0 8px;display:flex;align-items:center;gap:8px">
+                <div style="height:1px;flex:1;background:var(--border)"></div>
+                <span style="font-size:10px;font-weight:800;color:#92400e;background:#fef3c7;border:1px solid #f59e0b;padding:2px 10px;border-radius:20px">⏸️ PAUSADOS</span>
+                <div style="height:1px;flex:1;background:var(--border)"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">`;
+            html += pausados.map(itemHtml).join('');
+        }
+
+        if (concluidos.length) {
+            html += `</div>
+            <div style="margin:12px 0 8px;display:flex;align-items:center;gap:8px">
+                <div style="height:1px;flex:1;background:var(--border)"></div>
+                <span style="font-size:10px;font-weight:800;color:var(--green);background:var(--green-pale);border:1px solid rgba(22,163,74,.3);padding:2px 10px;border-radius:20px">✅ CONCLUÍDOS</span>
+                <div style="height:1px;flex:1;background:var(--border)"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">`;
+            html += concluidos.map(itemHtml).join('');
+        }
+
+        html += `</div>`;
 
         const container = $('projListaBox');
-        if (container) {
-            container.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">${projHtml}</div>`;
-        }
+        if (container) container.innerHTML = html;
+
         window._tiDados.projetos = lista;
     } catch(e) {
         $('projMetrics').innerHTML='<div class="sem-dados">Dados não disponíveis</div>';
     }
 }
 
-// ── Card Gestão Ativos ─────────────────────────────────────────────────────────
-// BUG CORRIGIDO: removido "const const" — era sintaxe inválida que quebrava todo o JS da página
+// ── Card Gestão Ativos ────────────────────────────────────────────────────────
 async function carregarGestaoAtivos() {
     const box=$('gaConteudo');
     try {
@@ -617,7 +670,7 @@ async function carregarGestaoAtivos() {
     } catch(e) { box.innerHTML=`<div class="sem-dados">Erro: ${e.message}</div>`; }
 }
 
-// ── Card Ativos (legado) ───────────────────────────────────────────────────────
+// ── Card Ativos (legado) ──────────────────────────────────────────────────────
 async function carregarAtivos() {
     try {
         const r = await fetch('/ti/api/ativos/');
@@ -643,7 +696,7 @@ async function carregarAtivos() {
     } catch(e) { $('ativosAbas').innerHTML=`<div class="sem-dados" style="grid-column:1/-1">Erro: ${e.message}</div>`; }
 }
 
-// ── Card Migração ──────────────────────────────────────────────────────────────
+// ── Card Migração ─────────────────────────────────────────────────────────────
 function renderMigracao(s) {
     if (!s||!s.ok) { $('migMetrics').innerHTML='<div class="sem-dados">Sincronize a migração para ver dados</div>'; return; }
     miniCards('migMetrics', [
@@ -661,11 +714,11 @@ function renderMigracao(s) {
     window._tiDados.migracao=s;
 }
 
-// ── Card Chamados ──────────────────────────────────────────────────────────────
+// ── Card Chamados ─────────────────────────────────────────────────────────────
 function renderChamados(ano) {
     ano=ano||G.cham.anoSel||'todos';
     const d=G.cham.todos;
-if (!d || (!d.chamados && !d.ok)) { $('chamMetrics').innerHTML=''; $('chamSemDados').style.display=''; $('chamGraficos').style.display='none'; return; }
+    if (!d || (!d.chamados && !d.ok)) { $('chamMetrics').innerHTML=''; $('chamSemDados').style.display=''; $('chamGraficos').style.display='none'; return; }
     $('chamSemDados').style.display='none';
     const chamados=d.chamados||[];
     const lista=ano==='todos'?chamados:chamados.filter(c=>c.dataCriacao&&new Date(c.dataCriacao).getFullYear()===parseInt(ano));
@@ -689,7 +742,7 @@ if (!d || (!d.chamados && !d.ok)) { $('chamMetrics').innerHTML=''; $('chamSemDad
     window._tiDados.chamados=chamados;
 }
 
-// ── Card Pix TEF ───────────────────────────────────────────────────────────────
+// ── Card Pix TEF ──────────────────────────────────────────────────────────────
 async function carregarPix() {
     try {
         const s=await fetch('/ti/api/pix/stats').then(r=>r.json());
@@ -709,72 +762,28 @@ async function carregarPix() {
     } catch(e) { $('pixMetrics').innerHTML='<div class="sem-dados">Dados não disponíveis</div>'; }
 }
 
-// ── Card Links ─────────────────────────────────────────────────────────────────
+// ── Card Links ────────────────────────────────────────────────────────────────
 async function carregarLinks() {
     try {
         const r = await fetch('/ti/api/links/');
-        if (r.status === 401 || r.redirected) {
-            $('linksMetrics').innerHTML = '<div class="sem-dados">Sessão expirada — faça login</div>';
-            return;
-        }
+        if (r.status === 401 || r.redirected) { $('linksMetrics').innerHTML = '<div class="sem-dados">Sessão expirada — faça login</div>'; return; }
         const ct = r.headers.get('content-type') || '';
-        if (!ct.includes('application/json')) {
-            $('linksMetrics').innerHTML = '<div class="sem-dados">Erro de autenticação — faça login</div>';
-            return;
-        }
+        if (!ct.includes('application/json')) { $('linksMetrics').innerHTML = '<div class="sem-dados">Erro de autenticação — faça login</div>'; return; }
         const d = await r.json();
-        if (!d.ok || !d.links?.length) {
-            $('linksMetrics').innerHTML = '<div class="sem-dados">Sem links cadastrados</div>';
-            return;
-        }
+        if (!d.ok || !d.links?.length) { $('linksMetrics').innerHTML = '<div class="sem-dados">Sem links cadastrados</div>'; return; }
         const contagem = {};
         d.links.forEach(l => { const t=(l.tipo||'link').toLowerCase(); contagem[t]=(contagem[t]||0)+1; });
-        const total  = d.links.length;
-        const grupos = Object.keys(d.grupos || {}).length;
+        const total = d.links.length, grupos = Object.keys(d.grupos || {}).length;
         const sorted = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
-        const TIPO_CFG_LOCAL = {
-            sistema:      { icon:'⚙️',  label:'Sistemas'      },
-            planilha:     { icon:'📊',  label:'Planilhas'     },
-            manual:       { icon:'📘',  label:'Manuais'       },
-            apresentacao: { icon:'📑',  label:'Apresentações' },
-            formulario:   { icon:'📋',  label:'Formulários'   },
-            drive:        { icon:'📁',  label:'Drive'         },
-            link:         { icon:'🔗',  label:'Links'         },
-        };
-        const pillTotal = `
-            <div class="link-tipo-pill" style="border-color:rgba(124,58,237,.35);background:var(--ti2-pale)">
-                <span class="link-tipo-icon">🔗</span>
-                <div class="link-tipo-info">
-                    <span class="link-tipo-count" style="color:var(--ti2)">${total}</span>
-                    <span class="link-tipo-label">TOTAL</span>
-                </div>
-            </div>`;
-        const pillsTipo = sorted.map(([tipo, qtd]) => {
-            const cfg = TIPO_CFG_LOCAL[tipo] || { icon:'🏷️', label: tipo.charAt(0).toUpperCase()+tipo.slice(1) };
-            return `<div class="link-tipo-pill">
-                <span class="link-tipo-icon">${cfg.icon}</span>
-                <div class="link-tipo-info">
-                    <span class="link-tipo-count">${qtd}</span>
-                    <span class="link-tipo-label">${cfg.label}</span>
-                </div>
-            </div>`;
-        }).join('');
-        $('linksMetrics').innerHTML = `
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-                <span style="font-size:12px;font-weight:700;color:var(--muted)">
-                    <strong style="color:var(--ti2)">${total}</strong> links · <strong style="color:var(--ti2)">${grupos}</strong> grupos
-                </span>
-                <span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">${sorted.length} tipos</span>
-            </div>
-            <div class="links-tipos-grid">${pillTotal}${pillsTipo}</div>`;
+        const TIPOS = { sistema:{icon:'⚙️',label:'Sistemas'}, planilha:{icon:'📊',label:'Planilhas'}, manual:{icon:'📘',label:'Manuais'}, apresentacao:{icon:'📑',label:'Apresentações'}, formulario:{icon:'📋',label:'Formulários'}, drive:{icon:'📁',label:'Drive'}, link:{icon:'🔗',label:'Links'} };
+        const pillTotal = `<div class="link-tipo-pill" style="border-color:rgba(124,58,237,.35);background:var(--ti2-pale)"><span class="link-tipo-icon">🔗</span><div class="link-tipo-info"><span class="link-tipo-count" style="color:var(--ti2)">${total}</span><span class="link-tipo-label">TOTAL</span></div></div>`;
+        const pillsTipo = sorted.map(([tipo,qtd]) => { const cfg=TIPOS[tipo]||{icon:'🏷️',label:tipo.charAt(0).toUpperCase()+tipo.slice(1)}; return `<div class="link-tipo-pill"><span class="link-tipo-icon">${cfg.icon}</span><div class="link-tipo-info"><span class="link-tipo-count">${qtd}</span><span class="link-tipo-label">${cfg.label}</span></div></div>`; }).join('');
+        $('linksMetrics').innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><span style="font-size:12px;font-weight:700;color:var(--muted)"><strong style="color:var(--ti2)">${total}</strong> links · <strong style="color:var(--ti2)">${grupos}</strong> grupos</span><span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">${sorted.length} tipos</span></div><div class="links-tipos-grid">${pillTotal}${pillsTipo}</div>`;
         window._tiDados.links = d.links;
-    } catch(e) {
-        console.error('[links]', e.message);
-        $('linksMetrics').innerHTML = '<div class="sem-dados">Dados não disponíveis</div>';
-    }
+    } catch(e) { $('linksMetrics').innerHTML = '<div class="sem-dados">Dados não disponíveis</div>'; }
 }
 
-// ── Carregar tudo em paralelo ──────────────────────────────────────────────────
+// ── Carregar tudo ─────────────────────────────────────────────────────────────
 async function carregar() {
     setStatus('syncing','Carregando dashboard...');
     const [rMig,rCham]=await Promise.allSettled([
@@ -791,17 +800,10 @@ async function carregar() {
         if (cham.sincronizadoEm) set('lastSync','Sync: '+new Date(cham.sincronizadoEm).toLocaleString('pt-BR'));
     }
     renderChamados('todos');
-    // Carrega os 5 cards restantes em paralelo — nenhum bloqueia o outro
-    Promise.allSettled([
-        carregarProjetos(),
-        carregarGestaoAtivos(),
-        carregarAtivos(),
-        carregarPix(),
-        carregarLinks(),
-    ]);
+    Promise.allSettled([carregarProjetos(), carregarGestaoAtivos(), carregarAtivos(), carregarPix(), carregarLinks()]);
 }
 
-// ── Sincronizar ────────────────────────────────────────────────────────────────
+// ── Sincronizar ───────────────────────────────────────────────────────────────
 async function sincronizar() {
     const btn=$('btnSync');
     btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
@@ -814,91 +816,52 @@ async function sincronizar() {
         const ta=rA.status==='fulfilled'&&rA.value?.ok?rA.value.totais:null;
         const tc=rC.status==='fulfilled'&&rC.value?.ok?rC.value.totalTI:null;
         if (ta||tc) { toast(`✅ Ativos: ${ta?`${ta.ativos}·${ta.distratados}·${ta.desligados}·${ta.ti}`:'—'} | Chamados: ${tc??'—'}`); await carregar(); }
-        else { toast('⚠️ Sincronização parcial — verifique os serviços',4000); setStatus('error','⚠️ Sincronização parcial'); await carregar(); }
+        else { toast('⚠️ Sincronização parcial',4000); setStatus('error','⚠️ Sincronização parcial'); await carregar(); }
     } catch(e) { toast('❌ '+e.message,4000); setStatus('error','❌ '+e.message); }
     btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
 }
 
-// ── IA ─────────────────────────────────────────────────────────────────────────
+// ── IA ────────────────────────────────────────────────────────────────────────
 var _iaTiAberto = false;
-
 function toggleIATi() {
     _iaTiAberto = !_iaTiAberto;
-    var jan = $('iaTiJanela'), tog = $('iaTiToggle');
-    if (_iaTiAberto) {
-        jan.classList.add('aberto'); tog.classList.add('aberto');
-        tog.innerHTML = '✕<div class="iati-unread" id="iaTiUnread"></div>';
-    } else {
-        jan.classList.remove('aberto'); tog.classList.remove('aberto');
-        tog.innerHTML = '🤖<div class="iati-unread" id="iaTiUnread">1</div>';
-        setTimeout(function(){var u=$('iaTiUnread');if(u){u.style.display='flex';}},100);
-    }
+    var jan=$('iaTiJanela'), tog=$('iaTiToggle');
+    if (_iaTiAberto) { jan.classList.add('aberto'); tog.classList.add('aberto'); tog.innerHTML='✕<div class="iati-unread" id="iaTiUnread"></div>'; }
+    else { jan.classList.remove('aberto'); tog.classList.remove('aberto'); tog.innerHTML='🤖<div class="iati-unread" id="iaTiUnread">1</div>'; setTimeout(function(){var u=$('iaTiUnread');if(u)u.style.display='flex';},100); }
 }
-
 function _montarContextoTIFront() {
-    var d = window._tiDados || {};
-    var ativos=(d.ativos||[]), dist=(d.distratados||[]), desl=(d.desligados||[]),
-        ti=(d.ti||[]), sti=(d.statsTI||{}), chams=(d.chamados||[]),
-        m=(d.migracao||{}), p=(d.pix||{}), ga=(d.gestaoAtivos||{}),
-        proj=(d.projetos||[]);
+    var d=window._tiDados||{}, ativos=(d.ativos||[]), dist=(d.distratados||[]), desl=(d.desligados||[]),
+        ti=(d.ti||[]), sti=(d.statsTI||{}), chams=(d.chamados||[]), m=(d.migracao||{}), p=(d.pix||{}),
+        ga=(d.gestaoAtivos||{}), proj=(d.projetos||[]);
+    var pausados=proj.filter(function(p){return p.pausado;});
     var tiLines=ti.slice(0,20).map(function(e){return '  • '+(e.descricao||e.item||'—')+' | '+(e.estado||'—')+' | '+(e.loja||e.local||'—');}).join('\n');
     var chamLines=chams.slice(0,20).map(function(c){return '  • ['+(c.fechado?'FECHADO':'ABERTO')+'] '+(c.tipo||'—')+' | Resp: '+(c.responsavel||'—');}).join('\n');
-    var abertos=chams.filter(function(c){return !c.fechado;}).length;
-    var fechados=chams.filter(function(c){return c.fechado;}).length;
-    return '=== CENTRAL T.I. — DIVINO FOGÃO ===\n\n'+
-        '--- PROJETOS ---\nTotal: '+proj.length+'\n\n'+
-        '--- GESTÃO DE ATIVOS ---\n'+
-        'Total colaboradores: '+(ga.total||0)+'\nCom equipamento: '+(ga.comEquip||0)+'\nSem equipamento: '+(ga.semEquip||0)+'\n% cadastro: '+(ga.pctCad||0)+'%\nValor total: '+(ga.valorTotal||'—')+'\nRestituído: '+(ga.valorRestituido||'—')+'\n\n'+
-        '--- ATIVOS (legado) ---\n'+
-        'Comodatos: '+ativos.length+'\nDistratados: '+dist.length+'\nDesligados: '+desl.length+'\nEquip. T.I.: '+ti.length+'\nEm bom estado: '+(sti.emBomEstado||0)+'\n\n'+
-        '--- EQUIP. T.I. (amostra) ---\n'+(tiLines||'  Sem dados')+'\n\n'+
-        '--- MIGRAÇÃO ---\nTotal SULTS: '+(m.sultsTotal||0)+'\nLojas no SW: '+(m.comSW||0)+'\n% Migrado: '+(m.pctMigrado||0)+'%\n\n'+
-        '--- PIX TEF ---\nTotal: '+(p.total||0)+'\nConcluídas: '+(p.concluidos||0)+'\n% Concluído: '+(p.pctConcluido||0)+'%\n\n'+
-        '--- CHAMADOS ---\nTotal: '+chams.length+'\nAbertos: '+abertos+'\nFechados: '+fechados+'\nTaxa resolução: '+(chams.length?Math.round(fechados/chams.length*100):0)+'%\n\n'+
-        '--- ÚLTIMOS CHAMADOS ---\n'+(chamLines||'  Sem dados');
+    var abertos=chams.filter(function(c){return !c.fechado;}).length, fechados=chams.filter(function(c){return c.fechado;}).length;
+    return '=== CENTRAL T.I. — DIVINO FOGÃO ===\n\n--- PROJETOS ---\nTotal: '+proj.length+'\nAtivos: '+proj.filter(function(p){return !p.pausado&&p.pctConcluido<100;}).length+'\nPausados: '+pausados.length+'\nConcluídos: '+proj.filter(function(p){return p.pctConcluido>=100;}).length+'\nPausados: '+pausados.map(function(p){return p.nome;}).join(', ')+'\n\n--- GESTÃO DE ATIVOS ---\nTotal colaboradores: '+(ga.total||0)+'\nCom equipamento: '+(ga.comEquip||0)+'\n% cadastro: '+(ga.pctCad||0)+'%\n\n--- ATIVOS (legado) ---\nComodatos: '+ativos.length+'\nDistratados: '+dist.length+'\nDesligados: '+desl.length+'\nEquip. T.I.: '+ti.length+'\n\n--- MIGRAÇÃO ---\nTotal SULTS: '+(m.sultsTotal||0)+'\nLojas no SW: '+(m.comSW||0)+'\n% Migrado: '+(m.pctMigrado||0)+'%\n\n--- PIX TEF ---\nTotal: '+(p.total||0)+'\nConcluídas: '+(p.concluidos||0)+'\n\n--- CHAMADOS ---\nTotal: '+chams.length+'\nAbertos: '+abertos+'\nFechados: '+fechados;
 }
-
 async function perguntarIATi(fixa) {
-    var inp = $('inputIATi');
-    var q   = fixa || (inp ? inp.value.trim() : '');
+    var inp=$('inputIATi'), q=fixa||(inp?inp.value.trim():'');
     if (!q) return;
-    if (inp) inp.value = '';
+    if (inp) inp.value='';
     if (!_iaTiAberto) toggleIATi();
-    var box = $('iaTiMsgs');
-    var mu  = document.createElement('div'); mu.className='iati-msg user'; mu.textContent=q; box.appendChild(mu);
-    var ma  = document.createElement('div'); ma.className='iati-msg ai carregando';
-    ma.innerHTML='<span style="opacity:.6">⏳ Analisando dados de T.I. com Gemini…</span>';
-    box.appendChild(ma); box.scrollTop=box.scrollHeight;
+    var box=$('iaTiMsgs');
+    var mu=document.createElement('div'); mu.className='iati-msg user'; mu.textContent=q; box.appendChild(mu);
+    var ma=document.createElement('div'); ma.className='iati-msg ai carregando'; ma.innerHTML='<span style="opacity:.6">⏳ Analisando…</span>'; box.appendChild(ma); box.scrollTop=box.scrollHeight;
     var btn=$('iaTiBtnEnviar'); if(btn) btn.disabled=true;
     try {
-        var resp = await fetch('/ia-ti/perguntar', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({ pergunta: q, contexto: _montarContextoTIFront() })
-        });
+        var resp=await fetch('/ia-ti/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q,contexto:_montarContextoTIFront()})});
         if (!resp.ok) throw new Error('HTTP '+resp.status);
-        var json = await resp.json();
-        var txt  = json.resposta || json.erro || 'Sem resposta.';
+        var json=await resp.json(), txt=json.resposta||json.erro||'Sem resposta.';
         ma.className='iati-msg ai';
-        ma.innerHTML=txt
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--ti)">■</span> ')
-            .replace(/\n/g,'<br>');
-    } catch(e) {
-        ma.className='iati-msg ai';
-        ma.textContent='❌ Erro: '+e.message;
-    }
+        ma.innerHTML=txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^(▸|•|→|-) /gm,'<span style="color:var(--ti)">■</span> ').replace(/\n/g,'<br>');
+    } catch(e) { ma.className='iati-msg ai'; ma.textContent='❌ Erro: '+e.message; }
     if(btn) btn.disabled=false;
     box.scrollTop=box.scrollHeight;
 }
-
 document.addEventListener('DOMContentLoaded', function() {
     var input=$('inputIATi');
     if(input) input.addEventListener('keydown',function(e){if(e.key==='Enter') perguntarIATi();});
-    setTimeout(function(){
-        if(!_iaTiAberto){var u=$('iaTiUnread');if(u){u.style.display='flex';u.textContent='1';}}
-    },3000);
+    setTimeout(function(){if(!_iaTiAberto){var u=$('iaTiUnread');if(u){u.style.display='flex';u.textContent='1';}}},3000);
 });
 
 carregar();
