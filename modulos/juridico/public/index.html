@@ -24,7 +24,8 @@
         .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
         .hd{width:1px;height:32px;background:var(--border);}
         .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
-        nav{display:flex;gap:2px;margin-left:auto;}
+        nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none;}
+        nav::-webkit-scrollbar{display:none;}
         .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
         .nav-btn:hover{color:var(--text);background:var(--bg3);}
         .nav-btn.active{color:var(--jur);border-bottom-color:var(--jur);background:var(--jur-pale);}
@@ -53,6 +54,78 @@
         .ql.primary:hover{background:#6d28d9;}
         .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--jur);border-radius:50%;animation:spin .7s linear infinite;}
         @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* IA Widget */
+        #iaWidget{
+            position:fixed;right:24px;bottom:24px;z-index:9999;
+            display:flex;flex-direction:column;align-items:flex-end;gap:12px;
+        }
+        #iaToggle{
+            width:60px;height:60px;border:none;border-radius:999px;cursor:pointer;
+            background:linear-gradient(135deg,var(--jur),#6d28d9);
+            color:#fff;font-size:24px;box-shadow:var(--shadow-lg);
+        }
+        #iaJanela{
+            width:390px;max-width:calc(100vw - 24px);
+            background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;
+            box-shadow:var(--shadow-lg);overflow:hidden;display:none;
+        }
+        #iaJanela.open{display:block;}
+        .ia-head{
+            padding:14px 16px;border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:space-between;
+            background:linear-gradient(135deg,var(--jur-pale),#fff);
+        }
+        .ia-title{font-size:14px;font-weight:800;color:var(--text);}
+        .ia-close{
+            background:none;border:none;cursor:pointer;font-size:18px;
+            color:var(--muted);font-weight:800;
+        }
+        .ia-sugs{
+            padding:12px 12px 0 12px;display:flex;flex-wrap:wrap;gap:8px;background:#fff;
+        }
+        .ia-sug{
+            border:1px solid var(--border);background:var(--bg3);color:var(--text);
+            border-radius:999px;padding:8px 10px;font-size:12px;font-weight:700;cursor:pointer;
+        }
+        .ia-sug:hover{border-color:var(--jur);color:var(--jur);background:var(--jur-pale);}
+        #iaMsgs{
+            height:320px;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;
+            background:linear-gradient(180deg,#fff 0%, #fcfbf9 100%);
+        }
+        .ia-msg{
+            max-width:88%;padding:10px 12px;border-radius:14px;line-height:1.45;
+            font-size:13px;white-space:pre-wrap;
+        }
+        .ia-msg.user{
+            align-self:flex-end;background:var(--jur);color:#fff;border-bottom-right-radius:6px;
+        }
+        .ia-msg.bot{
+            align-self:flex-start;background:var(--bg3);color:var(--text);
+            border:1px solid var(--border);border-bottom-left-radius:6px;
+        }
+        .ia-foot{
+            border-top:1px solid var(--border);padding:12px;display:flex;gap:8px;background:#fff;
+        }
+        #inputIA{
+            flex:1;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;
+            font-family:'Nunito',sans-serif;font-size:13px;outline:none;
+        }
+        #inputIA:focus{border-color:var(--jur);}
+        #btnEnviarIA{
+            border:none;border-radius:12px;padding:0 16px;cursor:pointer;
+            background:var(--jur);color:#fff;font-weight:800;font-family:'Nunito',sans-serif;
+        }
+        #btnEnviarIA:hover{background:#6d28d9;}
+
+        @media(max-width:768px){
+            header{padding:0 14px;gap:10px;}
+            .h-title{display:none;}
+            main{padding:22px 14px 110px;}
+            #statusBar{padding:7px 14px;}
+            #iaWidget{right:12px;bottom:12px}
+            #iaJanela{width:min(390px, calc(100vw - 12px))}
+        }
     </style>
 </head>
 <body>
@@ -81,7 +154,6 @@
     <div class="page-sub" id="pageSub">Divino Fogão — Gestão de Ativos & Comodatos</div>
 
     <div class="cards">
-        <!-- Comodatos Ativos -->
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--jur)">
             <div class="card-icon">📱</div>
             <div class="card-label">Comodatos Ativos</div>
@@ -89,7 +161,6 @@
             <div class="card-sub">contratos vigentes</div>
         </a>
 
-        <!-- Distratados -->
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--orange)">
             <div class="card-icon">📋</div>
             <div class="card-label">Distratados</div>
@@ -97,7 +168,6 @@
             <div class="card-sub">distratos realizados</div>
         </a>
 
-        <!-- Desligados -->
         <a class="card" href="/juridico/ativos" style="border-top:3px solid #64748b">
             <div class="card-icon">🔴</div>
             <div class="card-label">Desligados</div>
@@ -105,7 +175,6 @@
             <div class="card-sub">colaboradores desligados</div>
         </a>
 
-        <!-- Valor Total -->
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--green)">
             <div class="card-icon">💰</div>
             <div class="card-label">Valor Total Ativos</div>
@@ -113,7 +182,6 @@
             <div class="card-sub">patrimônio em comodato</div>
         </a>
 
-        <!-- Uploads Drive -->
         <a class="card" href="/juridico/uploads" style="border-top:3px solid var(--blue)" id="cardUploads">
             <div class="card-icon">📁</div>
             <div class="card-label">Arquivos no Drive</div>
@@ -137,23 +205,183 @@
     </div>
 </main>
 
+<div id="iaWidget">
+    <div id="iaJanela">
+        <div class="ia-head">
+            <div class="ia-title">⚖️ IA Jurídico — Central Jurídica</div>
+            <button class="ia-close" onclick="toggleIA()">×</button>
+        </div>
+
+        <div class="ia-sugs">
+            <button class="ia-sug" onclick="usarSugestaoIA('Faça um resumo executivo do módulo jurídico.')">Resumo executivo</button>
+            <button class="ia-sug" onclick="usarSugestaoIA('Quantos ativos, distratados e desligados existem hoje?')">Totais do módulo</button>
+            <button class="ia-sug" onclick="usarSugestaoIA('Qual é o valor total atual dos ativos?')">Valor total</button>
+            <button class="ia-sug" onclick="usarSugestaoIA('Resuma a situação atual dos uploads do jurídico.')">Uploads</button>
+        </div>
+
+        <div id="iaMsgs">
+            <div class="ia-msg bot">Olá! Posso analisar os dados atuais do Jurídico com base no que estiver carregado nesta tela.</div>
+        </div>
+
+        <div class="ia-foot">
+            <input id="inputIA" type="text" placeholder="Pergunte sobre os dados do Jurídico..." onkeydown="if(event.key==='Enter') perguntarIA()">
+            <button id="btnEnviarIA" onclick="perguntarIA()">Enviar</button>
+        </div>
+    </div>
+
+    <button id="iaToggle" onclick="toggleIA()">🧠</button>
+</div>
+
 <script>
 const $ = id => document.getElementById(id);
-const setStatus = (cls, msg) => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
+const setStatus = (cls, msg) => { $('sdot').className = 'sdot ' + cls; $('statusText').textContent = msg; };
+
+let dadosAtivosIA = {
+    ativos: [],
+    distratados: [],
+    desligados: [],
+    statsAtivos: null,
+    sincronizadoEm: null
+};
+
+let dadosUploadsIA = {
+    pastas: [],
+    arquivos: []
+};
+
+function toggleIA() {
+    $('iaJanela').classList.toggle('open');
+    if ($('iaJanela').classList.contains('open')) {
+        setTimeout(() => $('inputIA')?.focus(), 60);
+    }
+}
+
+function addMsgIA(texto, tipo = 'bot') {
+    const div = document.createElement('div');
+    div.className = 'ia-msg ' + tipo;
+    div.textContent = texto;
+    $('iaMsgs').appendChild(div);
+    $('iaMsgs').scrollTop = $('iaMsgs').scrollHeight;
+}
+
+function usarSugestaoIA(texto) {
+    $('inputIA').value = texto;
+    perguntarIA();
+}
+
+function normItem(item = {}) {
+    return {
+        comodatario: item.comodatario || item.comodatário || item['COMODATÁRIO'] || item.nome || item.colaborador || '',
+        aparelho: item.aparelho || item['APARELHO'] || item.tipo || '',
+        modelo: item.modelo || item['MODELO'] || '',
+        valor: item.valor || item['VALOR'] || item.valorFormatado || '',
+        assinatura: item.assinatura || item['ASSINATURA'] || '',
+        etiqueta: item.etiqueta || item['ETIQUETA'] || '',
+        linha: item.linha || item['N° LINHA'] || item['Nº LINHA'] || item.numeroLinha || '',
+        distrato: item.distrato || item['DISTRATO'] || '',
+        obs: item.obs || item['OBS'] || item.observacoes || item.observações || ''
+    };
+}
+
+function montarContextoIA() {
+    const ativos      = Array.isArray(dadosAtivosIA.ativos) ? dadosAtivosIA.ativos : [];
+    const distratados = Array.isArray(dadosAtivosIA.distratados) ? dadosAtivosIA.distratados : [];
+    const desligados  = Array.isArray(dadosAtivosIA.desligados) ? dadosAtivosIA.desligados : [];
+    const pastas      = Array.isArray(dadosUploadsIA.pastas) ? dadosUploadsIA.pastas : [];
+    const arquivos    = Array.isArray(dadosUploadsIA.arquivos) ? dadosUploadsIA.arquivos : [];
+
+    const contexto = {
+        pagina: 'index jurídico',
+        resumo: {
+            ativos: ativos.length,
+            distratados: distratados.length,
+            desligados: desligados.length,
+            valorTotalAtivos: dadosAtivosIA.statsAtivos?.valorTotalFormatado || 'não informado',
+            sincronizadoEm: dadosAtivosIA.sincronizadoEm || null,
+            totalPastasDrive: pastas.length,
+            totalArquivosDrive: arquivos.length
+        },
+        amostraAtivos: ativos.slice(0, 30).map(normItem),
+        amostraDistratados: distratados.slice(0, 30).map(normItem),
+        amostraDesligados: desligados.slice(0, 30).map(normItem),
+        amostraUploads: arquivos.slice(0, 20).map(a => ({
+            nome: a.nome || '',
+            pasta: a.pastaNome || a.pasta || '',
+            tamanho: a.tamanhoFormatado || a.tamanho || '',
+            tipo: a.mimeType || a.tipo || ''
+        }))
+    };
+
+    return JSON.stringify(contexto, null, 2);
+}
+
+async function perguntarIA() {
+    const pergunta = $('inputIA').value.trim();
+    if (!pergunta) return;
+
+    addMsgIA(pergunta, 'user');
+    $('inputIA').value = '';
+
+    const btn = $('btnEnviarIA');
+    const textoOriginal = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    try {
+        const r = await fetch('/juridico/ia/analisar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pergunta,
+                contexto: montarContextoIA()
+            })
+        });
+
+        const d = await r.json();
+
+        if (!r.ok || !d.ok) {
+            throw new Error(d.erro || 'Falha ao consultar IA');
+        }
+
+        addMsgIA(d.resposta || 'Sem resposta.', 'bot');
+    } catch (e) {
+        addMsgIA('Erro ao consultar IA: ' + e.message, 'bot');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = textoOriginal;
+    }
+}
 
 async function carregar() {
     setStatus('syncing', 'Carregando...');
     try {
         const r = await fetch('/juridico/api/ativos/');
         const d = await r.json();
-        if (!d.ok) { setStatus('error', '⚠️ ' + (d.erro||'Erro')); return; }
-        $('c-ativos').textContent = (d.ativos||[]).length;
-        $('c-dist').textContent   = (d.distratados||[]).length;
-        $('c-desl').textContent   = (d.desligados||[]).length;
+
+        if (!d.ok) {
+            setStatus('error', '⚠️ ' + (d.erro || 'Erro'));
+            return;
+        }
+
+        dadosAtivosIA = {
+            ativos: d.ativos || [],
+            distratados: d.distratados || [],
+            desligados: d.desligados || [],
+            statsAtivos: d.statsAtivos || null,
+            sincronizadoEm: d.sincronizadoEm || null
+        };
+
+        $('c-ativos').textContent = (d.ativos || []).length;
+        $('c-dist').textContent   = (d.distratados || []).length;
+        $('c-desl').textContent   = (d.desligados || []).length;
         $('c-valor').textContent  = d.statsAtivos?.valorTotalFormatado || '—';
-        $('pageSub').textContent  = `${(d.ativos||[]).length} comodatos · ${(d.distratados||[]).length} distratados · ${(d.desligados||[]).length} desligados`;
-        setStatus('ready', '✓ Dados carregados' + (d.sincronizadoEm ? ' · Sync: ' + new Date(d.sincronizadoEm).toLocaleString('pt-BR') : ''));
-    } catch(e) {
+        $('pageSub').textContent  = `${(d.ativos || []).length} comodatos · ${(d.distratados || []).length} distratados · ${(d.desligados || []).length} desligados`;
+
+        setStatus(
+            'ready',
+            '✓ Dados carregados' + (d.sincronizadoEm ? ' · Sync: ' + new Date(d.sincronizadoEm).toLocaleString('pt-BR') : '')
+        );
+    } catch (e) {
         setStatus('error', '❌ ' + e.message);
     }
 }
@@ -165,29 +393,31 @@ async function carregarUploads() {
             fetch('/juridico/uploads/arquivos').then(r => r.json()),
         ]);
 
-        const pastas   = rPastas.status   === 'fulfilled' && rPastas.value.ok   ? rPastas.value.pastas    || [] : [];
-        const arquivos = rArquivos.status === 'fulfilled' && rArquivos.value.ok ? rArquivos.value.arquivos || [] : [];
+        const pastas   = rPastas.status === 'fulfilled' && rPastas.value.ok ? (rPastas.value.pastas || []) : [];
+        const arquivos = rArquivos.status === 'fulfilled' && rArquivos.value.ok ? (rArquivos.value.arquivos || []) : [];
+
+        dadosUploadsIA = { pastas, arquivos };
 
         const totalArqs  = arquivos.length;
-        const totalBytes = arquivos.reduce((s, f) => s + parseInt(f.tamanho || 0), 0);
+        const totalBytes = arquivos.reduce((s, f) => s + parseInt(f.tamanho || 0, 10), 0);
 
         const fmtBytes = b => {
-            if (b < 1024)       return b + ' B';
-            if (b < 1048576)    return (b / 1024).toFixed(1) + ' KB';
+            if (b < 1024) return b + ' B';
+            if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
             if (b < 1073741824) return (b / 1048576).toFixed(1) + ' MB';
             return (b / 1073741824).toFixed(1) + ' GB';
         };
 
-        $('c-uploads').textContent     = totalArqs + ' arq.';
+        $('c-uploads').textContent = totalArqs + ' arq.';
         $('c-uploads-sub').textContent = pastas.length + ' pasta(s) · ' + fmtBytes(totalBytes);
 
-        // Hover do card muda se não tem arquivos
         if (totalArqs === 0 && pastas.length === 0) {
-            $('c-uploads').textContent     = '—';
+            $('c-uploads').textContent = '—';
             $('c-uploads-sub').textContent = 'Nenhum arquivo ainda';
         }
-    } catch(e) {
-        $('c-uploads').textContent     = '—';
+    } catch (e) {
+        dadosUploadsIA = { pastas: [], arquivos: [] };
+        $('c-uploads').textContent = '—';
         $('c-uploads-sub').textContent = 'Erro ao carregar';
     }
 }
