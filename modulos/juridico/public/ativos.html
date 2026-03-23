@@ -143,34 +143,73 @@
         @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         .valor-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-pale);border:1.5px solid rgba(22,163,74,.2);border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800;color:var(--green);}
 
-        /* ── IA WIDGET ── */
-        #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
-        #iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--jur),#6d28d9);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .25s;color:#fff;position:relative;}
-        #iaToggle:hover{transform:scale(1.08);}
-        #iaToggle.aberto{background:linear-gradient(135deg,#444,#1a1a1a);}
-        .ia-unread{position:absolute;top:-3px;right:-3px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid #fff;line-height:1;}
-        #iaJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:400px;max-width:calc(100vw - 32px);max-height:660px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;animation:iaSlide .25s ease;}
-        #iaJanela.aberto{display:flex;}
-        @keyframes iaSlide{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-        .ia-topo{background:linear-gradient(135deg,var(--jur),#6d28d9);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-        .ia-topo-esq{display:flex;align-items:center;gap:10px;}
-        .ia-topo-titulo{font-size:14px;font-weight:800;}
-        .ia-topo-sub{font-size:11px;opacity:.8;margin-top:1px;}
-        .ia-fechar{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
-        .ia-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-        .ia-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;}
+        /* ── IA NOVA ── */
+        #iaWidget{
+            position:fixed;right:24px;bottom:24px;z-index:9999;
+            display:flex;flex-direction:column;align-items:flex-end;gap:12px;
+        }
+        #iaToggle{
+            width:60px;height:60px;border:none;border-radius:999px;cursor:pointer;
+            background:linear-gradient(135deg,var(--jur),#6d28d9);
+            color:#fff;font-size:24px;box-shadow:var(--shadow-lg);
+        }
+        #iaJanela{
+            width:390px;max-width:calc(100vw - 24px);
+            background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;
+            box-shadow:var(--shadow-lg);overflow:hidden;display:none;
+        }
+        #iaJanela.open{display:block;}
+        .ia-head{
+            padding:14px 16px;border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:space-between;
+            background:linear-gradient(135deg,var(--jur-pale),#fff);
+        }
+        .ia-title{font-size:14px;font-weight:800;color:var(--text);}
+        .ia-close{
+            background:none;border:none;cursor:pointer;font-size:18px;
+            color:var(--muted);font-weight:800;
+        }
+        .ia-sugs{
+            padding:12px 12px 0 12px;display:flex;flex-wrap:wrap;gap:8px;background:#fff;
+        }
+        .ia-sug{
+            border:1px solid var(--border);background:var(--bg3);color:var(--text);
+            border-radius:999px;padding:8px 10px;font-size:12px;font-weight:700;cursor:pointer;
+        }
         .ia-sug:hover{border-color:var(--jur);color:var(--jur);background:var(--jur-pale);}
-        .ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:220px;max-height:380px;}
-        .ia-msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
-        .ia-msg.user{background:var(--jur);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
-        .ia-msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
-        .ia-msg.ai.carregando{color:var(--muted);font-style:italic;}
-        .ia-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-        .ia-input{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;}
-        .ia-input:focus{border-color:var(--jur);}
-        .ia-enviar{background:var(--jur);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
-        .ia-enviar:disabled{opacity:.5;cursor:not-allowed;}
-        @media(max-width:768px){#iaJanela{width:calc(100vw - 32px);}#iaWidget{right:16px;bottom:16px;}}
+        #iaMsgs{
+            height:320px;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;
+            background:linear-gradient(180deg,#fff 0%, #fcfbf9 100%);
+        }
+        .ia-msg{
+            max-width:88%;padding:10px 12px;border-radius:14px;line-height:1.45;
+            font-size:13px;white-space:pre-wrap;
+        }
+        .ia-msg.user{
+            align-self:flex-end;background:var(--jur);color:#fff;border-bottom-right-radius:6px;
+        }
+        .ia-msg.bot{
+            align-self:flex-start;background:var(--bg3);color:var(--text);
+            border:1px solid var(--border);border-bottom-left-radius:6px;
+        }
+        .ia-foot{
+            border-top:1px solid var(--border);padding:12px;display:flex;gap:8px;background:#fff;
+        }
+        #inputIA{
+            flex:1;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;
+            font-family:'Nunito',sans-serif;font-size:13px;outline:none;
+        }
+        #inputIA:focus{border-color:var(--jur);}
+        #btnEnviarIA{
+            border:none;border-radius:12px;padding:0 16px;cursor:pointer;
+            background:var(--jur);color:#fff;font-weight:800;font-family:'Nunito',sans-serif;
+        }
+        #btnEnviarIA:hover{background:#6d28d9;}
+
+        @media(max-width:768px){
+            #iaJanela{width:min(390px, calc(100vw - 12px))}
+            #iaWidget{right:12px;bottom:12px}
+        }
     </style>
 </head>
 <body>
@@ -312,8 +351,6 @@
             <div class="pagination" id="des-pag"></div>
         </div>
     </div>
-
-
 </main>
 
 <!-- MODAL -->
@@ -327,41 +364,32 @@
     </div>
 </div>
 
-<!-- IA WIDGET -->
+<!-- IA NOVA -->
 <div id="iaWidget">
     <div id="iaJanela">
-        <div class="ia-topo">
-            <div class="ia-topo-esq">
-                <span style="font-size:24px">🤖</span>
-                <div>
-                    <div class="ia-topo-titulo">IA — Ativos Jurídico</div>
-                    <div class="ia-topo-sub">Analise comodatos, jurídico e patrimônio</div>
-                </div>
-            </div>
-            <button class="ia-fechar" onclick="toggleIA()">✕</button>
+        <div class="ia-head">
+            <div class="ia-title">⚖️ IA Jurídico — Ativos</div>
+            <button class="ia-close" onclick="toggleIA()">×</button>
         </div>
+
         <div class="ia-sugs">
-            <button class="ia-sug" onclick="perguntarIA('Quantos ativos temos no total?')">📊 Resumo</button>
-            <button class="ia-sug" onclick="perguntarIA('Qual o valor total do patrimônio jurídico?')">💰 Patrimônio</button>
-            <button class="ia-sug" onclick="perguntarIA('Quais equipamentos estão em mau estado?')">⚠️ Estado</button>
-            <button class="ia-sug" onclick="perguntarIA('Quem tem mais comodatos ativos?')">👤 Top</button>
-            <button class="ia-sug" onclick="perguntarIA('Faça um resumo executivo dos ativos.')">📋 Executivo</button>
+            <button class="ia-sug" onclick="usarSugestaoIA('Faça um resumo executivo dos ativos jurídicos.')">Resumo executivo</button>
+            <button class="ia-sug" onclick="usarSugestaoIA('Quantos ativos, distratados e desligados existem hoje?')">Totais</button>
+            <button class="ia-sug" onclick="usarSugestaoIA('Qual é o valor total atual dos ativos?')">Valor total</button>
+            <button class="ia-sug" onclick="usarSugestaoIA('Quem tem mais itens cadastrados no histórico?')">Top comodatários</button>
         </div>
-        <div class="ia-msgs" id="iaMsgs">
-            <div class="ia-msg ai">
-                👋 Olá! Posso analisar os ativos, comodatos, distratados, desligados e inventário Jurídico.<br><br>
-                <span style="font-size:11px;color:var(--muted)">💡 Clique em uma sugestão ou digite sua pergunta.</span>
-            </div>
+
+        <div id="iaMsgs">
+            <div class="ia-msg bot">Olá! Posso analisar os dados atuais de ativos, distratados e desligados com base no que estiver carregado nesta tela.</div>
         </div>
-        <div class="ia-rodape">
-            <input type="text" class="ia-input" id="inputIA" placeholder="Ex: Qual o valor total em notebooks?">
-            <button class="ia-enviar" id="btnIA" onclick="perguntarIA()">➤</button>
+
+        <div class="ia-foot">
+            <input id="inputIA" type="text" placeholder="Pergunte sobre os dados do Jurídico..." onkeydown="if(event.key==='Enter') perguntarIA()">
+            <button id="btnEnviarIA" onclick="perguntarIA()">Enviar</button>
         </div>
     </div>
-    <button id="iaToggle" onclick="toggleIA()" title="IA Ativos Jurídico">
-        🤖
-        <div class="ia-unread" id="iaUnread">1</div>
-    </button>
+
+    <button id="iaToggle" onclick="toggleIA()">🧠</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -697,84 +725,125 @@ function exportCSV(){
     toast(`📥 ${lista.length} registros exportados`);
 }
 
-// ══ IA ══════════════════════════════════════════════════════
-var _iaAberto = false;
-
+/* ══ IA NOVA ═══════════════════════════════════════════════ */
 function toggleIA() {
-    _iaAberto = !_iaAberto;
-    const jan=$('iaJanela'), tog=$('iaToggle');
-    if (_iaAberto) {
-        jan.classList.add('aberto'); tog.classList.add('aberto');
-        tog.innerHTML='✕<div class="ia-unread" id="iaUnread"></div>';
-    } else {
-        jan.classList.remove('aberto'); tog.classList.remove('aberto');
-        tog.innerHTML='🤖<div class="ia-unread" id="iaUnread">1</div>';
-        setTimeout(()=>{const u=$('iaUnread');if(u)u.style.display='flex';},100);
+    $('iaJanela').classList.toggle('open');
+    if ($('iaJanela').classList.contains('open')) {
+        setTimeout(() => $('inputIA')?.focus(), 60);
     }
+}
+
+function addMsgIA(texto, tipo='bot') {
+    const div = document.createElement('div');
+    div.className = 'ia-msg ' + tipo;
+    div.textContent = texto;
+    $('iaMsgs').appendChild(div);
+    $('iaMsgs').scrollTop = $('iaMsgs').scrollHeight;
+}
+
+function usarSugestaoIA(txt) {
+    $('inputIA').value = txt;
+    perguntarIA();
+}
+
+function normItem(item = {}) {
+    return {
+        comodatario: item.comodatario || item.comodatário || item['COMODATÁRIO'] || item.nome || item.colaborador || '',
+        aparelho: item.aparelho || item['APARELHO'] || item.tipo || '',
+        modelo: item.modelo || item['MODELO'] || '',
+        valor: item.valor || item['VALOR'] || item.valorFormatado || '',
+        assinatura: item.assinatura || item['ASSINATURA'] || '',
+        etiqueta: item.etiqueta || item['ETIQUETA'] || '',
+        linha: item.linha || item['N° LINHA'] || item['Nº LINHA'] || item.numeroLinha || item.numLinha || '',
+        distrato: item.distrato || item['DISTRATO'] || '',
+        obs: item.obs || item['OBS'] || item.observacoes || item.observações || ''
+    };
 }
 
 function montarContextoIA() {
-    const sa=D.raw?.statsAtivos||{}, sd=D.raw?.statsDistratados||{}, sde=D.raw?.statsDesligados||{};
-    const amostraAtivos=(D.ativos||[]).slice(0,20).map(i=>`  • ${i.comodatario||'—'} | ${i.aparelho||'—'} | ${i.modelo||'—'} | ${i.valorFormatado||'—'}`).join('\n');
-    return `=== ATIVOS JURÍDICO — DIVINO FOGÃO ===
+    const ativos = Array.isArray(D.ativos) ? D.ativos : [];
+    const distratados = Array.isArray(D.distratados) ? D.distratados : [];
+    const desligados = Array.isArray(D.desligados) ? D.desligados : [];
+    const sa = D.raw?.statsAtivos || {};
+    const sd = D.raw?.statsDistratados || {};
+    const sde = D.raw?.statsDesligados || {};
 
---- COMODATOS ATIVOS ---
-Total: ${D.ativos.length}
-Valor total: ${sa.valorTotalFormatado||'—'}
-Notebooks: ${D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length}
-Celulares: ${D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('celular')).length}
+    const contexto = {
+        pagina: 'ativos juridico',
+        abaAtual,
+        resumo: {
+            ativos: ativos.length,
+            distratados: distratados.length,
+            desligados: desligados.length,
+            valorTotalAtivos: sa.valorTotalFormatado || 'não informado',
+            valorTotalDistratados: sd.valorTotalFormatado || 'não informado',
+            valorTotalDesligados: sde.valorTotalFormatado || 'não informado',
+            sincronizadoEm: D.raw?.sincronizadoEm || null
+        },
+        indicadores: {
+            ativos: {
+                notebooks: ativos.filter(i => (i.aparelho || '').toLowerCase().includes('notebook')).length,
+                celulares: ativos.filter(i => (i.aparelho || '').toLowerCase().includes('celular') || (i.aparelho || '').toLowerCase().includes('smartph')).length,
+                porAparelho: sa.porAparelho || [],
+                topComodatarios: sa.topComodatarios || []
+            },
+            distratados: {
+                notebooks: distratados.filter(i => (i.aparelho || '').toLowerCase().includes('notebook')).length,
+                celulares: distratados.filter(i => (i.aparelho || '').toLowerCase().includes('celular') || (i.aparelho || '').toLowerCase().includes('smartph')).length,
+                porAparelho: sd.porAparelho || [],
+                topComodatarios: sd.topComodatarios || []
+            },
+            desligados: {
+                notebooks: desligados.filter(i => (i.aparelho || '').toLowerCase().includes('notebook')).length,
+                celulares: desligados.filter(i => (i.aparelho || '').toLowerCase().includes('celular') || (i.aparelho || '').toLowerCase().includes('smartph')).length,
+                porAparelho: sde.porAparelho || [],
+                topComodatarios: sde.topComodatarios || []
+            }
+        },
+        amostraAtivos: ativos.slice(0, 30).map(normItem),
+        amostraDistratados: distratados.slice(0, 30).map(normItem),
+        amostraDesligados: desligados.slice(0, 30).map(normItem)
+    };
 
---- DISTRATADOS ---
-Total: ${D.distratados.length}
-Valor total: ${sd.valorTotalFormatado||'—'}
-
---- DESLIGADOS ---
-Total: ${D.desligados.length}
-Valor total: ${sde.valorTotalFormatado||'—'}
-
---- AMOSTRA ATIVOS ---
-${amostraAtivos||'  Sem dados'}`.trim();
+    return JSON.stringify(contexto, null, 2);
 }
 
-async function perguntarIA(fixa) {
-    const inp=$('inputIA');
-    const q = fixa || (inp?inp.value.trim():'');
-    if (!q) return;
-    if (inp) inp.value='';
-    if (!_iaAberto) toggleIA();
+async function perguntarIA() {
+    const pergunta = $('inputIA').value.trim();
+    if (!pergunta) return;
 
-    const box=$('iaMsgs');
-    const mu=document.createElement('div'); mu.className='ia-msg user'; mu.textContent=q; box.appendChild(mu);
-    const ma=document.createElement('div'); ma.className='ia-msg ai carregando';
-    ma.innerHTML='<span style="opacity:.6">⏳ Analisando ativos...</span>';
-    box.appendChild(ma); box.scrollTop=box.scrollHeight;
+    addMsgIA(pergunta, 'user');
+    $('inputIA').value = '';
 
-    const btn=$('btnIA'); if(btn) btn.disabled=true;
+    const btn = $('btnEnviarIA');
+    const txtOriginal = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '...';
 
     try {
-        const resp=await fetch('/ia-juridico/perguntar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q,contexto:montarContextoIA()})});
-        if(!resp.ok) throw new Error('HTTP '+resp.status);
-        const json=await resp.json();
-        const txt=json.resposta||json.erro||'Sem resposta.';
-        ma.className='ia-msg ai';
-        ma.innerHTML=txt
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--jur)">■</span> ')
-            .replace(/\n/g,'<br>');
-    } catch(e) {
-        ma.className='ia-msg ai';
-        ma.textContent='❌ Erro: '+e.message;
-    }
-    if(btn) btn.disabled=false;
-    box.scrollTop=box.scrollHeight;
-}
+        const r = await fetch('/juridico/ia/analisar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pergunta,
+                contexto: montarContextoIA()
+            })
+        });
 
-document.addEventListener('DOMContentLoaded', ()=>{
-    const inp=$('inputIA');
-    if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') perguntarIA(); });
-    setTimeout(()=>{ if(!_iaAberto){const u=$('iaUnread');if(u){u.style.display='flex';u.textContent='1';}} },3000);
-});
+        const d = await r.json();
+
+        if (!r.ok || !d.ok) {
+            throw new Error(d.erro || 'Falha ao consultar IA');
+        }
+
+        addMsgIA(d.resposta || 'Sem resposta.', 'bot');
+    } catch (e) {
+        addMsgIA('Erro ao consultar IA: ' + e.message, 'bot');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = txtOriginal;
+    }
+}
 
 carregar();
 </script>
