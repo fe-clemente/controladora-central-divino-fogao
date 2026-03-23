@@ -34,7 +34,7 @@
         .sdot.error{background:var(--red);animation:none;}
         .sdot.syncing{background:var(--ti-light);animation:pulse .8s infinite;}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-        main{max-width:1300px;margin:0 auto;padding:28px 24px;}
+        main{max-width:1400px;margin:0 auto;padding:28px 24px;}
         .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
         .page-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
         .aba-switcher{display:flex;gap:6px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:50px;padding:6px 8px;box-shadow:var(--shadow);width:fit-content;margin-bottom:24px;flex-wrap:wrap;}
@@ -76,19 +76,38 @@
         .btn-green{background:var(--green);color:#fff;}.btn-green:hover{background:#15803d;}
         .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}.btn-ghost:hover{background:var(--bg2);}
         .btn-sm{padding:6px 12px;font-size:12px;}
+        .btn-xs{padding:4px 8px;font-size:11px;border-radius:6px;}
         .btn:disabled{opacity:.5;cursor:not-allowed;}
         .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
         @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* ── TABELA AGRUPADA ── */
         .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
         .table-head{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
         .tbl-title{font-size:13px;font-weight:800;}
         .tbl-scroll{overflow-x:auto;}
         table{width:100%;border-collapse:collapse;min-width:700px;}
         thead th{padding:9px 13px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
-        tbody tr{transition:background .12s;cursor:pointer;}
-        tbody tr:hover td{background:var(--bg3);}
-        tbody td{padding:10px 13px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        tbody tr:last-child td{border-bottom:none;}
+
+        /* Linhas agrupadas */
+        .tr-comod td{background:#fafaf8;border-bottom:none;padding-top:12px;padding-bottom:4px;vertical-align:top;}
+        .tr-comod:hover td{background:#f0f9ff;}
+        .tr-item td{background:#fff;padding-top:7px;padding-bottom:7px;border-bottom:1px solid var(--border);vertical-align:middle;}
+        .tr-item:hover td{background:#f8fbff;}
+        .tr-sep{height:6px;}
+        .tr-sep td{background:var(--bg);border:none;padding:0;}
+        .comod-nome{font-size:12px;font-weight:800;color:var(--ti);cursor:pointer;line-height:1.3;word-break:break-word;white-space:normal;}
+        .comod-nome:hover{color:#024f7a;text-decoration:underline;}
+        .comod-meta{font-size:10px;color:var(--muted);margin-top:3px;}
+        .add-item-btn{background:#f0fdf4;border:1.5px dashed #86efac;color:#166534;border-radius:7px;padding:4px 9px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;margin-top:6px;display:inline-block;}
+        .add-item-btn:hover{background:#dcfce7;border-style:solid;}
+
+        /* Tabela T.I — linhas clicáveis simples */
+        .tr-ti{transition:background .12s;cursor:pointer;}
+        .tr-ti:hover td{background:var(--bg3);}
+        .tr-ti td{padding:10px 13px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .tr-ti:last-child td{border-bottom:none;}
+
         .mono{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
         .td-nome{font-weight:700;}
         .td-valor{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--green);}
@@ -102,14 +121,17 @@
         .eb-bom{background:var(--ti-pale);color:var(--ti);border:1.5px solid rgba(3,105,161,.2);}
         .eb-regular{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
         .eb-ruim{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
+
         .pagination{display:flex;align-items:center;justify-content:center;gap:5px;padding:12px;flex-wrap:wrap;border-top:1px solid var(--border);}
         .pagination button{background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;color:var(--muted);padding:5px 11px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;transition:all .15s;}
         .pagination button.active,.pagination button:hover{background:var(--ti);color:#fff;border-color:var(--ti);}
         .pagination button:disabled{opacity:.4;cursor:not-allowed;pointer-events:none;}
         .pg-info{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+
+        /* ── MODAL ── */
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
         .modal-overlay.open{display:flex;}
-        .modal-box{background:var(--bg2);border-radius:18px;padding:26px 28px;max-width:620px;width:100%;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;}
+        .modal-box{background:var(--bg2);border-radius:18px;padding:26px 28px;max-width:700px;width:100%;box-shadow:var(--shadow-lg);max-height:92vh;overflow-y:auto;}
         .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;}
         .modal-title{font-size:15px;font-weight:800;}
         .modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:5px 11px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);}
@@ -129,15 +151,27 @@
         .form-group{display:flex;flex-direction:column;gap:4px;}
         .form-group.full{grid-column:1/-1;}
         .form-group label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
-        .form-control{padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;transition:border-color .2s;}
+        .form-control{padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;transition:border-color .2s;width:100%;}
         .form-control:focus{border-color:var(--ti);}
         select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-        textarea.form-control{resize:vertical;min-height:65px;}
+        textarea.form-control{resize:vertical;min-height:60px;}
+
+        /* ── CARDS DE ITEM NO MODAL ── */
+        .item-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;position:relative;}
+        .item-card-num{position:absolute;top:10px;left:14px;font-size:10px;font-weight:800;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+        .item-card-remove{position:absolute;top:8px;right:10px;background:var(--red-pale);border:none;border-radius:6px;color:var(--red);font-size:11px;font-weight:800;padding:3px 8px;cursor:pointer;font-family:'Nunito',sans-serif;}
+        .item-card-remove:hover{background:var(--red);color:#fff;}
+        .item-card-body{padding-top:4px;}
+        .add-outro-item{background:#f0f9ff;border:1.5px dashed #93c5fd;color:var(--ti);border-radius:9px;padding:10px;font-size:12px;font-weight:800;cursor:pointer;width:100%;font-family:'Nunito',sans-serif;margin-top:4px;transition:all .15s;}
+        .add-outro-item:hover{background:#e0f2fe;border-style:solid;}
+
         .empty{text-align:center;padding:50px;color:var(--muted);}
         .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
         .toast.show{display:block;animation:fadeUp .3s ease;}
         @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         .valor-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-pale);border:1.5px solid rgba(22,163,74,.2);border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800;color:var(--green);}
+
+        /* ── IA ── */
         #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
         #iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--ti),#075985);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(3,105,161,.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .25s;color:#fff;position:relative;}
         #iaToggle:hover{transform:scale(1.08);}
@@ -165,6 +199,9 @@
         .ia-enviar{background:var(--ti);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
         .ia-enviar:disabled{opacity:.5;cursor:not-allowed;}
         @media(max-width:768px){#iaJanela{width:calc(100vw - 32px);}#iaWidget{right:16px;bottom:16px;}}
+
+        /* Ícone planilha */
+        .icon-sheet{width:13px;height:13px;flex-shrink:0;}
     </style>
 </head>
 <body>
@@ -176,18 +213,17 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
-<nav>
-    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
-    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
-    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-    <button class="nav-btn active" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
-    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
-    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
-    <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
-    
-</nav>
+    <nav>
+        <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
+        <button class="nav-btn active" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+        <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+        <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+        <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+        <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+        <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+        <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
+    </nav>
 </header>
 
 <div id="statusBar">
@@ -228,6 +264,7 @@
     <div class="painel active" id="painel-ativos">
         <div class="metrics">
             <div class="mc"><div class="mc-icon">📱</div><div class="mc-label">Total</div><div class="mc-val" style="color:var(--ti)" id="a-total">—</div><div class="mc-sub">comodatos ativos</div></div>
+            <div class="mc"><div class="mc-icon">👤</div><div class="mc-label">Comodatários</div><div class="mc-val" style="color:var(--ti)" id="a-comod">—</div></div>
             <div class="mc"><div class="mc-icon">💻</div><div class="mc-label">Notebooks</div><div class="mc-val" style="color:var(--ti)" id="a-nb">—</div></div>
             <div class="mc"><div class="mc-icon">📱</div><div class="mc-label">Celulares</div><div class="mc-val" style="color:var(--green)" id="a-cel">—</div></div>
             <div class="mc"><div class="mc-icon">💰</div><div class="mc-label">Valor Total</div><div class="mc-val" style="color:var(--green);font-size:16px" id="a-valor">—</div></div>
@@ -244,11 +281,24 @@
         </div>
         <div class="table-wrap">
             <div class="table-head">
-                <div><div class="tbl-title">📱 Comodatos Ativos</div></div>
-                <button class="btn btn-green btn-sm" onclick="abrirInsert('ativos')">➕ Novo Registro</button>
+                <div>
+                    <div class="tbl-title">📱 Comodatos Ativos</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:3px">Agrupado por comodatário · ➕ para adicionar item</div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                    <a class="btn btn-ghost btn-sm" href="https://docs.google.com/spreadsheets/d/1aqS-In7hzRP3jay6QbLOq5SLH9Q434vi5qZjOKo1tnI/edit?gid=2107119853#gid=2107119853" target="_blank" rel="noopener" style="text-decoration:none">
+                        <svg class="icon-sheet" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Planilha
+                    </a>
+                    <button class="btn btn-green btn-sm" onclick="abrirInsert('ativos')">➕ Novo Comodatário</button>
+                </div>
             </div>
             <div class="tbl-scroll">
-                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Modelo</th><th>Nº Linha</th><th>Valor</th><th>Assinatura</th><th>Etiqueta</th><th>Obs</th></tr></thead>
+                <table><thead><tr>
+                    <th style="width:170px;min-width:170px">Comodatário</th>
+                    <th>Aparelho</th><th>Modelo</th><th>Nº Linha</th>
+                    <th>Valor</th><th>Assinatura</th><th>Etiqueta</th><th>Obs</th><th>Ações</th>
+                </tr></thead>
                 <tbody id="a-body"></tbody></table>
             </div>
             <div class="pagination" id="a-pag"></div>
@@ -259,6 +309,7 @@
     <div class="painel" id="painel-distratados">
         <div class="metrics">
             <div class="mc"><div class="mc-icon">📋</div><div class="mc-label">Total</div><div class="mc-val" style="color:var(--orange)" id="d-total">—</div></div>
+            <div class="mc"><div class="mc-icon">👤</div><div class="mc-label">Comodatários</div><div class="mc-val" style="color:var(--orange)" id="d-comod">—</div></div>
             <div class="mc"><div class="mc-icon">💻</div><div class="mc-label">Notebooks</div><div class="mc-val" style="color:var(--ti)" id="d-nb">—</div></div>
             <div class="mc"><div class="mc-icon">📱</div><div class="mc-label">Celulares</div><div class="mc-val" style="color:var(--green)" id="d-cel">—</div></div>
             <div class="mc"><div class="mc-icon">💰</div><div class="mc-label">Valor Total</div><div class="mc-val" style="color:var(--green);font-size:16px" id="d-valor">—</div></div>
@@ -275,11 +326,24 @@
         </div>
         <div class="table-wrap">
             <div class="table-head">
-                <div><div class="tbl-title">📋 Distratados</div></div>
-                <button class="btn btn-green btn-sm" onclick="abrirInsert('distratados')">➕ Novo Registro</button>
+                <div>
+                    <div class="tbl-title">📋 Distratados</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:3px">Agrupado por comodatário</div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                    <a class="btn btn-ghost btn-sm" href="https://docs.google.com/spreadsheets/d/1aqS-In7hzRP3jay6QbLOq5SLH9Q434vi5qZjOKo1tnI/edit?gid=1348630875#gid=1348630875" target="_blank" rel="noopener" style="text-decoration:none">
+                        <svg class="icon-sheet" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Planilha
+                    </a>
+                    <button class="btn btn-green btn-sm" onclick="abrirInsert('distratados')">➕ Novo Registro</button>
+                </div>
             </div>
             <div class="tbl-scroll">
-                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Modelo</th><th>Nº Linha</th><th>Valor</th><th>Assinatura</th><th>Distrato</th><th>Obs</th></tr></thead>
+                <table><thead><tr>
+                    <th style="width:170px;min-width:170px">Comodatário</th>
+                    <th>Aparelho</th><th>Modelo</th><th>Nº Linha</th>
+                    <th>Valor</th><th>Assinatura</th><th>Distrato</th><th>Obs</th><th>Ações</th>
+                </tr></thead>
                 <tbody id="d-body"></tbody></table>
             </div>
             <div class="pagination" id="d-pag"></div>
@@ -290,6 +354,7 @@
     <div class="painel" id="painel-desligados">
         <div class="metrics">
             <div class="mc"><div class="mc-icon">🔴</div><div class="mc-label">Total</div><div class="mc-val" style="color:#64748b" id="des-total">—</div></div>
+            <div class="mc"><div class="mc-icon">👤</div><div class="mc-label">Comodatários</div><div class="mc-val" style="color:#64748b" id="des-comod">—</div></div>
             <div class="mc"><div class="mc-icon">💻</div><div class="mc-label">Notebooks</div><div class="mc-val" style="color:var(--ti)" id="des-nb">—</div></div>
             <div class="mc"><div class="mc-icon">📱</div><div class="mc-label">Celulares</div><div class="mc-val" style="color:var(--green)" id="des-cel">—</div></div>
             <div class="mc"><div class="mc-icon">💰</div><div class="mc-label">Valor Total</div><div class="mc-val" style="color:var(--green);font-size:16px" id="des-valor">—</div></div>
@@ -306,11 +371,24 @@
         </div>
         <div class="table-wrap">
             <div class="table-head">
-                <div><div class="tbl-title">🔴 Desligados</div></div>
-                <button class="btn btn-green btn-sm" onclick="abrirInsert('desligados')">➕ Novo Registro</button>
+                <div>
+                    <div class="tbl-title">🔴 Desligados</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:3px">Agrupado por comodatário</div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                    <a class="btn btn-ghost btn-sm" href="https://docs.google.com/spreadsheets/d/1aqS-In7hzRP3jay6QbLOq5SLH9Q434vi5qZjOKo1tnI/edit?gid=1949369402#gid=1949369402" target="_blank" rel="noopener" style="text-decoration:none">
+                        <svg class="icon-sheet" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Planilha
+                    </a>
+                    <button class="btn btn-green btn-sm" onclick="abrirInsert('desligados')">➕ Novo Registro</button>
+                </div>
             </div>
             <div class="tbl-scroll">
-                <table><thead><tr><th>Comodatário</th><th>Aparelho</th><th>Nº Linha</th><th>Modelo</th><th>Valor</th><th>Assinatura</th><th>Distrato</th></tr></thead>
+                <table><thead><tr>
+                    <th style="width:170px;min-width:170px">Comodatário</th>
+                    <th>Aparelho</th><th>Nº Linha</th><th>Modelo</th>
+                    <th>Valor</th><th>Assinatura</th><th>Distrato</th><th>Ações</th>
+                </tr></thead>
                 <tbody id="des-body"></tbody></table>
             </div>
             <div class="pagination" id="des-pag"></div>
@@ -340,10 +418,16 @@
         <div class="table-wrap">
             <div class="table-head">
                 <div><div class="tbl-title">🖥️ Inventário T.I</div></div>
-                <button class="btn btn-green btn-sm" onclick="abrirInsert('ti')">➕ Novo Equipamento</button>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                    <a class="btn btn-ghost btn-sm" href="https://docs.google.com/spreadsheets/d/1aqS-In7hzRP3jay6QbLOq5SLH9Q434vi5qZjOKo1tnI/edit?gid=2116761454#gid=2116761454" target="_blank" rel="noopener" style="text-decoration:none">
+                        <svg class="icon-sheet" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Planilha
+                    </a>
+                    <button class="btn btn-green btn-sm" onclick="abrirInsert('ti')">➕ Novo Equipamento</button>
+                </div>
             </div>
             <div class="tbl-scroll">
-                <table><thead><tr><th>#</th><th>Equipamento</th><th>Marca</th><th>Modelo</th><th>Local</th><th>Estado</th><th>Dt. Compra</th><th>Valor</th><th>Obs</th></tr></thead>
+                <table><thead><tr><th>#</th><th>Equipamento</th><th>Marca</th><th>Modelo</th><th>Local</th><th>Estado</th><th>Dt. Compra</th><th>Valor</th><th>Obs</th><th>Ações</th></tr></thead>
                 <tbody id="ti-body"></tbody></table>
             </div>
             <div class="pagination" id="ti-pag"></div>
@@ -351,7 +435,7 @@
     </div>
 </main>
 
-<!-- MODAL -->
+<!-- MODAL ÚNICO -->
 <div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
     <div class="modal-box">
         <div class="modal-header">
@@ -368,10 +452,7 @@
         <div class="ia-topo">
             <div class="ia-topo-esq">
                 <span style="font-size:24px">🤖</span>
-                <div>
-                    <div class="ia-topo-titulo">IA — Ativos T.I.</div>
-                    <div class="ia-topo-sub">Analise comodatos, T.I. e patrimônio</div>
-                </div>
+                <div><div class="ia-topo-titulo">IA — Ativos T.I.</div><div class="ia-topo-sub">Analise comodatos, T.I. e patrimônio</div></div>
             </div>
             <button class="ia-fechar" onclick="toggleIA()">✕</button>
         </div>
@@ -394,34 +475,32 @@
         </div>
     </div>
     <button id="iaToggle" onclick="toggleIA()" title="IA Ativos T.I.">
-        🤖
-        <div class="ia-unread" id="iaUnread">1</div>
+        🤖<div class="ia-unread" id="iaUnread">1</div>
     </button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ══ Estado global ══════════════════════════════════════════
+// ══ Estado global ══
 const D = {
     ativos:[], distratados:[], desligados:[], ti:[],
     f:{ ativos:[], distratados:[], desligados:[], ti:[] },
     pag:{ ativos:1, distratados:1, desligados:1, ti:1 },
+    g:{ ativos:[], distratados:[], desligados:[] },
     raw: null,
 };
 let abaAtual = 'ativos';
-const PER = 25;
+const PER = 20;
 const CORES = ['var(--ti)','var(--ti2)','var(--orange)','var(--green)','var(--yellow)','#0891b2','#db2777'];
 const PREFIX = { ativos:'a', distratados:'d', desligados:'des', ti:'ti' };
 
 const $ = id => document.getElementById(id);
 const toast = (msg, ms=2500) => { const el=$('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),ms); };
 const setStatus = (cls, msg) => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
+const fmtData = dt => { if(!dt)return '—'; try{const d=new Date(dt);return isNaN(d)?dt:d.toLocaleDateString('pt-BR');}catch{return dt;} };
+const esc = s => (s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
 
-const fmtData = dt => {
-    if (!dt) return '—';
-    try { const d=new Date(dt); return isNaN(d)?dt:d.toLocaleDateString('pt-BR'); } catch { return dt; }
-};
 const aparelhoBadge = ap => {
     const l=(ap||'').toLowerCase();
     if(l.includes('notebook')||l.includes('laptop')) return `<span class="eb eb-notebook">💻 ${ap}</span>`;
@@ -441,9 +520,16 @@ const valorDisplay = v => v>0
     ? `<span class="td-valor">R$ ${v.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>`
     : `<span class="td-zero">—</span>`;
 
-// ══ Paginação — funções globais para evitar quebra em onclick ══
-window._pagHandlers = {};
-function _irPag(aba, np) { D.pag[aba]=np; renderTabela(aba); }
+// ── Agrupamento por comodatário ──
+function agrupar(lista) {
+    const map = new Map();
+    for (const item of lista) {
+        const nome = item.comodatario || '(sem nome)';
+        if (!map.has(nome)) map.set(nome, { comodatario: nome, itens: [] });
+        map.get(nome).itens.push(item);
+    }
+    return [...map.values()];
+}
 
 function setAba(aba) {
     abaAtual = aba;
@@ -472,6 +558,9 @@ function carregar() {
         D.desligados=raw.desligados||[]; D.ti=raw.ti||[];
         D.f.ativos=D.ativos; D.f.distratados=D.distratados;
         D.f.desligados=D.desligados; D.f.ti=D.ti;
+        D.g.ativos      = agrupar(D.f.ativos);
+        D.g.distratados = agrupar(D.f.distratados);
+        D.g.desligados  = agrupar(D.f.desligados);
         renderTudo(raw);
         setStatus('ready',`✓ ${D.ativos.length} ativos · ${D.distratados.length} distratados · ${D.desligados.length} desligados · ${D.ti.length} T.I`);
         if (raw.sincronizadoEm) $('lastSync').textContent='Sync: '+new Date(raw.sincronizadoEm).toLocaleString('pt-BR');
@@ -485,7 +574,10 @@ function renderTudo(raw) {
     $('badge-desligados').textContent=D.desligados.length;
     $('badge-ti').textContent=D.ti.length;
     $('pageSub').textContent=`${D.ativos.length} ativos · ${D.distratados.length} distratados · ${D.desligados.length} desligados · ${D.ti.length} T.I`;
+
+    // Ativos
     $('a-total').textContent=D.ativos.length;
+    $('a-comod').textContent=D.g.ativos.length;
     $('a-nb').textContent=D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length;
     $('a-cel').textContent=D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('celular')||(i.aparelho||'').toLowerCase().includes('smartph')).length;
     $('a-valor').textContent=sa.valorTotalFormatado||'—';
@@ -493,7 +585,10 @@ function renderTudo(raw) {
     renderBarras('a-chart-tipo',sa.porAparelho||[],'aparelho','qtd',['var(--ti)','var(--green)','var(--ti2)']);
     renderBarras('a-chart-comod',(sa.topComodatarios||[]).filter(c=>c.qtd>1),'nome','qtd',['var(--orange)']);
     popularFiltro('a-fapa',D.ativos,'aparelho');
+
+    // Distratados
     $('d-total').textContent=D.distratados.length;
+    $('d-comod').textContent=D.g.distratados.length;
     $('d-nb').textContent=D.distratados.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length;
     $('d-cel').textContent=D.distratados.filter(i=>(i.aparelho||'').toLowerCase().includes('celular')||(i.aparelho||'').toLowerCase().includes('smartph')).length;
     $('d-valor').textContent=sd.valorTotalFormatado||'—';
@@ -501,7 +596,10 @@ function renderTudo(raw) {
     renderBarras('d-chart-tipo',sd.porAparelho||[],'aparelho','qtd',['var(--orange)','var(--ti)','var(--green)']);
     renderBarras('d-chart-comod',(sd.topComodatarios||[]).filter(c=>c.qtd>1),'nome','qtd',['var(--ti2)']);
     popularFiltro('d-fapa',D.distratados,'aparelho');
+
+    // Desligados
     $('des-total').textContent=D.desligados.length;
+    $('des-comod').textContent=D.g.desligados.length;
     $('des-nb').textContent=D.desligados.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length;
     $('des-cel').textContent=D.desligados.filter(i=>(i.aparelho||'').toLowerCase().includes('celular')||(i.aparelho||'').toLowerCase().includes('smartph')).length;
     $('des-valor').textContent=sde.valorTotalFormatado||'—';
@@ -509,6 +607,8 @@ function renderTudo(raw) {
     renderBarras('des-chart-tipo',sde.porAparelho||[],'aparelho','qtd',['#64748b','var(--ti)','var(--green)']);
     renderBarras('des-chart-comod',(sde.topComodatarios||[]).filter(c=>c.qtd>1),'nome','qtd',['var(--red)']);
     popularFiltro('des-fapa',D.desligados,'aparelho');
+
+    // T.I
     $('ti-total').textContent=D.ti.length;
     $('ti-bom').textContent=sti.emBomEstado||0;
     $('ti-locais').textContent=(sti.porLocal||[]).length;
@@ -520,6 +620,7 @@ function renderTudo(raw) {
     popularFiltro('ti-fequip',D.ti,'equipamento');
     $('ti-festado').innerHTML='<option value="">Todos</option>'+[...new Set(D.ti.map(i=>i.estado||'').filter(Boolean))].sort().map(e=>`<option value="${e}">${e}</option>`).join('');
     $('ti-flocal').innerHTML='<option value="">Todos</option>'+[...new Set(D.ti.map(i=>i.local||'').filter(Boolean))].sort().map(l=>`<option value="${l}">${l}</option>`).join('');
+
     atualizarValorBadge(abaAtual);
     ['ativos','distratados','desligados','ti'].forEach(k=>renderTabela(k));
 }
@@ -552,8 +653,9 @@ function filtrar(aba) {
             return true;
         });
     }
-    D.f[aba]=lista; D.pag[aba]=1;
-    $(`${p}-count`).textContent=`${lista.length} item${lista.length!==1?'s':''}`;
+    D.f[aba]=lista;
+    if (aba!=='ti') D.g[aba]=agrupar(lista);
+    D.pag[aba]=1;
     renderTabela(aba);
 }
 
@@ -564,92 +666,125 @@ function limparFiltro(aba) {
     filtrar(aba);
 }
 
+// ══ Renderização agrupada (Ativos / Distratados / Desligados) ══
 function renderTabela(aba) {
-    const p=PREFIX[aba], lista=D.f[aba];
-    const totalPag=Math.ceil(lista.length/PER), pag=D.pag[aba];
-    const page=lista.slice((pag-1)*PER,pag*PER);
-    $(`${p}-count`).textContent=`${lista.length} item${lista.length!==1?'s':''}`;
-    if(!lista.length){
-        $(`${p}-body`).innerHTML='<tr><td colspan="9"><div class="empty"><p>Nenhum item encontrado</p></div></td></tr>';
-        $(`${p}-pag`).innerHTML='';
+    if (aba === 'ti') { renderTabelaTI(); return; }
+    const p = PREFIX[aba];
+    const grupos = D.g[aba] || [];
+    const totalPag = Math.ceil(grupos.length / PER);
+    const pag = D.pag[aba];
+    const page = grupos.slice((pag-1)*PER, pag*PER);
+
+    $(`${p}-count`).textContent = `${D.f[aba].length} item(s) · ${grupos.length} comodatário(s)`;
+
+    if (!grupos.length) {
+        $(`${p}-body`).innerHTML = '<tr><td colspan="9"><div class="empty">Nenhum item encontrado</div></td></tr>';
+        $(`${p}-pag`).innerHTML = '';
         return;
     }
-    if(aba==='ti'){
-        $('ti-body').innerHTML=page.map(i=>{
-            const enc=encodeURIComponent(JSON.stringify(i));
-            return `<tr onclick="abrirDetalhe('ti','${enc}')">
-                <td class="mono">${i.numero||'—'}</td>
-                <td class="td-nome">${i.equipamento||'—'}</td>
-                <td style="color:var(--muted)">${i.marca||'—'}</td>
-                <td title="${i.modelo}">${i.modelo||'—'}</td>
-                <td style="font-weight:600">${i.local||'—'}</td>
-                <td>${estadoBadge(i.estado)}</td>
-                <td class="mono">${fmtData(i.dtCompra)}</td>
-                <td>${valorDisplay(i.valor)}</td>
-                <td style="color:var(--muted);font-size:11px" title="${i.obs||''}">${i.obs||'—'}</td>
-            </tr>`;
-        }).join('');
-    } else if(aba==='ativos'){
-        $('a-body').innerHTML=page.map(i=>{
-            const enc=encodeURIComponent(JSON.stringify(i));
-            return `<tr onclick="abrirDetalhe('ativos','${enc}')">
-                <td class="td-nome" title="${i.comodatario}">${i.comodatario||'—'}</td>
-                <td>${aparelhoBadge(i.aparelho)}</td>
-                <td style="font-size:11px;color:var(--muted)">${i.modelo||'—'}</td>
-                <td class="mono">${i.numLinha||'—'}</td>
-                <td>${valorDisplay(i.valor)}</td>
-                <td class="mono">${i.assinatura||'—'}</td>
-                <td style="font-size:11px;color:var(--muted)">${i.etiqueta||'—'}</td>
-                <td style="font-size:11px;color:var(--muted)" title="${i.obs||''}">${i.obs||'—'}</td>
-            </tr>`;
-        }).join('');
-    } else if(aba==='distratados'){
-        $('d-body').innerHTML=page.map(i=>{
-            const enc=encodeURIComponent(JSON.stringify(i));
-            return `<tr onclick="abrirDetalhe('distratados','${enc}')">
-                <td class="td-nome" title="${i.comodatario}">${i.comodatario||'—'}</td>
-                <td>${aparelhoBadge(i.aparelho)}</td>
-                <td style="font-size:11px;color:var(--muted)">${i.modelo||'—'}</td>
-                <td class="mono">${i.numLinha||'—'}</td>
-                <td>${valorDisplay(i.valor)}</td>
-                <td class="mono">${i.assinatura||'—'}</td>
-                <td class="mono">${i.distrato||'—'}</td>
-                <td style="font-size:11px;color:var(--muted)" title="${i.obs||''}">${i.obs||'—'}</td>
-            </tr>`;
-        }).join('');
-    } else if(aba==='desligados'){
-        $('des-body').innerHTML=page.map(i=>{
-            const enc=encodeURIComponent(JSON.stringify(i));
-            return `<tr onclick="abrirDetalhe('desligados','${enc}')">
-                <td class="td-nome" title="${i.comodatario}">${i.comodatario||'—'}</td>
-                <td>${aparelhoBadge(i.aparelho)}</td>
-                <td class="mono">${i.numLinha||'—'}</td>
-                <td style="font-size:11px;color:var(--muted)">${i.modelo||'—'}</td>
-                <td>${valorDisplay(i.valor)}</td>
-                <td class="mono">${i.assinatura||'—'}</td>
-                <td class="mono">${i.distrato||'—'}</td>
-            </tr>`;
-        }).join('');
+
+    let html = '';
+    for (const grupo of page) {
+        const itens = grupo.itens;
+        const rs = itens.length;
+
+        for (let i = 0; i < itens.length; i++) {
+            const item = itens[i];
+            const enc = encodeURIComponent(JSON.stringify(item));
+
+            if (i === 0) {
+                html += `<tr class="tr-comod">
+                    <td rowspan="${rs}" style="vertical-align:top;border-right:2px solid var(--border);padding-right:12px;width:170px;min-width:170px;max-width:170px">
+                        <div class="comod-nome" onclick="abrirDetalhe('${aba}','${enc}')">${grupo.comodatario}</div>
+                        <div class="comod-meta">${rs} item(s)</div>
+                        <button class="add-item-btn" onclick="abrirAddItem('${aba}','${esc(grupo.comodatario)}')">➕ Add item</button>
+                    </td>`;
+            } else {
+                html += `<tr class="tr-item">`;
+            }
+
+            if (aba === 'ativos') {
+                html += `
+                    <td>${aparelhoBadge(item.aparelho)}</td>
+                    <td style="font-size:11px;color:var(--muted)">${item.modelo||'—'}</td>
+                    <td class="mono">${item.numLinha||'—'}</td>
+                    <td>${valorDisplay(item.valor)}</td>
+                    <td class="mono" style="font-size:11px">${item.assinatura||'—'}</td>
+                    <td style="font-size:11px;color:var(--muted)">${item.etiqueta||'—'}</td>
+                    <td style="font-size:11px;color:var(--muted)" title="${item.obs||''}">${item.obs||'—'}</td>
+                    <td><button class="btn btn-ghost btn-xs" onclick="abrirDetalhe('${aba}','${enc}')">✏️</button></td>`;
+            } else if (aba === 'distratados') {
+                html += `
+                    <td>${aparelhoBadge(item.aparelho)}</td>
+                    <td style="font-size:11px;color:var(--muted)">${item.modelo||'—'}</td>
+                    <td class="mono">${item.numLinha||'—'}</td>
+                    <td>${valorDisplay(item.valor)}</td>
+                    <td class="mono" style="font-size:11px">${item.assinatura||'—'}</td>
+                    <td class="mono" style="font-size:11px">${item.distrato||'—'}</td>
+                    <td style="font-size:11px;color:var(--muted)" title="${item.obs||''}">${item.obs||'—'}</td>
+                    <td><button class="btn btn-ghost btn-xs" onclick="abrirDetalhe('${aba}','${enc}')">✏️</button></td>`;
+            } else {
+                html += `
+                    <td>${aparelhoBadge(item.aparelho)}</td>
+                    <td class="mono">${item.numLinha||'—'}</td>
+                    <td style="font-size:11px;color:var(--muted)">${item.modelo||'—'}</td>
+                    <td>${valorDisplay(item.valor)}</td>
+                    <td class="mono" style="font-size:11px">${item.assinatura||'—'}</td>
+                    <td class="mono" style="font-size:11px">${item.distrato||'—'}</td>
+                    <td><button class="btn btn-ghost btn-xs" onclick="abrirDetalhe('${aba}','${enc}')">✏️</button></td>`;
+            }
+            html += `</tr>`;
+        }
+        html += `<tr class="tr-sep"><td colspan="9"></td></tr>`;
     }
+    $(`${p}-body`).innerHTML = html;
     renderPag(`${p}-pag`, totalPag, pag, aba);
 }
 
-// ── Paginação corrigida — usa data-aba/data-pg para evitar problemas com closures ──
+// ══ Renderização T.I (lista simples clicável) ══
+function renderTabelaTI() {
+    const lista = D.f.ti;
+    const totalPag = Math.ceil(lista.length / PER);
+    const pag = D.pag.ti;
+    const page = lista.slice((pag-1)*PER, pag*PER);
+    $('ti-count').textContent = `${lista.length} item(s)`;
+    if (!lista.length) {
+        $('ti-body').innerHTML='<tr><td colspan="10"><div class="empty">Nenhum item</div></td></tr>';
+        $('ti-pag').innerHTML='';
+        return;
+    }
+    $('ti-body').innerHTML = page.map(i => {
+        const enc = encodeURIComponent(JSON.stringify(i));
+        return `<tr class="tr-ti" onclick="abrirDetalhe('ti','${enc}')">
+            <td class="mono">${i.numero||'—'}</td>
+            <td class="td-nome">${i.equipamento||'—'}</td>
+            <td style="color:var(--muted)">${i.marca||'—'}</td>
+            <td title="${i.modelo||''}">${i.modelo||'—'}</td>
+            <td style="font-weight:600">${i.local||'—'}</td>
+            <td>${estadoBadge(i.estado)}</td>
+            <td class="mono">${fmtData(i.dtCompra)}</td>
+            <td>${valorDisplay(i.valor)}</td>
+            <td style="color:var(--muted);font-size:11px" title="${i.obs||''}">${i.obs||'—'}</td>
+            <td><button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();abrirDetalhe('ti','${enc}')">✏️</button></td>
+        </tr>`;
+    }).join('');
+    renderPag('ti-pag', totalPag, pag, 'ti');
+}
+
 function renderPag(id, total, atual, aba) {
     if(total<=1){$(id).innerHTML='';return;}
     let h='';
-    h+=`<button ${atual===1?'disabled':''} data-aba="${aba}" data-pg="${atual-1}" class="pg-nav">‹</button>`;
+    h+=`<button ${atual===1?'disabled':''} data-aba="${aba}" data-pg="${atual-1}">‹</button>`;
     for(let i=1;i<=total;i++){
         if(total>7&&Math.abs(i-atual)>2&&i!==1&&i!==total){
             if(i===atual-3||i===atual+3) h+=`<span class="pg-info">…</span>`;
             continue;
         }
-        h+=`<button class="${i===atual?'active':''}" data-aba="${aba}" data-pg="${i}" class="pg-nav">${i}</button>`;
+        h+=`<button class="${i===atual?'active':''}" data-aba="${aba}" data-pg="${i}">${i}</button>`;
     }
-    h+=`<button ${atual===total?'disabled':''} data-aba="${aba}" data-pg="${atual+1}" class="pg-nav">›</button>`;
+    h+=`<button ${atual===total?'disabled':''} data-aba="${aba}" data-pg="${atual+1}">›</button>`;
     h+=`<span class="pg-info">Pág. ${atual}/${total}</span>`;
     $(id).innerHTML=h;
-    // Vincula eventos diretamente — sem inline onclick
     $(id).querySelectorAll('button[data-pg]').forEach(btn=>{
         btn.addEventListener('click',()=>{
             if(btn.disabled) return;
@@ -660,7 +795,7 @@ function renderPag(id, total, atual, aba) {
 }
 
 function renderBarras(id,items,kL,kV,cores){
-    const el=$(id);if(!el)return;
+    const el=$(id); if(!el)return;
     if(!items||!items.length){el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:10px;text-align:center">Sem dados</div>';return;}
     const max=items[0][kV]||1;
     el.innerHTML=items.slice(0,8).map((item,i)=>`
@@ -671,11 +806,11 @@ function renderBarras(id,items,kL,kV,cores){
         </div>`).join('');
 }
 
-// ══ Modal detalhe / editar ═════════════════════════════════
+// ══ Modal detalhe / editar ══
 function abrirDetalhe(aba, enc) {
     const i = JSON.parse(decodeURIComponent(enc));
-    let titulo, detalhes, formEditar;
     const aopts = ['NOTEBOOK','CELULAR','TABLET','OUTROS'].map(s=>`<option value="${s}"${i.aparelho===s?' selected':''}>${s}</option>`).join('');
+    let titulo, detalhes, formEditar;
 
     if (aba==='ti') {
         titulo = `🖥️ ${i.equipamento||'Equipamento'} — #${i.numero||''}`;
@@ -696,8 +831,7 @@ function abrirDetalhe(aba, enc) {
                 <div class="form-group"><label>Marca</label><input type="text" class="form-control" id="e-marca" value="${i.marca||''}"></div>
                 <div class="form-group"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
                 <div class="form-group"><label>Local</label><input type="text" class="form-control" id="e-local" value="${i.local||''}"></div>
-                <div class="form-group"><label>Estado</label>
-                    <select class="form-control" id="e-estado">${['Novo','Bom','Regular','Usado','Ruim','Defeito'].map(s=>`<option value="${s}"${i.estado===s?' selected':''}>${s}</option>`).join('')}</select></div>
+                <div class="form-group"><label>Estado</label><select class="form-control" id="e-estado">${['Novo','Bom','Regular','Usado','Ruim','Defeito'].map(s=>`<option value="${s}"${i.estado===s?' selected':''}>${s}</option>`).join('')}</select></div>
                 <div class="form-group"><label>Dt. Compra</label><input type="text" class="form-control" id="e-dtCompra" value="${i.dtCompraOriginal||''}"></div>
                 <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
                 <div class="form-group full"><label>Observações</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>
@@ -705,7 +839,7 @@ function abrirDetalhe(aba, enc) {
             <button class="btn btn-ti" id="btnSalvar" onclick="salvar('ti',${i.rowIndex})">💾 Salvar</button>
         </div>`;
     } else {
-        titulo = `📋 ${i.comodatario||'—'}`;
+        titulo = `📋 ${i.comodatario||'—'} — ${i.aparelho||'item'}`;
         detalhes = `<div class="df-grid">
             <div class="df"><div class="dfl">Comodatário</div><div class="dfv">${i.comodatario||'—'}</div></div>
             <div class="df"><div class="dfl">Aparelho</div><div class="dfv">${aparelhoBadge(i.aparelho)}</div></div>
@@ -717,82 +851,138 @@ function abrirDetalhe(aba, enc) {
             ${aba!=='ativos'?`<div class="df"><div class="dfl">Distrato</div><div class="dfv">${i.distrato||'—'}</div></div>`:''}
             ${i.obs?`<div class="df full"><div class="dfl">Obs</div><div class="dfv">${i.obs}</div></div>`:''}
         </div>`;
-        let camposEditar='';
-        if(aba==='ativos'){
-            camposEditar=`
-                <div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
-                <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
-                <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
-                <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
-                <div class="form-group"><label>Etiqueta</label><input type="text" class="form-control" id="e-etiqueta" value="${i.etiqueta||''}"></div>
-                <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
-                <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>`;
-        } else if(aba==='distratados'){
-            camposEditar=`
-                <div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
-                <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
-                <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
-                <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
-                <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="e-distrato" value="${i.distrato||''}"></div>
-                <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
-                <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>`;
-        } else {
-            camposEditar=`
-                <div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
-                <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
-                <div class="form-group"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
-                <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
-                <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
-                <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="e-distrato" value="${i.distrato||''}"></div>`;
-        }
-        formEditar=`<div class="form-section edit"><div class="form-section-title">✏️ Editar</div>
-            <div class="form-grid">${camposEditar}</div>
+        let campos = aba === 'ativos' ? `
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
+            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
+            <div class="form-group"><label>Etiqueta</label><input type="text" class="form-control" id="e-etiqueta" value="${i.etiqueta||''}"></div>
+            <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
+            <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>` :
+        aba === 'distratados' ? `
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
+            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
+            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="e-distrato" value="${i.distrato||''}"></div>
+            <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
+            <div class="form-group full"><label>Obs</label><textarea class="form-control" id="e-obs">${i.obs||''}</textarea></div>` : `
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="e-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="e-numLinha" value="${i.numLinha||''}"></div>
+            <div class="form-group"><label>Modelo</label><input type="text" class="form-control" id="e-modelo" value="${i.modelo||''}"></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="e-valor" value="${i.valorFormatado||''}"></div>
+            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="e-assinatura" value="${i.assinatura||''}"></div>
+            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="e-distrato" value="${i.distrato||''}"></div>`;
+        formEditar = `<div class="form-section edit"><div class="form-section-title">✏️ Editar este item</div>
+            <div class="form-grid">${campos}</div>
             <button class="btn btn-ti" id="btnSalvar" onclick="salvar('${aba}',${i.rowIndex})">💾 Salvar</button>
         </div>`;
     }
-    $('modalTitulo').textContent=titulo;
-    $('modalBody').innerHTML=detalhes+formEditar;
+    $('modalTitulo').textContent = titulo;
+    $('modalBody').innerHTML = detalhes + formEditar;
     $('modalOverlay').classList.add('open');
 }
 
-// ══ Modal insert ═══════════════════════════════════════════
+// ══ Insert — múltiplos itens por comodatário ══
+let _insertAba = '', _insertComod = '', _itemCount = 0;
+
+function camposItem(aba, idx) {
+    const aopts = ['NOTEBOOK','CELULAR','TABLET','OUTROS'].map(s=>`<option value="${s}">${s}</option>`).join('');
+    if (aba === 'ativos') return `
+        <div class="form-grid">
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="i${idx}-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="i${idx}-numLinha" placeholder="Nº da linha"></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="i${idx}-valor" placeholder="R$ 0,00"></div>
+            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="i${idx}-assinatura" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group"><label>Etiqueta</label><input type="text" class="form-control" id="i${idx}-etiqueta" placeholder="Código"></div>
+            <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="i${idx}-modelo" placeholder="Marca, modelo, S/N…"></div>
+            <div class="form-group full"><label>Observação</label><input type="text" class="form-control" id="i${idx}-obs"></div>
+        </div>`;
+    if (aba === 'distratados') return `
+        <div class="form-grid">
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="i${idx}-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="i${idx}-numLinha"></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="i${idx}-valor" placeholder="R$ 0,00"></div>
+            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="i${idx}-assinatura" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="i${idx}-distrato" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group full"><label>Modelo</label><input type="text" class="form-control" id="i${idx}-modelo"></div>
+            <div class="form-group full"><label>Obs</label><input type="text" class="form-control" id="i${idx}-obs"></div>
+        </div>`;
+    return `
+        <div class="form-grid">
+            <div class="form-group"><label>Aparelho</label><select class="form-control" id="i${idx}-aparelho">${aopts}</select></div>
+            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="i${idx}-numLinha"></div>
+            <div class="form-group"><label>Modelo</label><input type="text" class="form-control" id="i${idx}-modelo"></div>
+            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="i${idx}-valor" placeholder="R$ 0,00"></div>
+            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="i${idx}-assinatura" placeholder="dd/mm/aaaa"></div>
+            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="i${idx}-distrato" placeholder="dd/mm/aaaa"></div>
+        </div>`;
+}
+
+function adicionarItemCard(aba) {
+    _itemCount++;
+    const idx = _itemCount;
+    const container = $('itensContainer');
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.id = `item-card-${idx}`;
+    card.innerHTML = `
+        <div class="item-card-num">Item #${idx}</div>
+        ${idx > 1 ? `<button class="item-card-remove" onclick="removerItem(${idx})">✕</button>` : ''}
+        <div class="item-card-body">${camposItem(aba, idx)}</div>`;
+    container.appendChild(card);
+}
+
+function removerItem(idx) {
+    const card = $(`item-card-${idx}`);
+    if (card) card.remove();
+}
+
 function abrirInsert(aba) {
-    const TITULOS = { ativos:'➕ Novo Comodato — Ativos', distratados:'➕ Novo Registro — Distratados', desligados:'➕ Novo Registro — Desligados', ti:'➕ Novo Equipamento — T.I' };
-    $('modalTitulo').textContent=TITULOS[aba]||'Novo Registro';
-    const aopts=['NOTEBOOK','CELULAR','TABLET','OUTROS'].map(s=>`<option value="${s}">${s}</option>`).join('');
-    const eopts=['Novo','Bom','Regular','Usado','Ruim','Defeito'].map(s=>`<option value="${s}">${s}</option>`).join('');
-    let campos='';
-    if(aba==='ativos'){
-        campos=`
+    _insertAba = aba; _insertComod = ''; _itemCount = 0;
+    if (aba === 'ti') { _abrirInsertTI(); return; }
+    const TITULOS = { ativos:'➕ Novo Comodatário — Ativos', distratados:'➕ Novo Registro — Distratados', desligados:'➕ Novo Registro — Desligados' };
+    $('modalTitulo').textContent = TITULOS[aba] || 'Novo Registro';
+    $('modalBody').innerHTML = `<div class="form-section insert">
+        <div class="form-section-title">📝 Dados do comodatário</div>
+        <div class="form-grid">
             <div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
-            <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
-            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha" placeholder="Nº da linha"></div>
-            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
-            <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo" placeholder="Marca, modelo, S/N…"></div>
-            <div class="form-group"><label>Assinatura (data)</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
-            <div class="form-group"><label>Etiqueta / Verificação</label><input type="text" class="form-control" id="n-etiqueta" placeholder="Código etiqueta"></div>
-            <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
-    } else if(aba==='distratados'){
-        campos=`
-            <div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
-            <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
-            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha" placeholder="Nº da linha"></div>
-            <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo"></div>
-            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
-            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
-            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="n-distrato" placeholder="dd/mm/aaaa"></div>
-            <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
-    } else if(aba==='desligados'){
-        campos=`
-            <div class="form-group full"><label>Comodatário *</label><input type="text" class="form-control" id="n-comodatario" placeholder="Nome completo"></div>
-            <div class="form-group"><label>Aparelho</label><select class="form-control" id="n-aparelho">${aopts}</select></div>
-            <div class="form-group"><label>Nº Linha</label><input type="text" class="form-control" id="n-numLinha" placeholder="Nº da linha"></div>
-            <div class="form-group full"><label>Modelo / Descrição</label><input type="text" class="form-control" id="n-modelo"></div>
-            <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
-            <div class="form-group"><label>Assinatura</label><input type="text" class="form-control" id="n-assinatura" placeholder="dd/mm/aaaa"></div>
-            <div class="form-group"><label>Distrato</label><input type="text" class="form-control" id="n-distrato" placeholder="dd/mm/aaaa"></div>`;
-    } else {
-        campos=`
+        </div>
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:14px 0 8px">Equipamentos</div>
+        <div id="itensContainer"></div>
+        <button class="add-outro-item" onclick="adicionarItemCard('${aba}')">➕ Adicionar outro equipamento</button>
+        <div style="margin-top:16px">
+            <button class="btn btn-green" id="btnInserir" onclick="confirmarInsertMulti('${aba}')">✅ Inserir na Planilha</button>
+        </div>
+    </div>`;
+    adicionarItemCard(aba);
+    $('modalOverlay').classList.add('open');
+}
+
+function abrirAddItem(aba, comodatario) {
+    _insertAba = aba; _insertComod = comodatario; _itemCount = 0;
+    $('modalTitulo').textContent = `➕ Adicionar item — ${comodatario}`;
+    $('modalBody').innerHTML = `<div class="form-section insert">
+        <div style="background:#f0f9ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;font-weight:700;color:var(--ti)">
+            👤 Comodatário: <strong>${comodatario}</strong>
+        </div>
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Equipamentos a adicionar</div>
+        <div id="itensContainer"></div>
+        <button class="add-outro-item" onclick="adicionarItemCard('${aba}')">➕ Adicionar outro equipamento</button>
+        <div style="margin-top:16px">
+            <button class="btn btn-green" id="btnInserir" onclick="confirmarInsertMulti('${aba}')">✅ Inserir na Planilha</button>
+        </div>
+    </div>`;
+    adicionarItemCard(aba);
+    $('modalOverlay').classList.add('open');
+}
+
+function _abrirInsertTI() {
+    const eopts = ['Novo','Bom','Regular','Usado','Ruim','Defeito'].map(s=>`<option value="${s}">${s}</option>`).join('');
+    $('modalTitulo').textContent = '➕ Novo Equipamento — T.I';
+    $('modalBody').innerHTML = `<div class="form-section insert">
+        <div class="form-section-title">📝 Preencha os campos</div>
+        <div class="form-grid">
             <div class="form-group"><label>Nº Equipamento</label><input type="text" class="form-control" id="n-numero" placeholder="Ex: 001"></div>
             <div class="form-group"><label>Equipamento *</label><input type="text" class="form-control" id="n-equipamento" placeholder="Notebook, Monitor…"></div>
             <div class="form-group"><label>Marca</label><input type="text" class="form-control" id="n-marca" placeholder="Dell, Lenovo…"></div>
@@ -801,14 +991,61 @@ function abrirInsert(aba) {
             <div class="form-group"><label>Estado</label><select class="form-control" id="n-estado">${eopts}</select></div>
             <div class="form-group"><label>Dt. Compra</label><input type="text" class="form-control" id="n-dtCompra" placeholder="dd/mm/aaaa"></div>
             <div class="form-group"><label>Valor</label><input type="text" class="form-control" id="n-valor" placeholder="R$ 0,00"></div>
-            <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>`;
-    }
-    $('modalBody').innerHTML=`<div class="form-section insert">
-        <div class="form-section-title">📝 Preencha os campos</div>
-        <div class="form-grid">${campos}</div>
-        <button class="btn btn-green" id="btnInserir" onclick="confirmarInsert('${aba}')">✅ Inserir na Planilha</button>
+            <div class="form-group full"><label>Observação</label><textarea class="form-control" id="n-obs"></textarea></div>
+        </div>
+        <button class="btn btn-green" id="btnInserir" onclick="confirmarInsertTI()">✅ Inserir na Planilha</button>
     </div>`;
     $('modalOverlay').classList.add('open');
+}
+
+async function confirmarInsertMulti(aba) {
+    const comodatario = _insertComod || ($('n-comodatario')?.value?.trim() || '');
+    if (!comodatario) { toast('⚠️ Informe o comodatário'); return; }
+    const cards = document.querySelectorAll('#itensContainer .item-card');
+    if (!cards.length) { toast('⚠️ Adicione ao menos um equipamento'); return; }
+
+    const btn = $('btnInserir');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Inserindo...';
+
+    let inseridos = 0, erros = 0;
+    for (const card of cards) {
+        const idx = card.id.replace('item-card-','');
+        const get = field => document.getElementById(`i${idx}-${field}`)?.value?.trim() || '';
+        const body = { comodatario, aparelho: get('aparelho'), modelo: get('modelo'), numLinha: get('numLinha'), valor: get('valor'), assinatura: get('assinatura'), obs: get('obs') };
+        if (aba === 'ativos')  body.etiqueta = get('etiqueta');
+        if (aba !== 'ativos')  body.distrato  = get('distrato');
+
+        try {
+            const r = await fetch(`/ti/api/ativos/inserir?aba=${aba}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+            const d = await r.json();
+            if (d.ok) inseridos++; else { erros++; console.error('Erro item:', d.erro); }
+        } catch(e) { erros++; console.error(e); }
+    }
+
+    btn.disabled = false; btn.innerHTML = '✅ Inserir na Planilha';
+    if (inseridos > 0) {
+        toast(`✅ ${inseridos} item(s) inserido(s)${erros ? ' · ⚠️ '+erros+' com erro' : ''}`, 4000);
+        $('modalOverlay').classList.remove('open');
+        sincronizar();
+    } else {
+        toast('❌ Falha ao inserir', 4000);
+    }
+}
+
+async function confirmarInsertTI() {
+    const equip = $('n-equipamento')?.value?.trim();
+    if (!equip) { toast('⚠️ Informe o equipamento'); return; }
+    const btn = $('btnInserir');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Inserindo...';
+    const body = {};
+    ['numero','equipamento','marca','modelo','local','estado','dtCompra','valor','obs'].forEach(k=>{ const el=$('n-'+k); if(el) body[k]=el.value.trim(); });
+    try {
+        const r = await fetch('/ti/api/ativos/inserir?aba=ti', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        const d = await r.json();
+        btn.disabled = false; btn.innerHTML = '✅ Inserir na Planilha';
+        if(d.ok){ toast(`✅ Inserido na linha ${d.linha}!`); $('modalOverlay').classList.remove('open'); sincronizar(); }
+        else toast('❌ '+(d.erro||'Erro ao inserir'),4000);
+    } catch(e){ btn.disabled=false; btn.innerHTML='✅ Inserir na Planilha'; toast('❌ '+e.message,4000); }
 }
 
 async function salvar(aba, rowIndex) {
@@ -822,22 +1059,6 @@ async function salvar(aba, rowIndex) {
         if(d.ok){toast('✅ Salvo!');$('modalOverlay').classList.remove('open');carregar();}
         else toast('❌ '+(d.erro||'Erro'),4000);
     } catch(e){btn.disabled=false;btn.innerHTML='💾 Salvar';toast('❌ '+e.message,4000);}
-}
-
-async function confirmarInsert(aba) {
-    const btn=$('btnInserir');
-    const obrig=aba==='ti'?$('n-equipamento'):$('n-comodatario');
-    if(!obrig?.value?.trim()){toast('⚠️ Preencha o campo obrigatório');return;}
-    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Inserindo...';
-    const body={};
-    ['comodatario','aparelho','modelo','valor','assinatura','etiqueta','distrato','numLinha','obs','numero','equipamento','marca','local','estado','dtCompra'].forEach(k=>{const el=$('n-'+k);if(el)body[k]=el.value.trim();});
-    try {
-        const r=await fetch(`/ti/api/ativos/inserir?aba=${aba}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-        const d=await r.json();
-        btn.disabled=false; btn.innerHTML='✅ Inserir na Planilha';
-        if(d.ok){toast(`✅ Inserido na linha ${d.linha}!`);$('modalOverlay').classList.remove('open');sincronizar();}
-        else toast('❌ '+(d.erro||'Erro ao inserir'),4000);
-    } catch(e){btn.disabled=false;btn.innerHTML='✅ Inserir na Planilha';toast('❌ '+e.message,4000);}
 }
 
 function fecharModal(e){ if(e.target.id==='modalOverlay') $('modalOverlay').classList.remove('open'); }
@@ -870,7 +1091,7 @@ function exportCSV(){
     toast(`📥 ${lista.length} registros exportados`);
 }
 
-// ══ IA ══════════════════════════════════════════════════════
+// ══ IA ══
 var _iaAberto=false;
 function toggleIA(){
     _iaAberto=!_iaAberto;
@@ -910,6 +1131,7 @@ async function perguntarIA(fixa){
 document.addEventListener('DOMContentLoaded',()=>{
     const inp=$('inputIA');
     if(inp)inp.addEventListener('keydown',e=>{if(e.key==='Enter')perguntarIA();});
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') $('modalOverlay').classList.remove('open'); });
     setTimeout(()=>{if(!_iaAberto){const u=$('iaUnread');if(u){u.style.display='flex';u.textContent='1';}}},3000);
 });
 
