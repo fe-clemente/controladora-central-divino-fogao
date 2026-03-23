@@ -3,9 +3,9 @@
 
 const express = require('express');
 const path    = require('path');
-const https   = require('https');
 const multer  = require('multer');
 const router  = express.Router();
+const { perguntarTreinamento } = require('./services/iaTreinamentoService');
 
 const PUBLIC = path.join(__dirname, 'public');
 
@@ -24,7 +24,6 @@ const uploadsCache      = require('./services/uploadsCache');
 const { gravarSultsNaPlanilha }  = require('./services/gravarSultsPlanilha');
 const { enviarWhatsAppLembrete } = require('./services/whatsapp');
 const { enviarEmailLembrete }    = require('./services/email');
-const { router: avaliacaoRouter, gerarLinkAvaliacao } = require('./services/avaliacao');
 
 const {
   listarPastas,
@@ -66,6 +65,11 @@ uploadsCache.inicializar().catch(e => console.error('UPLOADS init falhou:', e.me
 
 // ─── Arquivos estáticos do módulo ─────────────────────────────────────────────
 router.use(express.static(PUBLIC, { index: false, extensions: false }));
+
+// ─── Helper de link de avaliação ─────────────────────────────────────────────
+function gerarLinkAvaliacao(rowIndex, baseUrl) {
+  return `${baseUrl}/avaliacao?row=${rowIndex}`;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // PÁGINAS HTML
@@ -133,10 +137,7 @@ router.get('/dashboard/perfil-desenvolvimento', async (req, res) => {
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // AVALIAÇÃO
-// ATENÇÃO: rotas específicas ANTES do router.use('/avaliacao') para não serem
-// interceptadas pelo avaliacaoRouter (que exige token/sessão)
 // ═══════════════════════════════════════════════════════════════════════════════
-
 router.post('/avaliacao/gravar', async (req, res) => {
   try {
     const { rowIndex, nota, dataFim } = req.body;
@@ -155,8 +156,6 @@ router.post('/avaliacao/responder', async (req, res) => {
     res.json({ sucesso: true });
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
-
-router.use('/avaliacao', avaliacaoRouter);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // CADASTRO
@@ -280,10 +279,8 @@ router.post('/enviar-lembrete', async (req, res) => {
     const baseUrl       = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
     const linkAvaliacao = gerarLinkAvaliacao(f.rowIndex, baseUrl);
 
-    // ✅ Responde imediatamente
     res.json({ sucesso: true });
 
-    // ✅ Executa em background
     if (f.telefone) {
       enviarWhatsAppLembrete({ ...f, diffDias: f.diffDias ?? 0 })
         .catch(e => console.error('[LEMBRETE] WhatsApp:', e.message));
@@ -384,7 +381,7 @@ router.get('/turnover/registros', async (req, res) => {
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
-router.get('/turnover/status',  (req, res) => res.json(turnoverCache.getStatus()));
+router.get('/turnover/status', (req, res) => res.json(turnoverCache.getStatus()));
 
 router.get('/turnover/resumo', (req, res) => {
   const dados = turnoverCache.getDados();
@@ -466,10 +463,10 @@ router.get('/sults/resumo', async (req, res) => {
     if (!dados) dados = await sultsCache.sincronizarEAtualizar('auto');
     if (!dados) return res.status(503).json({ erro: 'Dados indisponíveis' });
     res.json({
-      totalUnidades:     dados.totalUnidades,
+      totalUnidades:    dados.totalUnidades,
       totalFuncionarios: dados.totalFuncionarios,
-      totalImplantacao:  dados.totalUnidadesImplantacao,
-      sincronizadoEm:    dados.sincronizadoEm,
+      totalImplantacao: dados.totalUnidadesImplantacao,
+      sincronizadoEm:   dados.sincronizadoEm,
     });
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
@@ -523,13 +520,10 @@ router.post('/universidade/sincronizar', async (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 // UPLOADS — Google Drive
 // ═══════════════════════════════════════════════════════════════════════════════
-
-// Status do cache de pastas
 router.get('/uploads/status', (req, res) => {
   res.json({ ok: true, ...uploadsCache.getStatus() });
 });
 
-// Forçar re-sincronização do cache de pastas
 router.post('/uploads/sincronizar', async (req, res) => {
   try {
     const dados = await uploadsCache.sincronizarEAtualizar('manual');
@@ -537,7 +531,6 @@ router.post('/uploads/sincronizar', async (req, res) => {
   } catch (e) { res.status(500).json({ ok: false, erro: e.message }); }
 });
 
-// Listar pastas — cache para raiz, Drive ao vivo para subpastas
 router.get('/uploads/pastas', async (req, res) => {
   try {
     const { pastaId } = req.query;
@@ -554,7 +547,6 @@ router.get('/uploads/pastas', async (req, res) => {
   }
 });
 
-// Criar nova pasta
 router.post('/uploads/pastas', async (req, res) => {
   try {
     const { nome, pastaId } = req.body;
@@ -568,7 +560,6 @@ router.post('/uploads/pastas', async (req, res) => {
   }
 });
 
-// Listar arquivos de uma pasta
 router.get('/uploads/arquivos', async (req, res) => {
   try {
     const { pastaId } = req.query;
@@ -580,14 +571,13 @@ router.get('/uploads/arquivos', async (req, res) => {
   }
 });
 
-// Upload de um ou múltiplos arquivos
 router.post('/uploads/arquivo', upload.array('arquivos', 20), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0)
       return res.status(400).json({ ok: false, erro: 'Nenhum arquivo enviado' });
 
     const { pastaId } = req.body;
-    const destino = pastaId || PASTA_RAIZ_ID;
+    const destino    = pastaId || PASTA_RAIZ_ID;
     const resultados = [];
     const erros      = [];
 
@@ -619,7 +609,6 @@ router.post('/uploads/arquivo', upload.array('arquivos', 20), async (req, res) =
   }
 });
 
-// Deletar arquivo
 router.delete('/uploads/arquivos/:fileId', async (req, res) => {
   try {
     await deletarArquivo(req.params.fileId);
@@ -631,98 +620,79 @@ router.delete('/uploads/arquivos/:fileId', async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// IA — Gemini direto via GEMINI_API_KEY
+// IA — Treinamento
 // ═══════════════════════════════════════════════════════════════════════════════
-async function chamarGeminiDireto(prompt) {
-  const GEMINI_KEY = process.env.GEMINI_API_KEY;
-  if (!GEMINI_KEY) throw new Error('GEMINI_API_KEY não configurada no .env');
-
-  const body = JSON.stringify({
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
-  });
-
-  return new Promise((resolve, reject) => {
-    const req = https.request({
-      hostname: 'generativelanguage.googleapis.com',
-      path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
-    }, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try {
-          const json = JSON.parse(data);
-          if (json.error) return reject(new Error(json.error.message || 'Erro Gemini'));
-          resolve(json?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sem resposta.');
-        } catch (e) { reject(new Error('Resposta inválida da API Gemini')); }
-      });
-    });
-    req.on('error', reject);
-    req.write(body);
-    req.end();
-  });
-}
-
-router.post('/ia/analisar', async (req, res) => {
+router.post('/ia-treinamento/perguntar', async (req, res) => {
   try {
-    const { pergunta, ano } = req.body;
-    if (!pergunta) return res.status(400).json({ erro: 'pergunta obrigatória' });
-    const rows = await getSheetsData();
-    const anoFiltro  = String(ano || new Date().getFullYear());
-    const totalGeral = rows.filter(r => r[2]).length;
-    const contexto = `Você é assistente de T&D da Central de Treinamentos do Divino Fogão.
-Base total: ${totalGeral} registros | Ano: ${anoFiltro}
-Responda em português, de forma direta e precisa.`;
-    const resposta = await chamarGeminiDireto(`${contexto}\n\nPergunta: ${pergunta}`);
-    res.json({ resposta });
+    const { pergunta, contexto = '' } = req.body;
+    const usuario = req.user?.nome || req.user?.email || '';
+    if (!pergunta) return res.status(400).json({ ok: false, erro: 'Campo "pergunta" é obrigatório.' });
+    const resposta = await perguntarTreinamento({ pergunta, contexto, usuario });
+    return res.json({ ok: true, resposta });
   } catch (e) {
-    res.status(500).json({ erro: e.message, resposta: '❌ Erro: ' + e.message });
+    console.error('[IA-TREINAMENTO] Erro:', e.message);
+    const isQuota = String(e.message).toLowerCase().includes('cota') || String(e.message).toLowerCase().includes('quota');
+    return res.status(isQuota ? 429 : 500).json({ ok: false, erro: e.message });
   }
 });
 
-router.post('/ia', async (req, res) => {
-  req.url = '/ia/analisar';
-  router.handle(req, res, () => {});
+// Compatibilidade — páginas antigas que chamam /ia/analisar
+router.post('/ia/analisar', async (req, res) => {
+  try {
+    const { pergunta, contexto = '', ano } = req.body;
+    const usuario = req.user?.nome || req.user?.email || '';
+    if (!pergunta) return res.status(400).json({ erro: 'pergunta obrigatória', resposta: '❌ Erro: pergunta obrigatória' });
+    const contextoFinal = contexto || ('Ano de referência: ' + String(ano || new Date().getFullYear()));
+    const resposta = await perguntarTreinamento({ pergunta, contexto: contextoFinal, usuario });
+    return res.json({ resposta });
+  } catch (e) {
+    console.error('[IA-ANALISAR] Erro:', e.message);
+    const isQuota = String(e.message).toLowerCase().includes('cota') || String(e.message).toLowerCase().includes('quota');
+    return res.status(isQuota ? 429 : 500).json({ erro: e.message, resposta: '❌ Erro: ' + e.message });
+  }
 });
 
+// Alias antigo — /ia
+router.post('/ia', async (req, res) => {
+  try {
+    const { pergunta, contexto = '', ano } = req.body;
+    const usuario = req.user?.nome || req.user?.email || '';
+    if (!pergunta) return res.status(400).json({ erro: 'pergunta obrigatória', resposta: '❌ Erro: pergunta obrigatória' });
+    const contextoFinal = contexto || ('Ano de referência: ' + String(ano || new Date().getFullYear()));
+    const resposta = await perguntarTreinamento({ pergunta, contexto: contextoFinal, usuario });
+    return res.json({ resposta });
+  } catch (e) {
+    console.error('[IA] Erro:', e.message);
+    const isQuota = String(e.message).toLowerCase().includes('cota') || String(e.message).toLowerCase().includes('quota');
+    return res.status(isQuota ? 429 : 500).json({ erro: e.message, resposta: '❌ Erro: ' + e.message });
+  }
+});
+
+// Turnover via IA — monta contexto automaticamente do cache
 router.post('/ia/turnover', async (req, res) => {
   try {
     const { pergunta } = req.body;
-    if (!pergunta) return res.status(400).json({ erro: 'pergunta obrigatória' });
+    const usuario = req.user?.nome || req.user?.email || '';
+    if (!pergunta) return res.status(400).json({ erro: 'pergunta obrigatória', resposta: '❌ Erro: pergunta obrigatória' });
     const cache = turnoverCache.getDados();
-    const ctx   = cache
-      ? `Turnover ${cache.ano}: ${cache.pctTurnover}% | Ativos: ${cache.totalAtivos} | Desligados: ${cache.desligadosAno} | Total: ${cache.totalGeral}`
+    const contexto = cache
+      ? `DADOS DE TURNOVER:\nAno: ${cache.ano}\nTurnover: ${cache.pctTurnover}%\nAtivos: ${cache.totalAtivos}\nDesligados no ano: ${cache.desligadosAno}\nTotal geral: ${cache.totalGeral}\nMotivos: ${JSON.stringify(cache.motivos || [])}\nPor loja: ${JSON.stringify(cache.porLoja || [])}`
       : 'Dados de turnover não disponíveis.';
-    const resposta = await chamarGeminiDireto(
-      `Você é assistente de RH do Divino Fogão. Responda em português, direto.\n\n${ctx}\n\nPergunta: ${pergunta}`
-    );
-    res.json({ resposta });
+    const resposta = await perguntarTreinamento({ pergunta, contexto, usuario });
+    return res.json({ resposta });
   } catch (e) {
-    res.status(500).json({ erro: e.message, resposta: '❌ Erro: ' + e.message });
+    console.error('[IA-TURNOVER] Erro:', e.message);
+    const isQuota = String(e.message).toLowerCase().includes('cota') || String(e.message).toLowerCase().includes('quota');
+    return res.status(isQuota ? 429 : 500).json({ erro: e.message, resposta: '❌ Erro: ' + e.message });
   }
 });
 
-// ─── Health ──────────────────────────────────────────────────────────────────
+// ─── Health ───────────────────────────────────────────────────────────────────
 router.get('/health', (req, res) => res.json({
   modulo: 'treinamento',
   status: 'online',
-  rotas: [
-    'GET  /treinamento/',
-    'GET  /treinamento/uploads',
-    'GET  /treinamento/uploads/pastas',
-    'POST /treinamento/uploads/pastas',
-    'GET  /treinamento/uploads/arquivos',
-    'POST /treinamento/uploads/arquivo',
-    'DELETE /treinamento/uploads/arquivos/:fileId',
-    'GET  /treinamento/avaliacao',
-    'GET  /treinamento/chamados',
-    'GET  /treinamento/sults',
-    'GET  /treinamento/turnover',
-    'GET  /treinamento/universidade',
-    'GET  /treinamento/valores',
-  ],
+  ia:     process.env.GEMINI_API_KEY ? 'configurada' : 'sem GEMINI_API_KEY',
+  model:  process.env.GEMINI_MODEL || 'gemini-2.0-flash',
 }));
 
 module.exports = router;
