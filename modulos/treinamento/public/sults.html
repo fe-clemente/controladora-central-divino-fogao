@@ -21,16 +21,22 @@
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
 /* HEADER */
-header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
-.logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
-.logo img{height:52px;width:auto;display:block;}
-.logo-fallback{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1px;display:none;}
-.header-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
-.header-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
-nav{display:flex;gap:2px;margin-left:auto;}
-.tab-btn{background:none;border:none;color:var(--muted);padding:20px 16px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;text-decoration:none;}
-.tab-btn:hover{color:var(--text);background:var(--bg3);}
-.tab-btn.active{color:var(--red);border-bottom-color:var(--red);background:var(--red-pale);}
+header{ background:var(--bg2);  border-bottom:2px solid var(--border);  padding:0 28px;  display:flex;  align-items:center;  gap:20px;  position:sticky;  top:0;
+  z-index:100;  box-shadow:var(--shadow);}
+
+.logo{  padding:10px 0;  flex-shrink:0;}
+.logo img{  height:48px;  width:auto;  display:block;}
+.logo-fallback{  font-size:18px;  font-weight:900;  color:var(--red);}
+
+.header-divider{  width:1px;  height:32px;  background:var(--border);}
+.header-title{  font-size:13px;  font-weight:700;  color:var(--muted);}
+nav{  display:flex;  gap:2px;  margin-left:auto;}
+
+.nav-btn{  background:none;  border:none;  padding:18px 14px;  cursor:pointer;  font-family:'Nunito',sans-serif;  font-size:13px;  font-weight:700;  color:var(--muted);
+  border-bottom:3px solid transparent;  transition:all .2s;  white-space:nowrap;  text-decoration:none;  display:flex;  align-items:center;}
+
+.nav-btn:hover{  color:var(--text);  background:var(--bg3);}
+.nav-btn.active{  color:var(--red);  border-bottom-color:var(--red);  background:var(--red-pale);}
 
 /* STATUS BAR */
 #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;}
@@ -188,19 +194,20 @@ tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
     </div>
     <div class="header-divider"></div>
     <div class="header-title">Central de Treinamentos</div>
-    <nav>
+
+        <nav>
         <a href="/treinamento/"             class="nav-btn">📊 Dashboard</a>
         <a href="/treinamento/"             class="nav-btn">🔔 Lembretes</a>
         <a href="/treinamento/"             class="nav-btn">🔍 Busca</a>
-        <a href="/treinamento/sults"        class="nav-btn">🏪 Sults</a>
-        <a href="/treinamento/chamados"     class="nav-btn">📞 Chamados T&D</a>
+        <a href="/treinamento/sults"        class="nav-btn active">🏪 Sults</a>
+        <a href="/treinamento/chamados"     class="nav-btn ">📞 Chamados T&D</a>
         <a href="/treinamento/universidade" class="nav-btn">🎓 Universidade</a>
         <a href="/treinamento/turnover"     class="nav-btn">🔄 Turnover</a>
         <a href="/treinamento/"             class="nav-btn">➕ Cadastro</a>
         <a href="/treinamento/"             class="nav-btn">📋 Histórico</a>
-        <a href="/treinamento/uploads"      class="nav-btn active">📁 Uploads</a>
+        <a href="/treinamento/uploads"      class="nav-btn">📁 Uploads</a>
     </nav>
-</header>
+
 </header>
 
 <div id="statusBar">
