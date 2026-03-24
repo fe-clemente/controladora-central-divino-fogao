@@ -18,6 +18,7 @@ const passport = require('./core/auth');
 const { middlewarePerfil, exigirModulo, exigirMaster } = require('./core/permissoes');
 
 const app  = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
@@ -27,7 +28,7 @@ app.use(session({
     secret:            process.env.SESSION_SECRET || 'divino-central-secret',
     resave:            false,
     saveUninitialized: false,
-    cookie:            { maxAge: 24 * 60 * 60 * 1000 },
+    cookie:            { maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'lax' },
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -164,9 +165,9 @@ const tiRoutes          = getRoutes('ti');
 const treinamentoRoutes = getRoutes('treinamento');
 
 // Rotas de sync localhost (TI)
-app.post('/ti/api/pix/sincronizar',              apenasLocal, (req, res, next) => { req.url = '/api/pix/sincronizar';              tiRoutes(req, res, next); });
-app.post('/ti/api/chamados/sincronizar',          apenasLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar';          tiRoutes(req, res, next); });
-app.post('/ti/api/chamados/sincronizar/completo', apenasLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar/completo'; tiRoutes(req, res, next); });
+app.post('/ti/api/pix/sincronizar',              exigirLogin, (req, res, next) => { req.url = '/api/pix/sincronizar';              tiRoutes(req, res, next); });
+app.post('/ti/api/chamados/sincronizar',          exigirLogin, (req, res, next) => { req.url = '/api/chamados/sincronizar';          tiRoutes(req, res, next); });
+app.post('/ti/api/chamados/sincronizar/completo', exigirLogin, (req, res, next) => { req.url = '/api/chamados/sincronizar/completo'; tiRoutes(req, res, next); });
 
 // Rotas de sync localhost (Treinamento)
 app.post('/treinamento/sults/sincronizar',        apenasLocal, (req, res, next) => { req.url = '/sults/sincronizar';        treinamentoRoutes(req, res, next); });

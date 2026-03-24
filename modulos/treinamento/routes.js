@@ -17,7 +17,7 @@ const upload = multer({
 
 // ─── Services ────────────────────────────────────────────────────────────────
 const sultsCache        = require('./services/sultsCache');
-const chamadosCache     = require('./services/chamadosCache');
+const chamadosCache     = require('./services/chamadoscache');
 const turnoverCache     = require('./services/turnoverCache');
 const universidadeCache = require('./services/universidadeCache');
 const uploadsCache      = require('./services/uploadsCache');

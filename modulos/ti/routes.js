@@ -107,7 +107,7 @@ router.use('/api/ativos',    ativosRoutes);
 router.use('/api/links',     linksRoutes);
 
 // ─── Pix ─────────────────────────────────────────────────────
-router.post('/api/pix/sincronizar', apenasLocal, async (req, res) => {
+router.post('/api/pix/sincronizar', async (req, res) => {
     req.url = '/sincronizar';
     pixRoutes(req, res, (err) => {
         if (err) res.json({ ok: false, erro: err.message });
@@ -145,14 +145,14 @@ router.get('/api/chamados/status', (req, res) => {
     catch (e) { res.json({ erro: e.message }); }
 });
 
-router.post('/api/chamados/sincronizar/completo', apenasLocal, async (req, res) => {
+router.post('/api/chamados/sincronizar/completo', async (req, res) => {
     try {
         const d = await chamadosCache.sincronizarEAtualizar('completo');
         res.json({ ok: true, totalTI: d.totalTI });
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-router.post('/api/chamados/sincronizar', apenasLocal, async (req, res) => {
+router.post('/api/chamados/sincronizar', async (req, res) => {
     try {
         const d = await chamadosCache.sincronizarEAtualizar('manual');
         res.json({ ok: true, totalTI: d.totalTI });
