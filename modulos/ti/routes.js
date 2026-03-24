@@ -22,7 +22,7 @@ const migracaoRoutes = require('./services/migracao');
 const ativosRoutes   = require('./services/ativosService');
 const chamadosCache  = require('./services/chamadosTiCache');
 const pixRoutes      = require('./services/pixService');
-const linksRoutes    = require('./services/linksexternosservice');
+const linksRoutes    = require('./services/linksExternosService');
 const tiUploadsCache = require('./services/uploadsCache');
 const { perguntarTI } = require('./services/iaTiService');
 
