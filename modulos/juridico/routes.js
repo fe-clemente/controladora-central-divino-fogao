@@ -18,7 +18,7 @@ const upload = multer({
 });
 
 // ─── Services ────────────────────────────────────────────────
-const ativosService   = require('./services/ativosService');
+const ativosService   = require('./services/ativosservice');
 const jurUploadsCache = require('./services/uploadsCache');
 const {
     listarPastas,
