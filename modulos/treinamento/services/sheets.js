@@ -88,11 +88,10 @@ async function getSheetsData() {
     const sheets = google.sheets({ version: 'v4', auth });
     const res    = await sheets.spreadsheets.values.get({
         spreadsheetId: SPREADSHEET_ID,
-        range: `'${ABA_CADASTRAL}'!A9:AL`,
+        range: `'${ABA_CADASTRAL}'!A9:AW`,
     });
     return res.data.values || [];
 }
-
 // ─── LEITURA — ABA VALORES (linha 8 em diante) ───────────────────────────────
 async function getValoresSheetData() {
     const auth   = await getAuth();
@@ -112,7 +111,7 @@ async function marcarLembreteEnviado(rowIndex) {
     const dataHora  = new Date().toLocaleString('pt-BR');
     await sheets.spreadsheets.values.update({
         spreadsheetId: SPREADSHEET_ID,
-        range: `'${ABA_CADASTRAL}'!AI${linhaReal}`,
+        range: `'${ABA_CADASTRAL}'!AJ${linhaReal}`,
         valueInputOption: 'USER_ENTERED',
         requestBody: { values: [[`Lembrete enviado em ${dataHora}`]] },
     });
@@ -177,7 +176,7 @@ async function preencherAvaliacao(rowIndex, nota, dataFim, observacoes) {
         updates.push(
             sheets.spreadsheets.values.update({
                 spreadsheetId: SPREADSHEET_ID,
-                range: `'${ABA_CADASTRAL}'!AM${linhaReal}`,
+                range: `'${ABA_CADASTRAL}'!AW${linhaReal}`,
                 valueInputOption: 'USER_ENTERED',
                 requestBody: { values: [[observacoes.trim().slice(0, 200)]] },
             })
@@ -189,6 +188,63 @@ async function preencherAvaliacao(rowIndex, nota, dataFim, observacoes) {
 
 async function gravarAvaliacao(rowIndex, nota) {
     await preencherAvaliacao(rowIndex, nota, null);
+}
+
+// ─── PREENCHER AVALIAÇÃO DA LOJA TREINADORA ───────────────────────────────────
+// AN=39 SIM | AQ=42 nota | AR=43 obs | P=15 data fim (só loja treinadora)
+async function preencherAvaliacaoTreinadora(rowIndex, nota, dataFim, observacoes) {
+    const linhaReal = rowIndex + 9;
+    const auth      = await getAuth();
+    const sheets    = google.sheets({ version: 'v4', auth });
+    const updates   = [];
+
+    // AN = Loja treinadora avaliou? → SIM
+    updates.push(
+        sheets.spreadsheets.values.update({
+            spreadsheetId: SPREADSHEET_ID,
+            range: `'${ABA_CADASTRAL}'!AN${linhaReal}`,
+            valueInputOption: 'USER_ENTERED',
+            requestBody: { values: [['SIM']] },
+        })
+    );
+
+    // AQ = nota da loja treinadora
+    if (nota !== undefined && nota !== null && nota !== '') {
+        updates.push(
+            sheets.spreadsheets.values.update({
+                spreadsheetId: SPREADSHEET_ID,
+                range: `'${ABA_CADASTRAL}'!AR${linhaReal}`,
+                valueInputOption: 'USER_ENTERED',
+                requestBody: { values: [[String(nota)]] },
+            })
+        );
+    }
+
+    // P = Fim treinamento — SÓ a loja treinadora preenche
+    if (dataFim) {
+        updates.push(
+            sheets.spreadsheets.values.update({
+                spreadsheetId: SPREADSHEET_ID,
+                range: `'${ABA_CADASTRAL}'!P${linhaReal}`,
+                valueInputOption: 'USER_ENTERED',
+                requestBody: { values: [[dataFim]] },
+            })
+        );
+    }
+
+    // AR = observação da loja treinadora
+    if (observacoes && observacoes.trim()) {
+        updates.push(
+            sheets.spreadsheets.values.update({
+                spreadsheetId: SPREADSHEET_ID,
+                range: `'${ABA_CADASTRAL}'!AS${linhaReal}`,               
+                 valueInputOption: 'USER_ENTERED',
+                requestBody: { values: [[observacoes.trim().slice(0, 200)]] },
+            })
+        );
+    }
+
+    await Promise.all(updates);
 }
 
 // ─── BUSCAR COLABORADOR EXATO — Cadastral ────────────────────────────────────
@@ -245,6 +301,10 @@ function montarColaborador(row, index) {
         aprovado:        row[32] || '',  // AG
         notaAvaliacao:   row[33] || '',  // AH
         lembreteEnviado: row[34] || '',  // AI
+        avaliacaoTreinadora: row[39] || '',  // AN — loja treinadora avaliou?
+        emailLojaAvaliadora: row[40] || '',  // AO — email loja avaliadora
+        notaTreinadora:      row[42] || '',  // AQ — nota da loja treinadora
+        obsTreinadora:       row[43] || '',  // AR — obs da loja treinadora
     };
 }
 
@@ -264,7 +324,7 @@ async function getFuncionariosParaLembrete() {
 
     rows.forEach((row, index) => {
         const inicioTrein     = row[14] || '';  // O
-        const lembreteEnviado = row[34] || '';  // AI
+        const lembreteEnviado = row[35] || '';  // AI
         if (!inicioTrein) return;
 
         const partes = inicioTrein.split('/');
@@ -294,6 +354,7 @@ async function getFuncionariosParaLembrete() {
                 inicioTrein:   row[14] || '',  // O
                 fimTrein:      row[15] || '',  // P
                 notaAvaliacao: row[33] || '',  // AH
+                emailLojaAvaliadora: row[40] || '',  // AO
             });
         }
     });
@@ -304,19 +365,19 @@ async function getFuncionariosParaLembrete() {
 async function getHistoricoLembretes() {
     const rows = await getSheetsData();
     return rows
-        .filter(row => row[34])
+        .filter(row => row[35] || row[34])          // AJ novo OU AI antigo
         .map((row, index) => ({
             rowIndex:       index,
             nome:           row[2]  || '',
             loja:           row[1]  || '',
             funcao:         row[5]  || '',
-            email:          row[12] || '',  // M
-            telefone:       row[13] || '',  // N
-            inicioTrein:    row[14] || '',  // O
-            fimTrein:       row[15] || '',  // P
-            lembrete:       row[34] || '',  // AI
-            emailAvaliacao: row[24] || '',  // Y
-            notaAvaliacao:  row[33] || '',  // AH
+            email:          row[12] || '',
+            telefone:       row[13] || '',
+            inicioTrein:    row[14] || '',
+            fimTrein:       row[15] || '',
+            lembrete:       row[35] || row[34] || '',  // AJ ou AI
+            emailAvaliacao: row[24] || '',
+            notaAvaliacao:  row[33] || '',
         }));
 }
 
@@ -334,7 +395,7 @@ async function getDashboardData() {
         const loja     = row[1]  || 'Sem loja';
         const funcao   = row[5]  || 'Sem função';
         const inicio   = row[14] || '';  // O
-        const lembrete = row[34] || '';  // AI
+        const lembrete = row[35] || row[34] || '';  // AJ novo ou AI antigo
         const nota     = row[33] || '';  // AH
 
         if (lembrete) comLembrete++;
@@ -416,7 +477,7 @@ async function cadastrarFuncionario(dados) {
 
     const response = await sheets.spreadsheets.values.append({
         spreadsheetId: SPREADSHEET_ID,
-        range: `'${ABA_CADASTRAL}'!A9:AL`,
+    range: `'${ABA_CADASTRAL}'!A9:AW`,
         valueInputOption: 'USER_ENTERED',
         insertDataOption: 'INSERT_ROWS',
         requestBody: { values: [row] },
@@ -830,7 +891,7 @@ async function getCadastralDashboardData(ano) {
         }
 
         // ─ Lembretes (AI=34)
-        const ai = (row[34] || '').trim();
+        const ai = (row[35] || row[34] || '').trim();  // AJ novo ou AI antigo
         m[i].totalLemb++;
         m[i].itensLemb.push({ nome, loja, fimStr, lembrete: ai });
         if (ai) m[i].comLemb++;
@@ -1040,15 +1101,15 @@ async function getTurnoverCadastral(anoFiltro) {
     };
 }
 
-// Gravar data de desligamento (AK) e motivo (AL) na Cadastral 2026
 async function gravarDesligamento(rowIndex, dataDeslig, motivo) {
-    const auth   = await getAuth();
-    const sheets = google.sheets({ version: 'v4', auth });
+    const linhaReal = rowIndex + 9;
+    const auth      = await getAuth();
+    const sheets    = google.sheets({ version: 'v4', auth });
     await sheets.spreadsheets.values.update({
-        spreadsheetId: SPREADSHEET_ID,
-        range: `'${ABA_CADASTRAL}'!AK${rowIndex}:AL${rowIndex}`,
+        spreadsheetId:   SPREADSHEET_ID,
+        range:           `'${ABA_CADASTRAL}'!AK${linhaReal}:AL${linhaReal}`,
         valueInputOption: 'USER_ENTERED',
-        requestBody: { values: [[dataDeslig||'', motivo||'']] },
+        requestBody:     { values: [[dataDeslig || '', motivo || '']] },
     });
 }
 
@@ -1073,4 +1134,5 @@ module.exports = {
     getDashboardValores,
     getValoresPeriodos,
     getCadastralDashboardData,
+    preencherAvaliacaoTreinadora,
   };

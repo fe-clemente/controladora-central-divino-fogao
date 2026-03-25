@@ -37,7 +37,9 @@
         main{max-width:1100px;margin:0 auto;padding:32px 24px;}
         .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
         .page-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
-        .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px;}
+
+        /* ── CARDS DE RESUMO ── */
+        .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
         .card{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:var(--text);}
         .card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);border-color:var(--jur);}
         .card-icon{font-size:28px;margin-bottom:10px;}
@@ -45,6 +47,51 @@
         .card-val{font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
         .card-sub{font-size:11px;color:var(--muted);margin-top:6px;font-weight:600;}
         .card-link{font-size:11px;font-weight:700;margin-top:8px;display:inline-flex;align-items:center;gap:4px;}
+
+        /* ── HCARD ── */
+        .hcard{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:all .2s;margin-bottom:16px;text-decoration:none;display:block;}
+        .hcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+        .hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:16px 16px 0 0;}
+        .hcard.c-jur::before{background:linear-gradient(90deg,var(--jur),var(--jur-light));}
+        .hcard.c-jur:hover{border-color:var(--jur);}
+        .hcard.c-yellow::before{background:linear-gradient(90deg,var(--yellow),#fbbf24);}
+        .hcard.c-yellow:hover{border-color:var(--yellow);}
+        .hcard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;}
+        .hcard-top-left{display:flex;align-items:flex-start;gap:12px;}
+        .hcard-icon{font-size:26px;flex-shrink:0;margin-top:2px;}
+        .hcard-name{font-size:14px;font-weight:800;margin-bottom:3px;}
+        .hcard-desc{font-size:11px;color:var(--muted);font-weight:600;}
+        .hcard-link{font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;}
+        .hcard-link.c-jur{color:var(--jur);}
+        .hcard-link.c-yellow{color:var(--yellow);}
+
+        /* ── GA (Gestão de Ativos) ── */
+        .ga-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px;}
+        .ga-metric{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+        .ga-metric-val{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px;}
+        .ga-metric-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+        .ga-prog-wrap{background:var(--bg3);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+        .ga-prog-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+        .ga-prog-title{font-size:13px;font-weight:800;}
+        .ga-prog-nums{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--muted);}
+        .ga-prog-track{height:12px;background:var(--bg);border-radius:6px;overflow:hidden;border:1px solid var(--border);}
+        .ga-prog-fill{height:100%;border-radius:6px;transition:width 1.4s cubic-bezier(.23,1,.32,1);}
+        .ga-prog-sub{font-size:11px;color:var(--muted);margin-top:6px;}
+        .ga-valor-row{display:flex;gap:10px;flex-wrap:wrap;}
+        .ga-valor-pill{flex:1;min-width:140px;background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;}
+        .ga-valor-pill-val{font-size:20px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:3px;}
+        .ga-valor-pill-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+        .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+        .bar-label{font-size:12px;font-weight:600;color:var(--text);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .bar-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+        .bar-fill{height:100%;border-radius:4px;transition:width .8s ease;}
+        .bar-count{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);width:28px;text-align:right;flex-shrink:0;}
+        .loading-msg{text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;}
+        .sem-dados{color:var(--muted);font-size:12px;text-align:center;padding:16px;}
+        .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--jur);border-radius:50%;animation:spin .7s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* ── QUICK LINKS ── */
         .quick{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);}
         .quick-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px;}
         .quick-links{display:flex;gap:10px;flex-wrap:wrap;}
@@ -52,79 +99,77 @@
         .ql:hover{background:var(--jur-pale);border-color:var(--jur);color:var(--jur);}
         .ql.primary{background:var(--jur);color:#fff;border-color:var(--jur);}
         .ql.primary:hover{background:#6d28d9;}
-        .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--jur);border-radius:50%;animation:spin .7s linear infinite;}
-        @keyframes spin{to{transform:rotate(360deg)}}
 
-        /* IA Widget */
-        #iaWidget{
-            position:fixed;right:24px;bottom:24px;z-index:9999;
-            display:flex;flex-direction:column;align-items:flex-end;gap:12px;
-        }
-        #iaToggle{
-            width:60px;height:60px;border:none;border-radius:999px;cursor:pointer;
-            background:linear-gradient(135deg,var(--jur),#6d28d9);
-            color:#fff;font-size:24px;box-shadow:var(--shadow-lg);
-        }
-        #iaJanela{
-            width:390px;max-width:calc(100vw - 24px);
-            background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;
-            box-shadow:var(--shadow-lg);overflow:hidden;display:none;
-        }
+        /* ── IA Widget ── */
+        #iaWidget{position:fixed;right:24px;bottom:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+        #iaToggle{width:60px;height:60px;border:none;border-radius:999px;cursor:pointer;background:linear-gradient(135deg,var(--jur),#6d28d9);color:#fff;font-size:24px;box-shadow:var(--shadow-lg);}
+        #iaJanela{width:390px;max-width:calc(100vw - 24px);background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;box-shadow:var(--shadow-lg);overflow:hidden;display:none;}
         #iaJanela.open{display:block;}
-        .ia-head{
-            padding:14px 16px;border-bottom:1px solid var(--border);
-            display:flex;align-items:center;justify-content:space-between;
-            background:linear-gradient(135deg,var(--jur-pale),#fff);
-        }
+        .ia-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,var(--jur-pale),#fff);}
         .ia-title{font-size:14px;font-weight:800;color:var(--text);}
-        .ia-close{
-            background:none;border:none;cursor:pointer;font-size:18px;
-            color:var(--muted);font-weight:800;
-        }
-        .ia-sugs{
-            padding:12px 12px 0 12px;display:flex;flex-wrap:wrap;gap:8px;background:#fff;
-        }
-        .ia-sug{
-            border:1px solid var(--border);background:var(--bg3);color:var(--text);
-            border-radius:999px;padding:8px 10px;font-size:12px;font-weight:700;cursor:pointer;
-        }
+        .ia-close{background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted);font-weight:800;}
+        .ia-sugs{padding:12px 12px 0 12px;display:flex;flex-wrap:wrap;gap:8px;background:#fff;}
+        .ia-sug{border:1px solid var(--border);background:var(--bg3);color:var(--text);border-radius:999px;padding:8px 10px;font-size:12px;font-weight:700;cursor:pointer;}
         .ia-sug:hover{border-color:var(--jur);color:var(--jur);background:var(--jur-pale);}
-        #iaMsgs{
-            height:320px;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;
-            background:linear-gradient(180deg,#fff 0%, #fcfbf9 100%);
-        }
-        .ia-msg{
-            max-width:88%;padding:10px 12px;border-radius:14px;line-height:1.45;
-            font-size:13px;white-space:pre-wrap;
-        }
-        .ia-msg.user{
-            align-self:flex-end;background:var(--jur);color:#fff;border-bottom-right-radius:6px;
-        }
-        .ia-msg.bot{
-            align-self:flex-start;background:var(--bg3);color:var(--text);
-            border:1px solid var(--border);border-bottom-left-radius:6px;
-        }
-        .ia-foot{
-            border-top:1px solid var(--border);padding:12px;display:flex;gap:8px;background:#fff;
-        }
-        #inputIA{
-            flex:1;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;
-            font-family:'Nunito',sans-serif;font-size:13px;outline:none;
-        }
+        #iaMsgs{height:320px;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,#fff 0%,#fcfbf9 100%);}
+        .ia-msg{max-width:88%;padding:10px 12px;border-radius:14px;line-height:1.45;font-size:13px;white-space:pre-wrap;}
+        .ia-msg.user{align-self:flex-end;background:var(--jur);color:#fff;border-bottom-right-radius:6px;}
+        .ia-msg.bot{align-self:flex-start;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:6px;}
+        .ia-foot{border-top:1px solid var(--border);padding:12px;display:flex;gap:8px;background:#fff;}
+        #inputIA{flex:1;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-family:'Nunito',sans-serif;font-size:13px;outline:none;}
         #inputIA:focus{border-color:var(--jur);}
-        #btnEnviarIA{
-            border:none;border-radius:12px;padding:0 16px;cursor:pointer;
-            background:var(--jur);color:#fff;font-weight:800;font-family:'Nunito',sans-serif;
-        }
+        #btnEnviarIA{border:none;border-radius:12px;padding:0 16px;cursor:pointer;background:var(--jur);color:#fff;font-weight:800;font-family:'Nunito',sans-serif;}
         #btnEnviarIA:hover{background:#6d28d9;}
+
+        /* ── BOTÃO FLUTUANTE COMUNICADOS ── */
+        #popBtn{
+            position:fixed;right:96px;bottom:24px;z-index:9999;
+            width:60px;height:60px;border:none;border-radius:999px;cursor:pointer;
+            background:linear-gradient(135deg,var(--orange),#f97316);
+            color:#fff;font-size:24px;box-shadow:var(--shadow-lg);
+            display:flex;align-items:center;justify-content:center;
+            transition:transform .15s;
+        }
+        #popBtn:hover{transform:scale(1.08);}
+        #popBadge{
+            position:absolute;top:-4px;right:-4px;
+            background:var(--red);color:#fff;
+            font-size:10px;font-weight:900;font-family:'Nunito',sans-serif;
+            border-radius:999px;width:18px;height:18px;
+            display:flex;align-items:center;justify-content:center;
+            pointer-events:none;
+        }
+
+        /* ── POPUP COMUNICADOS ── */
+        .pop-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .22s;}
+        .pop-overlay.open{opacity:1;pointer-events:all;}
+        .pop-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:100%;max-width:560px;max-height:80vh;display:flex;flex-direction:column;transform:translateY(12px);transition:transform .22s;}
+        .pop-overlay.open .pop-box{transform:translateY(0);}
+        .pop-head{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0;}
+        .pop-titulo{font-size:15px;font-weight:800;margin:0 0 3px;}
+        .pop-data{font-size:11px;color:var(--muted);}
+        .pop-close{background:none;border:1.5px solid var(--border);border-radius:8px;padding:4px 12px;cursor:pointer;font-size:18px;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:800;}
+        .pop-close:hover{background:var(--bg3);color:var(--text);}
+        .pop-body{padding:16px 20px;overflow-y:auto;flex:1;}
+        .pop-msg{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+        .pop-msg:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+        .pop-msg-tipo{display:inline-block;font-size:10px;font-weight:800;padding:3px 10px;border-radius:999px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+        .pop-msg-tipo.urgente{background:var(--red-pale);color:var(--red);}
+        .pop-msg-tipo.atualiz{background:var(--blue-pale);color:var(--blue);}
+        .pop-msg-tipo.aviso{background:var(--yellow-pale);color:var(--yellow);}
+        .pop-msg-tipo.info{background:var(--green-pale);color:var(--green);}
+        .pop-msg h3{font-size:14px;font-weight:800;margin:0 0 6px;}
+        .pop-msg p{font-size:13px;color:var(--muted);line-height:1.6;margin:0;}
+        .pop-foot{padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+        .pop-pag{font-size:12px;color:var(--muted);}
+        .pop-btn-ok{background:var(--jur);border:none;border-radius:10px;padding:9px 22px;cursor:pointer;font-size:13px;font-weight:800;color:#fff;font-family:'Nunito',sans-serif;}
+        .pop-btn-ok:hover{background:#6d28d9;}
 
         @media(max-width:768px){
             header{padding:0 14px;gap:10px;}
             .h-title{display:none;}
             main{padding:22px 14px 110px;}
-            #statusBar{padding:7px 14px;}
-            #iaWidget{right:12px;bottom:12px}
-            #iaJanela{width:min(390px, calc(100vw - 12px))}
+            #popBtn{right:96px;bottom:24px;}
         }
     </style>
 </head>
@@ -139,8 +184,10 @@
     <div class="h-title">Jurídico</div>
     <nav>
         <button class="nav-btn active" onclick="location.href='/juridico/'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/juridico/controle-equipamentos'">🖥️ Gestão Ativos(funcionários)</button>
         <button class="nav-btn" onclick="location.href='/juridico/ativos'">📋 Ativos & Comodatos</button>
         <button class="nav-btn" onclick="location.href='/juridico/uploads'">📁 Uploads</button>
+        <button class="nav-btn" onclick="abrirPopup()" style="color:var(--orange)">📢 Comunicados</button>
     </nav>
 </header>
 
@@ -153,6 +200,7 @@
     <div class="page-title">⚖️ Central Jurídica</div>
     <div class="page-sub" id="pageSub">Divino Fogão — Gestão de Ativos & Comodatos</div>
 
+    <!-- ── CARDS DE RESUMO ── -->
     <div class="cards">
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--jur)">
             <div class="card-icon">📱</div>
@@ -160,28 +208,24 @@
             <div class="card-val" style="color:var(--jur)" id="c-ativos">—</div>
             <div class="card-sub">contratos vigentes</div>
         </a>
-
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--orange)">
             <div class="card-icon">📋</div>
             <div class="card-label">Distratados</div>
             <div class="card-val" style="color:var(--orange)" id="c-dist">—</div>
             <div class="card-sub">distratos realizados</div>
         </a>
-
         <a class="card" href="/juridico/ativos" style="border-top:3px solid #64748b">
             <div class="card-icon">🔴</div>
             <div class="card-label">Desligados</div>
             <div class="card-val" style="color:#64748b" id="c-desl">—</div>
             <div class="card-sub">colaboradores desligados</div>
         </a>
-
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--green)">
             <div class="card-icon">💰</div>
             <div class="card-label">Valor Total Ativos</div>
             <div class="card-val" style="color:var(--green);font-size:18px" id="c-valor">—</div>
             <div class="card-sub">patrimônio em comodato</div>
         </a>
-
         <a class="card" href="/juridico/uploads" style="border-top:3px solid var(--blue)" id="cardUploads">
             <div class="card-icon">📁</div>
             <div class="card-label">Arquivos no Drive</div>
@@ -193,42 +237,100 @@
         </a>
     </div>
 
-    <div class="quick">
+    <!-- ══ CARD GESTÃO DE ATIVOS — COLABORADORES ══ -->
+    <a href="/juridico/controle-equipamentos" class="hcard c-yellow" id="cardGestaoAtivos">
+        <div class="hcard-top">
+            <div class="hcard-top-left">
+                <div class="hcard-icon">📦</div>
+                <div>
+                    <div class="hcard-name">Gestão de Ativos — Colaboradores</div>
+                    <div class="hcard-desc">Controle de equipamentos por funcionário · progresso de cadastro · patrimônio</div>
+                </div>
+            </div>
+            <div class="hcard-top-right">
+                <span class="hcard-link c-yellow">Ver detalhes →</span>
+            </div>
+        </div>
+        <div id="gaConteudo">
+            <div class="loading-msg"><div class="spinner" style="border-top-color:var(--yellow)"></div> Carregando...</div>
+        </div>
+    </a>
+
+    <!-- ══ CARD ATIVOS & COMODATOS ══ -->
+    <a href="/juridico/ativos" class="hcard c-jur" id="cardAtivos">
+        <div class="hcard-top">
+            <div class="hcard-top-left">
+                <div class="hcard-icon">⚖️</div>
+                <div>
+                    <div class="hcard-name">Ativos & Comodatos</div>
+                    <div class="hcard-desc">Comodatos ativos, distratados e desligados — visão completa</div>
+                </div>
+            </div>
+            <div class="hcard-top-right">
+                <span class="hcard-link c-jur">Ver detalhes →</span>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px" id="ativosGrid">
+            <div class="loading-msg" style="grid-column:1/-1"><div class="spinner"></div></div>
+        </div>
+    </a>
+
+    <!-- ── QUICK LINKS ── -->
+    <div class="quick" style="margin-top:16px">
         <div class="quick-title">🔗 Acesso Rápido</div>
         <div class="quick-links">
             <a class="ql primary" href="/juridico/ativos">📋 Ver Todos os Ativos & Comodatos</a>
-            <a class="ql" href="/juridico/ativos" onclick="setTimeout(()=>document.getElementById('btn-ativos')?.click(),500)">📱 Comodatos Ativos</a>
-            <a class="ql" href="/juridico/ativos" onclick="setTimeout(()=>document.getElementById('btn-distratados')?.click(),500)">📋 Distratados</a>
-            <a class="ql" href="/juridico/ativos" onclick="setTimeout(()=>document.getElementById('btn-desligados')?.click(),500)">🔴 Desligados</a>
+            <a class="ql" href="/juridico/controle-equipamentos">🖥️ Gestão de Ativos</a>
             <a class="ql" href="/juridico/uploads" style="border-color:rgba(14,165,233,.4);color:var(--blue)">📁 Uploads Drive</a>
         </div>
     </div>
 </main>
 
+<!-- ══ BOTÃO FLUTUANTE COMUNICADOS ══ -->
+<button id="popBtn" onclick="abrirPopup()" title="Comunicados & Atualizações">
+    📢
+    <span id="popBadge">0</span>
+</button>
+
+<!-- ══ POPUP COMUNICADOS ══ -->
+<div class="pop-overlay" id="popOverlay" onclick="if(event.target===this)fecharPopup()">
+    <div class="pop-box">
+        <div class="pop-head">
+            <div>
+                <p class="pop-titulo">📢 Comunicados & Atualizações</p>
+                <p class="pop-data" id="popData"></p>
+            </div>
+            <button class="pop-close" onclick="fecharPopup()">×</button>
+        </div>
+        <div class="pop-body" id="popBody"></div>
+        <div class="pop-foot">
+            <span class="pop-pag" id="popPag"></span>
+            <button class="pop-btn-ok" onclick="fecharPopup()">Entendido</button>
+        </div>
+    </div>
+</div>
+
+<!-- IA Widget -->
 <div id="iaWidget">
     <div id="iaJanela">
         <div class="ia-head">
             <div class="ia-title">⚖️ IA Jurídico — Central Jurídica</div>
             <button class="ia-close" onclick="toggleIA()">×</button>
         </div>
-
         <div class="ia-sugs">
             <button class="ia-sug" onclick="usarSugestaoIA('Faça um resumo executivo do módulo jurídico.')">Resumo executivo</button>
             <button class="ia-sug" onclick="usarSugestaoIA('Quantos ativos, distratados e desligados existem hoje?')">Totais do módulo</button>
             <button class="ia-sug" onclick="usarSugestaoIA('Qual é o valor total atual dos ativos?')">Valor total</button>
-            <button class="ia-sug" onclick="usarSugestaoIA('Resuma a situação atual dos uploads do jurídico.')">Uploads</button>
+            <button class="ia-sug" onclick="usarSugestaoIA('Quais colaboradores estão sem equipamento?')">Sem equipamento</button>
         </div>
-
         <div id="iaMsgs">
             <div class="ia-msg bot">Olá! Posso analisar os dados atuais do Jurídico com base no que estiver carregado nesta tela.</div>
         </div>
-
         <div class="ia-foot">
             <input id="inputIA" type="text" placeholder="Pergunte sobre os dados do Jurídico..." onkeydown="if(event.key==='Enter') perguntarIA()">
             <button id="btnEnviarIA" onclick="perguntarIA()">Enviar</button>
         </div>
     </div>
-
     <button id="iaToggle" onclick="toggleIA()">🧠</button>
 </div>
 
@@ -236,194 +338,212 @@
 const $ = id => document.getElementById(id);
 const setStatus = (cls, msg) => { $('sdot').className = 'sdot ' + cls; $('statusText').textContent = msg; };
 
-let dadosAtivosIA = {
-    ativos: [],
-    distratados: [],
-    desligados: [],
-    statsAtivos: null,
-    sincronizadoEm: null
-};
+const CORES = ['var(--jur)','var(--yellow)','var(--orange)','var(--green)','var(--blue)','#0891b2','#db2777'];
 
-let dadosUploadsIA = {
-    pastas: [],
-    arquivos: []
-};
+let dadosAtivosIA  = { ativos:[], distratados:[], desligados:[], statsAtivos:null, sincronizadoEm:null };
+let dadosUploadsIA = { pastas:[], arquivos:[] };
+let dadosGestaoIA  = {};
 
-function toggleIA() {
-    $('iaJanela').classList.toggle('open');
-    if ($('iaJanela').classList.contains('open')) {
-        setTimeout(() => $('inputIA')?.focus(), 60);
-    }
-}
-
-function addMsgIA(texto, tipo = 'bot') {
-    const div = document.createElement('div');
-    div.className = 'ia-msg ' + tipo;
-    div.textContent = texto;
-    $('iaMsgs').appendChild(div);
-    $('iaMsgs').scrollTop = $('iaMsgs').scrollHeight;
-}
-
-function usarSugestaoIA(texto) {
-    $('inputIA').value = texto;
-    perguntarIA();
-}
-
-function normItem(item = {}) {
-    return {
-        comodatario: item.comodatario || item.comodatário || item['COMODATÁRIO'] || item.nome || item.colaborador || '',
-        aparelho: item.aparelho || item['APARELHO'] || item.tipo || '',
-        modelo: item.modelo || item['MODELO'] || '',
-        valor: item.valor || item['VALOR'] || item.valorFormatado || '',
-        assinatura: item.assinatura || item['ASSINATURA'] || '',
-        etiqueta: item.etiqueta || item['ETIQUETA'] || '',
-        linha: item.linha || item['N° LINHA'] || item['Nº LINHA'] || item.numeroLinha || '',
-        distrato: item.distrato || item['DISTRATO'] || '',
-        obs: item.obs || item['OBS'] || item.observacoes || item.observações || ''
-    };
-}
+// ── IA ──────────────────────────────────────────────────────────────────────
+function toggleIA() { $('iaJanela').classList.toggle('open'); if($('iaJanela').classList.contains('open')) setTimeout(()=>$('inputIA')?.focus(),60); }
+function addMsgIA(texto, tipo='bot') { const div=document.createElement('div'); div.className='ia-msg '+tipo; div.textContent=texto; $('iaMsgs').appendChild(div); $('iaMsgs').scrollTop=$('iaMsgs').scrollHeight; }
+function usarSugestaoIA(texto) { $('inputIA').value=texto; perguntarIA(); }
 
 function montarContextoIA() {
-    const ativos      = Array.isArray(dadosAtivosIA.ativos) ? dadosAtivosIA.ativos : [];
-    const distratados = Array.isArray(dadosAtivosIA.distratados) ? dadosAtivosIA.distratados : [];
-    const desligados  = Array.isArray(dadosAtivosIA.desligados) ? dadosAtivosIA.desligados : [];
-    const pastas      = Array.isArray(dadosUploadsIA.pastas) ? dadosUploadsIA.pastas : [];
-    const arquivos    = Array.isArray(dadosUploadsIA.arquivos) ? dadosUploadsIA.arquivos : [];
-
-    const contexto = {
+    return JSON.stringify({
         pagina: 'index jurídico',
         resumo: {
-            ativos: ativos.length,
-            distratados: distratados.length,
-            desligados: desligados.length,
+            ativos: dadosAtivosIA.ativos.length,
+            distratados: dadosAtivosIA.distratados.length,
+            desligados: dadosAtivosIA.desligados.length,
             valorTotalAtivos: dadosAtivosIA.statsAtivos?.valorTotalFormatado || 'não informado',
-            sincronizadoEm: dadosAtivosIA.sincronizadoEm || null,
-            totalPastasDrive: pastas.length,
-            totalArquivosDrive: arquivos.length
+            totalPastasDrive: dadosUploadsIA.pastas.length,
+            totalArquivosDrive: dadosUploadsIA.arquivos.length,
         },
-        amostraAtivos: ativos.slice(0, 30).map(normItem),
-        amostraDistratados: distratados.slice(0, 30).map(normItem),
-        amostraDesligados: desligados.slice(0, 30).map(normItem),
-        amostraUploads: arquivos.slice(0, 20).map(a => ({
-            nome: a.nome || '',
-            pasta: a.pastaNome || a.pasta || '',
-            tamanho: a.tamanhoFormatado || a.tamanho || '',
-            tipo: a.mimeType || a.tipo || ''
-        }))
-    };
-
-    return JSON.stringify(contexto, null, 2);
+        gestaoAtivos: dadosGestaoIA,
+        amostraAtivos: dadosAtivosIA.ativos.slice(0,20),
+    }, null, 2);
 }
 
 async function perguntarIA() {
-    const pergunta = $('inputIA').value.trim();
-    if (!pergunta) return;
-
-    addMsgIA(pergunta, 'user');
-    $('inputIA').value = '';
-
-    const btn = $('btnEnviarIA');
-    const textoOriginal = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = '...';
-
+    const pergunta = $('inputIA').value.trim(); if(!pergunta) return;
+    addMsgIA(pergunta,'user'); $('inputIA').value='';
+    const btn=$('btnEnviarIA'); btn.disabled=true; btn.textContent='...';
     try {
-        const r = await fetch('/juridico/ia/analisar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                pergunta,
-                contexto: montarContextoIA()
-            })
-        });
-
+        const r = await fetch('/juridico/ia/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta,contexto:montarContextoIA()})});
         const d = await r.json();
-
-        if (!r.ok || !d.ok) {
-            throw new Error(d.erro || 'Falha ao consultar IA');
-        }
-
-        addMsgIA(d.resposta || 'Sem resposta.', 'bot');
-    } catch (e) {
-        addMsgIA('Erro ao consultar IA: ' + e.message, 'bot');
-    } finally {
-        btn.disabled = false;
-        btn.textContent = textoOriginal;
-    }
+        if(!r.ok||!d.ok) throw new Error(d.erro||'Falha ao consultar IA');
+        addMsgIA(d.resposta||'Sem resposta.','bot');
+    } catch(e){ addMsgIA('Erro ao consultar IA: '+e.message,'bot'); }
+    finally{ btn.disabled=false; btn.textContent='Enviar'; }
 }
 
-async function carregar() {
-    setStatus('syncing', 'Carregando...');
+// ── CARD GESTÃO DE ATIVOS ────────────────────────────────────────────────────
+async function carregarGestaoAtivos() {
+    const box = $('gaConteudo');
+    try {
+        const r = await fetch('/juridico/api/controle-equipamentos', {credentials:'include'});
+        if(r.status===401){ box.innerHTML='<div class="sem-dados">Faça login para ver os dados</div>'; return; }
+        const d = await r.json();
+        if(!d.ok||!d.equipamentos){ box.innerHTML='<div class="sem-dados">Sincronize a Gestão de Ativos para ver dados</div>'; return; }
+
+        const lista  = d.equipamentos||[], stats = d.stats||{}, total = lista.length;
+        const normS  = s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+        const comEquip  = lista.filter(i=>i.tipoAparelho&&i.tipoAparelho!=='').length;
+        const semEquip  = total - comEquip;
+        const deslig    = lista.filter(i=>normS(i.statusAtual).includes('deslig')).length;
+        const manut     = lista.filter(i=>normS(i.statusAtual).includes('manut')).length;
+        const semComod  = lista.filter(i=>i.assinouComodato!=='Sim').length;
+        const valorTotal = stats.valorTotalFormatado || '—';
+
+        let valorRestituido = '—';
+        try {
+            const rh = await fetch('/juridico/api/controle-equipamentos/historico-stats',{credentials:'include'});
+            if(rh.ok){ const dh=await rh.json(); if(dh.ok) valorRestituido=dh.totalRestituidoFormatado||'—'; }
+        } catch(_){}
+
+        const pctCad = total ? Math.round((comEquip/total)*100) : 0;
+        const corBarra = pctCad>=80
+            ? 'linear-gradient(90deg,var(--green),#4ade80)'
+            : pctCad>=50
+                ? 'linear-gradient(90deg,var(--yellow),#fbbf24)'
+                : 'linear-gradient(90deg,var(--orange),#fb923c)';
+
+        dadosGestaoIA = {total,comEquip,semEquip,deslig,manut,semComod,valorTotal,valorRestituido,pctCad};
+
+        box.innerHTML = `
+          <div class="ga-grid">
+            <div class="ga-metric" style="border-color:rgba(124,58,237,.3)"><div class="ga-metric-val" style="color:var(--jur)">${total}</div><div class="ga-metric-lbl">Colaboradores</div></div>
+            <div class="ga-metric" style="border-color:rgba(22,163,74,.3)"><div class="ga-metric-val" style="color:var(--green)">${comEquip}</div><div class="ga-metric-lbl">Com Equipamento</div></div>
+            <div class="ga-metric" style="border-color:rgba(234,88,12,.3)"><div class="ga-metric-val" style="color:var(--orange)">${semEquip}</div><div class="ga-metric-lbl">Sem Equipamento</div></div>
+            <div class="ga-metric" style="border-color:rgba(200,16,46,.3)"><div class="ga-metric-val" style="color:var(--red)">${deslig}</div><div class="ga-metric-lbl">Desligados</div></div>
+            <div class="ga-metric" style="border-color:rgba(217,119,6,.3)"><div class="ga-metric-val" style="color:var(--yellow)">${manut}</div><div class="ga-metric-lbl">Manutenção</div></div>
+            <div class="ga-metric" style="border-color:rgba(124,58,237,.3)"><div class="ga-metric-val" style="color:var(--jur)">${semComod}</div><div class="ga-metric-lbl">Sem Comodato</div></div>
+          </div>
+          <div class="ga-prog-wrap">
+            <div class="ga-prog-header">
+              <span class="ga-prog-title">Colaboradores com equipamento cadastrado</span>
+              <span class="ga-prog-nums">${comEquip} / ${total}</span>
+            </div>
+            <div class="ga-prog-track"><div class="ga-prog-fill" id="gaProgFill" style="width:0%;background:${corBarra}"></div></div>
+            <div class="ga-prog-sub">${pctCad}% dos colaboradores possuem ao menos um equipamento cadastrado · ${semEquip} aguardando cadastro</div>
+          </div>
+          <div class="ga-valor-row">
+            <div class="ga-valor-pill" style="border-color:rgba(124,58,237,.3)">
+              <div class="ga-valor-pill-val" style="color:var(--jur)">${valorTotal}</div>
+              <div class="ga-valor-pill-lbl">💰 Valor total em ativos</div>
+            </div>
+            <div class="ga-valor-pill" style="border-color:rgba(217,119,6,.3)">
+              <div class="ga-valor-pill-val" style="color:var(--yellow)">${valorRestituido}</div>
+              <div class="ga-valor-pill-lbl">💳 Total restituído (trocas)</div>
+            </div>
+          </div>
+        `;
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{ const f=$('gaProgFill'); if(f) f.style.width=pctCad+'%'; }));
+    } catch(e) { box.innerHTML=`<div class="sem-dados">Erro: ${e.message}</div>`; }
+}
+
+// ── CARD ATIVOS & COMODATOS ──────────────────────────────────────────────────
+async function carregarAtivos() {
     try {
         const r = await fetch('/juridico/api/ativos/');
         const d = await r.json();
-
-        if (!d.ok) {
-            setStatus('error', '⚠️ ' + (d.erro || 'Erro'));
-            return;
-        }
+        if(!d.ok){ $('ativosGrid').innerHTML='<div class="sem-dados" style="grid-column:1/-1">Sincronize os ativos para ver dados</div>'; return; }
 
         dadosAtivosIA = {
-            ativos: d.ativos || [],
-            distratados: d.distratados || [],
-            desligados: d.desligados || [],
-            statsAtivos: d.statsAtivos || null,
-            sincronizadoEm: d.sincronizadoEm || null
+            ativos:      d.ativos||[],
+            distratados: d.distratados||[],
+            desligados:  d.desligados||[],
+            statsAtivos: d.statsAtivos||null,
+            sincronizadoEm: d.sincronizadoEm||null,
         };
 
-        $('c-ativos').textContent = (d.ativos || []).length;
-        $('c-dist').textContent   = (d.distratados || []).length;
-        $('c-desl').textContent   = (d.desligados || []).length;
+        const nAtivos=(d.ativos||[]).length, nDist=(d.distratados||[]).length, nDesl=(d.desligados||[]).length;
+        $('c-ativos').textContent = nAtivos;
+        $('c-dist').textContent   = nDist;
+        $('c-desl').textContent   = nDesl;
         $('c-valor').textContent  = d.statsAtivos?.valorTotalFormatado || '—';
-        $('pageSub').textContent  = `${(d.ativos || []).length} comodatos · ${(d.distratados || []).length} distratados · ${(d.desligados || []).length} desligados`;
+        $('pageSub').textContent  = `${nAtivos} comodatos · ${nDist} distratados · ${nDesl} desligados`;
 
-        setStatus(
-            'ready',
-            '✓ Dados carregados' + (d.sincronizadoEm ? ' · Sync: ' + new Date(d.sincronizadoEm).toLocaleString('pt-BR') : '')
-        );
-    } catch (e) {
-        setStatus('error', '❌ ' + e.message);
-    }
+        $('ativosGrid').innerHTML = `
+            <div class="ga-metric" style="border-color:rgba(124,58,237,.25)"><div class="ga-metric-val" style="color:var(--jur)">${nAtivos}</div><div class="ga-metric-lbl">Ativos</div></div>
+            <div class="ga-metric" style="border-color:rgba(234,88,12,.25)"><div class="ga-metric-val" style="color:var(--orange)">${nDist}</div><div class="ga-metric-lbl">Distratados</div></div>
+            <div class="ga-metric" style="border-color:rgba(100,116,139,.25)"><div class="ga-metric-val" style="color:#64748b">${nDesl}</div><div class="ga-metric-lbl">Desligados</div></div>
+            <div class="ga-metric" style="border-color:rgba(22,163,74,.25)"><div class="ga-metric-val" style="color:var(--green);font-size:16px">${d.statsAtivos?.valorTotalFormatado||'—'}</div><div class="ga-metric-lbl">Valor Total</div></div>
+        `;
+
+        setStatus('ready', '✓ Dados carregados' + (d.sincronizadoEm ? ' · Sync: '+new Date(d.sincronizadoEm).toLocaleString('pt-BR') : ''));
+    } catch(e) { setStatus('error','❌ '+e.message); }
 }
 
+// ── UPLOADS ──────────────────────────────────────────────────────────────────
 async function carregarUploads() {
     try {
         const [rPastas, rArquivos] = await Promise.allSettled([
-            fetch('/juridico/uploads/pastas').then(r => r.json()),
-            fetch('/juridico/uploads/arquivos').then(r => r.json()),
+            fetch('/juridico/uploads/pastas').then(r=>r.json()),
+            fetch('/juridico/uploads/arquivos').then(r=>r.json()),
         ]);
-
-        const pastas   = rPastas.status === 'fulfilled' && rPastas.value.ok ? (rPastas.value.pastas || []) : [];
-        const arquivos = rArquivos.status === 'fulfilled' && rArquivos.value.ok ? (rArquivos.value.arquivos || []) : [];
-
+        const pastas   = rPastas.status==='fulfilled'&&rPastas.value.ok ? (rPastas.value.pastas||[]) : [];
+        const arquivos = rArquivos.status==='fulfilled'&&rArquivos.value.ok ? (rArquivos.value.arquivos||[]) : [];
         dadosUploadsIA = { pastas, arquivos };
-
-        const totalArqs  = arquivos.length;
-        const totalBytes = arquivos.reduce((s, f) => s + parseInt(f.tamanho || 0, 10), 0);
-
-        const fmtBytes = b => {
-            if (b < 1024) return b + ' B';
-            if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
-            if (b < 1073741824) return (b / 1048576).toFixed(1) + ' MB';
-            return (b / 1073741824).toFixed(1) + ' GB';
-        };
-
-        $('c-uploads').textContent = totalArqs + ' arq.';
-        $('c-uploads-sub').textContent = pastas.length + ' pasta(s) · ' + fmtBytes(totalBytes);
-
-        if (totalArqs === 0 && pastas.length === 0) {
-            $('c-uploads').textContent = '—';
-            $('c-uploads-sub').textContent = 'Nenhum arquivo ainda';
-        }
-    } catch (e) {
-        dadosUploadsIA = { pastas: [], arquivos: [] };
-        $('c-uploads').textContent = '—';
-        $('c-uploads-sub').textContent = 'Erro ao carregar';
+        const totalBytes = arquivos.reduce((s,f)=>s+parseInt(f.tamanho||0,10),0);
+        const fmtBytes = b => b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':b<1073741824?(b/1048576).toFixed(1)+' MB':(b/1073741824).toFixed(1)+' GB';
+        $('c-uploads').textContent     = arquivos.length ? arquivos.length+' arq.' : '—';
+        $('c-uploads-sub').textContent = pastas.length+' pasta(s) · '+fmtBytes(totalBytes);
+    } catch(e) {
+        $('c-uploads').textContent='—'; $('c-uploads-sub').textContent='Erro ao carregar';
     }
 }
 
-carregar();
-carregarUploads();
+// ── POPUP COMUNICADOS ────────────────────────────────────────────────────────
+
+/* ════════════════════════════════════════════
+   ✏️  EDITE APENAS ESTE BLOCO — COMUNICADOS
+   tipo: 'urgente' | 'atualiz' | 'aviso' | 'info'
+   ════════════════════════════════════════════ */
+const COMUNICADOS = [
+    {
+        tipo: 'aviso',
+        titulo: 'Cadastro e atualização de ativos',
+        texto: 'Até o dia 31/03 as placas de patrimônio estaram prontas para fazer a gestão de ativos.'
+    },
+    {
+        tipo: 'atualiz',
+        titulo: 'Histórico de trocas disponível',
+        texto: 'A página de Gestão de Ativos (funcionários) foi compartilhada entre T.I. e Jurídico, com funcionalidade de exclusão de registros.'
+    },
+    // ← adicione mais objetos aqui
+];
+/* ════════════════════════════════════════════ */
+
+(function(){
+    const TIPOS = { urgente:'🔴 Urgente', atualiz:'🔵 Atualização', aviso:'🟡 Aviso', info:'🟢 Informativo' };
+    $('popData').textContent = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+    $('popBody').innerHTML = COMUNICADOS.map(c=>`
+        <div class="pop-msg">
+            <span class="pop-msg-tipo ${c.tipo}">${TIPOS[c.tipo]||c.tipo}</span>
+            <h3>${c.titulo}</h3>
+            <p>${c.texto}</p>
+        </div>`).join('');
+    $('popPag').textContent = COMUNICADOS.length + (COMUNICADOS.length===1?' comunicado':' comunicados');
+    // atualiza badge
+    const badge = $('popBadge');
+    if(badge){ badge.textContent = COMUNICADOS.length; badge.style.display = COMUNICADOS.length ? 'flex' : 'none'; }
+})();
+
+function abrirPopup(){
+    $('popOverlay').classList.add('open');
+}
+function fecharPopup(){
+    $('popOverlay').classList.remove('open');
+    // some o badge após ler
+    const badge = $('popBadge');
+    if(badge) badge.style.display = 'none';
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+setStatus('syncing','Carregando...');
+Promise.allSettled([carregarAtivos(), carregarGestaoAtivos(), carregarUploads()]);
 </script>
 </body>
 </html>

@@ -196,7 +196,7 @@
     <nav>
         <button class="nav-btn active" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
         <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
-        <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Ativos</button>
+        <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Comodato - Jurídico</button>
         <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
         <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
         <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
@@ -453,6 +453,118 @@
         <div class="iati-unread" id="iaTiUnread">1</div>
     </button>
 </div>
+<!-- ══ BOTÃO FLUTUANTE COMUNICADOS ══ -->
+<style>
+#popBtn{
+    position:fixed;right:96px;bottom:24px;z-index:9999;
+    width:58px;height:58px;border:none;border-radius:999px;cursor:pointer;
+    background:linear-gradient(135deg,var(--orange),#f97316);
+    color:#fff;font-size:22px;box-shadow:var(--shadow-lg);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .15s;
+}
+#popBtn:hover{transform:scale(1.08);}
+#popBadge{
+    position:absolute;top:-3px;right:-3px;
+    background:#ff3b5c;color:#fff;
+    font-size:10px;font-weight:800;font-family:'Nunito',sans-serif;
+    border-radius:999px;width:18px;height:18px;
+    display:flex;align-items:center;justify-content:center;
+    pointer-events:none;border:2px solid #fff;
+}
+/* ── POPUP ── */
+.pop-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .22s;}
+.pop-overlay.open{opacity:1;pointer-events:all;}
+.pop-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:100%;max-width:560px;max-height:80vh;display:flex;flex-direction:column;transform:translateY(12px);transition:transform .22s;}
+.pop-overlay.open .pop-box{transform:translateY(0);}
+.pop-head{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0;}
+.pop-titulo{font-size:15px;font-weight:800;margin:0 0 3px;}
+.pop-data{font-size:11px;color:var(--muted);}
+.pop-close{background:none;border:1.5px solid var(--border);border-radius:8px;padding:4px 12px;cursor:pointer;font-size:18px;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:800;}
+.pop-close:hover{background:var(--bg3);color:var(--text);}
+.pop-body{padding:16px 20px;overflow-y:auto;flex:1;}
+.pop-msg{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.pop-msg:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.pop-msg-tipo{display:inline-block;font-size:10px;font-weight:800;padding:3px 10px;border-radius:999px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.pop-msg-tipo.urgente{background:var(--red-pale);color:var(--red);}
+.pop-msg-tipo.atualiz{background:var(--ti-pale);color:var(--ti);}
+.pop-msg-tipo.aviso{background:var(--yellow-pale);color:var(--yellow);}
+.pop-msg-tipo.info{background:var(--green-pale);color:var(--green);}
+.pop-msg h3{font-size:14px;font-weight:800;margin:0 0 6px;}
+.pop-msg p{font-size:13px;color:var(--muted);line-height:1.6;margin:0;}
+.pop-foot{padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.pop-pag{font-size:12px;color:var(--muted);}
+.pop-btn-ok{background:var(--ti);border:none;border-radius:10px;padding:9px 22px;cursor:pointer;font-size:13px;font-weight:800;color:#fff;font-family:'Nunito',sans-serif;}
+.pop-btn-ok:hover{background:#075985;}
+</style>
+
+<button id="popBtn" onclick="abrirPopup()" title="Comunicados & Atualizações">
+    📢
+    <span id="popBadge">0</span>
+</button>
+
+<div class="pop-overlay" id="popOverlay" onclick="if(event.target===this)fecharPopup()">
+    <div class="pop-box">
+        <div class="pop-head">
+            <div>
+                <p class="pop-titulo">📢 Comunicados & Atualizações — T.I.</p>
+                <p class="pop-data" id="popData"></p>
+            </div>
+            <button class="pop-close" onclick="fecharPopup()">×</button>
+        </div>
+        <div class="pop-body" id="popBody"></div>
+        <div class="pop-foot">
+            <span class="pop-pag" id="popPag"></span>
+            <button class="pop-btn-ok" onclick="fecharPopup()">Entendido</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   ✏️  EDITE APENAS ESTE BLOCO — COMUNICADOS T.I.
+   tipo: 'urgente' | 'atualiz' | 'aviso' | 'info'
+   ════════════════════════════════════════════ */
+   const COMUNICADOS = [
+    {
+        tipo: 'aviso',
+        titulo: 'Cadastro e atualização de ativos',
+        texto: 'Até o dia 31/03 as placas de patrimônio estaram prontas para fazer a gestão de ativos.'
+    },
+    {
+        tipo: 'atualiz',
+        titulo: 'Histórico de trocas disponível',
+        texto: 'A página de Gestão de Ativos (funcionários) foi compartilhada entre T.I. e Jurídico, com funcionalidade de exclusão de registros.'
+    },
+    // ← adicione mais comunicados aqui
+    
+];
+/* ════════════════════════════════════════════ */
+
+(function(){
+    const TIPOS = { urgente:'🔴 Urgente', atualiz:'🔵 Atualização', aviso:'🟡 Aviso', info:'🟢 Informativo' };
+    const gi = id => document.getElementById(id);
+    gi('popData').textContent = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+    gi('popBody').innerHTML = COMUNICADOS.map(c=>`
+        <div class="pop-msg">
+            <span class="pop-msg-tipo ${c.tipo}">${TIPOS[c.tipo]||c.tipo}</span>
+            <h3>${c.titulo}</h3>
+            <p>${c.texto}</p>
+        </div>`).join('');
+    gi('popPag').textContent = COMUNICADOS.length + (COMUNICADOS.length===1?' comunicado':' comunicados');
+    const badge = gi('popBadge');
+    if(badge){ badge.textContent = COMUNICADOS.length; badge.style.display = COMUNICADOS.length ? 'flex' : 'none'; }
+})();
+
+function abrirPopup(){
+    document.getElementById('popOverlay').classList.add('open');
+}
+function fecharPopup(){
+    document.getElementById('popOverlay').classList.remove('open');
+    const badge = document.getElementById('popBadge');
+    if(badge) badge.style.display = 'none';
+}
+</script>
 
 <script>
 const $ = id => document.getElementById(id);

@@ -116,13 +116,9 @@ router.post('/api/pix/sincronizar', apenasLocal, async (req, res) => {
 router.use('/api/pix', pixRoutes);
 
 // ─── Controle de equipamentos ─────────────────────────────────
-try {
-    const controleEquipamentosRoutes = require('./services/controleEquipamentosService');
-    router.use('/api/controle-equipamentos', controleEquipamentosRoutes);
-    console.log('\x1b[32m[TI]\x1b[0m controleEquipamentosService carregado');
-} catch (e) {
-    console.warn('\x1b[33m[TI AVISO]\x1b[0m controleEquipamentosService não carregado:', e.message);
-}
+const controleEquipamentosRoutes = require('./services/controleEquipamentosService');
+router.use('/api/controle-equipamentos', controleEquipamentosRoutes);
+console.log('\x1b[32m[TI]\x1b[0m controleEquipamentosService carregado');
 
 // ─── Chamados ────────────────────────────────────────────────
 router.use('/chamados', (req, res, next) => {

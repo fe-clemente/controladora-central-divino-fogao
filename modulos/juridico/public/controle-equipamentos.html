@@ -217,17 +217,12 @@
   </div>
   <div class="hd"></div>
   <div class="h-title">Central T.I.</div>
-  <nav>
-    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-    <button class="nav-btn active" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(funcionários)</button>
-    <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Comodato - Jurídico</button>
-    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
-    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
-    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
-    <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
-  </nav>
+   <nav>
+        <button class="nav-btn " onclick="location.href='/juridico/'">📊 Dashboard</button>
+        <button class="nav-btn active" onclick="location.href='/juridico/controle-equipamentos.html'">🖥️ Gestão Ativos(funcionários)</button>
+        <button class="nav-btn " onclick="location.href='/juridico/ativos'">📋 Comodatos Jurídico</button>
+        <button class="nav-btn" onclick="location.href='/juridico/uploads'">📁 Uploads</button>
+    </nav>
 </header>
 
 <div id="statusBar">
@@ -725,7 +720,7 @@
 
 <script>
 const $ = id => document.getElementById(id);
-const API_BASE = '/ti/api/controle-equipamentos';
+const API_BASE = '/juridico/api/controle-equipamentos';
 
 // ── ESTADO GLOBAL ──
 let DADOS = { funcionarios: [], stats: {} };

@@ -19,7 +19,7 @@ const upload = multer({
 
 // ─── Services ────────────────────────────────────────────────
 const ativosService   = require('./services/ativosService');
-const jurUploadsCache = require('./services/uploadsCache');
+const jurUploadsCache = require('./services/uploadscache');
 const {
     listarPastas,
     criarPasta,
@@ -47,10 +47,12 @@ router.get('/', (req, res) => {
     return res.sendFile(ativos);
 });
 
-router.get('/ativos',       (req, res) => res.sendFile(path.join(__dirname, 'public', 'ativos.html')));
-router.get('/ativos.html',  (req, res) => res.sendFile(path.join(__dirname, 'public', 'ativos.html')));
-router.get('/uploads',      (req, res) => res.sendFile(path.join(__dirname, 'public', 'uploads.html')));
-router.get('/uploads.html', (req, res) => res.sendFile(path.join(__dirname, 'public', 'uploads.html')));
+router.get('/ativos',                     (req, res) => res.sendFile(path.join(__dirname, 'public', 'ativos.html')));
+router.get('/ativos.html',                (req, res) => res.sendFile(path.join(__dirname, 'public', 'ativos.html')));
+router.get('/uploads',                    (req, res) => res.sendFile(path.join(__dirname, 'public', 'uploads.html')));
+router.get('/uploads.html',               (req, res) => res.sendFile(path.join(__dirname, 'public', 'uploads.html')));
+router.get('/controle-equipamentos',      (req, res) => res.sendFile(path.join(__dirname, 'public', 'controle-equipamentos.html')));
+router.get('/controle-equipamentos.html', (req, res) => res.sendFile(path.join(__dirname, 'public', 'controle-equipamentos.html')));
 
 // opcional, caso você crie uma página própria da IA
 router.get('/iajuridico', (req, res) => {
@@ -73,6 +75,13 @@ router.get('/iajuridico.html', (req, res) => {
 // API DE ATIVOS
 // ══════════════════════════════════════════════════════════════
 router.use('/api/ativos', ativosService);
+
+// ══════════════════════════════════════════════════════════════
+// CONTROLE DE EQUIPAMENTOS
+// ══════════════════════════════════════════════════════════════
+const controleEquipamentosRoutes = require('./services/controleEquipamentosService');
+router.use('/api/controle-equipamentos', controleEquipamentosRoutes);
+console.log('\x1b[32m[JURIDICO]\x1b[0m controleEquipamentosService carregado');
 
 // ══════════════════════════════════════════════════════════════
 // IA DO JURÍDICO

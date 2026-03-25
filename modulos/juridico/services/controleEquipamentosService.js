@@ -89,7 +89,7 @@ const COL_MAP = {
 };
 
 // ─── Cache ────────────────────────────────────────────────────────────────────
-const CACHE_DIR        = path.join(__dirname, '../cache');
+const CACHE_DIR = path.join(__dirname, '../../ti/cache');
 const CACHE_FILE       = path.join(CACHE_DIR, 'controle_equipamentos_cache.json');
 const CACHE_HIST       = path.join(CACHE_DIR, 'controle_historico_cache.json');
 const CACHE_DRIVE_FILE = path.join(CACHE_DIR, 'drive_pastas_equip_cache.json');
