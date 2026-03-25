@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // ─── EMAIL FIXO — sempre recebe uma cópia de tudo ─────────────────────────────
-const EMAIL_FIXO = process.env.SMTP_USER || 'fernando.clemente@divinofogao.com.br';
+const EMAIL_FIXO = process.env.SMTP_USER || 'treinamento@divinofogao.com.br';
 
 // ─── SANITIZA EMAIL ───────────────────────────────────────────────────────────
 function sanitizarEmail(email) {
@@ -29,7 +29,7 @@ function tr2(bg, label, val) {
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // EMAIL DE LEMBRETE — vai para o email da coluna M (franqueado/responsável)
-// Sempre envia cópia para EMAIL_FIXO (fernando.clemente@divinofogao.com.br)
+// Sempre envia cópia para EMAIL_FIXO (treinamento@divinofogao.com.br)
 // Contém botão verde de avaliação com link único por colaborador
 // ═══════════════════════════════════════════════════════════════════════════════
 async function enviarEmailLembrete(funcionario, linkAvaliacao) {
@@ -258,7 +258,7 @@ async function enviarEmailResultadoAvaliacao(funcionario, nota, dataFim, observa
     </html>`;
 
     await transporter.sendMail({
-        from: '"Divino Fogão Treinamentos" <fernando.clemente@divinofogao.com.br>',
+        from: '"Divino Fogão Treinamentos" <treinamento@divinofogao.com.br>',
         to: emailTo,
         ...(emailCC ? { cc: emailCC } : {}),
         subject: `📋 Avaliação Concluída — ${funcionario.nome} | ${funcionario.loja} | Nota: ${nota}/10`,

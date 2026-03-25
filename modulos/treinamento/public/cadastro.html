@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divino Fogão — Cadastro de Treinamento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
+            --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+            --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+            --accent:#2563eb; --green:#16a34a; --green-pale:#f0fdf4;
+            --yellow:#d97706; --yellow-pale:#fffbeb;
+            --shadow:0 2px 12px rgba(0,0,0,0.08);
+            --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+        /* ── HEADER ── */
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+        .logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
+        .logo img{height:52px;width:auto;display:block;}
+        .logo-fallback{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1px;display:none;}
+        .header-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+        .header-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
+        .header-back{margin-left:auto;background:var(--bg3);border:1.5px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
+        .header-back:hover{background:var(--red-pale);color:var(--red);border-color:rgba(200,16,46,.2);}
+
+        /* ── STATUS BAR ── */
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;}
+        .status-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+        .status-dot.ready{background:var(--green);animation:none;}
+        .status-dot.error{background:var(--red);animation:none;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+        /* ── MAIN ── */
+        main{max-width:900px;margin:0 auto;padding:32px 24px;}
+
+        /* ── SECTION HEADER ── */
+        .section-header{margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
+        .section-header h2{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px;}
+        .section-header p{color:var(--muted);font-size:13px;}
+
+        /* ── ALERT ── */
+        .cad-alert{border-radius:10px;padding:13px 18px;margin-bottom:20px;font-size:13px;font-weight:600;display:none;align-items:center;gap:10px;}
+        .cad-alert.success{background:var(--green-pale);border:1.5px solid rgba(22,163,74,.3);color:#166534;display:flex;}
+        .cad-alert.error{background:var(--red-pale);border:1.5px solid rgba(200,16,46,.2);color:var(--red);display:flex;}
+
+        /* ── FORM ── */
+        .cadastro-form{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:28px 32px;box-shadow:var(--shadow);}
+        .form-section{margin-bottom:28px;}
+        .form-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.9px;color:var(--muted);margin-bottom:16px;padding-bottom:8px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:8px;}
+        .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;}
+        .form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+        .form-field{display:flex;flex-direction:column;gap:6px;}
+        .form-field label{font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+        .req{color:var(--red);font-size:14px;line-height:1;}
+        .col-hint{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;background:var(--bg3);padding:1px 6px;border-radius:4px;border:1px solid var(--border);}
+        .form-control{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none;}
+        .form-control:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.08);}
+        .form-control::placeholder{color:var(--muted);font-weight:400;}
+        select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+        .money-wrap{position:relative;display:flex;align-items:center;}
+        .money-prefix{position:absolute;left:12px;font-size:13px;font-weight:700;color:var(--muted);pointer-events:none;z-index:1;}
+        .money-wrap .form-control{padding-left:38px;}
+        .total-box{background:var(--green-pale);border:2px solid rgba(22,163,74,.3);border-radius:10px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-top:14px;}
+        .total-label{font-size:13px;font-weight:700;color:var(--green);}
+        .total-valor{font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green);}
+        .form-actions{display:flex;gap:12px;justify-content:flex-end;padding-top:20px;border-top:1.5px solid var(--border);margin-top:8px;}
+        .btn{padding:11px 22px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;}
+        .btn-primary{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
+        .btn-primary:hover{background:var(--red-light);transform:translateY(-1px);}
+        .btn-secondary{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+        .btn-secondary:hover{background:var(--bg2);border-color:#ccc;}
+        .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
+
+        /* ── HISTÓRICO RECENTE ── */
+        .historico-recente{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:22px 26px;box-shadow:var(--shadow);margin-top:24px;}
+        .historico-recente h3{font-size:14px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px;}
+        .hist-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+        .hist-item:last-child{border-bottom:none;}
+        .hist-item-check{font-size:18px;flex-shrink:0;}
+        .hist-item-info{flex:1;min-width:0;}
+        .hist-item-nome{font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .hist-item-meta{font-size:11px;color:var(--muted);margin-top:2px;font-weight:600;}
+        .hist-item-linha{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:700;white-space:nowrap;flex-shrink:0;}
+
+        /* ── SPINNER ── */
+        .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* ── DEBUG ── */
+        #debug{position:fixed;bottom:16px;left:16px;background:rgba(255,255,255,.96);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);max-width:280px;z-index:998;backdrop-filter:blur(10px);box-shadow:var(--shadow-lg);}
+        .debug-line{padding:1px 0;}
+        .debug-line.ok{color:var(--green);}
+        .debug-line.err{color:var(--red);}
+        .debug-line.warn{color:var(--yellow);}
+
+        @media(max-width:700px){
+            header{padding:0 14px;gap:10px;}
+            .header-title{display:none;}
+            main{padding:20px 14px;}
+            .cadastro-form{padding:20px 16px;}
+            .form-grid-3{grid-template-columns:1fr;}
+            .form-actions{flex-direction:column;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="/treinamento/logo.png" alt="Divino Fogão"
+             onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
+        <span class="logo-fallback">🍽️ DIVINO FOGÃO</span>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">Cadastro de Treinamento</div>
+    <a href="/treinamento" class="header-back">← Voltar ao Dashboard</a>
+</header>
+
+<div id="statusBar">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Inicializando...</span>
+</div>
+
+<main>
+    <div class="section-header">
+        <div>
+            <h2>Cadastro de Funcionário / Treinamento</h2>
+            <p>Insere um novo registro direto na planilha Cadastral 2026</p>
+        </div>
+    </div>
+
+    <div id="cadAlert" class="cad-alert"></div>
+
+    <div class="cadastro-form">
+        <!-- ── IDENTIFICAÇÃO ── -->
+        <div class="form-section">
+            <div class="form-section-title">👤 Identificação do Colaborador</div>
+            <div class="form-grid">
+                <div class="form-field">
+                    <label>Loja <span class="req">*</span> <span class="col-hint">COL B</span></label>
+                    <select class="form-control" id="cad-loja"><option value="">— Selecionar loja —</option></select>
+                </div>
+                <div class="form-field" style="grid-column:1/-1;">
+                    <label>Nome Completo <span class="req">*</span> <span class="col-hint">COL C</span></label>
+                    <input type="text" class="form-control" id="cad-nome" placeholder="Nome completo do colaborador">
+                </div>
+                <div class="form-field">
+                    <label>CPF <span class="col-hint">COL D</span></label>
+                    <input type="text" class="form-control" id="cad-cpf" placeholder="000.000.000-00" maxlength="14">
+                </div>
+                <div class="form-field">
+                    <label>RG <span class="col-hint">COL E</span></label>
+                    <input type="text" class="form-control" id="cad-rg" placeholder="0000000">
+                </div>
+                <div class="form-field">
+                    <label>Função <span class="req">*</span> <span class="col-hint">COL F</span></label>
+                    <select class="form-control" id="cad-funcao"><option value="">— Selecionar função —</option></select>
+                </div>
+                <div class="form-field">
+                    <label>Turma de Trabalho <span class="col-hint">COL G</span></label>
+                    <select class="form-control" id="cad-turma"><option value="">— Selecionar turma —</option></select>
+                </div>
+                <div class="form-field">
+                    <label>E-mail <span class="col-hint">COL M</span></label>
+                    <input type="email" class="form-control" id="cad-email" placeholder="email@exemplo.com">
+                </div>
+                <div class="form-field">
+                    <label>Telefone <span class="col-hint">COL N</span></label>
+                    <input type="text" class="form-control" id="cad-telefone" placeholder="(00) 00000-0000" maxlength="15">
+                </div>
+            </div>
+        </div>
+
+        <!-- ── TREINAMENTO ── -->
+        <div class="form-section">
+            <div class="form-section-title">🎓 Dados do Treinamento</div>
+            <div class="form-grid">
+                <div class="form-field">
+                    <label>Início do Treinamento <span class="req">*</span> <span class="col-hint">COL O</span></label>
+                    <input type="date" class="form-control" id="cad-inicio">
+                </div>
+                <div class="form-field">
+                    <label>Solicitado por <span class="col-hint">COL R</span></label>
+                    <select class="form-control" id="cad-solicitador"><option value="">— Selecionar —</option></select>
+                </div>
+                <div class="form-field">
+                    <label>Local de Treinamento <span class="col-hint">COL S</span></label>
+                    <input type="text" class="form-control" id="cad-local" placeholder="Ex: Unidade Centro">
+                </div>
+                <div class="form-field">
+                    <label>Modelo de Treinamento <span class="col-hint">COL X</span></label>
+                    <select class="form-control" id="cad-modelo">
+                        <option value="">— Selecionar —</option>
+                        <option>Presencial</option><option>Online</option>
+                        <option>Híbrido</option><option>On the Job</option><option>EAD</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label>Mês Treinamento <span class="req">*</span> <span class="col-hint">COL AE</span></label>
+                    <select class="form-control" id="cad-mes">
+                        <option value="">— Selecionar mês —</option>
+                        <option>Janeiro</option><option>Fevereiro</option><option>Março</option>
+                        <option>Abril</option><option>Maio</option><option>Junho</option>
+                        <option>Julho</option><option>Agosto</option><option>Setembro</option>
+                        <option>Outubro</option><option>Novembro</option><option>Dezembro</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label>Ano Treinamento <span class="col-hint">COL AF</span></label>
+                    <input type="number" class="form-control" id="cad-ano" value="2026" min="2020" max="2035">
+                </div>
+            </div>
+        </div>
+
+        <!-- ── FINANCEIRO ── -->
+        <div class="form-section">
+            <div class="form-section-title">💰 Financeiro</div>
+            <div class="form-grid-3">
+                <div class="form-field">
+                    <label>Prêmio <span class="col-hint">COL AB</span></label>
+                    <div class="money-wrap">
+                        <span class="money-prefix">R$</span>
+                        <input type="number" class="form-control" id="cad-premio" placeholder="0,00" step="0.01" min="0" oninput="calcTotal()">
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label>Refeição <span class="col-hint">COL AC</span></label>
+                    <div class="money-wrap">
+                        <span class="money-prefix">R$</span>
+                        <input type="number" class="form-control" id="cad-refeicao" placeholder="0,00" step="0.01" min="0" oninput="calcTotal()">
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label>Pago <span class="col-hint">COL AD</span></label>
+                    <select class="form-control" id="cad-pago">
+                        <option value="">— Selecionar —</option>
+                        <option value="SIM">✅ SIM</option>
+                        <option value="NÃO">❌ NÃO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="total-box">
+                <span class="total-label">💵 Valor Total (Prêmio + Refeição)</span>
+                <span class="total-valor" id="totalDisplay">R$ 0,00</span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-secondary" onclick="limparCadastro()">🗑 Limpar campos</button>
+            <button class="btn btn-primary" id="btnSalvar" onclick="salvarCadastro()">💾 Salvar na Planilha</button>
+        </div>
+    </div>
+
+    <!-- ── HISTÓRICO RECENTE ── -->
+    <div class="historico-recente" id="historicoRecente" style="display:none">
+        <h3>✅ Cadastros Recentes nesta Sessão</h3>
+        <div id="historicoLista"></div>
+    </div>
+</main>
+
+<div id="debug"></div>
+
+<script>
+const API     = '/treinamento';
+const debugEl = document.getElementById('debug');
+
+/* ── DEBUG ── */
+function log(msg, tipo) {
+    tipo = tipo || '';
+    const l = document.createElement('div');
+    l.className = 'debug-line ' + tipo;
+    const h = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    l.textContent = h + ' ' + msg;
+    debugEl.appendChild(l);
+    while (debugEl.children.length > 7) debugEl.removeChild(debugEl.firstChild);
+}
+
+/* ── STATUS ── */
+async function verificarStatus() {
+    const dot = document.getElementById('statusDot');
+    const txt = document.getElementById('statusText');
+    try {
+        const r = await fetch(API + '/status');
+        const d = await r.json();
+        if (d.status === 'pronto' && d.total > 0) {
+            dot.className = 'status-dot ready';
+            txt.textContent = '✓ Sistema pronto — ' + d.total + ' colaboradores';
+            log('Cache: ' + d.total, 'ok');
+        } else {
+            dot.className = 'status-dot';
+            txt.textContent = '⏳ Carregando planilha...';
+            setTimeout(verificarStatus, 2500);
+        }
+    } catch (e) {
+        dot.className = 'status-dot error';
+        txt.textContent = '⚠️ Servidor offline';
+        setTimeout(verificarStatus, 5000);
+    }
+}
+
+/* ── PREENCHER SELECT ── */
+function fillSel(id, lista, ph) {
+    const s = document.getElementById(id);
+    s.innerHTML = '<option value="">' + ph + '</option>';
+    (lista || []).forEach(function(v) {
+        const o = document.createElement('option');
+        o.value = v; o.textContent = v;
+        s.appendChild(o);
+    });
+}
+
+/* ── CARREGAR OPÇÕES ── */
+async function carregarOpcoes() {
+    log('📋 Carregando listas...', 'warn');
+    try {
+        const r = await fetch(API + '/cadastro/opcoes');
+        const d = await r.json();
+        fillSel('cad-loja',       d.lojas,        '— Selecionar loja —');
+        fillSel('cad-funcao',     d.funcoes,       '— Selecionar função —');
+        fillSel('cad-turma',      d.turmas,        '— Selecionar turma —');
+        fillSel('cad-solicitador',d.solicitadores, '— Selecionar —');
+        log('✓ Listas carregadas', 'ok');
+    } catch (e) {
+        log('Erro listas: ' + e.message, 'err');
+    }
+}
+
+/* ── TOTAL ── */
+function calcTotal() {
+    const p = parseFloat(document.getElementById('cad-premio').value)   || 0;
+    const r = parseFloat(document.getElementById('cad-refeicao').value) || 0;
+    document.getElementById('totalDisplay').textContent =
+        'R$ ' + (p + r).toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
+/* ── ALERTA ── */
+function alertCad(tipo, msg) {
+    const el = document.getElementById('cadAlert');
+    el.className = 'cad-alert ' + tipo;
+    el.innerHTML = (tipo === 'success' ? '✅ ' : '⚠️ ') + msg;
+    el.style.display = 'flex';
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    if (tipo === 'success') setTimeout(function() { el.style.display = 'none'; }, 7000);
+}
+
+/* ── LIMPAR ── */
+function limparCadastro() {
+    ['cad-loja','cad-funcao','cad-turma','cad-solicitador','cad-modelo','cad-mes','cad-pago']
+        .forEach(function(id) { document.getElementById(id).value = ''; });
+    ['cad-nome','cad-cpf','cad-rg','cad-email','cad-telefone','cad-local','cad-premio','cad-refeicao']
+        .forEach(function(id) { document.getElementById(id).value = ''; });
+    document.getElementById('cad-inicio').value = '';
+    document.getElementById('cad-ano').value    = '2026';
+    calcTotal();
+    document.getElementById('cadAlert').style.display = 'none';
+}
+
+/* ── FORMATAR DATA ── */
+function dt(v) {
+    if (!v) return '';
+    const p = v.split('-');
+    return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : v;
+}
+
+/* ── HISTÓRICO LOCAL DA SESSÃO ── */
+const _historico = [];
+function adicionarHistorico(nome, loja, funcao, linha) {
+    _historico.unshift({ nome, loja, funcao, linha });
+    const wrap = document.getElementById('historicoRecente');
+    const lista = document.getElementById('historicoLista');
+    wrap.style.display = 'block';
+    lista.innerHTML = _historico.slice(0, 8).map(function(h) {
+        return '<div class="hist-item">' +
+            '<div class="hist-item-check">✅</div>' +
+            '<div class="hist-item-info">' +
+            '<div class="hist-item-nome">' + h.nome + '</div>' +
+            '<div class="hist-item-meta">' + h.loja + ' · ' + h.funcao + '</div>' +
+            '</div>' +
+            '<div class="hist-item-linha">linha ' + h.linha + '</div>' +
+            '</div>';
+    }).join('');
+}
+
+/* ── SALVAR ── */
+async function salvarCadastro() {
+    const nome   = document.getElementById('cad-nome').value.trim();
+    const loja   = document.getElementById('cad-loja').value;
+    const funcao = document.getElementById('cad-funcao').value;
+    const inicio = document.getElementById('cad-inicio').value;
+    const mes    = document.getElementById('cad-mes').value;
+
+    if (!nome)   { alertCad('error', 'Nome completo é obrigatório.');        return; }
+    if (!loja)   { alertCad('error', 'Selecione a loja.');                   return; }
+    if (!funcao) { alertCad('error', 'Selecione a função.');                 return; }
+    if (!inicio) { alertCad('error', 'Informe a data de início.');           return; }
+    if (!mes)    { alertCad('error', 'Selecione o mês do treinamento.');     return; }
+
+    const premio   = parseFloat(document.getElementById('cad-premio').value)   || 0;
+    const refeicao = parseFloat(document.getElementById('cad-refeicao').value) || 0;
+
+    const dados = {
+        loja, nome,
+        cpf:        document.getElementById('cad-cpf').value.trim(),
+        rg:         document.getElementById('cad-rg').value.trim(),
+        funcao,
+        turma:      document.getElementById('cad-turma').value,
+        email:      document.getElementById('cad-email').value.trim(),
+        telefone:   document.getElementById('cad-telefone').value.trim(),
+        inicioTrein:dt(inicio),
+        solicitador:document.getElementById('cad-solicitador').value,
+        local:      document.getElementById('cad-local').value.trim(),
+        modelo:     document.getElementById('cad-modelo').value,
+        premio, refeicao, valorTotal: premio + refeicao,
+        pago:       document.getElementById('cad-pago').value,
+        mes,
+        ano:        document.getElementById('cad-ano').value || '2026',
+    };
+
+    const btn = document.getElementById('btnSalvar');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Salvando...';
+    log('💾 Salvando: ' + nome, 'warn');
+
+    try {
+        const r = await fetch(API + '/cadastrar', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(dados),
+        });
+        const d = await r.json();
+        if (d.sucesso) {
+            log('✓ Salvo: ' + nome, 'ok');
+            alertCad('success', 'Funcionário <strong>' + nome + '</strong> cadastrado! (linha ' + d.linhaReal + ')');
+            adicionarHistorico(nome, loja, funcao, d.linhaReal);
+            limparCadastro();
+        } else {
+            alertCad('error', d.erro || 'Erro ao salvar na planilha.');
+            log('Erro: ' + (d.erro || '?'), 'err');
+        }
+    } catch (e) {
+        alertCad('error', 'Erro de conexão: ' + e.message);
+        log('Erro: ' + e.message, 'err');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '💾 Salvar na Planilha';
+}
+
+/* ── MÁSCARAS ── */
+document.getElementById('cad-cpf').addEventListener('input', function(e) {
+    let v = e.target.value.replace(/\D/g, '').substring(0, 11);
+    v = v.replace(/(\d{3})(\d)/, '$1.$2')
+         .replace(/(\d{3})(\d)/, '$1.$2')
+         .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    e.target.value = v;
+});
+document.getElementById('cad-telefone').addEventListener('input', function(e) {
+    let v = e.target.value.replace(/\D/g, '').substring(0, 11);
+    if      (v.length >= 11) v = v.replace(/(\d{2})(\d{5})(\d{4})/,    '($1) $2-$3');
+    else if (v.length > 6)   v = v.replace(/(\d{2})(\d{4,5})(\d{0,4})/, '($1) $2-$3');
+    else if (v.length > 2)   v = v.replace(/(\d{2})(\d+)/,              '($1) $2');
+    e.target.value = v;
+});
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+    verificarStatus();
+    carregarOpcoes();
+    // Pré-definir data de início com hoje
+    const hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('cad-inicio').value = hoje;
+    // Pré-definir mês atual
+    const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                   'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    const sel = document.getElementById('cad-mes');
+    const mesAtual = meses[new Date().getMonth()];
+    Array.from(sel.options).forEach(function(o) {
+        if (o.value === mesAtual) o.selected = true;
+    });
+});
+</script>
+
+</body>
+</html>

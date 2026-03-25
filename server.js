@@ -25,10 +25,10 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(session({
-    secret:            process.env.SESSION_SECRET || 'divino-central-secret',
-    resave:            false,
+    secret: process.env.SESSION_SECRET || 'divino-central-secret',
+    resave: false,
     saveUninitialized: false,
-    cookie:            { maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'lax' },
+    cookie: { maxAge: 24 * 60 * 60 * 1000, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' },
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -87,6 +87,7 @@ const apenasLocal = (req, res, next) => {
     const ip = req.ip || req.connection.remoteAddress || '';
     const isLocal = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
     if (isLocal) return next();
+
     return res.status(401).json({ ok: false, erro: 'Sessão expirada. Faça login.' });
 };
 

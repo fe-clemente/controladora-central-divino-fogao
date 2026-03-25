@@ -78,27 +78,7 @@
         .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;}
         .card-field{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px 13px;}
         .card-field-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--muted);margin-bottom:3px;}
-.card-field-value{font-size:13px;font-weight:600; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%;}
-        .lembrete-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:18px;box-shadow:var(--shadow);transition:all 0.2s;margin-bottom:10px;}
-        .lembrete-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);}
-        .lembrete-card.enviado{opacity:0.72;background:var(--green-pale);border-color:rgba(22,163,74,0.25);}
-        .dias-badge{flex-shrink:0;width:62px;height:62px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;}
-        .dias-badge.hoje{background:#fff0f2;color:var(--red);border:2px solid rgba(200,16,46,0.25);}
-        .dias-badge.amanha{background:var(--yellow-pale);color:var(--yellow);border:2px solid rgba(217,119,6,0.25);}
-        .dias-badge.dois{background:#eff6ff;color:var(--accent);border:2px solid rgba(37,99,235,0.2);}
-        .dias-badge .num{font-size:22px;line-height:1;}
-        .dias-badge .label{font-size:9px;text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;}
-        .lembrete-info{flex:1;min-width:0;}
-        .lembrete-nome{font-size:15px;font-weight:800;margin-bottom:5px;color:var(--text);}
-        .lembrete-meta{font-size:12px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;font-weight:600;}
-        .lembrete-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
-        .enviado-tag{font-size:11px;background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,0.3);padding:4px 12px;border-radius:20px;font-weight:700;white-space:nowrap;}
-        .avaliacao-tag{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;white-space:nowrap;}
-        .avaliacao-tag.aguardando{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,0.2);}
-        .nota-badge{font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;padding:3px 10px;border-radius:20px;white-space:nowrap;}
-        .nota-badge.alta{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,0.2);}
-        .nota-badge.media{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,0.2);}
-        .nota-badge.baixa{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,0.2);}
+        .card-field-value{font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;}
 
         .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:24px;}
         .stat-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);}
@@ -110,13 +90,6 @@
         @media(max-width:700px){.chart-section{grid-template-columns:1fr;}}
         .chart-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--shadow);}
         .chart-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:18px;}
-        .bar-item{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
-        .bar-label{font-size:12px;font-weight:600;color:var(--text);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .bar-track{flex:1;height:7px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
-        .bar-fill{height:100%;background:linear-gradient(90deg,var(--red),#e8192e);border-radius:4px;transition:width 0.8s ease;}
-        .bar-fill.blue{background:linear-gradient(90deg,var(--accent),#60a5fa);}
-        .bar-fill.green{background:linear-gradient(90deg,var(--green),#4ade80);}
-        .bar-count{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--muted);font-weight:600;width:24px;text-align:right;flex-shrink:0;}
 
         /* ── CADASTRO ─────────────────────────────────────────────── */
         .cadastro-form{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:28px 32px;box-shadow:var(--shadow);}
@@ -143,15 +116,6 @@
         .cad-alert.success{background:var(--green-pale);border:1.5px solid rgba(22,163,74,0.3);color:#166534;display:flex;}
         .cad-alert.error{background:var(--red-pale);border:1.5px solid rgba(200,16,46,0.2);color:var(--red);display:flex;}
         .form-actions{display:flex;gap:12px;justify-content:flex-end;padding-top:20px;border-top:1.5px solid var(--border);margin-top:8px;}
-
-        .historico-item{background:var(--bg2);border:1.5px solid rgba(22,163,74,0.2);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:8px;box-shadow:var(--shadow);transition:all 0.2s;}
-        .historico-item:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);}
-        .historico-check{font-size:22px;flex-shrink:0;}
-        .historico-info{flex:1;min-width:0;}
-        .historico-nome{font-size:14px;font-weight:800;color:var(--text);}
-        .historico-meta{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;}
-        .historico-nota{font-size:12px;font-family:'JetBrains Mono',monospace;font-weight:800;margin-top:3px;}
-        .historico-data{font-size:11px;color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:600;white-space:nowrap;text-align:right;flex-shrink:0;}
 
         /* ── FLOATING IA ──────────────────────────────────────────── */
         #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
@@ -197,20 +161,6 @@
         .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
         @keyframes spin{to{transform:rotate(360deg);}}
 
-        @media(max-width:768px){
-            header{padding:0 14px;gap:10px;}
-            .header-title{display:none;}
-            .tab-btn{padding:14px 10px;font-size:11px;}
-            main{padding:20px 14px;}
-            .lembrete-card{flex-wrap:wrap;}
-            .lembrete-actions{flex-direction:row;width:100%;justify-content:flex-end;}
-            #iaJanela{width:calc(100vw - 32px);}
-            #iaWidget{right:16px;bottom:16px;}
-            .cadastro-form{padding:20px 16px;}
-            .form-actions{flex-direction:column;}
-        }
-
-        /* ── MODAL LOJAS ─────────────────────────────────────────── */
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
         .modal-overlay.open{display:flex;}
         .modal-box{background:var(--bg2);border-radius:18px;padding:28px 32px;max-width:640px;width:100%;box-shadow:var(--shadow-lg);max-height:84vh;overflow-y:auto;}
@@ -227,19 +177,9 @@
         .filtro-ano label{font-size:12px;font-weight:700;color:var(--muted);}
         .filtro-ano select{padding:7px 14px;border-radius:9px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text);background:var(--bg2);outline:none;cursor:pointer;}
         .filtro-ano select:focus{border-color:var(--red);}
-        .bar-item-clickable{cursor:pointer;border-radius:8px;padding:2px 4px;transition:background 0.15s;}
-        .bar-item-clickable:hover{background:var(--red-pale);}
-
-        /* ── GRÁFICO VERTICAL ───────────────────────────────────── */
-
-        /* ── CHART HEADER COM SELETOR ──────────────────────────── */
         .chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-        .chart-title-text{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;}
         .chart-ano-sel{padding:4px 10px;border-radius:7px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--text);background:var(--bg2);outline:none;cursor:pointer;}
         .chart-ano-sel:focus{border-color:var(--red);}
-        .avaliacao-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;}
-        .avaliacao-pill.sim{background:var(--green-pale);color:var(--green);border:1px solid rgba(22,163,74,.2);}
-        .avaliacao-pill.nao{background:var(--yellow-pale);color:var(--yellow);border:1px solid rgba(217,119,6,.2);}
         .vchart-outer{overflow-x:auto;padding-bottom:4px;}
         .vchart{display:flex;align-items:flex-end;gap:6px;height:140px;border-bottom:2px solid var(--border);padding:0 4px;min-width:0;}
         .vcol{display:flex;flex-direction:column;align-items:center;flex:1;min-width:36px;max-width:64px;cursor:pointer;gap:2px;}
@@ -252,6 +192,17 @@
         .vcol:hover .vcol-bar{filter:brightness(1.15);}
         .vchart-labels{display:flex;gap:6px;padding:6px 4px 0;min-width:0;}
         .vchart-label{flex:1;min-width:36px;max-width:64px;font-size:9px;font-weight:700;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+        @media(max-width:768px){
+            header{padding:0 14px;gap:10px;}
+            .header-title{display:none;}
+            .tab-btn{padding:14px 10px;font-size:11px;}
+            main{padding:20px 14px;}
+            #iaJanela{width:calc(100vw - 32px);}
+            #iaWidget{right:16px;bottom:16px;}
+            .cadastro-form{padding:20px 16px;}
+            .form-actions{flex-direction:column;}
+        }
     </style>
 </head>
 <body>
@@ -265,22 +216,21 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
 <div class="header-divider"></div>
 <div class="header-title">Central de Treinamentos</div>
 <nav>
-<!-- 1 --> <button class="tab-btn active" onclick="mudarTab('dashboard',this)">📊 Dashboard</button>
-<!-- 2 --> <button class="tab-btn" onclick="mudarTab('lembretes',this)">
-            🔔 Lembretes <span class="tab-badge" id="badgeLembretes">0</span>
-           </button>
-<!-- 3 --> <button class="tab-btn" onclick="mudarTab('busca',this)">🔍 Busca</button>
-<!-- 4 --> <button class="tab-btn" onclick="window.location.href='/treinamento/sults'">
-            🏪 Sults Lojas/Colab <span id="sults-sub" style="font-size:10px;font-family:monospace;color:inherit;opacity:.7"></span>
-           </button>
-<!-- 5 --> <button class="tab-btn" onclick="window.location.href='/treinamento/chamados'">📞 Chamados T&D</button>
-<!-- 6 --> <button class="tab-btn" onclick="window.location.href='/treinamento/universidade'">🎓 Universidade</button>
-<!-- 7 --> <button class="tab-btn" onclick="window.location.href='/treinamento/turnover'">🔄 Turnover</button>
-<!-- 8 --> <button class="tab-btn" onclick="mudarTab('cadastro',this)">➕ Cadastro</button>
-<!-- 9 --> <button class="tab-btn" onclick="mudarTab('historico',this)">📋 Histórico</button>
+<!-- 1 -->  <button class="tab-btn active" onclick="mudarTab('dashboard',this)">📊 Dashboard</button>
+<!-- 2 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/lembretes'">
+             🔔 Lembretes <span class="tab-badge" id="badgeLembretes">...</span>
+            </button>
+<!-- 3 -->  <button class="tab-btn" onclick="mudarTab('busca',this)">🔍 Busca</button>
+<!-- 4 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/sults'">
+             🏪 Sults Lojas/Colab <span id="sults-sub" style="font-size:10px;font-family:monospace;color:inherit;opacity:.7"></span>
+            </button>
+<!-- 5 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/chamados'">📞 Chamados T&D</button>
+<!-- 6 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/universidade'">🎓 Universidade</button>
+<!-- 7 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/turnover'">🔄 Turnover</button>
+<!-- 8 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/cadastro'">➕ Cadastro</button>
+<!-- 9 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/lembretes#historico'">📋 Histórico</button>
 <!-- 10 --> <button class="tab-btn" onclick="window.location.href='/treinamento/uploads'">📁 Uploads</button>
 </nav>
- 
 </header>
 
 <div id="statusBar">
@@ -291,8 +241,8 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
 <main>
 
     <!-- BUSCA -->
-<div class="tab-content" id="tab-busca">
-            <div class="section-header">
+    <div class="tab-content" id="tab-busca">
+        <div class="section-header">
             <div>
                 <h2>Busca de Colaboradores</h2>
                 <p>Busca inteligente por nome usando Vertex AI Embeddings</p>
@@ -314,18 +264,9 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
         </div>
     </div>
 
-    <!-- LEMBRETES -->
-    <div class="tab-content" id="tab-lembretes">
-        <div class="section-header">
-            <div><h2>Lembretes do Dia</h2><p>Colaboradores com treinamento nos próximos 2 dias</p></div>
-            <button class="btn btn-secondary" onclick="carregarLembretes()">↻ Atualizar</button>
-        </div>
-        <div id="listaLembretes"><div class="loading-msg"><div class="spinner"></div> Carregando...</div></div>
-    </div>
-
     <!-- DASHBOARD -->
-<div class="tab-content active" id="tab-dashboard">
-            <div class="section-header">
+    <div class="tab-content active" id="tab-dashboard">
+        <div class="section-header">
             <div><h2>Dashboard</h2><p>Visão geral dos treinamentos, avaliações e financeiro</p></div>
             <button class="btn btn-secondary" onclick="carregarDashboard()">↻ Atualizar</button>
         </div>
@@ -334,170 +275,41 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
             <select id="filtroAno" onchange="carregarDashboard()">
                 <option value="2024">2024</option>
                 <option value="2025">2025</option>
-                <option value="2026">2026</option>
+                <option value="2026" selected>2026</option>
                 <option value="2027">2027</option>
             </select>
         </div>
         <div class="stats-row" id="statsRow"><div class="loading-msg"><div class="spinner"></div></div></div>
         <div class="chart-section" id="chartSection"></div>
 
-        <!-- Gráfico de turnover inline no dashboard -->
-<div class="chart-card chart-card-full" id="secTurnoverDashCard" style="margin-top:16px">            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <!-- Card preview Lembretes — substitui as tabs antigas -->
+        <div class="chart-card chart-card-full" style="margin-top:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+                <div class="chart-title" style="margin:0">🔔 Lembretes de Treinamento</div>
+                <a href="/treinamento/lembretes" class="btn btn-primary" style="text-decoration:none;font-size:12px">
+                    📋 Abrir página de Lembretes →
+                </a>
+            </div>
+            <div id="lembretesDashPreview">
+                <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+            </div>
+        </div>
+
+        <!-- Turnover inline -->
+        <div class="chart-card chart-card-full" id="secTurnoverDashCard" style="margin-top:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
                 <div class="chart-title" style="margin:0">🔄 Turnover — Motivos e Lojas</div>
-                <button class="btn" style="font-size:12px" onclick="abrirGraficoTurnover()">📊 Ver gráfico completo</button>
+                <button class="btn" style="font-size:12px" onclick="window.location.href='/treinamento/turnover'">📊 Ver página completa</button>
             </div>
             <div id="secTurnoverDash"><span style="color:var(--muted);font-size:12px">Carregando dados de turnover…</span></div>
         </div>
     </div>
 
-    <!-- CADASTRO -->
-    <div class="tab-content" id="tab-cadastro">
-        <div class="section-header">
-            <div>
-                <h2>Cadastro de Funcionário / Treinamento</h2>
-                <p>Insere um novo registro direto na planilha Cadastral 2026</p>
-            </div>
-        </div>
-
-        <div id="cadAlert" class="cad-alert"></div>
-
-        <div class="cadastro-form">
-
-            <!-- SEÇÃO 1: IDENTIFICAÇÃO -->
-            <div class="form-section">
-                <div class="form-section-title">👤 Identificação do Colaborador</div>
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label>Loja <span class="req">*</span> <span class="col-hint">COL B</span></label>
-                        <select class="form-control" id="cad-loja"><option value="">— Selecionar loja —</option></select>
-                    </div>
-                    <div class="form-field" style="grid-column:1/-1;">
-                        <label>Nome Completo <span class="req">*</span> <span class="col-hint">COL C</span></label>
-                        <input type="text" class="form-control" id="cad-nome" placeholder="Nome completo do colaborador">
-                    </div>
-                    <div class="form-field">
-                        <label>CPF <span class="col-hint">COL D</span></label>
-                        <input type="text" class="form-control" id="cad-cpf" placeholder="000.000.000-00" maxlength="14">
-                    </div>
-                    <div class="form-field">
-                        <label>RG <span class="col-hint">COL E</span></label>
-                        <input type="text" class="form-control" id="cad-rg" placeholder="0000000">
-                    </div>
-                    <div class="form-field">
-                        <label>Função <span class="req">*</span> <span class="col-hint">COL F</span></label>
-                        <select class="form-control" id="cad-funcao"><option value="">— Selecionar função —</option></select>
-                    </div>
-                    <div class="form-field">
-                        <label>Turma de Trabalho <span class="col-hint">COL G</span></label>
-                        <select class="form-control" id="cad-turma"><option value="">— Selecionar turma —</option></select>
-                    </div>
-                    <div class="form-field">
-                        <label>E-mail <span class="col-hint">COL M</span></label>
-                        <input type="email" class="form-control" id="cad-email" placeholder="email@exemplo.com">
-                    </div>
-                    <div class="form-field">
-                        <label>Telefone <span class="col-hint">COL N</span></label>
-                        <input type="text" class="form-control" id="cad-telefone" placeholder="(00) 00000-0000" maxlength="15">
-                    </div>
-                </div>
-            </div>
-
-            <!-- SEÇÃO 2: TREINAMENTO -->
-            <div class="form-section">
-                <div class="form-section-title">🎓 Dados do Treinamento</div>
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label>Início do Treinamento <span class="req">*</span> <span class="col-hint">COL O</span></label>
-                        <input type="date" class="form-control" id="cad-inicio">
-                    </div>
-                    <div class="form-field">
-                        <label>Solicitado por <span class="col-hint">COL R</span></label>
-                        <select class="form-control" id="cad-solicitador"><option value="">— Selecionar —</option></select>
-                    </div>
-                    <div class="form-field">
-                        <label>Local de Treinamento <span class="col-hint">COL S</span></label>
-                        <input type="text" class="form-control" id="cad-local" placeholder="Ex: Unidade Centro">
-                    </div>
-                    <div class="form-field">
-                        <label>Modelo de Treinamento <span class="col-hint">COL X</span></label>
-                        <select class="form-control" id="cad-modelo">
-                            <option value="">— Selecionar —</option>
-                            <option>Presencial</option><option>Online</option>
-                            <option>Híbrido</option><option>On the Job</option><option>EAD</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label>Mês Treinamento <span class="req">*</span> <span class="col-hint">COL AE</span></label>
-                        <select class="form-control" id="cad-mes">
-                            <option value="">— Selecionar mês —</option>
-                            <option>Janeiro</option><option>Fevereiro</option><option>Março</option>
-                            <option>Abril</option><option>Maio</option><option>Junho</option>
-                            <option>Julho</option><option>Agosto</option><option>Setembro</option>
-                            <option>Outubro</option><option>Novembro</option><option>Dezembro</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label>Ano Treinamento <span class="col-hint">COL AF</span></label>
-                        <input type="number" class="form-control" id="cad-ano" value="2026" min="2020" max="2035">
-                    </div>
-                </div>
-            </div>
-
-            <!-- SEÇÃO 3: FINANCEIRO -->
-            <div class="form-section">
-                <div class="form-section-title">💰 Financeiro</div>
-                <div class="form-grid-3">
-                    <div class="form-field">
-                        <label>Prêmio <span class="col-hint">COL AB</span></label>
-                        <div class="money-wrap">
-                            <span class="money-prefix">R$</span>
-                            <input type="number" class="form-control" id="cad-premio"
-                                   placeholder="0,00" step="0.01" min="0" oninput="calcTotal()">
-                        </div>
-                    </div>
-                    <div class="form-field">
-                        <label>Refeição <span class="col-hint">COL AC</span></label>
-                        <div class="money-wrap">
-                            <span class="money-prefix">R$</span>
-                            <input type="number" class="form-control" id="cad-refeicao"
-                                   placeholder="0,00" step="0.01" min="0" oninput="calcTotal()">
-                        </div>
-                    </div>
-                    <div class="form-field">
-                        <label>Pago <span class="col-hint">COL AD</span></label>
-                        <select class="form-control" id="cad-pago">
-                            <option value="">— Selecionar —</option>
-                            <option value="SIM">✅ SIM</option>
-                            <option value="NÃO">❌ NÃO</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="total-box">
-                    <span class="total-label">💵 Valor Total (Prêmio + Refeição)</span>
-                    <span class="total-valor" id="totalDisplay">R$ 0,00</span>
-                </div>
-            </div>
-
-            <!-- AÇÕES -->
-            <div class="form-actions">
-                <button class="btn btn-secondary" onclick="limparCadastro()">🗑 Limpar campos</button>
-                <button class="btn btn-primary" id="btnSalvar" onclick="salvarCadastro()">💾 Salvar na Planilha</button>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- HISTÓRICO -->
-    <div class="tab-content" id="tab-historico">
-        <div class="section-header">
-            <div><h2>Histórico de Lembretes</h2><p>Todos os lembretes enviados com status de avaliação</p></div>
-            <button class="btn btn-secondary" onclick="carregarHistorico()">↻ Atualizar</button>
-        </div>
-        <div id="listaHistorico"><div class="loading-msg"><div class="spinner"></div> Carregando...</div></div>
-    </div>
+    <!-- CADASTRO — movido para /treinamento/cadastro -->
 
 </main>
 
+<!-- FLOATING IA -->
 <div id="iaWidget">
     <div id="iaJanela">
         <div class="ia-topo">
@@ -530,8 +342,8 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
             </div>
         </div>
         <div class="ia-rodape">
-            <input type="text" class="ia-input" id="inputIA" 
-                placeholder="Ex: João fez quantos treinos?" 
+            <input type="text" class="ia-input" id="inputIA"
+                placeholder="Ex: João fez quantos treinos?"
                 onkeydown="if(event.key==='Enter')perguntarIA()">
             <button class="ia-enviar" id="iaBtnEnviar" onclick="perguntarIA()">➤</button>
         </div>
@@ -542,1644 +354,7 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
     </button>
 </div>
 
-<div id="debug"></div>
-
-<script>
-const API = '/treinamento';
-const debugEl  = document.getElementById('debug');
-let timerInterval = null, timerSeg = 0;
-let iaAberto = false;
-let opcoesOk = false;
-
-/* ── DEBUG ─────────────────────────────────────────────────────────────── */
-function log(msg, tipo) {
-    tipo = tipo || '';
-    const l = document.createElement('div');
-    l.className = 'debug-line ' + tipo;
-    const h = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    l.textContent = h + ' ' + msg;
-    debugEl.appendChild(l);
-    while (debugEl.children.length > 7) debugEl.removeChild(debugEl.firstChild);
-}
-
-/* ── STATUS ────────────────────────────────────────────────────────────── */
-async function verificarStatus() {
-    const dot = document.getElementById('statusDot');
-    const txt = document.getElementById('statusText');
-    const inf = document.getElementById('cacheInfoText');
-    try {
-        const r = await fetch(API + '/status');
-        const d = await r.json();
-
-        if (d.status === 'pronto' && d.total > 0) {
-            if (dot) dot.className = 'status-dot ready';
-            if (txt) txt.textContent = '✓ Sistema pronto — ' + d.total + ' colaboradores';
-            if (inf) {
-                const ua = d.ultimaAtualizacao
-                    ? new Date(d.ultimaAtualizacao).toLocaleTimeString('pt-BR')
-                    : '—';
-                inf.innerHTML = '<strong>' + d.total + '</strong> colaboradores carregados · ' + ua;
-            }
-            log('Cache: ' + d.total, 'ok');
-        } else {
-            if (dot) dot.className = 'status-dot';
-            if (txt) txt.textContent = '⏳ Carregando planilha...';
-            if (inf) inf.textContent = '⏳ Conectando ao Google Sheets...';
-            setTimeout(verificarStatus, 2500);
-        }
-    } catch (e) {
-        if (dot) dot.className = 'status-dot error';
-        if (txt) txt.textContent = '⚠️ Servidor offline — recarregue a página';
-        setTimeout(verificarStatus, 5000);
-    }
-}
-
-
-/* ── CACHE COM PROGRESSO SSE ── ★ NOVO ──────────────────────────────────── */
-async function atualizarCache(forcar) {
-    const btn    = document.getElementById(forcar ? 'btnFull' : 'btnDiff');
-    const lbl    = btn.innerHTML;
-    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>';
-
-    const infoEl = document.getElementById('cacheInfoText');
-    infoEl.innerHTML = '⏳ Iniciando carregamento...';
-    document.getElementById('statusDot').className = 'status-dot';
-    document.getElementById('statusText').textContent = '⏳ Conectando à planilha...';
-
-    if (window._sseCache) { try { window._sseCache.close(); } catch(_){} }
-
-    // Abre SSE para receber progresso em tempo real
-    const sse = new EventSource(API + '/cache/progresso');
-    window._sseCache = sse;
-
-    sse.onmessage = function(e) {
-        try {
-            const d = JSON.parse(e.data);
-            if (d.total > 0) {
-                const pct = Math.round((d.atual / d.total) * 100);
-                infoEl.innerHTML =
-                    '<strong>' + d.atual + ' / ' + d.total + '</strong> colaboradores ' +
-                    '<span style="color:var(--muted);font-size:11px;font-family:JetBrains Mono,monospace">' +
-                    '(' + pct + '%)' + (d.msg ? ' · ' + d.msg : '') + '</span>';
-                document.getElementById('statusText').textContent =
-                    '⏳ Carregando... ' + d.atual + '/' + d.total + ' (' + pct + '%)';
-            } else {
-                infoEl.textContent = d.msg || '⏳ Aguardando...';
-            }
-            if (d.msg && d.msg.startsWith('✅')) {
-                sse.close();
-                setTimeout(function() { btn.disabled=false; btn.innerHTML=lbl; verificarStatus(); }, 600);
-            }
-        } catch(_) {}
-    };
-    sse.onerror = function() { sse.close(); };
-
-    fetch(API + '/recarregar-cache', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({forcar})
-    }).catch(function(err) {
-        btn.disabled=false; btn.innerHTML=lbl;
-        infoEl.textContent = '❌ Erro: ' + err.message;
-        sse.close();
-    });
-}
-
-/* ── TABS ──────────────────────────────────────────────────────────────── */
-function mudarTab(id, el) {
-    document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
-    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
-    document.getElementById('tab-'+id).classList.add('active');
-    el.classList.add('active');
-    if (id === 'lembretes') carregarLembretes();
-    if (id === 'dashboard') carregarDashboard();
-    if (id === 'historico') carregarHistorico();
-    if (id === 'cadastro')  carregarOpcoes();
-}
-
-function irParaTurnover() { location.href = '/turnover'; }
-
-
-/* ── BUSCA ─────────────────────────────────────────────────────────────── */
-function iniciarTimer() {
-    timerSeg = 0; clearInterval(timerInterval);
-    timerInterval = setInterval(function(){
-        timerSeg += 0.1;
-        document.getElementById('timerBusca').textContent = '⏱ ' + timerSeg.toFixed(1) + 's';
-    }, 100);
-}
-
-async function fazerBusca() {
-    const q  = document.getElementById('inputBusca').value.trim();
-    const ct = document.getElementById('resultadosBusca');
-    if (!q) return;
-    log('🔍 ' + q);
-    ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Consultando Vertex AI...</div>';
-    iniciarTimer();
-    try {
-        const r    = await fetch(API + '/buscar', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q})});
-        const data = await r.json();
-        clearInterval(timerInterval);
-        document.getElementById('timerBusca').textContent = '⏱ ' + timerSeg.toFixed(1) + 's · ' + data.length + ' resultado(s)';
-        log(timerSeg.toFixed(1) + 's — ' + data.length + ' resultados', 'ok');
-        if (!data.length) {
-            ct.innerHTML = '<div class="empty"><div class="icon">😕</div><p>Nenhum resultado para "' + q + '"</p></div>';
-            return;
-        }
-        ct.innerHTML = data.map(function(it){
-            const p = (it.similaridade*100).toFixed(1);
-            return '<div class="card"><div class="card-header"><span class="card-name">'+it.nome+'</span>' +
-                '<span class="match-badge '+(parseFloat(p)>=90?'high':'')+'">'+p+'% match</span></div>' +
-                '<div class="card-grid">'+
-                cf('Loja',it.loja)+cf('Função',it.funcao)+cf('Turno',it.turno)+
-                cf('Telefone',it.telefone)+cf('E-mail',it.email)+
-                cf('Início',it.inicioTrein)+cf('Fim',it.fimTrein)+
-                '</div></div>';
-        }).join('');
-    } catch (e) {
-        clearInterval(timerInterval);
-        log('Erro busca: '+e.message,'err');
-        ct.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro ao conectar</p></div>';
-    }
-}
-
-function cf(l, v) {
-    return '<div class="card-field"><div class="card-field-label">'+l+'</div>'
-        + '<div class="card-field-value" title="'+(v||'—')+'">'+(v||'—')+'</div></div>';
-}
-
-/* ── LEMBRETES ─────────────────────────────────────────────────────────── */
-async function carregarLembretes() {
-    const ct = document.getElementById('listaLembretes');
-    ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
-    try {
-        const r    = await fetch(API + '/lembretes');
-        const raw  = await r.json();
-        const data = Array.isArray(raw) ? raw : (raw.lista || []); // ★ FIX
-        const pend = data.filter(function(f){ return !f.lembreteEnviado; }).length;
-        document.getElementById('badgeLembretes').textContent = pend;
-        if (!data.length) {
-            ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>Nenhum treinamento nos próximos 2 dias</p></div>';
-            return;
-        }
-        ct.innerHTML = data.map(function(f){
-            const di = f.diffDias===0 ? {cls:'hoje',num:'!',lbl:'HOJE'}
-                     : f.diffDias===1 ? {cls:'amanha',num:'1',lbl:'DIA'}
-                     :                  {cls:'dois',num:'2',lbl:'DIAS'};
-            let at = '';
-            if (f.notaAvaliacao !== '' && f.notaAvaliacao !== undefined) {
-                const n = parseFloat(f.notaAvaliacao);
-                at = '<span class="nota-badge '+(n>=8?'alta':n>=6?'media':'baixa')+'">⭐ Nota: '+f.notaAvaliacao+'/10</span>';
-            } else if (f.emailAvaliacaoEnviado) {
-                at = '<span class="avaliacao-tag aguardando">⏳ Avaliação pendente</span>';
-            }
-            const js = JSON.stringify(f).replace(/"/g,'&quot;');
-            return '<div class="lembrete-card '+(f.lembreteEnviado?'enviado':'')+'" id="lc-'+f.rowIndex+'">' +
-                '<div class="dias-badge '+di.cls+'"><div class="num">'+di.num+'</div><div class="label">'+di.lbl+'</div></div>' +
-                '<div class="lembrete-info"><div class="lembrete-nome">'+f.nome+'</div>' +
-                '<div class="lembrete-meta"><span>🏪 '+f.loja+'</span><span>👔 '+f.funcao+'</span>' +
-                '<span>📅 '+f.inicioTrein+'</span><span>📞 '+(f.telefone||'—')+'</span></div></div>' +
-                '<div class="lembrete-actions">' +
-                (f.lembreteEnviado
-                    ? '<span class="enviado-tag">✓ Enviado</span>'
-                    : '<button class="btn btn-green" onclick="enviarLembrete('+js+')">📤 Enviar lembrete</button>') +
-                at + '</div></div>';
-        }).join('');
-    } catch (e) {
-        log('Erro lembretes: '+e.message,'err');
-        ct.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro ao carregar</p></div>';
-    }
-}
-
-async function enviarLembrete(f) {
-    const card = document.getElementById('lc-'+f.rowIndex);
-    const btn  = card.querySelector('button');
-    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Enviando...';
-    log('📤 '+f.nome,'warn');
-    try {
-        const r = await fetch(API+'/enviar-lembrete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(f)});
-        const d = await r.json();
-        if (d.sucesso) {
-            log('✓ Enviado: '+f.nome,'ok');
-            card.classList.add('enviado');
-            card.querySelector('.lembrete-actions').innerHTML='<span class="enviado-tag">✓ Enviado</span><span class="avaliacao-tag aguardando">⏳ Avaliação pendente</span>';
-            const b = document.getElementById('badgeLembretes');
-            b.textContent = Math.max(0,parseInt(b.textContent)-1);
-        } else {
-            btn.disabled=false; btn.innerHTML='📤 Enviar lembrete';
-        }
-        if (d.erros) d.erros.forEach(function(e){ log('⚠ '+e,'warn'); });
-    } catch (e) {
-        log('Erro envio: '+e.message,'err');
-        btn.disabled=false; btn.innerHTML='📤 Enviar lembrete';
-    }
-}
-
-/* ── HELPERS VISUAIS ─────────────────────────────────────────────── */
-function fmtR(v){
-    return 'R$\u00a0'+parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-function mkVChart(itens, cor){
-    if(!itens||!itens.length) return '<div style="color:var(--muted);font-size:12px;text-align:center;padding:20px">Sem dados</div>';
-    var mx = Math.max.apply(null, itens.map(function(x){ return x.valor||0; }))||1;
-    return '<div class="vchart-outer">'+
-        '<div class="vchart">'+
-        itens.map(function(x){
-            var h = Math.max(4, Math.round(((x.valor||0)/mx)*110));
-            return '<div class="vcol"'+
-                (x.onclick?' onclick="'+x.onclick+'" style="cursor:pointer"':'')+
-                ' title="'+x.label+(x.sub?' · '+x.sub:'')+'">'+
-                '<div class="vcol-num">'+(x.num!==undefined?x.num:x.valor)+'</div>'+
-                '<div class="vcol-bar '+cor+'" style="height:'+h+'px"></div></div>';
-        }).join('')+
-        '</div>'+
-        '<div class="vchart-labels">'+
-        itens.map(function(x){
-            return '<div class="vchart-label">'+String(x.label||'').substring(0,3)+'</div>';
-        }).join('')+
-        '</div></div>';
-}
-function mkTable(cols, rows){
-    var ths = cols.map(function(c,i){
-        return '<th style="text-align:'+(i===0?'left':'right')+';padding:7px 10px;font-size:10px;color:var(--muted);font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap">'+c+'</th>';
-    }).join('');
-    var trs = rows.map(function(r){
-        var tds = r.cells.map(function(c,i){
-            var v  = typeof c==='object'?c.v:c;
-            var st = typeof c==='object'?(c.st||''):'';
-            return '<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid var(--border);text-align:'+(i===0?'left':'right')+';'+st+'">'+v+'</td>';
-        }).join('');
-        return '<tr class="'+(r.onclick?'tr-click':'')+'"'+(r.onclick?' onclick="'+r.onclick+'"':'')+' style="'+(r.onclick?'cursor:pointer':'')+'">'+ tds+'</tr>';
-    }).join('');
-    return '<table style="width:100%;border-collapse:collapse;margin-top:12px">'+'<thead><tr>'+ths+'</tr></thead><tbody>'+trs+'</tbody></table>';
-}
-function abrirModal(titulo, corpo){
-    document.getElementById('modalTitulo').textContent = titulo;
-    document.getElementById('modalConteudo').innerHTML = corpo;
-    document.getElementById('modalLojas').classList.add('open');
-}
-function fecharModal(e){
-    if(e.target.id==='modalLojas') document.getElementById('modalLojas').classList.remove('open');
-}
-function chip(ok, okTxt, nokTxt){
-    return '<span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;'+
-        (ok?'background:#dcfce7;color:#16a34a;border:1px solid rgba(22,163,74,.25)':
-            'background:#fef9c3;color:#b45309;border:1px solid rgba(217,119,6,.25)')+'">'+(ok?okTxt:nokTxt)+'</span>';
-}
-function anoSelEl(id, cur, cb){
-    return '<select class="chart-ano-sel" id="'+id+'" onchange="'+cb+'">'+
-        ['2024','2025','2026','2027'].map(function(a){
-            return '<option value="'+a+'"'+(a===String(cur)?' selected':'')+'>'+a+'</option>';
-        }).join('')+'</select>';
-}
-
-/* ── DASHBOARD ───────────────────────────────────────────────────── */
-var _cad = {};   // cache: { '2026': data, ... }
-
-async function carregarDashboard(){
-    var ano = (document.getElementById('filtroAno')||{value:'2026'}).value||'2026';
-    var sr  = document.getElementById('statsRow');
-    var cs  = document.getElementById('chartSection');
-    sr.innerHTML = '<div class="loading-msg" style="grid-column:1/-1"><div class="spinner"></div> Carregando...</div>';
-    cs.innerHTML = '';
-    try {
-        var res = await fetch(API+'/dashboard/cadastral?ano='+ano);
-        var d   = await res.json();
-        if(d.erro) throw new Error(d.erro);
-        _cad[ano] = d;
-        renderDash(d, ano);
-    } catch(e){
-        log('Erro dashboard: '+e.message,'err');
-        sr.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="icon">⚠️</div><p>'+e.message+'</p></div>';
-    }
-}
-
-async function recarregarAno(a){
-    document.getElementById('filtroAno').value = a;
-    await carregarDashboard();
-}
-
-function renderDash(d, ano){
-    var t  = d.totais||{};
-    var sr = document.getElementById('statsRow');
-    var cs = document.getElementById('chartSection');
-
-    /* ── STAT CARDS ── */
-    function sc(icon, label, val, sub, cor, fn){
-        return '<div class="stat-card'+(fn?' clickable':'')+'"'+(fn?' onclick="'+fn+'"':'')+
-            ' style="border-top:3px solid '+cor+'">'+
-            '<div class="stat-label" style="color:'+cor+'">'+icon+' '+label+'</div>'+
-            '<div class="stat-value" style="font-size:22px;color:'+cor+'">'+val+'</div>'+
-            '<div class="stat-sub">'+sub+'</div></div>';
-    }
-    var totalLojas = (d.lojasTrinadasPorMes||[]).reduce(function(s,m){ return s+(m.lojas?m.lojas.length:0); },0);
-    var totalColabs = (d.lojasTrinadasPorMes||[]).reduce(function(s,m){ return s+(m.colaboradores||0); },0);
-    var pctLemb  = Math.round(((t.comLemb||0)/Math.max(t.totalLemb||1,1))*100);
-    var pctAval  = Math.round(((t.simAval||0)/Math.max(t.totalAval||1,1))*100);
-    // Rebuilds cards com id fixos para atualizar sem duplicar
-    sr.innerHTML =
-        sc('📊','Lojas Treinadas', totalLojas+' lojas', totalColabs+' colaboradores','var(--red)','scrollSec("lojas")')+
-        sc('🔔','Lembretes', (t.comLemb||0)+'/'+(t.totalLemb||0), pctLemb+'% enviados','var(--green)','scrollSec("lembretes")')+
-        sc('⭐','Avaliações', (t.simAval||0)+'/'+(t.totalAval||0), pctAval+'% avaliados','var(--accent)','scrollSec("avaliacoes")')+
-        sc('📈','Perfil Desenv.', (t.totalPerfil||0)+' concluídos', ano,'#7c3aed','scrollSec("perfilFuncao")')+
-        sc('🏆','Prêmio+Refeição', fmtR(t.totalFin||0),(t.itensPremio||0)+' colabs · Prêm: '+fmtR(t.totalPremio)+' · Ref: '+fmtR(t.totalRefeicao),'var(--yellow)','scrollSec("premio")')+
-        // Card turnover — valor atualizado assincronamente
-        '<div class="stat-card clickable" id="toCardDash" style="border-top:3px solid #c8102e" onclick="irParaTurnover()">'+
-        '<div class="stat-label" style="color:#c8102e">🔄 Turnover '+ano+'</div>'+
-        '<div class="stat-value" style="font-size:22px;color:#c8102e" id="toCardPct">—%</div>'+
-        '<div class="stat-sub" id="toCardSub">carregando…</div></div>';
-    atualizarCardTurnoverDash();
-// Cards SULTS
-    fetch(API+'/sults/resumo').then(r=>r.json()).then(function(s){
-        var cardUnidades = '<div class="stat-card" style="border-top:3px solid #1565c0">'+
-            '<div class="stat-label" style="color:#1565c0">🏪 Unidades Ativas</div>'+
-            '<div class="stat-value" style="font-size:22px;color:#1565c0">'+(s.totalUnidades||'—')+'</div>'+
-            '<div class="stat-sub">'+( s.totalImplantacao||0)+' em implantação</div></div>';
-        var cardFuncionarios = '<div class="stat-card" style="border-top:3px solid #00695c">'+
-            '<div class="stat-label" style="color:#00695c">👥 Funcionários SULTS</div>'+
-            '<div class="stat-value" style="font-size:22px;color:#00695c">'+(s.totalFuncionarios||'—')+'</div>'+
-            '<div class="stat-sub">média '+(s.totalUnidades ? Math.round(s.totalFuncionarios/s.totalUnidades) : '—')+' por unidade</div></div>';
-        sr.innerHTML += cardUnidades + cardFuncionarios;
-    }).catch(function(){});
-
-    
-    // Cards Universidade (Tabela Dinâmica 10)
-    fetch(API+'/universidade/dados').then(function(r){ return r.json(); }).then(function(u){
-        var t = (u.totais) || {};
-        var cardAndamento = '<div class="stat-card" style="border-top:3px solid var(--accent);cursor:pointer" onclick="window.location.href=\'/universidade\'">'+
-            '<div class="stat-label" style="color:var(--accent)">⚙️ Andamento (Univ.)</div>'+
-            '<div class="stat-value" style="font-size:22px;color:var(--accent)">'+(t.andamento||0)+'</div>'+
-            '<div class="stat-sub">cursos em andamento</div></div>';
-        var cardPendente = '<div class="stat-card" style="border-top:3px solid var(--orange);cursor:pointer" onclick="window.location.href=\'/universidade\'">'+
-            '<div class="stat-label" style="color:var(--orange)">⏳ Pendente (Univ.)</div>'+
-            '<div class="stat-value" style="font-size:22px;color:var(--orange)">'+(t.pendente||0)+'</div>'+
-            '<div class="stat-sub">cursos pendentes</div></div>';
-        var cardTotal = '<div class="stat-card" style="border-top:3px solid var(--red);cursor:pointer" onclick="window.location.href=\'/universidade\'">'+
-            '<div class="stat-label" style="color:var(--red)">🎓 Total Geral (Univ.)</div>'+
-            '<div class="stat-value" style="font-size:22px;color:var(--red)">'+(t.total||0)+'</div>'+
-            '<div class="stat-sub">'+(u.totalUnidades||0)+' unidades · '+(u.totalLinhas||0)+' linhas</div></div>';
-        sr.innerHTML += cardAndamento + cardPendente + cardTotal;
-    }).catch(function(){});
-
-    // Card Uploads — Google Drive
-    fetch(API+'/uploads/pastas').then(function(r){ return r.json(); }).then(function(u){
-        var totalPastas = (u.pastas||[]).length;
-        sr.innerHTML += '<div class="stat-card clickable" style="border-top:3px solid #0ea5e9;cursor:pointer" onclick="abrirModalUploads()">'+
-            '<div class="stat-label" style="color:#0ea5e9">📁 Arquivos no Drive</div>'+
-            '<div class="stat-value" style="font-size:22px;color:#0ea5e9" id="uploadCardTotal">—</div>'+
-            '<div class="stat-sub">'+totalPastas+' pasta(s) · <a href="/treinamento/uploads" onclick="event.stopPropagation()" style="color:#0ea5e9;font-weight:700;text-decoration:none">Ir para Uploads →</a></div>'+
-        '</div>';
-        // Buscar total de arquivos na raiz
-        fetch(API+'/uploads/arquivos').then(function(r){ return r.json(); }).then(function(d){
-            var el = document.getElementById('uploadCardTotal');
-            if (el) el.textContent = (d.arquivos||[]).length + ' arq.';
-        }).catch(function(){});
-    }).catch(function(){
-        sr.innerHTML += '<div class="stat-card" style="border-top:3px solid #0ea5e9">'+
-            '<div class="stat-label" style="color:#0ea5e9">📁 Arquivos no Drive</div>'+
-            '<div class="stat-value" style="font-size:22px;color:#0ea5e9">—</div>'+
-            '<div class="stat-sub"><a href="/treinamento/uploads" style="color:#0ea5e9;font-weight:700;text-decoration:none">Ir para Uploads →</a></div>'+
-        '</div>';
-    });
-
-    /* ── GRÁFICOS ── */
-    cs.innerHTML =
-        buildSec('📊 Lojas Treinadas por Mês — '+ano, d.lojasTrinadasPorMes, 'lojas', 'red', ano)+
-        buildSec('🏆 Prêmio + Refeição por Mês — '+ano, d.premioRefeicao, 'premio', 'orange', ano)+
-        buildSec('🔔 Lembretes por Mês — '+ano, d.lembretes, 'lembretes', 'green', ano)+
-        buildSec('⭐ Avaliações por Mês — '+ano, d.avaliacoes, 'avaliacoes', 'blue', ano)+
-        buildPerfilSec('sec-perfilModelo',
-            '📋 Perfil — Modo de Treinamento (col X) — '+ano,
-            d.perfilModelo, d.allModelos, ano, false)+
-        buildPerfilSec('sec-perfilFuncao',
-            '👤 Perfil do Treinando — Quantidade por Função (col F) — '+ano,
-            d.perfilFuncao, d.allFuncoes, ano, true);
-}
-
-
-var CORES_PERFIL = ['#c8102e','#f59e0b','#16a34a','#2563eb','#7c3aed','#0891b2','#db2777','#65a30d'];
-
-/* ── MODAL UPLOADS ─────────────────────────────────────────────────────── */
-async function abrirModalUploads() {
-    document.getElementById('modalUploads').style.display = 'flex';
-    try {
-        var r = await fetch(API+'/uploads/pastas');
-        var d = await r.json();
-        var sel = document.getElementById('uploadModalPasta');
-        sel.innerHTML = '<option value="">📂 Raiz</option>';
-        (d.pastas||[]).forEach(function(p){
-            sel.innerHTML += '<option value="'+p.id+'">📁 '+p.nome+'</option>';
-        });
-    } catch(e){}
-    carregarArquivosModal('');
-}
-
-function fecharModalUploads() {
-    document.getElementById('modalUploads').style.display = 'none';
-}
-
-async function carregarArquivosModal(pastaId) {
-    var wrap = document.getElementById('uploadModalLista');
-    var cont = document.getElementById('uploadModalCount');
-    wrap.innerHTML = '<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px">'+
-        '<div class="spinner"></div> Carregando...</div>';
-    try {
-        var url = pastaId ? API+'/uploads/arquivos?pastaId='+pastaId : API+'/uploads/arquivos';
-        var r   = await fetch(url);
-        var d   = await r.json();
-        var arqs = d.arquivos || [];
-        if (cont) cont.textContent = arqs.length + ' arquivo(s)';
-        if (!arqs.length) {
-            wrap.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted)">'+
-                '<div style="font-size:36px;margin-bottom:10px">📂</div>'+
-                '<div style="font-size:13px;font-weight:600">Nenhum arquivo nesta pasta</div></div>';
-            return;
-        }
-        var icon = function(m){ m=m||'';
-            if(m.startsWith('image/'))  return '🖼️';
-            if(m.includes('pdf'))       return '📄';
-            if(m.includes('sheet')||m.includes('excel')||m.includes('csv')) return '📊';
-            if(m.includes('word')||m.includes('document')) return '📝';
-            if(m.includes('zip')||m.includes('rar'))       return '🗜️';
-            if(m.startsWith('video/'))  return '🎬';
-            if(m.startsWith('audio/'))  return '🎵';
-            return '📎';
-        };
-        var bytes = function(b){ var n=parseInt(b||0);
-            if(n<1024) return n+' B';
-            if(n<1048576) return (n/1024).toFixed(1)+' KB';
-            return (n/1048576).toFixed(1)+' MB';
-        };
-        var dt = function(iso){ if(!iso) return '—';
-            try{ return new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
-            catch(e){ return '—'; }
-        };
-        var linhas = arqs.map(function(f){
-            return '<tr onmouseover="this.style.background=\'var(--bg)\'" onmouseout="this.style.background=\'\'">'+
-                '<td style="padding:10px 14px;font-size:18px;width:36px">'+icon(f.tipo)+'</td>'+
-                '<td style="padding:10px 4px;font-size:13px;font-weight:700;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+f.nome+'">'+f.nome+'</td>'+
-                '<td style="padding:10px 14px;font-size:11px;font-family:\'JetBrains Mono\',monospace;color:var(--muted);white-space:nowrap">'+bytes(f.tamanho)+'</td>'+
-                '<td style="padding:10px 14px;font-size:11px;font-family:\'JetBrains Mono\',monospace;color:var(--muted);white-space:nowrap">'+dt(f.criadoEm)+'</td>'+
-                '<td style="padding:10px 14px;text-align:right">'+
-                (f.link?'<a href="'+f.link+'" target="_blank" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;text-decoration:none;color:var(--text)">🔗 Abrir</a>':'')+
-                '</td></tr>';
-        }).join('');
-        wrap.innerHTML = '<table style="width:100%;border-collapse:collapse">'+
-            '<thead><tr style="background:var(--bg)">'+
-            '<th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);width:36px"></th>'+
-            '<th style="padding:8px 4px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Nome</th>'+
-            '<th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Tamanho</th>'+
-            '<th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Data</th>'+
-            '<th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border)"></th>'+
-            '</tr></thead><tbody>'+linhas+'</tbody></table>';
-    } catch(e) {
-        wrap.innerHTML = '<div style="padding:30px;text-align:center;color:var(--red);font-size:13px;font-weight:600">❌ '+e.message+'</div>';
-    }
-}
-
-
-var CORES_PERFIL = ['#c8102e','#f59e0b','#16a34a','#2563eb','#7c3aed','#0891b2','#db2777','#65a30d'];
-
-/* ── CACHE DOS DADOS DE PERFIL para os modais ───────────────────── */
-var _perfilCache = {}; // { 'modelo': [...dados], 'funcao': [...dados] }
-
-function barrasEmpilhadas(dados, cats, tipo) {
-    if (!dados||!dados.length) return '';
-    var totais = dados.map(function(d){ return d.total||0; });
-    var mx = Math.max.apply(null, totais) || 1;
-    var ALT = 150;
-
-    // Legenda
-    var legenda = cats.map(function(cat,ci){
-        return '<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;margin-right:14px;margin-bottom:4px;cursor:default">'+
-            '<span style="width:13px;height:13px;border-radius:3px;background:'+CORES_PERFIL[ci%CORES_PERFIL.length]+'"></span>'+cat+'</span>';
-    }).join('');
-
-    // Barras com onclick
-    var cols = dados.map(function(d, di){
-        var segmentos = '';
-        cats.slice().reverse().forEach(function(cat, ri){
-            var ci = cats.length - 1 - ri;
-            var v  = d.valores[cat]||0;
-            var h  = Math.round((v/mx)*ALT);
-            if (!h) return;
-            segmentos += '<div title="'+cat+': '+v+'" style="'+
-                'width:100%;height:'+h+'px;'+
-                'background:'+CORES_PERFIL[ci%CORES_PERFIL.length]+';'+
-                'display:flex;align-items:center;justify-content:center;'+
-                'font-size:9px;font-weight:800;color:#fff;'+
-                'border-top:1px solid rgba(255,255,255,.2)">'+
-                (h>14?v:'')+'</div>';
-        });
-        var onc = tipo ? "modalPerfilMes('"+tipo+"',"+di+")" : '';
-        return '<div onclick="'+onc+'" style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:52px;max-width:90px;gap:0;cursor:'+(tipo?'pointer':'default')+'">'+
-            '<div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:3px">'+d.total+'</div>'+
-            '<div style="display:flex;flex-direction:column-reverse;width:100%;height:'+ALT+'px;'+
-            'border-radius:8px 8px 0 0;overflow:hidden;border-bottom:2px solid var(--border);'+
-            'transition:filter .15s,transform .15s" '+
-            'onmouseover="this.style.filter=\'brightness(1.12)\';this.style.transform=\'scaleX(1.04)\'" '+
-            'onmouseout="this.style.filter=\'\';this.style.transform=\'\'">'+
-            segmentos+'</div></div>';
-    }).join('');
-
-    var labels = dados.map(function(d){
-        return '<div style="flex:1;min-width:52px;max-width:90px;text-align:center;font-size:10px;color:var(--muted);'+
-            'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-top:5px;font-weight:600">'+
-            d.mes.substring(0,3)+'</div>';
-    }).join('');
-
-    return '<div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:2px">'+legenda+'</div>'+
-        '<div style="overflow-x:auto"><div style="display:flex;align-items:flex-end;gap:8px;padding:0 4px;min-width:0">'+cols+'</div>'+
-        '<div style="display:flex;gap:8px;padding:0 4px">'+labels+'</div></div>';
-}
-
-/* Modal ao clicar no mês do perfil */
-function modalPerfilMes(tipo, idx) {
-    var dados = _perfilCache[tipo];
-    if (!dados || !dados[idx]) return;
-    var d    = dados[idx];
-    var cats = _perfilCache[tipo+'_cats'] || [];
-
-    // Cards de quantidade por categoria
-    var cardsHtml = cats.map(function(cat, ci){
-        var v = d.valores[cat]||0;
-        if (!v) return '';
-        return '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;'+
-            'background:var(--bg);border:1.5px solid var(--border);margin-bottom:8px">'+
-            '<div style="width:14px;height:14px;border-radius:4px;flex-shrink:0;background:'+CORES_PERFIL[ci%CORES_PERFIL.length]+'"></div>'+
-            '<div style="flex:1;font-size:13px;font-weight:600">'+cat+'</div>'+
-            '<div style="font-size:22px;font-weight:900;color:'+CORES_PERFIL[ci%CORES_PERFIL.length]+';font-family:JetBrains Mono,monospace">'+v+'</div>'+
-            '</div>';
-    }).join('');
-
-    // Lista de colaboradores se disponível
-    var itensHtml = '';
-    if (d.itens && d.itens.length) {
-        // Agrupar por categoria
-        var grupos = {};
-        d.itens.forEach(function(it){
-            var key = tipo==='modelo' ? it.modelo : it.funcao;
-            if (!grupos[key]) grupos[key] = [];
-            grupos[key].push(it);
-        });
-        itensHtml = '<div style="margin-top:18px">';
-        Object.keys(grupos).sort().forEach(function(key, ki){
-            var cor = CORES_PERFIL[cats.indexOf(key)%CORES_PERFIL.length] || '#888';
-            var lista = grupos[key].map(function(it){
-                return '<div style="display:flex;align-items:center;justify-content:space-between;'+
-                    'padding:7px 12px;border-bottom:1px solid var(--border);font-size:12px">'+
-                    '<div style="font-weight:700;flex:2">'+it.nome+'</div>'+
-                    '<div style="color:var(--muted);flex:2;text-align:center">'+it.loja+'</div>'+
-                    '<div style="font-family:JetBrains Mono,monospace;color:var(--muted);flex:1;text-align:right">'+it.fimStr+'</div>'+
-                    '</div>';
-            }).join('');
-            itensHtml += '<div style="margin-bottom:12px">'+
-                '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'+
-                '<div style="width:12px;height:12px;border-radius:3px;background:'+cor+'"></div>'+
-                '<span style="font-size:11px;font-weight:800;color:'+cor+';text-transform:uppercase;letter-spacing:.5px">'+key+' ('+grupos[key].length+')</span></div>'+
-                '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">'+
-                '<div style="display:flex;padding:5px 12px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted)">'+
-                '<span style="flex:2">Nome</span><span style="flex:2;text-align:center">Loja</span><span style="flex:1;text-align:right">Data Fim</span></div>'+
-                lista+'</div></div>';
-        });
-        itensHtml += '</div>';
-    }
-
-    var totalCard = '<div style="display:flex;align-items:center;justify-content:space-between;'+
-        'padding:12px 16px;background:var(--bg);border-radius:10px;margin-bottom:16px;border:2px solid var(--border)">'+
-        '<span style="font-size:13px;font-weight:700;color:var(--muted)">Total do mês</span>'+
-        '<span style="font-size:28px;font-weight:900;color:var(--red);font-family:JetBrains Mono,monospace">'+d.total+'</span></div>';
-
-    abrirModal(
-        (tipo==='modelo'?'📋 Modo de Treinamento':'👤 Perfil do Treinando')+' — '+d.mes,
-        totalCard + cardsHtml + itensHtml
-    );
-}
-
-
-/* Gera HTML de tabela cruzada mês × categorias */
-function tabelaCruzada(dados, cats, tituloLinha, tipo) {
-    if (!dados||!dados.length||!cats||!cats.length) return '<p style="color:var(--muted);font-size:12px">Sem dados.</p>';
-
-    // Cabeçalho
-    var ths = ['<th style="padding:8px 10px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left;white-space:nowrap">Mês</th>'];
-    cats.forEach(function(c){
-        ths.push('<th style="padding:8px 10px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:right;white-space:nowrap">'+c+'</th>');
-    });
-    ths.push('<th style="padding:8px 10px;font-size:10px;font-weight:700;color:var(--red);border-bottom:2px solid var(--border);text-align:right;white-space:nowrap">TOTAL</th>');
-
-    // Totais por categoria
-    var totCats = {};
-    cats.forEach(function(c){ totCats[c] = 0; });
-    var totGeral = 0;
-
-    // Linhas — clicáveis se tipo informado
-    var trs = dados.map(function(row, ri){
-        var onclickAttr = tipo ? ' onclick="modalPerfilMes(\''+tipo+'\','+ri+')" style="cursor:pointer"' : '';
-        var tds = ['<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid var(--border);font-weight:700">'+
-            row.mes+(tipo?' <span style="font-size:10px;color:var(--accent)">▶</span>':'')+'</td>'];
-        cats.forEach(function(c){
-            var v = row.valores[c]||0;
-            totCats[c] += v;
-            tds.push('<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid var(--border);text-align:right;font-family:JetBrains Mono,monospace;color:'+(v?'var(--text)':'var(--muted)')+'">'+( v||'—')+'</td>');
-        });
-        totGeral += row.total||0;
-        tds.push('<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid var(--border);text-align:right;font-weight:800;color:var(--red);font-family:JetBrains Mono,monospace">'+row.total+'</td>');
-        return '<tr class="tr-click"'+onclickAttr+'>'+tds.join('')+'</tr>';
-    }).join('');
-
-    // Linha de totais
-    var totTds = ['<td style="padding:8px 10px;font-size:12px;font-weight:800;border-top:2px solid var(--border)">TOTAL ANO</td>'];
-    cats.forEach(function(c){
-        totTds.push('<td style="padding:8px 10px;font-size:12px;border-top:2px solid var(--border);text-align:right;font-weight:700;font-family:JetBrains Mono,monospace">'+totCats[c]+'</td>');
-    });
-    totTds.push('<td style="padding:8px 10px;font-size:12px;border-top:2px solid var(--border);text-align:right;font-weight:900;color:var(--red);font-family:JetBrains Mono,monospace">'+totGeral+'</td>');
-
-    return '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin-top:12px">'+
-        '<thead><tr>'+ths.join('')+'</tr></thead>'+
-        '<tbody>'+trs+'<tr style="background:var(--bg)">'+totTds.join('')+'</tr></tbody>'+
-        '</table></div>';
-}
-
-/* Gera gráfico de barras empilhadas vertical */
-function barrasEmpilhadas(dados, cats) {
-    if (!dados||!dados.length) return '';
-    var totais = dados.map(function(d){ return d.total||0; });
-    var mx = Math.max.apply(null, totais) || 1;
-    var ALT = 140;
-
-    // Legenda
-    var legenda = cats.map(function(c,ci){
-        return '<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;margin-right:12px">'+
-            '<span style="width:12px;height:12px;border-radius:3px;background:'+CORES_PERFIL[ci%CORES_PERFIL.length]+'"></span>'+c+'</span>';
-    }).join('');
-
-    // Barras
-    var cols = dados.map(function(d){
-        var segmentos = '';
-        cats.slice().reverse().forEach(function(c, ri){
-            var ci = cats.length - 1 - ri;
-            var v  = d.valores[c]||0;
-            var h  = Math.round((v/mx)*ALT);
-            if (!h) return;
-            segmentos += '<div title="'+c+': '+v+'" style="'+
-                'width:100%;height:'+h+'px;'+
-                'background:'+CORES_PERFIL[ci%CORES_PERFIL.length]+';'+
-                'display:flex;align-items:center;justify-content:center;'+
-                'font-size:9px;font-weight:800;color:#fff;'+
-                'border-top:1px solid rgba(255,255,255,.3)">'+
-                (h>14?v:'')+'</div>';
-        });
-        return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:44px;max-width:80px;gap:0">'+
-            '<div style="font-size:9px;font-weight:800;color:var(--muted);margin-bottom:3px">'+d.total+'</div>'+
-            '<div style="display:flex;flex-direction:column-reverse;width:100%;height:'+ALT+'px;border-radius:6px 6px 0 0;overflow:hidden;border-bottom:2px solid var(--border)">'+
-            segmentos+'</div></div>';
-    }).join('');
-
-    var labels = dados.map(function(d){
-        return '<div style="flex:1;min-width:44px;max-width:80px;text-align:center;font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-top:4px">'+
-            d.mes.substring(0,3)+'</div>';
-    }).join('');
-
-    return '<div style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:4px">'+legenda+'</div>'+
-        '<div style="overflow-x:auto"><div style="display:flex;align-items:flex-end;gap:6px;padding:0 4px;min-width:0">'+cols+'</div>'+
-        '<div style="display:flex;gap:6px;padding:0 4px">'+labels+'</div></div>';
-}
-
-/* Renderiza seção de perfil — modelo ou função */
-function buildPerfilSec(id, titulo, dados, cats, ano, comAnoSel) {
-    if (!dados||!dados.length||!cats||!cats.length) return '';
-    // Salvar no cache para os modais de clique
-    var tipo = id.replace('sec-perfil','').toLowerCase() || 'modelo';
-    _perfilCache[tipo]           = dados;
-    _perfilCache[tipo+'_cats']   = cats;
-    var grafico = barrasEmpilhadas(dados, cats, tipo);
-    var tabela  = tabelaCruzada(dados, cats, 'Mês', tipo);
-    var header  = comAnoSel
-        ? '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'+
-          '<div class="chart-title" style="margin:0">'+titulo+'</div>'+
-          anoSelEl(id+'AnoSel', ano, 'trocarPerfilAno(this.value)')+
-          '</div>'
-        : '<div class="chart-title">'+titulo+'</div>';
-    return '<div class="chart-card chart-card-full" id="'+id+'">'+header+grafico+tabela+'</div>';
-}
-
-
-function buildSec(titulo, arr, tipo, cor, ano, withAnoSel){
-    if(!arr||!arr.length) return '';
-    // Usa aspas simples para o tipo dentro do onclick HTML
-    // HTML final gerado: onclick="dashMes('lojas',0)" ← correto
-    var itens = arr.map(function(x,i){
-        var v, n;
-        switch(tipo){
-            case 'lojas':      v=x.totalLojas;  n=v; break;
-            case 'premio':     v=x.totalFin;    n=fmtR(v).replace('R$\u00a0',''); break;
-            case 'lembretes':  v=x.comLemb;     n=v+'/'+x.totalLemb; break;
-            case 'avaliacoes': v=x.simAval;     n=v+'/'+x.totalAval; break;
-            default:           v=x.totalPerfil; n=v;
-        }
-        // CORRETO: onclick="dashMes('lojas',0)" — sem aspas duplas dentro
-        return {label:x.mes, valor:v, num:n, onclick:"dashMes('"+tipo+"',"+i+")"};
-    });
-    var chart = mkVChart(itens, cor);
-
-    var rows;
-    switch(tipo){
-        case 'lojas':
-            rows = arr.map(function(x,i){ return {onclick:"dashMes('lojas',"+i+")", cells:[
-                {v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},
-                {v:x.totalLojas||0, st:'font-family:JetBrains Mono,monospace'},
-                {v:x.colaboradores||0, st:'color:var(--muted)'}
-            ]};});
-            var tab = mkTable(['Mês','Lojas','Colaboradores'], rows); break;
-        case 'premio':
-            rows = arr.map(function(x,i){ return {onclick:"dashMes('premio',"+i+")", cells:[
-                {v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},
-                {v:(x.itensPremio||[]).length, st:'color:var(--muted)'},
-                {v:fmtR(x.premio), st:'font-family:JetBrains Mono,monospace'},
-                {v:fmtR(x.refeicao), st:'font-family:JetBrains Mono,monospace'},
-                {v:fmtR(x.totalFin), st:'font-weight:800;color:var(--red);font-family:JetBrains Mono,monospace'}
-            ]};});
-            var tab = mkTable(['Mês','Colabs','Prêmio','Refeição','Total'], rows); break;
-        case 'lembretes':
-            rows = arr.map(function(x,i){ return {onclick:"dashMes('lembretes',"+i+")", cells:[
-                {v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},
-                {v:x.totalLemb||0, st:'color:var(--muted)'},
-                {v:'<span style="color:var(--green);font-weight:700">'+(x.comLemb||0)+'</span>'},
-                {v:'<span style="color:var(--yellow);font-weight:700">'+((x.totalLemb||0)-(x.comLemb||0))+'</span>'}
-            ]};});
-            var tab = mkTable(['Mês','Total','Enviados','Pendentes'], rows); break;
-        case 'avaliacoes':
-            rows = arr.map(function(x,i){ return {onclick:"dashMes('avaliacoes',"+i+")", cells:[
-                {v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},
-                {v:x.totalAval||0, st:'color:var(--muted)'},
-                {v:'<span style="color:var(--green);font-weight:700">'+(x.simAval||0)+'</span>'},
-                {v:'<span style="color:var(--yellow);font-weight:700">'+(x.naoAval||0)+'</span>'}
-            ]};});
-            var tab = mkTable(['Mês','Total','✓ Avaliados','✗ Pendentes'], rows); break;
-        default:
-            rows = arr.map(function(x,i){ return {onclick:"dashMes('perfil',"+i+")", cells:[
-                {v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},
-                {v:x.totalPerfil||0, st:'font-family:JetBrains Mono,monospace'}
-            ]};});
-            var tab = mkTable(['Mês','Concluídos'], rows);
-    }
-
-    var header = withAnoSel
-        ? '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'+
-          '<div class="chart-title" style="margin:0">'+titulo+'</div>'+
-          anoSelEl('perfilAno',ano,'trocarPerfilAno(this.value)')+
-          '</div>'
-        : '<div class="chart-title">'+titulo+' <span style="font-size:10px;font-weight:400;color:var(--muted)">(clique no mês para detalhar)</span></div>';
-
-    return '<div class="chart-card chart-card-full" id="sec-'+tipo+'">'+header+chart+tab+'</div>';
-}
-
-async function trocarPerfilAno(novoAno){
-    // Spinner nos dois cards de perfil
-    var c1 = document.getElementById('sec-perfilModelo');
-    var c2 = document.getElementById('sec-perfilFuncao');
-    var spin = '<div class="loading-msg"><div class="spinner"></div></div>';
-    if(c1) c1.innerHTML = spin;
-    if(c2) c2.innerHTML = spin;
-    try {
-        var d = _cad[novoAno];
-        if(!d){
-            var r = await fetch(API+'/dashboard/cadastral?ano='+novoAno);
-            d = await r.json();
-            _cad[novoAno] = d;
-        }
-        var novoM = buildPerfilSec('sec-perfilModelo',
-            '📋 Perfil — Modo de Treinamento (col X) — '+novoAno,
-            d.perfilModelo, d.allModelos, novoAno, false);
-        var novoF = buildPerfilSec('sec-perfilFuncao',
-            '👤 Perfil do Treinando — Quantidade por Função (col F) — '+novoAno,
-            d.perfilFuncao, d.allFuncoes, novoAno, true);
-        if(c1) c1.outerHTML = novoM || '<div id="sec-perfilModelo"></div>';
-        // após substituir c1, c2 pode ter mudado de ref
-        var c2b = document.getElementById('sec-perfilFuncao');
-        if(c2b) c2b.outerHTML = novoF || '<div id="sec-perfilFuncao"></div>';
-    } catch(e){
-        console.error('trocarPerfilAno:', e);
-        var e1=document.getElementById('sec-perfilModelo'); if(e1) e1.innerHTML='<p style="color:var(--muted)">Erro: '+e.message+'</p>';
-        var e2=document.getElementById('sec-perfilFuncao'); if(e2) e2.innerHTML='<p style="color:var(--muted)">Erro: '+e.message+'</p>';
-    }
-}
-
-/* Scroll suave até a seção correspondente */
-function scrollSec(tipo) {
-    // mapear tipo para ID correto
-    var idMap = {
-        perfilModelo: 'sec-perfilModelo',
-        perfilFuncao: 'sec-perfilFuncao',
-    };
-    var el = document.getElementById(idMap[tipo] || 'sec-'+tipo);
-    if (!el) return;
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    // flash visual
-    el.style.outline = '3px solid var(--red)';
-    el.style.outlineOffset = '4px';
-    setTimeout(function(){ el.style.outline=''; el.style.outlineOffset=''; }, 1500);
-}
-
-/* ── MODAIS ─────────────────────────────────────────────────────── */
-function _getCad(){
-    var anos = Object.keys(_cad);
-    return anos.length ? _cad[anos[anos.length-1]] : null;
-}
-
-function dashMes(tipo, idx){
-    var d   = _getCad(); if(!d) return;
-    var map = {lojas:'lojasTrinadasPorMes',premio:'premioRefeicao',lembretes:'lembretes',avaliacoes:'avaliacoes',perfil:'perfil'};
-    var arr = d[map[tipo]]; if(!arr) return;
-    var x   = arr[idx];    if(!x)   return;
-
-    switch(tipo){
-        case 'lojas': {
-            var lojas = (x.lojas||[]).map(function(l){ return '<span class="loja-pill">'+l+'</span>'; }).join('');
-            abrirModal('🏪 '+x.mes+' — '+((x.lojas||[]).length)+' lojas',
-                lojas||'<p style="color:var(--muted)">Nenhuma loja.</p>');
-            break;
-        }
-        case 'premio': {
-            var tab = mkTable(['Nome','Loja','Data Fim','Prêmio','Refeição','Total'],
-                (x.itensPremio||[]).map(function(it){ return {cells:[
-                    {v:it.nome,st:'font-weight:700'},
-                    {v:it.loja,st:'color:var(--muted)'},
-                    {v:it.fimStr,st:'font-family:JetBrains Mono,monospace'},
-                    {v:fmtR(it.premio),st:'font-family:JetBrains Mono,monospace'},
-                    {v:fmtR(it.refeicao),st:'font-family:JetBrains Mono,monospace'},
-                    {v:fmtR(it.total),st:'font-weight:800;color:var(--red);font-family:JetBrains Mono,monospace'}
-                ]};}));
-            abrirModal('🏆 Prêmio+Refeição — '+x.mes+' · Total: '+fmtR(x.totalFin), tab);
-            break;
-        }
-        case 'lembretes': {
-            var tab = mkTable(['Nome','Loja','Data Fim','Lembrete'],
-                (x.itensLemb||[]).map(function(it){ return {cells:[
-                    {v:it.nome,st:'font-weight:700'},
-                    {v:it.loja,st:'color:var(--muted)'},
-                    {v:it.fimStr,st:'font-family:JetBrains Mono,monospace'},
-                    {v:chip(!!it.lembrete,'✓ Enviado','✗ Pendente')}
-                ]};}));
-            abrirModal('🔔 Lembretes — '+x.mes+' ('+x.comLemb+' enviados / '+(x.totalLemb||0)+')', tab);
-            break;
-        }
-        case 'avaliacoes': {
-            var simList = mkTable(['Nome','Loja','Data Fim'],
-                (x.itensAvalSim||[]).map(function(it){ return {cells:[
-                    {v:it.nome,st:'font-weight:700'},
-                    {v:it.loja,st:'color:var(--muted)'},
-                    {v:it.fimStr,st:'font-family:JetBrains Mono,monospace'}
-                ]};}));
-            var naoList = mkTable(['Nome','Loja','Data Fim'],
-                (x.itensAvalNao||[]).map(function(it){ return {cells:[
-                    {v:it.nome,st:'font-weight:700'},
-                    {v:it.loja,st:'color:var(--muted)'},
-                    {v:it.fimStr,st:'font-family:JetBrains Mono,monospace'}
-                ]};}));
-            abrirModal('⭐ Avaliações — '+x.mes,
-                '<div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:4px">✓ Avaliados ('+x.simAval+')</div>'+simList+
-                '<div style="font-size:12px;font-weight:700;color:var(--yellow);margin:16px 0 4px">✗ Pendentes ('+x.naoAval+')</div>'+naoList);
-            break;
-        }
-        case 'perfil': {
-            var tab = mkTable(['Nome','Loja','Data Fim','Modelo (col X)'],
-                (x.itensPerfil||[]).map(function(it){ return {cells:[
-                    {v:it.nome,st:'font-weight:700'},
-                    {v:it.loja,st:'color:var(--muted)'},
-                    {v:it.fimStr,st:'font-family:JetBrains Mono,monospace'},
-                    {v:it.modelo||'—',st:'color:var(--accent)'}
-                ]};}));
-            abrirModal('📈 Perfil de Desenv. — '+x.mes+' ('+x.totalPerfil+' concluídos)', tab);
-            break;
-        }
-    }
-}
-
-function dashAll(tipo){
-    var d = _getCad(); if(!d) return;
-    var map = {lojas:'lojasTrinadasPorMes',premio:'premioRefeicao',lembretes:'lembretes',avaliacoes:'avaliacoes',perfil:'perfil'};
-    var arr = d[map[tipo]]; if(!arr||!arr.length){ abrirModal(tipo,'<p style="color:var(--muted)">Sem dados.</p>'); return; }
-    var cor = {premio:'orange',lembretes:'green',avaliacoes:'blue',perfil:'blue'}[tipo]||'red';
-    var chart = mkVChart(arr.map(function(x,i){
-        var v = tipo==='premio'?x.totalFin:tipo==='lembretes'?x.comLemb:tipo==='avaliacoes'?x.simAval:x.totalPerfil;
-        var n = tipo==='premio'?fmtR(v).replace('R$\u00a0',''):v;
-        return {label:x.mes,valor:v,num:n,onclick:"dashMes('"+tipo+"',"+i+")"};
-    }),cor);
-    var titulos={premio:'🏆 Prêmio+Refeição',lembretes:'🔔 Lembretes',avaliacoes:'⭐ Avaliações',perfil:'📈 Perfil de Desenv.'};
-    abrirModal((titulos[tipo]||tipo)+' — '+((d.ano)||''), chart+'<p style="text-align:center;font-size:11px;color:var(--muted);margin-top:6px">Clique no mês para ver detalhes</p>');
-}
-
-
-/* ── CADASTRO ──────────────────────────────────────────────────────────── */
-async function carregarOpcoes() {
-    if (opcoesOk) return;
-    log('📋 Carregando listas...','warn');
-    try {
-        const r = await fetch(API+'/cadastro/opcoes');
-        const d = await r.json();
-        fillSel('cad-loja',        d.lojas,         '— Selecionar loja —');
-        fillSel('cad-funcao',      d.funcoes,       '— Selecionar função —');
-        fillSel('cad-turma',       d.turmas,        '— Selecionar turma —');
-        fillSel('cad-solicitador', d.solicitadores, '— Selecionar —');
-        opcoesOk = true;
-        log('✓ Listas carregadas','ok');
-    } catch (e) {
-        log('Erro listas: '+e.message,'err');
-    }
-}
-
-function fillSel(id, lista, ph) {
-    const s = document.getElementById(id);
-    s.innerHTML = '<option value="">'+ph+'</option>';
-    (lista||[]).forEach(function(v){ const o=document.createElement('option'); o.value=v; o.textContent=v; s.appendChild(o); });
-}
-
-function calcTotal() {
-    const p = parseFloat(document.getElementById('cad-premio').value)||0;
-    const r = parseFloat(document.getElementById('cad-refeicao').value)||0;
-    document.getElementById('totalDisplay').textContent = 'R$ '+(p+r).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-
-function alertCad(tipo, msg) {
-    const el = document.getElementById('cadAlert');
-    el.className = 'cad-alert '+tipo;
-    el.innerHTML = (tipo==='success'?'✅ ':'⚠️ ')+msg;
-    el.style.display = 'flex';
-    el.scrollIntoView({behavior:'smooth',block:'center'});
-    if (tipo==='success') setTimeout(function(){ el.style.display='none'; }, 7000);
-}
-
-function limparCadastro() {
-    ['cad-loja','cad-funcao','cad-turma','cad-solicitador','cad-modelo','cad-mes','cad-pago'].forEach(function(id){ document.getElementById(id).value=''; });
-    ['cad-nome','cad-cpf','cad-rg','cad-email','cad-telefone','cad-local','cad-premio','cad-refeicao'].forEach(function(id){ document.getElementById(id).value=''; });
-    document.getElementById('cad-inicio').value='';
-    document.getElementById('cad-ano').value='2026';
-    calcTotal();
-    document.getElementById('cadAlert').style.display='none';
-}
-
-function dt(v){ if(!v) return ''; const p=v.split('-'); return p.length===3 ? p[2]+'/'+p[1]+'/'+p[0] : v; }
-
-async function salvarCadastro() {
-    const nome   = document.getElementById('cad-nome').value.trim();
-    const loja   = document.getElementById('cad-loja').value;
-    const funcao = document.getElementById('cad-funcao').value;
-    const inicio = document.getElementById('cad-inicio').value;
-    const mes    = document.getElementById('cad-mes').value;
-
-    if (!nome)   { alertCad('error','Nome completo é obrigatório.');             return; }
-    if (!loja)   { alertCad('error','Selecione a loja.');                        return; }
-    if (!funcao) { alertCad('error','Selecione a função.');                      return; }
-    if (!inicio) { alertCad('error','Informe a data de início do treinamento.'); return; }
-    if (!mes)    { alertCad('error','Selecione o mês do treinamento.');          return; }
-
-    const premio   = parseFloat(document.getElementById('cad-premio').value)||0;
-    const refeicao = parseFloat(document.getElementById('cad-refeicao').value)||0;
-
-    const dados = {
-        loja, nome,
-        cpf:         document.getElementById('cad-cpf').value.trim(),
-        rg:          document.getElementById('cad-rg').value.trim(),
-        funcao,
-        turma:       document.getElementById('cad-turma').value,
-        email:       document.getElementById('cad-email').value.trim(),
-        telefone:    document.getElementById('cad-telefone').value.trim(),
-        inicioTrein: dt(inicio),
-        solicitador: document.getElementById('cad-solicitador').value,
-        local:       document.getElementById('cad-local').value.trim(),
-        modelo:      document.getElementById('cad-modelo').value,
-        premio, refeicao,
-        valorTotal:  premio+refeicao,
-        pago:        document.getElementById('cad-pago').value,
-        mes,
-        ano:         document.getElementById('cad-ano').value||'2026',
-    };
-
-    const btn = document.getElementById('btnSalvar');
-    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Salvando...';
-    log('💾 Salvando: '+nome,'warn');
-
-    try {
-        const r = await fetch(API+'/cadastrar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)});
-        const d = await r.json();
-        if (d.sucesso) {
-            log('✓ Salvo: '+nome,'ok');
-            alertCad('success','Funcionário <strong>'+nome+'</strong> cadastrado com sucesso! (linha '+d.linhaReal+')');
-            limparCadastro();
-            opcoesOk = false;
-        } else {
-            alertCad('error', d.erro||'Erro ao salvar na planilha.');
-            log('Erro: '+(d.erro||'?'),'err');
-        }
-    } catch (e) {
-        alertCad('error','Erro de conexão: '+e.message);
-        log('Erro: '+e.message,'err');
-    }
-    btn.disabled=false; btn.innerHTML='💾 Salvar na Planilha';
-}
-
-// Máscara CPF
-document.getElementById('cad-cpf').addEventListener('input',function(e){
-    let v=e.target.value.replace(/\D/g,'').substring(0,11);
-    v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
-    e.target.value=v;
-});
-// Máscara Telefone
-document.getElementById('cad-telefone').addEventListener('input',function(e){
-    let v=e.target.value.replace(/\D/g,'').substring(0,11);
-    if(v.length>=11) v=v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3');
-    else if(v.length>6) v=v.replace(/(\d{2})(\d{4,5})(\d{0,4})/,'($1) $2-$3');
-    else if(v.length>2) v=v.replace(/(\d{2})(\d+)/,'($1) $2');
-    e.target.value=v;
-});
-
-/* ── FLOATING IA ───────────────────────────────────────────────────────── */
-function toggleIA() {
-    iaAberto = !iaAberto;
-    const jan = document.getElementById('iaJanela');
-    const tog = document.getElementById('iaToggle');
-    if (iaAberto) {
-        jan.classList.add('aberto');
-        tog.classList.add('aberto');
-        tog.innerHTML='✕';
-        const u=document.getElementById('iaUnread'); if(u) u.style.display='none';
-    } else {
-        jan.classList.remove('aberto');
-        tog.classList.remove('aberto');
-        tog.innerHTML='🤖<div class="ia-unread" id="iaUnread"></div>';
-    }
-}
-
-async function perguntarIA(fixa) {
-    const inp = document.getElementById('inputIA');
-    const q   = fixa || inp.value.trim();
-    if (!q) return;
-    inp.value = '';
-    if (!iaAberto) toggleIA();
-
-    const box = document.getElementById('iaMsgs');
-    const mu  = document.createElement('div'); mu.className='msg user'; mu.textContent=q; box.appendChild(mu);
-    const ma  = document.createElement('div'); ma.className='msg ai carregando'; ma.innerHTML='<span style="opacity:.6">⏳ Consultando a planilha e analisando com Gemini…</span>'; box.appendChild(ma);
-    box.scrollTop=box.scrollHeight;
-
-    const envBtn = document.getElementById('iaBtnEnviar');
-    if(envBtn) envBtn.disabled=true;
-    log('🤖 Gemini...','warn');
-
-    try {
-        const anoAtual = String(new Date().getFullYear());
-        const r = await fetch(API+'/ia/analisar',{method:'POST',headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({pergunta:q, ano:anoAtual})});
-        const d = await r.json();
-        const txt = d.resposta||d.erro||'Sem resposta.';
-        ma.className='msg ai';
-        // Formata: quebras de linha, negrito (**texto**), bullets
-        ma.innerHTML = txt
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-            .replace(/^(▸|•|→|\-) /gm,'<span style="color:var(--red)">■</span> ')
-            .replace(/\n/g,'<br>');
-        log('✓ Gemini OK','ok');
-    } catch(e) {
-        ma.className='msg ai'; ma.textContent='❌ Erro: '+e.message;
-        log('Erro IA: '+e.message,'err');
-    }
-    if(envBtn) envBtn.disabled=false;
-    box.scrollTop=box.scrollHeight;
-}
-
-/* ── HISTÓRICO ─────────────────────────────────────────────────────────── */
-async function carregarHistorico() {
-    const ct = document.getElementById('listaHistorico');
-    ct.innerHTML='<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
-    try {
-        const r    = await fetch(API+'/historico');
-        const raw  = await r.json();
-        const data = Array.isArray(raw) ? raw : (raw.resultado || []); // ★ FIX
-        if (!data.length) { ct.innerHTML='<div class="empty"><div class="icon">📋</div><p>Nenhum lembrete enviado ainda</p></div>'; return; }
-        ct.innerHTML = data.map(function(h){
-            let nh='';
-            if (h.notaAvaliacao) {
-                const n=parseFloat(h.notaAvaliacao);
-                nh='<div class="historico-nota" style="color:'+(n>=8?'var(--green)':n>=6?'var(--yellow)':'var(--red)')+'">⭐ Nota: '+h.notaAvaliacao+'/10</div>';
-            } else if (h.emailAvaliacao==='SIM') {
-                nh='<div class="historico-nota" style="color:var(--yellow)">⏳ Avaliação pendente</div>';
-            }
-            return '<div class="historico-item"><div class="historico-check">✅</div>' +
-                '<div class="historico-info"><div class="historico-nome">'+h.nome+'</div>' +
-                '<div class="historico-meta">'+h.loja+' · '+h.funcao+' · Início: '+h.inicioTrein+(h.fimTrein?' · Fim: '+h.fimTrein:'')+'</div>' +
-                nh+'</div>' +
-                '<div class="historico-data">'+(h.lembrete||'').replace('Lembrete enviado em ','')+'</div></div>';
-        }).join('');
-    } catch(e) {
-        log('Erro histórico: '+e.message,'err');
-        ct.innerHTML='<div class="empty"><div class="icon">⚠️</div><p>Erro ao carregar</p></div>';
-    }
-}
-
-/* ── INIT ──────────────────────────────────────────────────────────────── */
-
-
-document.addEventListener('DOMContentLoaded',function(){
-    // Carrega dashboard como tab inicial
-    carregarDashboard();
-
-    // Definir ano corrente no seletor (fallback: 2026)
-    var anoCorrente = String(new Date().getFullYear());
-    var selAno = document.getElementById('filtroAno');
-    if (selAno) {
-        var opt = selAno.querySelector('option[value="'+anoCorrente+'"]');
-        if (opt) opt.selected = true;
-    }
-    document.getElementById('inputBusca').addEventListener('keypress',function(e){ if(e.key==='Enter') fazerBusca(); });
-    document.getElementById('inputIA').addEventListener('keypress',function(e){ if(e.key==='Enter') perguntarIA(); });
-    setTimeout(function(){
-        if (!iaAberto) {
-            const u=document.getElementById('iaUnread');
-            if(u){ u.style.display='flex'; u.textContent='1'; }
-        }
-    }, 3000);
-});
-
-verificarStatus();
-
-
-/* ═══════════════════════════════════════════════════════════
-   TURNOVER — JS (Cadastral 2026: AK=deslig, AL=motivo)
-   ═══════════════════════════════════════════════════════════ */
-var _toData  = null;   // dados do /turnover
-var _toFilt  = [];     // registros filtrados na tabela
-
-/* ── CARD DO DASHBOARD ────────────────────────────────────── */
-async function atualizarCardTurnoverDash() {
-    var anoSel = String(document.getElementById('anoSel')?.value || new Date().getFullYear());
-    try {
-const r = await fetch(API+'/turnover/dados?ano='+anoSel);
-        const d = await r.json();
-        var pct = d.pctTurnover || 0;
-        var cor = pct>20?'#c8102e':pct>10?'#f59e0b':'#16a34a';
-        var elPct = document.getElementById('toCardPct');
-        var elSub = document.getElementById('toCardSub');
-        var elCard= document.getElementById('toCardDash');
-        if(elPct) elPct.textContent = pct+'%';
-        if(elPct) elPct.style.color = cor;
-        if(elCard) elCard.style.borderTop = '3px solid '+cor;
-        if(elSub) elSub.textContent = d.desligadosAno+' deslig. de '+d.totalGeral+' · Ativos: '+d.totalAtivos;
-        // Guardar dados para usar no gráfico da dash
-        if (!_toData || String(_toData.ano)!==anoSel) {
-            _toData = d;
-            renderGraficoMotivosInline(d);
-        }
-    } catch(e) { console.warn('Turnover card:', e.message); }
-}
-
-/* ── GRÁFICO DE MOTIVOS INLINE NA DASH ───────────────────── */
-function renderGraficoMotivosInline(d) {
-    var wrap = document.getElementById('secTurnoverDash');
-    if (!wrap) return;
-    var motivos = (d.motivos||[]).filter(function(m){ return m.motivo!=='Não informado'; });
-    if (!motivos.length && d.motivos && d.motivos.length) motivos = d.motivos;
-    if (!motivos.length) { wrap.innerHTML='<p style="color:var(--muted);font-size:12px;padding:10px 0">Sem desligamentos com motivo registrado para '+d.ano+'.</p>'; return; }
-
-    var total = d.desligadosAno || 1;
-    var max   = motivos[0].qtd;
-    var cores = ['#c8102e','#f59e0b','#2563eb','#7c3aed','#0891b2','#16a34a','#db2777','#ea580c'];
-
-    var barras = motivos.slice(0,8).map(function(m,i){
-        var pct = Math.round((m.qtd/total)*100);
-        var barW= Math.round((m.qtd/max)*100);
-        var cor = cores[i%cores.length];
-        return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">'+
-            '<div style="width:160px;font-size:11px;font-weight:600;text-align:right;flex-shrink:0;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+m.motivo+'">'+m.motivo+'</div>'+
-            '<div style="height:22px;width:'+barW+'%;min-width:4px;max-width:55%;background:'+cor+';border-radius:4px;flex-shrink:0"></div>'+
-            '<span style="font-size:11px;font-weight:800;color:'+cor+';font-family:JetBrains Mono,monospace;white-space:nowrap">'+m.qtd+' ('+pct+'%)</span>'+
-            '</div>';
-    }).join('');
-
-    var lojas = (d.porLoja||[]).slice(0,5).map(function(l){
-        var cor = l.pct>30?'#c8102e':l.pct>15?'#f59e0b':'#16a34a';
-        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--border);font-size:12px">'+
-            '<span style="font-weight:700;flex:2">'+l.loja+'</span>'+
-            '<span style="color:var(--muted);flex:1;text-align:center">'+l.desligados+'/'+l.total+'</span>'+
-            '<span style="font-weight:900;color:'+cor+';font-family:JetBrains Mono,monospace;flex:1;text-align:right">'+l.pct+'%</span>'+
-            '</div>';
-    }).join('');
-
-    wrap.innerHTML =
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex-wrap:wrap">'+
-        '<div>'+
-            '<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Motivos de Desligamento — '+d.ano+'</div>'+
-            barras+
-        '</div>'+
-        '<div>'+
-            '<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Top Lojas com Turnover</div>'+
-            '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">'+
-            '<div style="display:flex;padding:5px 10px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted)">'+
-            '<span style="flex:2">Loja</span><span style="flex:1;text-align:center">Deslig/Total</span><span style="flex:1;text-align:right">%</span></div>'+
-            lojas+
-            '</div>'+
-        '</div>'+
-        '</div>';
-}
-
-/* ── ABA TURNOVER — CARREGAMENTO ─────────────────────────── */
-async function carregarTurnover(forcar) {
-    var anoSel = document.getElementById('toAnoFiltro')?.value || '';
-
-    // Se trocar de ano, limpa cache de registros
-    if (forcar || !_toData || String(_toData.ano) !== (anoSel||'todos')) {
-        _toRegistros = [];
-    }
-
-    if (_toData && !forcar && String(_toData.ano) === (anoSel||'todos')) {
-        renderToCompleto();
-        return;
-    }
-
-    var tbody = document.getElementById('toTbody');
-    if (tbody) tbody.innerHTML = '<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--muted)">⏳ Buscando dados da Cadastral 2026...</td></tr>';
-
-    try {
-        var url = API + '/turnover' + (anoSel ? '?ano='+anoSel : '');
-        const r = await fetch(url);
-        _toData = await r.json();
-        if (_toData.erro) throw new Error(_toData.erro);
-
-        // Popular seletor de anos (apenas uma vez)
-        ['toAnoFiltro','toGraficoAno'].forEach(function(id){
-            var sel = document.getElementById(id);
-            if (!sel || sel.getAttribute('data-populated')) return;
-            (_toData.anos||[]).forEach(function(a){
-                var o = document.createElement('option');
-                o.value = a; o.text = a; sel.appendChild(o);
-            });
-            sel.setAttribute('data-populated','1');
-            // Selecionar ano corrente por padrão
-            var hoje = String(new Date().getFullYear());
-            [].slice.call(sel.options).forEach(function(o){ if(o.value===hoje) o.selected=true; });
-        });
-
-        renderToCompleto();
-    } catch(e) {
-        var tbody = document.getElementById('toTbody');
-        if (tbody) tbody.innerHTML = '<tr><td colspan="8" style="padding:30px;text-align:center;color:red">❌ Erro: '+e.message+'</td></tr>';
-        console.error('Turnover:', e);
-    }
-}
-
-function renderToCompleto() {
-    renderToCards();
-    aplicarFiltrosTO();
-    renderGraficoMotivosInline(_toData);
-}
-
-/* ── CARDS DA ABA TURNOVER ────────────────────────────────── */
-function renderToCards() {
-    var el = document.getElementById('toCards');
-    if (!el || !_toData) return;
-    var d   = _toData;
-    var pct = d.pctTurnover||0;
-    var cor = pct>20?'#c8102e':pct>10?'#f59e0b':'#16a34a';
-    el.innerHTML =
-        mkToCard('📋','Total Cadastrado no Ano','(col AJ — início trabalho)',d.cadastradosAno,'#2563eb')+
-        mkToCard('✅','Total Ativos','AK em branco — não mudou com ano',d.totalAtivos,'#16a34a')+
-        mkToCard('🚪','Desligados no Ano','AK preenchida no ano selecionado',d.desligadosAno,'#c8102e')+
-        mkToCard('🔄','Turnover %','desligados ÷ total geral × 100',pct+'%',cor,true);
-}
-
-function mkToCard(ic,lb,sb,vl,cor,dest) {
-    return '<div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;'+(dest?'border-left:4px solid '+cor:'')+'">' +
-        '<div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">'+ic+' '+lb+'</div>' +
-        '<div style="font-size:28px;font-weight:900;color:'+cor+';font-family:JetBrains Mono,monospace;margin-bottom:2px">'+vl+'</div>'+
-        '<div style="font-size:10px;color:var(--muted)">'+sb+'</div>'+
-        '</div>';
-}
-
-/* ── FILTROS ──────────────────────────────────────────────── */
-function filtrarTO() { aplicarFiltrosTO(); }
-
-function limparFiltrosTO() {
-    ['toFiltroNome','toFiltroLoja'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
-    aplicarFiltrosTO();
-}
-
-function aplicarFiltrosTO() {
-    if (!_toData) return;
-    var nome = (document.getElementById('toFiltroNome')?.value||'').toLowerCase().trim();
-    var loja = (document.getElementById('toFiltroLoja')?.value||'').toLowerCase().trim();
-
-    // Os registros já vêm filtrados por ano do backend
-    // Aqui filtramos apenas por nome/loja localmente
-    // Precisamos buscar a lista completa de registros da planilha
-    // _toData não tem lista de registros individualmente — vamos buscá-la separada
-    renderToTabela(nome, loja);
-}
-
-/* ── TABELA DE REGISTROS ─────────────────────────────────── */
-var _toRegistros = [];  // cache de registros individuais
-
-async function renderToTabela(filtNome, filtLoja) {
-    var tbody = document.getElementById('toTbody');
-    var cont  = document.getElementById('toContagem');
-    if (!tbody) return;
-
-    // Buscar registros individuais se ainda não temos
-    if (!_toRegistros.length) {
-        tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">⏳ Carregando registros...</td></tr>';
-        try {
-            var r = await fetch(API+'/turnover/registros'+(document.getElementById('toAnoFiltro')?.value?'?ano='+document.getElementById('toAnoFiltro').value:''));
-            var d = await r.json();
-            _toRegistros = d.registros || [];
-        } catch(e) {
-            tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:red">❌ '+e.message+'</td></tr>';
-            return;
-        }
-    }
-
-    var lista = _toRegistros.filter(function(r){
-        if (filtNome && !r.nome.toLowerCase().includes(filtNome)) return false;
-        if (filtLoja && !r.loja.toLowerCase().includes(filtLoja)) return false;
-        return true;
-    });
-    _toFilt = lista;
-    if (cont) cont.textContent = '('+lista.length+' registros)';
-
-    var cols = ['Nº','Loja','Nome','Função','Início Trab.','Data Deslig.','Motivo','Status'];
-    document.getElementById('toThead').innerHTML = '<tr>'+cols.map(function(col){
-        return '<th style="padding:9px 10px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;background:var(--bg)">'+col+'</th>';
-    }).join('')+'</tr>';
-
-    if (!lista.length) {
-        tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted)">Nenhum registro encontrado.</td></tr>';
-        return;
-    }
-
-    tbody.innerHTML = lista.map(function(r){
-        var ativo  = !r.dataDeslig;
-        var rowBg  = ativo ? '' : 'background:rgba(200,16,46,.04)';
-        var status = ativo
-            ? '<span style="background:#dcfce7;color:#15803d;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700">✅ Ativo</span>'
-            : '<span style="background:#fee2e2;color:#b91c1c;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700">🚪 Desligado</span>';
-        var enc = JSON.stringify(r).replace(/"/g,'&quot;');
-        return '<tr class="tr-click" style="'+rowBg+'" onclick="abrirEditTO('+enc+')">' +
-            tdTO(r.num)+tdTO(r.loja,'font-weight:700')+tdTO(r.nome,'font-weight:700')+
-            tdTO(r.funcao)+tdTO(r.inicioTrab||'—')+
-            tdTO(r.dataDeslig||'—','color:'+(r.dataDeslig?'var(--red)':'var(--muted)'))+
-            tdTO(r.motivo||'—','color:'+(r.motivo?'var(--red)':'var(--muted)'))+
-            '<td style="padding:7px 10px;border-bottom:1px solid var(--border)">'+status+'</td>'+
-        '</tr>';
-    }).join('');
-}
-function tdTO(v,st){ return '<td style="padding:7px 10px;border-bottom:1px solid var(--border);font-size:12px;white-space:nowrap;'+(st||'')+'">'+( v||'—')+'</td>'; }
-
-/* ── MODAL EDITAR ─────────────────────────────────────────── */
-function abrirEditTO(r) {
-    document.getElementById('toEditNome').textContent = r.nome;
-    document.getElementById('toEditSub').textContent  = r.loja+(r.funcao?' · '+r.funcao:'');
-    document.getElementById('toEditRow').value        = r.rowIndex;
-    document.getElementById('toEditDataDeslig').value = r.dataDeslig||'';
-    document.getElementById('toEditMotivo').value     = r.motivo||'';
-    var aviso = document.getElementById('toAvisoDesligamento');
-    if (aviso) aviso.style.display = r.dataDeslig ? 'block' : 'none';
-    document.getElementById('modalEditTO').style.display = 'flex';
-}
-function fecharEditTO(){ document.getElementById('modalEditTO').style.display='none'; }
-
-async function salvarEditTO() {
-    var rowIndex  = parseInt(document.getElementById('toEditRow').value);
-    var dataDeslig= document.getElementById('toEditDataDeslig').value.trim();
-    var motivo    = document.getElementById('toEditMotivo').value.trim();
-    if (dataDeslig && !motivo) { alert('Informe o motivo do desligamento.'); return; }
-
-    var btn = document.getElementById('btnSalvarTO');
-    btn.textContent='⏳ Salvando…'; btn.disabled=true;
-    try {
-        const r = await fetch(API+'/turnover/'+rowIndex, {
-            method:'PATCH', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ dataDeslig, motivo }),
-        });
-        const d = await r.json();
-        if (!d.ok) throw new Error(d.erro||'Erro');
-
-        // Atualizar registro local
-        _toRegistros.forEach(function(reg){
-            if (reg.rowIndex===rowIndex){ reg.dataDeslig=dataDeslig; reg.motivo=motivo; }
-        });
-        _toData = null; // forçar reload dos stats
-        fecharEditTO();
-        await carregarTurnover(true);
-        await atualizarCardTurnoverDash();
-        alert(dataDeslig ? '✅ Desligamento registrado!' : '✅ Registro atualizado!');
-    } catch(e){ alert('❌ '+e.message); }
-    finally { btn.textContent='💾 Salvar'; btn.disabled=false; }
-}
-
-/* ── GRÁFICO COMPARATIVO POR LOJA ─────────────────────────── */
-function abrirGraficoTurnover() {
-    if (!_toData) { carregarTurnover().then(abrirGraficoTurnover); return; }
-    renderGraficoTOModal();
-    document.getElementById('modalGraficoTO').style.display='flex';
-}
-
-function renderGraficoTOModal() {
-    var wrap = document.getElementById('graficoTOWrap');
-    if (!wrap || !_toData) return;
-    var d    = _toData;
-
-    // Motivos
-    var motivos = (d.motivos||[]);
-    var totDeslig = d.desligadosAno||1;
-    var cores = ['#c8102e','#f59e0b','#2563eb','#7c3aed','#0891b2','#16a34a','#db2777','#ea580c'];
-
-    var barrasMotivos = motivos.length ? motivos.slice(0,10).map(function(m,i){
-        var pct = Math.round((m.qtd/totDeslig)*100);
-        var barW= Math.round((m.qtd/motivos[0].qtd)*100)+'%'; barW=barW;
-        var cor = cores[i%cores.length];
-        return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">'+
-            '<div style="width:200px;font-size:12px;font-weight:600;text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+m.motivo+'">'+m.motivo+'</div>'+
-            '<div style="height:26px;width:'+barW+'px;min-width:4px;background:'+cor+';border-radius:5px"></div>'+
-            '<span style="font-size:12px;font-weight:800;color:'+cor+';font-family:JetBrains Mono,monospace">'+m.qtd+' ('+pct+'%)</span>'+
-            '</div>';
-    }).join('') : '<p style="color:var(--muted)">Sem motivos registrados.</p>';
-
-    // Tabela por loja
-    var lojaRows = (d.porLoja||[]).map(function(l){
-        var cor = l.pct>30?'#c8102e':l.pct>15?'#f59e0b':'#16a34a';
-        var barW= Math.round(l.pct)+'%'; barW=barW;
-        return '<tr><td style="padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700;font-size:12px">'+l.loja+'</td>'+
-            '<td style="padding:7px 10px;border-bottom:1px solid var(--border);text-align:center;font-size:12px;font-family:JetBrains Mono,monospace">'+l.desligados+'/'+l.total+'</td>'+
-            '<td style="padding:7px 10px;border-bottom:1px solid var(--border)">'+
-            '<div style="display:flex;align-items:center;gap:8px">'+
-            '<div style="height:16px;width:'+barW+'px;min-width:2px;background:'+cor+';border-radius:3px"></div>'+
-            '<span style="font-size:12px;font-weight:900;color:'+cor+';font-family:JetBrains Mono,monospace">'+l.pct+'%</span>'+
-            '</div></td></tr>';
-    }).join('');
-
-    wrap.innerHTML =
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">'+
-        // Coluna esquerda: motivos
-        '<div>'+
-        '<div style="font-size:13px;font-weight:800;margin-bottom:14px">Motivos — '+(d.ano||'Todos')+
-        ' <span style="font-size:11px;font-weight:400;color:var(--muted)">('+totDeslig+' desligamentos)</span></div>'+
-        barrasMotivos+'</div>'+
-        // Coluna direita: por loja
-        '<div>'+
-        '<div style="font-size:13px;font-weight:800;margin-bottom:14px">Turnover por Loja</div>'+
-        '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">'+
-        '<table style="width:100%;border-collapse:collapse">'+
-        '<thead><tr>'+
-        '<th style="padding:8px 10px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Loja</th>'+
-        '<th style="padding:8px 10px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:center">Deslig/Total</th>'+
-        '<th style="padding:8px 10px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border)">% Turnover</th>'+
-        '</tr></thead>'+
-        '<tbody>'+(lojaRows||'<tr><td colspan="3" style="padding:16px;text-align:center;color:var(--muted)">Sem dados</td></tr>')+'</tbody>'+
-        '</table></div></div></div>'+
-        '<div style="margin-top:16px;display:flex;gap:12px;font-size:11px;justify-content:center">'+
-        '<span><span style="display:inline-block;width:10px;height:10px;background:#16a34a;border-radius:2px;margin-right:4px"></span>Saudável (&lt;15%)</span>'+
-        '<span><span style="display:inline-block;width:10px;height:10px;background:#f59e0b;border-radius:2px;margin-right:4px"></span>Atenção (15–30%)</span>'+
-        '<span><span style="display:inline-block;width:10px;height:10px;background:#c8102e;border-radius:2px;margin-right:4px"></span>Alto (&gt;30%)</span>'+
-        '</div>';
-}
-
-function exportarTurnoverCSV() {
-    if (!_toFilt.length) { alert('Filtre os dados primeiro.'); return; }
-    var cols = ['Nr','Loja','Nome','Funcao','Inicio Trabalho','Data Desligamento','Motivo'];
-    var linhas = _toFilt.map(function(r){
-        return [r.num,r.loja,r.nome,r.funcao,r.inicioTrab,r.dataDeslig,r.motivo].map(function(v){
-            return '"'+String(v||'')+'"';
-        }).join(',');
-    });
-    var csv  = cols.join(',') + '\n' + linhas.join('\n');
-    var blob = new Blob([csv], {type:'text/csv'});
-    var a    = document.createElement('a');
-    a.href   = URL.createObjectURL(blob);
-    a.download = 'turnover.csv'; a.click();
-}
-
-</script>
-
 <!-- MODAL LOJAS -->
-
-    <!-- ═══════════════════ ABA TURNOVER ═══════════════════ -->
-    <div class="tab-content" id="tab-turnover">
-
-        <!-- Header + filtros -->
-        <div class="section-header">
-            <div>
-                <h2>🔄 Controle de Turnover</h2>
-                <p>Registros da <strong>Cadastral 2026</strong> — AK=Data Desligamento · AL=Motivo — clique em qualquer linha para atualizar o status</p>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-                <button class="btn btn-primary" onclick="abrirGraficoTurnover()">📊 Gráfico de Motivos</button>
-                <button class="btn" onclick="exportarTurnoverCSV()">⬇ CSV</button>
-            </div>
-        </div>
-
-        <!-- Filtros de busca -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 120px auto;gap:10px;margin-bottom:18px;align-items:end">
-            <div>
-                <label style="font-size:10px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">NOME</label>
-                <input id="toFiltroNome" class="form-input" placeholder="Buscar por nome…" oninput="filtrarTO()">
-            </div>
-            <div>
-                <label style="font-size:10px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">LOJA</label>
-                <input id="toFiltroLoja" class="form-input" placeholder="Buscar por loja…" oninput="filtrarTO()">
-            </div>
-            <div>
-                <label style="font-size:10px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">ANO</label>
-                <select id="toAnoFiltro" class="form-select" onchange="_toRegistros=[];_toData=null;carregarTurnover(true)">
-                    <option value="">Todos</option>
-                </select>
-            </div>
-            <div>
-                <button class="btn" onclick="limparFiltrosTO()">✕ Limpar</button>
-            </div>
-        </div>
-
-        <!-- Stat cards -->
-        <div id="toCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px"></div>
-
-        <!-- Tabela -->
-        <div class="chart-card-full" style="padding:0;overflow:hidden">
-            <div style="padding:16px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-                <div class="chart-title" style="margin:0">Registros <span id="toContagem" style="font-size:12px;font-weight:600;color:var(--muted)"></span></div>
-            </div>
-            <div style="overflow-x:auto">
-                <table id="toTabela" style="width:100%;border-collapse:collapse;font-size:12px;min-width:950px">
-                    <thead id="toThead"></thead>
-                    <tbody id="toTbody">
-                        <tr><td colspan="14" style="padding:30px;text-align:center;color:var(--muted)">Clique em <strong>🔄 Turnover</strong> para carregar os dados</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- ═══ MODAL: Registrar desligamento ═══ -->
-    <div id="modalEditTO" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9991;align-items:center;justify-content:center">
-        <div style="background:var(--bg2);border-radius:18px;padding:28px;width:min(480px,95vw);box-shadow:var(--shadow-lg)">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px">
-                <div>
-                    <div style="font-size:15px;font-weight:800" id="toEditNome">Editar Registro</div>
-                    <div style="font-size:12px;color:var(--muted)" id="toEditSub"></div>
-                </div>
-                <button onclick="fecharEditTO()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted)">✕</button>
-            </div>
-            <input type="hidden" id="toEditRow">
-            <div style="display:grid;gap:14px">
-                <div>
-                    <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">DATA DE DESLIGAMENTO (col AK) — deixe em branco se ativo</label>
-                    <input type="date" id="toEditDataDeslig" class="form-input" style="width:100%">
-                    <div style="font-size:10px;color:var(--muted);margin-top:3px">Branco = ativo · Data preenchida = desligado</div>
-                </div>
-                <div>
-                    <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">MOTIVO DO DESLIGAMENTO (col AL)</label>
-                    <select id="toEditMotivo" class="form-select" style="width:100%">
-                        <option value="">— Selecione —</option>
-                        <option>Pedido de demissão</option>
-                        <option>Demissão sem justa causa</option>
-                        <option>Demissão por justa causa</option>
-                        <option>Término de contrato</option>
-                        <option>Promoção / Transferência</option>
-                        <option>Aposentadoria</option>
-                        <option>Abandono de emprego</option>
-                        <option>Falta de identificação com o treinamento</option>
-                        <option>Problemas familiares</option>
-                        <option>Motivos de saúde</option>
-                        <option>Proposta de outra empresa</option>
-                        <option>Outros</option>
-                    </select>
-                </div>
-                <div id="toAvisoDesligamento" style="background:#fee2e2;border:1.5px solid rgba(200,16,46,.3);border-radius:10px;padding:12px;font-size:12px;color:#b91c1c">
-                    ⚠️ Ao salvar, <strong>AK</strong> (data) e <strong>AL</strong> (motivo) serão gravados na Cadastral 2026.
-                </div>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
-                <button class="btn" onclick="fecharEditTO()">Cancelar</button>
-                <button class="btn btn-primary" id="btnSalvarTO" onclick="salvarEditTO()">💾 Salvar na Planilha</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ═══ MODAL: Gráfico de motivos ═══ -->
-    <div id="modalGraficoTO" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9990;align-items:center;justify-content:center;padding:16px">
-        <div style="background:var(--bg2);border-radius:18px;padding:32px;width:min(1000px,96vw);max-height:92vh;overflow-y:auto;box-shadow:0 25px 80px rgba(0,0,0,.4)">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-                <div style="font-size:16px;font-weight:800">📊 Turnover — Motivos de Desligamento</div>
-                <div style="display:flex;gap:10px;align-items:center">
-                    <select id="toGraficoAno" class="form-select" style="width:110px" onchange="renderGraficoTO()">
-                        <option value="">Todos os anos</option>
-                    </select>
-                    <button onclick="document.getElementById('modalGraficoTO').style.display='none'"
-                        style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted)">✕</button>
-                </div>
-            </div>
-            <div id="graficoTOWrap"></div>
-        </div>
-    </div>
-
-
 <div class="modal-overlay" id="modalLojas" onclick="fecharModal(event)">
     <div class="modal-box">
         <div class="modal-header">
@@ -2190,7 +365,7 @@ function exportarTurnoverCSV() {
     </div>
 </div>
 
-<!-- ═══ MODAL UPLOADS — colar antes do </body> ═══ -->
+<!-- MODAL UPLOADS -->
 <div id="modalUploads" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9992;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)fecharModalUploads()">
     <div style="background:var(--bg2);border-radius:18px;padding:28px 30px;width:min(700px,96vw);max-height:88vh;overflow-y:auto;box-shadow:0 25px 80px rgba(0,0,0,.4)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
@@ -2217,6 +392,532 @@ function exportarTurnoverCSV() {
         </div>
     </div>
 </div>
+
+<div id="debug"></div>
+
+<script>
+const API = '/treinamento';
+const debugEl  = document.getElementById('debug');
+let timerInterval = null, timerSeg = 0;
+let iaAberto = false;
+// opcoesOk removido — cadastro em página própria
+
+/* ── DEBUG ── */
+function log(msg, tipo) {
+    tipo = tipo || '';
+    const l = document.createElement('div');
+    l.className = 'debug-line ' + tipo;
+    const h = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    l.textContent = h + ' ' + msg;
+    debugEl.appendChild(l);
+    while (debugEl.children.length > 7) debugEl.removeChild(debugEl.firstChild);
+}
+
+/* ── STATUS ── */
+async function verificarStatus() {
+    const dot = document.getElementById('statusDot');
+    const txt = document.getElementById('statusText');
+    const inf = document.getElementById('cacheInfoText');
+    try {
+        const r = await fetch(API + '/status');
+        const d = await r.json();
+        if (d.status === 'pronto' && d.total > 0) {
+            if (dot) dot.className = 'status-dot ready';
+            if (txt) txt.textContent = '✓ Sistema pronto — ' + d.total + ' colaboradores';
+            if (inf) {
+                const ua = d.ultimaAtualizacao ? new Date(d.ultimaAtualizacao).toLocaleTimeString('pt-BR') : '—';
+                inf.innerHTML = '<strong>' + d.total + '</strong> colaboradores carregados · ' + ua;
+            }
+            log('Cache: ' + d.total, 'ok');
+            // Disparar dashboard automaticamente quando o cache ficar pronto
+            if (!_dashCarregado) carregarDashboard();
+        } else {
+            if (dot) dot.className = 'status-dot';
+            if (txt) txt.textContent = '⏳ Carregando planilha...';
+            if (inf) inf.textContent = '⏳ Conectando ao Google Sheets...';
+            setTimeout(verificarStatus, 2500);
+        }
+    } catch (e) {
+        if (dot) dot.className = 'status-dot error';
+        if (txt) txt.textContent = '⚠️ Servidor offline — recarregue a página';
+        setTimeout(verificarStatus, 5000);
+    }
+}
+
+/* ── CACHE SSE ── */
+async function atualizarCache(forcar) {
+    const btn = document.getElementById(forcar ? 'btnFull' : 'btnDiff');
+    const lbl = btn.innerHTML;
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>';
+    const infoEl = document.getElementById('cacheInfoText');
+    infoEl.innerHTML = '⏳ Iniciando carregamento...';
+    document.getElementById('statusDot').className = 'status-dot';
+    document.getElementById('statusText').textContent = '⏳ Conectando à planilha...';
+    if (window._sseCache) { try { window._sseCache.close(); } catch(_){} }
+    const sse = new EventSource(API + '/cache/progresso');
+    window._sseCache = sse;
+    sse.onmessage = function(e) {
+        try {
+            const d = JSON.parse(e.data);
+            if (d.total > 0) {
+                const pct = Math.round((d.atual / d.total) * 100);
+                infoEl.innerHTML = '<strong>' + d.atual + ' / ' + d.total + '</strong> colaboradores ' +
+                    '<span style="color:var(--muted);font-size:11px;font-family:JetBrains Mono,monospace">(' + pct + '%)' + (d.msg ? ' · ' + d.msg : '') + '</span>';
+                document.getElementById('statusText').textContent = '⏳ Carregando... ' + d.atual + '/' + d.total + ' (' + pct + '%)';
+            } else { infoEl.textContent = d.msg || '⏳ Aguardando...'; }
+            if (d.msg && d.msg.startsWith('✅')) {
+                sse.close();
+                setTimeout(function() { btn.disabled=false; btn.innerHTML=lbl; verificarStatus(); }, 600);
+            }
+        } catch(_) {}
+    };
+    sse.onerror = function() { sse.close(); };
+    fetch(API + '/recarregar-cache', {
+        method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({forcar})
+    }).catch(function(err) {
+        btn.disabled=false; btn.innerHTML=lbl;
+        infoEl.textContent = '❌ Erro: ' + err.message;
+        sse.close();
+    });
+}
+
+/* ── TABS ── */
+function mudarTab(id, el) {
+    document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.getElementById('tab-'+id).classList.add('active');
+    el.classList.add('active');
+    if (id === 'dashboard') carregarDashboard();
+    // cadastro movido para /treinamento/cadastro
+}
+
+/* ── BUSCA ── */
+function iniciarTimer() {
+    timerSeg = 0; clearInterval(timerInterval);
+    timerInterval = setInterval(function(){ timerSeg += 0.1; document.getElementById('timerBusca').textContent = '⏱ ' + timerSeg.toFixed(1) + 's'; }, 100);
+}
+async function fazerBusca() {
+    const q  = document.getElementById('inputBusca').value.trim();
+    const ct = document.getElementById('resultadosBusca');
+    if (!q) return;
+    log('🔍 ' + q);
+    ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Consultando Vertex AI...</div>';
+    iniciarTimer();
+    try {
+        const r    = await fetch(API + '/buscar', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q})});
+        const data = await r.json();
+        clearInterval(timerInterval);
+        document.getElementById('timerBusca').textContent = '⏱ ' + timerSeg.toFixed(1) + 's · ' + data.length + ' resultado(s)';
+        log(timerSeg.toFixed(1) + 's — ' + data.length + ' resultados', 'ok');
+        if (!data.length) { ct.innerHTML = '<div class="empty"><div class="icon">😕</div><p>Nenhum resultado para "' + q + '"</p></div>'; return; }
+        ct.innerHTML = data.map(function(it){
+            const p = (it.similaridade*100).toFixed(1);
+            return '<div class="card"><div class="card-header"><span class="card-name">'+it.nome+'</span>' +
+                '<span class="match-badge '+(parseFloat(p)>=90?'high':'')+'">'+p+'% match</span></div>' +
+                '<div class="card-grid">'+cf('Loja',it.loja)+cf('Função',it.funcao)+cf('Turno',it.turno)+cf('Telefone',it.telefone)+cf('E-mail',it.email)+cf('Início',it.inicioTrein)+cf('Fim',it.fimTrein)+'</div></div>';
+        }).join('');
+    } catch (e) {
+        clearInterval(timerInterval);
+        log('Erro busca: '+e.message,'err');
+        ct.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro ao conectar</p></div>';
+    }
+}
+function cf(l, v) {
+    return '<div class="card-field"><div class="card-field-label">'+l+'</div><div class="card-field-value" title="'+(v||'—')+'">'+(v||'—')+'</div></div>';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PREVIEW DE LEMBRETES NO DASHBOARD
+   Busca /lembretes e mostra contadores + 3 urgentes + link
+   ══════════════════════════════════════════════════════════════ */
+async function carregarLembretesPreview() {
+    const wrap = document.getElementById('lembretesDashPreview');
+    if (!wrap) return;
+    try {
+        const r   = await fetch(API + '/lembretes', { headers: { 'Accept': 'application/json' } });
+        const raw = await r.json();
+        const data = Array.isArray(raw) ? raw : (raw.lista || []);  // ★ FIX original
+
+        const hoje   = data.filter(function(f){ return f.diffDias === 0; }).length;
+        const amanha = data.filter(function(f){ return f.diffDias === 1; }).length;
+        const dois   = data.filter(function(f){ return f.diffDias === 2; }).length;
+        const pend   = data.filter(function(f){ return !f.lembreteEnviado; }).length;
+        const env    = data.filter(function(f){ return f.lembreteEnviado; }).length;
+
+        // Atualizar badge no nav
+        const badge = document.getElementById('badgeLembretes');
+        if (badge) badge.textContent = pend || 0;
+
+        if (!data.length) {
+            wrap.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:14px;font-weight:600">🎉 Nenhum treinamento nos próximos 2 dias</div>';
+            return;
+        }
+
+        // Stats rápidos
+        function lp(num, label, cor) {
+            return '<div style="text-align:center;min-width:70px"><div style="font-size:26px;font-weight:800;font-family:JetBrains Mono,monospace;color:'+cor+';line-height:1">'+num+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);margin-top:3px">'+label+'</div></div>';
+        }
+
+        // Preview dos 3 mais urgentes pendentes
+        const urgentes = data.filter(function(f){ return !f.lembreteEnviado; }).slice(0,3);
+        const urgHtml = urgentes.length
+            ? urgentes.map(function(f){
+                const cor = f.diffDias===0 ? 'var(--red)' : f.diffDias===1 ? 'var(--yellow)' : 'var(--accent)';
+                const lbl = f.diffDias===0 ? 'HOJE' : f.diffDias===1 ? 'AMANHÃ' : '2 DIAS';
+                return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">'+
+                    '<span style="font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:'+cor+'20;color:'+cor+';flex-shrink:0">'+lbl+'</span>'+
+                    '<span style="font-size:13px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+f.nome+'</span>'+
+                    '<span style="font-size:11px;color:var(--muted);flex-shrink:0">'+f.loja+'</span>'+
+                    '</div>';
+            }).join('')
+            : '<div style="text-align:center;padding:10px;color:var(--green);font-size:13px;font-weight:700">✅ Todos os lembretes já foram enviados!</div>';
+
+        wrap.innerHTML =
+            '<div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:16px">'+
+            lp(hoje,  'Hoje',      'var(--red)')+
+            lp(amanha,'Amanhã',    'var(--yellow)')+
+            lp(dois,  '2 Dias',    'var(--accent)')+
+            lp(pend,  'Pendentes', 'var(--red)')+
+            lp(env,   'Enviados',  'var(--green)')+
+            '</div>'+
+            (pend > 0 ? '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">⏳ Mais urgentes</div>' : '')+
+            urgHtml+
+            (pend > 3 ? '<div style="font-size:11px;color:var(--muted);text-align:center;padding:7px">+ '+(pend-3)+' outros pendentes</div>' : '')+
+            '<div style="margin-top:14px;text-align:center">'+
+            '<a href="/treinamento/lembretes" style="display:inline-flex;align-items:center;gap:6px;padding:9px 20px;background:var(--red);color:#fff;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none" onmouseover="this.style.background=\'#e8192e\'" onmouseout="this.style.background=\'var(--red)\'">📋 Ver todos os lembretes e histórico →</a></div>';
+
+        log('Preview lembretes: '+data.length, 'ok');
+    } catch(e) {
+        if (wrap) wrap.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">⚠️ Não foi possível carregar — <a href="/treinamento/lembretes" style="color:var(--red);font-weight:700">abrir página</a></div>';
+    }
+}
+
+/* ── HELPERS VISUAIS ── */
+function fmtR(v){ return 'R$\u00a0'+parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function mkVChart(itens, cor){
+    if(!itens||!itens.length) return '<div style="color:var(--muted);font-size:12px;text-align:center;padding:20px">Sem dados</div>';
+    var mx = Math.max.apply(null, itens.map(function(x){ return x.valor||0; }))||1;
+    return '<div class="vchart-outer"><div class="vchart">'+
+        itens.map(function(x){ var h=Math.max(4,Math.round(((x.valor||0)/mx)*110)); return '<div class="vcol"'+(x.onclick?' onclick="'+x.onclick+'" style="cursor:pointer"':'')+' title="'+x.label+(x.sub?' · '+x.sub:'')+'"><div class="vcol-num">'+(x.num!==undefined?x.num:x.valor)+'</div><div class="vcol-bar '+cor+'" style="height:'+h+'px"></div></div>'; }).join('')+
+        '</div><div class="vchart-labels">'+itens.map(function(x){ return '<div class="vchart-label">'+String(x.label||'').substring(0,3)+'</div>'; }).join('')+'</div></div>';
+}
+function mkTable(cols, rows){
+    var ths = cols.map(function(c,i){ return '<th style="text-align:'+(i===0?'left':'right')+';padding:7px 10px;font-size:10px;color:var(--muted);font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap">'+c+'</th>'; }).join('');
+    var trs = rows.map(function(r){ var tds=r.cells.map(function(c,i){ var v=typeof c==='object'?c.v:c; var st=typeof c==='object'?(c.st||''):''; return '<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid var(--border);text-align:'+(i===0?'left':'right')+';'+st+'">'+v+'</td>'; }).join(''); return '<tr class="'+(r.onclick?'tr-click':'')+'"'+(r.onclick?' onclick="'+r.onclick+'"':'')+' style="'+(r.onclick?'cursor:pointer':'')+'">'+ tds+'</tr>'; }).join('');
+    return '<table style="width:100%;border-collapse:collapse;margin-top:12px"><thead><tr>'+ths+'</tr></thead><tbody>'+trs+'</tbody></table>';
+}
+function abrirModal(titulo, corpo){ document.getElementById('modalTitulo').textContent=titulo; document.getElementById('modalConteudo').innerHTML=corpo; document.getElementById('modalLojas').classList.add('open'); }
+function fecharModal(e){ if(e.target.id==='modalLojas') document.getElementById('modalLojas').classList.remove('open'); }
+function chip(ok,okTxt,nokTxt){ return '<span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;'+(ok?'background:#dcfce7;color:#16a34a;border:1px solid rgba(22,163,74,.25)':'background:#fef9c3;color:#b45309;border:1px solid rgba(217,119,6,.25)')+'">'+( ok?okTxt:nokTxt)+'</span>'; }
+function anoSelEl(id,cur,cb){ return '<select class="chart-ano-sel" id="'+id+'" onchange="'+cb+'">'+['2024','2025','2026','2027'].map(function(a){ return '<option value="'+a+'"'+(a===String(cur)?' selected':'')+'>'+a+'</option>'; }).join('')+'</select>'; }
+
+/* ── DASHBOARD ── */
+var _cad = {};
+var _dashCarregado = false;
+var CORES_PERFIL = ['#c8102e','#f59e0b','#16a34a','#2563eb','#7c3aed','#0891b2','#db2777','#65a30d'];
+var _perfilCache = {};
+
+async function carregarDashboard(){
+    var ano = (document.getElementById('filtroAno')||{value:'2026'}).value||'2026';
+    var sr  = document.getElementById('statsRow');
+    var cs  = document.getElementById('chartSection');
+    sr.innerHTML = '<div class="loading-msg" style="grid-column:1/-1"><div class="spinner"></div> Carregando...</div>';
+    cs.innerHTML = '';
+    try {
+        var res = await fetch(API+'/dashboard/cadastral?ano='+ano);
+        var d   = await res.json();
+        if(d.erro) throw new Error(d.erro);
+        _cad[ano] = d;
+        _dashCarregado = true;
+        renderDash(d, ano);
+    } catch(e){
+        log('Erro dashboard: '+e.message,'err');
+        sr.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="icon">⚠️</div><p>'+e.message+'</p></div>';
+        _dashCarregado = false;
+    }
+    carregarLembretesPreview();
+}
+
+function renderDash(d, ano){
+    var t=d.totais||{};
+    var sr=document.getElementById('statsRow');
+    var cs=document.getElementById('chartSection');
+    function sc(icon,label,val,sub,cor,fn){
+        return '<div class="stat-card'+(fn?' clickable':'')+'"'+(fn?' onclick="'+fn+'"':'')+' style="border-top:3px solid '+cor+'"><div class="stat-label" style="color:'+cor+'">'+icon+' '+label+'</div><div class="stat-value" style="font-size:22px;color:'+cor+'">'+val+'</div><div class="stat-sub">'+sub+'</div></div>';
+    }
+    var totalLojas=(d.lojasTrinadasPorMes||[]).reduce(function(s,m){ return s+(m.lojas?m.lojas.length:0); },0);
+    var totalColabs=(d.lojasTrinadasPorMes||[]).reduce(function(s,m){ return s+(m.colaboradores||0); },0);
+    var pctLemb=Math.round(((t.comLemb||0)/Math.max(t.totalLemb||1,1))*100);
+    var pctAval=Math.round(((t.simAval||0)/Math.max(t.totalAval||1,1))*100);
+    sr.innerHTML=
+        sc('📊','Lojas Treinadas',totalLojas+' lojas',totalColabs+' colaboradores','var(--red)','scrollSec("lojas")')+
+        sc('🔔','Lembretes',(t.comLemb||0)+'/'+(t.totalLemb||0),pctLemb+'% enviados','var(--green)','window.location.href=\'/treinamento/lembretes\'')+
+        sc('⭐','Avaliações',(t.simAval||0)+'/'+(t.totalAval||0),pctAval+'% avaliados','var(--accent)','scrollSec("avaliacoes")')+
+        sc('📈','Perfil Desenv.',(t.totalPerfil||0)+' concluídos',ano,'#7c3aed','scrollSec("perfilFuncao")')+
+        sc('🏆','Prêmio+Refeição',fmtR(t.totalFin||0),(t.itensPremio||0)+' colabs · Prêm: '+fmtR(t.totalPremio)+' · Ref: '+fmtR(t.totalRefeicao),'var(--yellow)','scrollSec("premio")')+
+        '<div class="stat-card clickable" id="toCardDash" style="border-top:3px solid #c8102e" onclick="window.location.href=\'/treinamento/turnover\'"><div class="stat-label" style="color:#c8102e">🔄 Turnover '+ano+'</div><div class="stat-value" style="font-size:22px;color:#c8102e" id="toCardPct">—%</div><div class="stat-sub" id="toCardSub">carregando…</div></div>';
+    atualizarCardTurnoverDash();
+
+    // Cards SULTS
+    fetch(API+'/sults/resumo').then(r=>r.json()).then(function(s){
+        sr.innerHTML+=
+            '<div class="stat-card" style="border-top:3px solid #1565c0"><div class="stat-label" style="color:#1565c0">🏪 Unidades Ativas</div><div class="stat-value" style="font-size:22px;color:#1565c0">'+(s.totalUnidades||'—')+'</div><div class="stat-sub">'+(s.totalImplantacao||0)+' em implantação</div></div>'+
+            '<div class="stat-card" style="border-top:3px solid #00695c"><div class="stat-label" style="color:#00695c">👥 Funcionários SULTS</div><div class="stat-value" style="font-size:22px;color:#00695c">'+(s.totalFuncionarios||'—')+'</div><div class="stat-sub">média '+(s.totalUnidades?Math.round(s.totalFuncionarios/s.totalUnidades):'—')+' por unidade</div></div>';
+    }).catch(function(){});
+
+    // Cards Universidade
+    fetch(API+'/universidade/dados').then(function(r){ return r.json(); }).then(function(u){
+        var t=(u.totais)||{};
+        sr.innerHTML+=
+            '<div class="stat-card" style="border-top:3px solid var(--accent);cursor:pointer" onclick="window.location.href=\'/treinamento/universidade\'"><div class="stat-label" style="color:var(--accent)">⚙️ Andamento (Univ.)</div><div class="stat-value" style="font-size:22px;color:var(--accent)">'+(t.andamento||0)+'</div><div class="stat-sub">cursos em andamento</div></div>'+
+            '<div class="stat-card" style="border-top:3px solid var(--orange);cursor:pointer" onclick="window.location.href=\'/treinamento/universidade\'"><div class="stat-label" style="color:var(--orange)">⏳ Pendente (Univ.)</div><div class="stat-value" style="font-size:22px;color:var(--orange)">'+(t.pendente||0)+'</div><div class="stat-sub">cursos pendentes</div></div>'+
+            '<div class="stat-card" style="border-top:3px solid var(--red);cursor:pointer" onclick="window.location.href=\'/treinamento/universidade\'"><div class="stat-label" style="color:var(--red)">🎓 Total Geral (Univ.)</div><div class="stat-value" style="font-size:22px;color:var(--red)">'+(t.total||0)+'</div><div class="stat-sub">'+(u.totalUnidades||0)+' unidades · '+(u.totalLinhas||0)+' linhas</div></div>';
+    }).catch(function(){});
+
+    // Card Uploads
+    fetch(API+'/uploads/pastas').then(function(r){ return r.json(); }).then(function(u){
+        var totalPastas=(u.pastas||[]).length;
+        sr.innerHTML+='<div class="stat-card clickable" style="border-top:3px solid #0ea5e9;cursor:pointer" onclick="abrirModalUploads()"><div class="stat-label" style="color:#0ea5e9">📁 Arquivos no Drive</div><div class="stat-value" style="font-size:22px;color:#0ea5e9" id="uploadCardTotal">—</div><div class="stat-sub">'+totalPastas+' pasta(s) · <a href="/treinamento/uploads" onclick="event.stopPropagation()" style="color:#0ea5e9;font-weight:700;text-decoration:none">Ir para Uploads →</a></div></div>';
+        fetch(API+'/uploads/arquivos').then(function(r){ return r.json(); }).then(function(d){ var el=document.getElementById('uploadCardTotal'); if(el) el.textContent=(d.arquivos||[]).length+' arq.'; }).catch(function(){});
+    }).catch(function(){
+        sr.innerHTML+='<div class="stat-card" style="border-top:3px solid #0ea5e9"><div class="stat-label" style="color:#0ea5e9">📁 Arquivos no Drive</div><div class="stat-value" style="font-size:22px;color:#0ea5e9">—</div><div class="stat-sub"><a href="/treinamento/uploads" style="color:#0ea5e9;font-weight:700;text-decoration:none">Ir para Uploads →</a></div></div>';
+    });
+
+    cs.innerHTML=
+        buildSec('📊 Lojas Treinadas por Mês — '+ano,d.lojasTrinadasPorMes,'lojas','red',ano)+
+        buildSec('🏆 Prêmio + Refeição por Mês — '+ano,d.premioRefeicao,'premio','orange',ano)+
+        buildSec('🔔 Lembretes por Mês — '+ano,d.lembretes,'lembretes','green',ano)+
+        buildSec('⭐ Avaliações por Mês — '+ano,d.avaliacoes,'avaliacoes','blue',ano)+
+        buildPerfilSec('sec-perfilModelo','📋 Perfil — Modo de Treinamento (col X) — '+ano,d.perfilModelo,d.allModelos,ano,false)+
+        buildPerfilSec('sec-perfilFuncao','👤 Perfil do Treinando — Quantidade por Função (col F) — '+ano,d.perfilFuncao,d.allFuncoes,ano,true);
+}
+
+/* ── MODAL UPLOADS ── */
+async function abrirModalUploads() {
+    document.getElementById('modalUploads').style.display='flex';
+    try { var r=await fetch(API+'/uploads/pastas'); var d=await r.json(); var sel=document.getElementById('uploadModalPasta'); sel.innerHTML='<option value="">📂 Raiz</option>'; (d.pastas||[]).forEach(function(p){ sel.innerHTML+='<option value="'+p.id+'">📁 '+p.nome+'</option>'; }); } catch(e){}
+    carregarArquivosModal('');
+}
+function fecharModalUploads() { document.getElementById('modalUploads').style.display='none'; }
+async function carregarArquivosModal(pastaId) {
+    var wrap=document.getElementById('uploadModalLista'); var cont=document.getElementById('uploadModalCount');
+    wrap.innerHTML='<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px"><div class="spinner"></div> Carregando...</div>';
+    try {
+        var url=pastaId?API+'/uploads/arquivos?pastaId='+pastaId:API+'/uploads/arquivos';
+        var r=await fetch(url); var d=await r.json(); var arqs=d.arquivos||[];
+        if(cont) cont.textContent=arqs.length+' arquivo(s)';
+        if(!arqs.length){ wrap.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted)"><div style="font-size:36px;margin-bottom:10px">📂</div><div style="font-size:13px;font-weight:600">Nenhum arquivo nesta pasta</div></div>'; return; }
+        var icon=function(m){ m=m||''; if(m.startsWith('image/')) return '🖼️'; if(m.includes('pdf')) return '📄'; if(m.includes('sheet')||m.includes('excel')||m.includes('csv')) return '📊'; if(m.includes('word')||m.includes('document')) return '📝'; if(m.includes('zip')||m.includes('rar')) return '🗜️'; if(m.startsWith('video/')) return '🎬'; if(m.startsWith('audio/')) return '🎵'; return '📎'; };
+        var bytes=function(b){ var n=parseInt(b||0); if(n<1024) return n+' B'; if(n<1048576) return (n/1024).toFixed(1)+' KB'; return (n/1048576).toFixed(1)+' MB'; };
+        var dt=function(iso){ if(!iso) return '—'; try{ return new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}); }catch(e){ return '—'; } };
+        var linhas=arqs.map(function(f){ return '<tr onmouseover="this.style.background=\'var(--bg)\'" onmouseout="this.style.background=\'\'"><td style="padding:10px 14px;font-size:18px;width:36px">'+icon(f.tipo)+'</td><td style="padding:10px 4px;font-size:13px;font-weight:700;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+f.nome+'">'+f.nome+'</td><td style="padding:10px 14px;font-size:11px;font-family:\'JetBrains Mono\',monospace;color:var(--muted);white-space:nowrap">'+bytes(f.tamanho)+'</td><td style="padding:10px 14px;font-size:11px;font-family:\'JetBrains Mono\',monospace;color:var(--muted);white-space:nowrap">'+dt(f.criadoEm)+'</td><td style="padding:10px 14px;text-align:right">'+(f.link?'<a href="'+f.link+'" target="_blank" style="background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;text-decoration:none;color:var(--text)">🔗 Abrir</a>':'')+' </td></tr>'; }).join('');
+        wrap.innerHTML='<table style="width:100%;border-collapse:collapse"><thead><tr style="background:var(--bg)"><th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);width:36px"></th><th style="padding:8px 4px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Nome</th><th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Tamanho</th><th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left">Data</th><th style="padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border)"></th></tr></thead><tbody>'+linhas+'</tbody></table>';
+    } catch(e) { wrap.innerHTML='<div style="padding:30px;text-align:center;color:var(--red);font-size:13px;font-weight:600">❌ '+e.message+'</div>'; }
+}
+
+/* ── PERFIL CHARTS ── */
+function barrasEmpilhadas(dados, cats, tipo) {
+    if(!dados||!dados.length) return '';
+    var totais=dados.map(function(d){ return d.total||0; }); var mx=Math.max.apply(null,totais)||1; var ALT=150;
+    var legenda=cats.map(function(cat,ci){ return '<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;margin-right:14px;margin-bottom:4px"><span style="width:13px;height:13px;border-radius:3px;background:'+CORES_PERFIL[ci%CORES_PERFIL.length]+'"></span>'+cat+'</span>'; }).join('');
+    var cols=dados.map(function(d,di){
+        var segs=''; cats.slice().reverse().forEach(function(cat,ri){ var ci=cats.length-1-ri; var v=d.valores[cat]||0; var h=Math.round((v/mx)*ALT); if(!h) return; segs+='<div title="'+cat+': '+v+'" style="width:100%;height:'+h+'px;background:'+CORES_PERFIL[ci%CORES_PERFIL.length]+';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;border-top:1px solid rgba(255,255,255,.2)">'+(h>14?v:'')+'</div>'; });
+        var onc=tipo?"modalPerfilMes('"+tipo+"',"+di+")":"";
+        return '<div onclick="'+onc+'" style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:52px;max-width:90px;gap:0;cursor:'+(tipo?'pointer':'default')+'"><div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:3px">'+d.total+'</div><div style="display:flex;flex-direction:column-reverse;width:100%;height:'+ALT+'px;border-radius:8px 8px 0 0;overflow:hidden;border-bottom:2px solid var(--border);transition:filter .15s,transform .15s" onmouseover="this.style.filter=\'brightness(1.12)\';this.style.transform=\'scaleX(1.04)\'" onmouseout="this.style.filter=\'\';this.style.transform=\'\'">'+segs+'</div></div>';
+    }).join('');
+    var labels=dados.map(function(d){ return '<div style="flex:1;min-width:52px;max-width:90px;text-align:center;font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-top:5px;font-weight:600">'+d.mes.substring(0,3)+'</div>'; }).join('');
+    return '<div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:2px">'+legenda+'</div><div style="overflow-x:auto"><div style="display:flex;align-items:flex-end;gap:8px;padding:0 4px;min-width:0">'+cols+'</div><div style="display:flex;gap:8px;padding:0 4px">'+labels+'</div></div>';
+}
+
+function modalPerfilMes(tipo,idx){
+    var dados=_perfilCache[tipo]; if(!dados||!dados[idx]) return;
+    var d=dados[idx]; var cats=_perfilCache[tipo+'_cats']||[];
+    var cardsHtml=cats.map(function(cat,ci){ var v=d.valores[cat]||0; if(!v) return ''; return '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--bg);border:1.5px solid var(--border);margin-bottom:8px"><div style="width:14px;height:14px;border-radius:4px;flex-shrink:0;background:'+CORES_PERFIL[ci%CORES_PERFIL.length]+'"></div><div style="flex:1;font-size:13px;font-weight:600">'+cat+'</div><div style="font-size:22px;font-weight:900;color:'+CORES_PERFIL[ci%CORES_PERFIL.length]+';font-family:JetBrains Mono,monospace">'+v+'</div></div>'; }).join('');
+    var itensHtml='';
+    if(d.itens&&d.itens.length){
+        var grupos={}; d.itens.forEach(function(it){ var key=tipo==='modelo'?it.modelo:it.funcao; if(!grupos[key]) grupos[key]=[]; grupos[key].push(it); });
+        itensHtml='<div style="margin-top:18px">';
+        Object.keys(grupos).sort().forEach(function(key){
+            var cor=CORES_PERFIL[cats.indexOf(key)%CORES_PERFIL.length]||'#888';
+            var lista=grupos[key].map(function(it){ return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid var(--border);font-size:12px"><div style="font-weight:700;flex:2">'+it.nome+'</div><div style="color:var(--muted);flex:2;text-align:center">'+it.loja+'</div><div style="font-family:JetBrains Mono,monospace;color:var(--muted);flex:1;text-align:right">'+it.fimStr+'</div></div>'; }).join('');
+            itensHtml+='<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:12px;height:12px;border-radius:3px;background:'+cor+'"></div><span style="font-size:11px;font-weight:800;color:'+cor+';text-transform:uppercase;letter-spacing:.5px">'+key+' ('+grupos[key].length+')</span></div><div style="border:1px solid var(--border);border-radius:8px;overflow:hidden"><div style="display:flex;padding:5px 12px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted)"><span style="flex:2">Nome</span><span style="flex:2;text-align:center">Loja</span><span style="flex:1;text-align:right">Data Fim</span></div>'+lista+'</div></div>';
+        });
+        itensHtml+='</div>';
+    }
+    abrirModal((tipo==='modelo'?'📋 Modo de Treinamento':'👤 Perfil do Treinando')+' — '+d.mes,
+        '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg);border-radius:10px;margin-bottom:16px;border:2px solid var(--border)"><span style="font-size:13px;font-weight:700;color:var(--muted)">Total do mês</span><span style="font-size:28px;font-weight:900;color:var(--red);font-family:JetBrains Mono,monospace">'+d.total+'</span></div>'+cardsHtml+itensHtml);
+}
+
+function tabelaCruzada(dados,cats,tituloLinha,tipo){
+    if(!dados||!dados.length||!cats||!cats.length) return '<p style="color:var(--muted);font-size:12px">Sem dados.</p>';
+    var ths=['<th style="padding:8px 10px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left;white-space:nowrap">Mês</th>'];
+    cats.forEach(function(c){ ths.push('<th style="padding:8px 10px;font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:right;white-space:nowrap">'+c+'</th>'); });
+    ths.push('<th style="padding:8px 10px;font-size:10px;font-weight:700;color:var(--red);border-bottom:2px solid var(--border);text-align:right;white-space:nowrap">TOTAL</th>');
+    var totCats={}; cats.forEach(function(c){ totCats[c]=0; }); var totGeral=0;
+    var trs=dados.map(function(row,ri){
+        var oa=tipo?' onclick="modalPerfilMes(\''+tipo+'\','+ri+')" style="cursor:pointer"':'';
+        var tds=['<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid var(--border);font-weight:700">'+row.mes+(tipo?' <span style="font-size:10px;color:var(--accent)">▶</span>':'')+'</td>'];
+        cats.forEach(function(c){ var v=row.valores[c]||0; totCats[c]+=v; tds.push('<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid var(--border);text-align:right;font-family:JetBrains Mono,monospace;color:'+(v?'var(--text)':'var(--muted)')+'">'+( v||'—')+'</td>'); });
+        totGeral+=row.total||0; tds.push('<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid var(--border);text-align:right;font-weight:800;color:var(--red);font-family:JetBrains Mono,monospace">'+row.total+'</td>');
+        return '<tr class="tr-click"'+oa+'>'+tds.join('')+'</tr>';
+    }).join('');
+    var totTds=['<td style="padding:8px 10px;font-size:12px;font-weight:800;border-top:2px solid var(--border)">TOTAL ANO</td>'];
+    cats.forEach(function(c){ totTds.push('<td style="padding:8px 10px;font-size:12px;border-top:2px solid var(--border);text-align:right;font-weight:700;font-family:JetBrains Mono,monospace">'+totCats[c]+'</td>'); });
+    totTds.push('<td style="padding:8px 10px;font-size:12px;border-top:2px solid var(--border);text-align:right;font-weight:900;color:var(--red);font-family:JetBrains Mono,monospace">'+totGeral+'</td>');
+    return '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin-top:12px"><thead><tr>'+ths.join('')+'</tr></thead><tbody>'+trs+'<tr style="background:var(--bg)">'+totTds.join('')+'</tr></tbody></table></div>';
+}
+
+function buildPerfilSec(id,titulo,dados,cats,ano,comAnoSel){
+    if(!dados||!dados.length||!cats||!cats.length) return '';
+    var tipo=id.replace('sec-perfil','').toLowerCase()||'modelo';
+    _perfilCache[tipo]=dados; _perfilCache[tipo+'_cats']=cats;
+    var grafico=barrasEmpilhadas(dados,cats,tipo);
+    var tabela=tabelaCruzada(dados,cats,'Mês',tipo);
+    var header=comAnoSel
+        ? '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div class="chart-title" style="margin:0">'+titulo+'</div>'+anoSelEl(id+'AnoSel',ano,'trocarPerfilAno(this.value)')+'</div>'
+        : '<div class="chart-title">'+titulo+'</div>';
+    return '<div class="chart-card chart-card-full" id="'+id+'">'+header+grafico+tabela+'</div>';
+}
+
+function buildSec(titulo,arr,tipo,cor,ano,withAnoSel){
+    if(!arr||!arr.length) return '';
+    var itens=arr.map(function(x,i){
+        var v,n;
+        switch(tipo){ case 'lojas': v=x.totalLojas; n=v; break; case 'premio': v=x.totalFin; n=fmtR(v).replace('R$\u00a0',''); break; case 'lembretes': v=x.comLemb; n=v+'/'+x.totalLemb; break; case 'avaliacoes': v=x.simAval; n=v+'/'+x.totalAval; break; default: v=x.totalPerfil; n=v; }
+        return {label:x.mes,valor:v,num:n,onclick:"dashMes('"+tipo+"',"+i+")"};
+    });
+    var chart=mkVChart(itens,cor);
+    var rows,tab;
+    switch(tipo){
+        case 'lojas': rows=arr.map(function(x,i){ return {onclick:"dashMes('lojas',"+i+")",cells:[{v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},{v:x.totalLojas||0,st:'font-family:JetBrains Mono,monospace'},{v:x.colaboradores||0,st:'color:var(--muted)'}]}; }); tab=mkTable(['Mês','Lojas','Colaboradores'],rows); break;
+        case 'premio': rows=arr.map(function(x,i){ return {onclick:"dashMes('premio',"+i+")",cells:[{v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},{v:(x.itensPremio||[]).length,st:'color:var(--muted)'},{v:fmtR(x.premio),st:'font-family:JetBrains Mono,monospace'},{v:fmtR(x.refeicao),st:'font-family:JetBrains Mono,monospace'},{v:fmtR(x.totalFin),st:'font-weight:800;color:var(--red);font-family:JetBrains Mono,monospace'}]}; }); tab=mkTable(['Mês','Colabs','Prêmio','Refeição','Total'],rows); break;
+        case 'lembretes': rows=arr.map(function(x,i){ return {onclick:"dashMes('lembretes',"+i+")",cells:[{v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},{v:x.totalLemb||0,st:'color:var(--muted)'},{v:'<span style="color:var(--green);font-weight:700">'+(x.comLemb||0)+'</span>'},{v:'<span style="color:var(--yellow);font-weight:700">'+((x.totalLemb||0)-(x.comLemb||0))+'</span>'}]}; }); tab=mkTable(['Mês','Total','Enviados','Pendentes'],rows); break;
+        case 'avaliacoes': rows=arr.map(function(x,i){ return {onclick:"dashMes('avaliacoes',"+i+")",cells:[{v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},{v:x.totalAval||0,st:'color:var(--muted)'},{v:'<span style="color:var(--green);font-weight:700">'+(x.simAval||0)+'</span>'},{v:'<span style="color:var(--yellow);font-weight:700">'+(x.naoAval||0)+'</span>'}]}; }); tab=mkTable(['Mês','Total','✓ Avaliados','✗ Pendentes'],rows); break;
+        default: rows=arr.map(function(x,i){ return {onclick:"dashMes('perfil',"+i+")",cells:[{v:'<b>'+x.mes+'</b>'},{v:x.totalPerfil||0,st:'font-family:JetBrains Mono,monospace'}]}; }); tab=mkTable(['Mês','Concluídos'],rows);
+    }
+    var header=withAnoSel
+        ? '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div class="chart-title" style="margin:0">'+titulo+'</div>'+anoSelEl('perfilAno',ano,'trocarPerfilAno(this.value)')+'</div>'
+        : '<div class="chart-title">'+titulo+' <span style="font-size:10px;font-weight:400;color:var(--muted)">(clique no mês para detalhar)</span></div>';
+    return '<div class="chart-card chart-card-full" id="sec-'+tipo+'">'+header+chart+tab+'</div>';
+}
+
+async function trocarPerfilAno(novoAno){
+    var c1=document.getElementById('sec-perfilModelo'); var c2=document.getElementById('sec-perfilFuncao');
+    var spin='<div class="loading-msg"><div class="spinner"></div></div>';
+    if(c1) c1.innerHTML=spin; if(c2) c2.innerHTML=spin;
+    try {
+        var d=_cad[novoAno];
+        if(!d){ var r=await fetch(API+'/dashboard/cadastral?ano='+novoAno); d=await r.json(); _cad[novoAno]=d; }
+        var novoM=buildPerfilSec('sec-perfilModelo','📋 Perfil — Modo de Treinamento (col X) — '+novoAno,d.perfilModelo,d.allModelos,novoAno,false);
+        var novoF=buildPerfilSec('sec-perfilFuncao','👤 Perfil do Treinando — Quantidade por Função (col F) — '+novoAno,d.perfilFuncao,d.allFuncoes,novoAno,true);
+        if(c1) c1.outerHTML=novoM||'<div id="sec-perfilModelo"></div>';
+        var c2b=document.getElementById('sec-perfilFuncao'); if(c2b) c2b.outerHTML=novoF||'<div id="sec-perfilFuncao"></div>';
+    } catch(e){
+        var e1=document.getElementById('sec-perfilModelo'); if(e1) e1.innerHTML='<p style="color:var(--muted)">Erro: '+e.message+'</p>';
+        var e2=document.getElementById('sec-perfilFuncao'); if(e2) e2.innerHTML='<p style="color:var(--muted)">Erro: '+e.message+'</p>';
+    }
+}
+
+function scrollSec(tipo){
+    var idMap={perfilModelo:'sec-perfilModelo',perfilFuncao:'sec-perfilFuncao'};
+    var el=document.getElementById(idMap[tipo]||'sec-'+tipo); if(!el) return;
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+    el.style.outline='3px solid var(--red)'; el.style.outlineOffset='4px';
+    setTimeout(function(){ el.style.outline=''; el.style.outlineOffset=''; },1500);
+}
+
+function _getCad(){ var anos=Object.keys(_cad); return anos.length?_cad[anos[anos.length-1]]:null; }
+
+function dashMes(tipo,idx){
+    var d=_getCad(); if(!d) return;
+    var map={lojas:'lojasTrinadasPorMes',premio:'premioRefeicao',lembretes:'lembretes',avaliacoes:'avaliacoes',perfil:'perfil'};
+    var arr=d[map[tipo]]; if(!arr) return;
+    var x=arr[idx]; if(!x) return;
+    switch(tipo){
+        case 'lojas': { var lojas=(x.lojas||[]).map(function(l){ return '<span class="loja-pill">'+l+'</span>'; }).join(''); abrirModal('🏪 '+x.mes+' — '+((x.lojas||[]).length)+' lojas',lojas||'<p style="color:var(--muted)">Nenhuma loja.</p>'); break; }
+        case 'premio': { var tab=mkTable(['Nome','Loja','Data Fim','Prêmio','Refeição','Total'],(x.itensPremio||[]).map(function(it){ return {cells:[{v:it.nome,st:'font-weight:700'},{v:it.loja,st:'color:var(--muted)'},{v:it.fimStr,st:'font-family:JetBrains Mono,monospace'},{v:fmtR(it.premio),st:'font-family:JetBrains Mono,monospace'},{v:fmtR(it.refeicao),st:'font-family:JetBrains Mono,monospace'},{v:fmtR(it.total),st:'font-weight:800;color:var(--red);font-family:JetBrains Mono,monospace'}]}; })); abrirModal('🏆 Prêmio+Refeição — '+x.mes+' · Total: '+fmtR(x.totalFin),tab); break; }
+        case 'lembretes': { window.location.href='/treinamento/lembretes'; break; } // ★ redireciona para página própria
+        case 'avaliacoes': { var simList=mkTable(['Nome','Loja','Data Fim'],(x.itensAvalSim||[]).map(function(it){ return {cells:[{v:it.nome,st:'font-weight:700'},{v:it.loja,st:'color:var(--muted)'},{v:it.fimStr,st:'font-family:JetBrains Mono,monospace'}]}; })); var naoList=mkTable(['Nome','Loja','Data Fim'],(x.itensAvalNao||[]).map(function(it){ return {cells:[{v:it.nome,st:'font-weight:700'},{v:it.loja,st:'color:var(--muted)'},{v:it.fimStr,st:'font-family:JetBrains Mono,monospace'}]}; })); abrirModal('⭐ Avaliações — '+x.mes,'<div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:4px">✓ Avaliados ('+x.simAval+')</div>'+simList+'<div style="font-size:12px;font-weight:700;color:var(--yellow);margin:16px 0 4px">✗ Pendentes ('+x.naoAval+')</div>'+naoList); break; }
+        case 'perfil': { var tab=mkTable(['Nome','Loja','Data Fim','Modelo (col X)'],(x.itensPerfil||[]).map(function(it){ return {cells:[{v:it.nome,st:'font-weight:700'},{v:it.loja,st:'color:var(--muted)'},{v:it.fimStr,st:'font-family:JetBrains Mono,monospace'},{v:it.modelo||'—',st:'color:var(--accent)'}]}; })); abrirModal('📈 Perfil de Desenv. — '+x.mes+' ('+x.totalPerfil+' concluídos)',tab); break; }
+    }
+}
+
+/* ── CADASTRO — movido para cadastro.html — acesse /treinamento/cadastro ── */
+document.getElementById('cad-telefone').addEventListener('input',function(e){ let v=e.target.value.replace(/\D/g,'').substring(0,11); if(v.length>=11) v=v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3'); else if(v.length>6) v=v.replace(/(\d{2})(\d{4,5})(\d{0,4})/,'($1) $2-$3'); else if(v.length>2) v=v.replace(/(\d{2})(\d+)/,'($1) $2'); e.target.value=v; });
+
+/* ── FLOATING IA ── */
+function toggleIA(){
+    iaAberto=!iaAberto;
+    const jan=document.getElementById('iaJanela'); const tog=document.getElementById('iaToggle');
+    if(iaAberto){ jan.classList.add('aberto'); tog.classList.add('aberto'); tog.innerHTML='✕'; const u=document.getElementById('iaUnread'); if(u) u.style.display='none'; }
+    else{ jan.classList.remove('aberto'); tog.classList.remove('aberto'); tog.innerHTML='🤖<div class="ia-unread" id="iaUnread"></div>'; }
+}
+async function perguntarIA(fixa){
+    const inp=document.getElementById('inputIA'); const q=fixa||inp.value.trim(); if(!q) return;
+    inp.value=''; if(!iaAberto) toggleIA();
+    const box=document.getElementById('iaMsgs');
+    const mu=document.createElement('div'); mu.className='msg user'; mu.textContent=q; box.appendChild(mu);
+    const ma=document.createElement('div'); ma.className='msg ai carregando'; ma.innerHTML='<span style="opacity:.6">⏳ Consultando a planilha e analisando com Gemini…</span>'; box.appendChild(ma);
+    box.scrollTop=box.scrollHeight;
+    const envBtn=document.getElementById('iaBtnEnviar'); if(envBtn) envBtn.disabled=true;
+    log('🤖 Gemini...','warn');
+    try {
+        const anoAtual=String(new Date().getFullYear());
+        const r=await fetch(API+'/ia/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q,ano:anoAtual})});
+        const d=await r.json();
+        const txt=d.resposta||d.erro||'Sem resposta.';
+        ma.className='msg ai';
+        ma.innerHTML=txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^(▸|•|→|\-) /gm,'<span style="color:var(--red)">■</span> ').replace(/\n/g,'<br>');
+        log('✓ Gemini OK','ok');
+    } catch(e){ ma.className='msg ai'; ma.textContent='❌ Erro: '+e.message; log('Erro IA: '+e.message,'err'); }
+    if(envBtn) envBtn.disabled=false;
+    box.scrollTop=box.scrollHeight;
+}
+
+/* ── TURNOVER CARD ── */
+var _toData=null;
+async function atualizarCardTurnoverDash(){
+    var anoSel=String(document.getElementById('filtroAno')?.value||'2026');
+    try {
+        var r=await fetch(API+'/turnover/dados?ano='+anoSel);
+        var d=await r.json();
+        // Se não tem desligamentos no ano selecionado, busca o ano anterior automaticamente
+        if((!d.desligadosAno || d.desligadosAno === 0) && anoSel === '2026') {
+            var r2=await fetch(API+'/turnover/dados?ano=2025');
+            var d2=await r2.json();
+            if(d2.desligadosAno > 0) d=d2;
+        }
+        var pct=d.pctTurnover||0; var cor=pct>20?'#c8102e':pct>10?'#f59e0b':'#16a34a';
+        var elPct=document.getElementById('toCardPct'); var elSub=document.getElementById('toCardSub'); var elCard=document.getElementById('toCardDash');
+        if(elPct){ elPct.textContent=pct+'%'; elPct.style.color=cor; }
+        if(elCard) elCard.style.borderTop='3px solid '+cor;
+        if(elSub) elSub.textContent=d.desligadosAno+' deslig. de '+d.totalGeral+' · Ativos: '+d.totalAtivos+' ('+d.ano+')';
+        if(!_toData||String(_toData.ano)!==String(d.ano)){ _toData=d; renderGraficoMotivosInline(d); }
+    } catch(e){ console.warn('Turnover card:',e.message); }
+}
+function renderGraficoMotivosInline(d){
+    var wrap=document.getElementById('secTurnoverDash'); if(!wrap) return;
+    var motivos=(d.motivos||[]).filter(function(m){ return m.motivo!=='Não informado'; });
+    if(!motivos.length&&d.motivos&&d.motivos.length) motivos=d.motivos;
+    if(!motivos.length){ wrap.innerHTML='<p style="color:var(--muted);font-size:12px;padding:10px 0">Sem desligamentos com motivo registrado para '+d.ano+'.</p>'; return; }
+    var total=d.desligadosAno||1; var max=motivos[0].qtd;
+    var cores=['#c8102e','#f59e0b','#2563eb','#7c3aed','#0891b2','#16a34a','#db2777','#ea580c'];
+    var barras=motivos.slice(0,8).map(function(m,i){ var pct=Math.round((m.qtd/total)*100); var barW=Math.round((m.qtd/max)*100); var cor=cores[i%cores.length]; return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:160px;font-size:11px;font-weight:600;text-align:right;flex-shrink:0;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+m.motivo+'">'+m.motivo+'</div><div style="height:22px;width:'+barW+'%;min-width:4px;max-width:55%;background:'+cor+';border-radius:4px;flex-shrink:0"></div><span style="font-size:11px;font-weight:800;color:'+cor+';font-family:JetBrains Mono,monospace;white-space:nowrap">'+m.qtd+' ('+pct+'%)</span></div>'; }).join('');
+    var lojas=(d.porLoja||[]).slice(0,5).map(function(l){ var cor=l.pct>30?'#c8102e':l.pct>15?'#f59e0b':'#16a34a'; return '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--border);font-size:12px"><span style="font-weight:700;flex:2">'+l.loja+'</span><span style="color:var(--muted);flex:1;text-align:center">'+l.desligados+'/'+l.total+'</span><span style="font-weight:900;color:'+cor+';font-family:JetBrains Mono,monospace;flex:1;text-align:right">'+l.pct+'%</span></div>'; }).join('');
+    wrap.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex-wrap:wrap"><div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Motivos de Desligamento — '+d.ano+'</div>'+barras+'</div><div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Top Lojas com Turnover</div><div style="border:1px solid var(--border);border-radius:8px;overflow:hidden"><div style="display:flex;padding:5px 10px;background:var(--bg);font-size:10px;font-weight:700;color:var(--muted)"><span style="flex:2">Loja</span><span style="flex:1;text-align:center">Deslig/Total</span><span style="flex:1;text-align:right">%</span></div>'+lojas+'</div></div></div>';
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',function(){
+    // Tenta carregar imediatamente; se falhar, verificarStatus() re-dispara quando cache ficar pronto
+    setTimeout(carregarDashboard, 300);
+    // Ano padrão 2026 já definido como selected no HTML
+    document.getElementById('inputBusca').addEventListener('keypress',function(e){ if(e.key==='Enter') fazerBusca(); });
+    document.getElementById('inputIA').addEventListener('keypress',function(e){ if(e.key==='Enter') perguntarIA(); });
+    setTimeout(function(){ if(!iaAberto){ const u=document.getElementById('iaUnread'); if(u){ u.style.display='flex'; u.textContent='1'; } } },3000);
+});
+verificarStatus();
+</script>
+
 </body>
-</html>
 </html>

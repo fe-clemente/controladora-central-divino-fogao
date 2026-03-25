@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divino Fogão — Lembretes de Treinamento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
+            --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+            --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+            --accent:#2563eb; --green:#16a34a; --green-pale:#f0fdf4;
+            --yellow:#d97706; --yellow-pale:#fffbeb;
+            --shadow:0 2px 12px rgba(0,0,0,0.08);
+            --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+        /* ── HEADER ─────────────────────────────────────────────── */
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+        .logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
+        .logo img{height:52px;width:auto;display:block;}
+        .logo-fallback{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1px;display:none;}
+        .header-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+        .header-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
+        .header-back{margin-left:auto;background:var(--bg3);border:1.5px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
+        .header-back:hover{background:var(--red-pale);color:var(--red);border-color:rgba(200,16,46,.2);}
+
+        /* ── STATUS BAR ─────────────────────────────────────────── */
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;}
+        .status-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+        .status-dot.ready{background:var(--green);animation:none;}
+        .status-dot.error{background:var(--red);animation:none;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+        /* ── MAIN ───────────────────────────────────────────────── */
+        main{max-width:1100px;margin:0 auto;padding:32px 24px;}
+
+        /* ── STAT CHIPS ─────────────────────────────────────────── */
+        .stat-chips{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;}
+        .stat-chip{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 20px;box-shadow:var(--shadow);min-width:110px;}
+        .stat-chip-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;}
+        .stat-chip-value{font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;}
+
+        /* ── TABS ───────────────────────────────────────────────── */
+        .tabs-row{display:flex;gap:2px;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:5px;margin-bottom:24px;box-shadow:var(--shadow);}
+        .tab-btn{flex:1;background:none;border:none;color:var(--muted);padding:11px 16px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;border-radius:10px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;}
+        .tab-btn:hover{color:var(--text);background:var(--bg3);}
+        .tab-btn.active{color:var(--red);background:var(--red-pale);box-shadow:0 2px 8px rgba(200,16,46,.12);}
+        .tab-badge{background:var(--red);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;min-width:20px;text-align:center;}
+        .tab-badge.green{background:var(--green);}
+        .tab-content{display:none;}
+        .tab-content.active{display:block;}
+
+        /* ── SECTION HEADER ─────────────────────────────────────── */
+        .section-header{margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
+        .section-header h2{font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px;}
+        .section-header p{color:var(--muted);font-size:13px;}
+
+        /* ── FILTROS ────────────────────────────────────────────── */
+        .filtros-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+        .filtro-btn{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:20px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;}
+        .filtro-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-pale);}
+        .filtro-btn.ativo{background:var(--red-pale);color:var(--red);border-color:rgba(200,16,46,.3);}
+
+        /* ── BOTÕES ─────────────────────────────────────────────── */
+        .btn{padding:10px 20px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;}
+        .btn-primary{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
+        .btn-primary:hover{background:var(--red-light);transform:translateY(-1px);}
+        .btn-secondary{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+        .btn-secondary:hover{background:var(--bg2);border-color:#ccc;}
+        .btn-green{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(22,163,74,.25);}
+        .btn-green:hover{background:#15803d;transform:translateY(-1px);}
+        .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
+
+        /* ── CARDS LEMBRETE ─────────────────────────────────────── */
+        .lembrete-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:18px;box-shadow:var(--shadow);transition:all .2s;margin-bottom:10px;}
+        .lembrete-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);}
+        .lembrete-card.enviado{opacity:.75;background:var(--green-pale);border-color:rgba(22,163,74,.25);}
+        .lembrete-card.urgente{border-left:4px solid var(--red);}
+        .dias-badge{flex-shrink:0;width:64px;height:64px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;}
+        .dias-badge.hoje{background:#fff0f2;color:var(--red);border:2px solid rgba(200,16,46,.25);}
+        .dias-badge.amanha{background:var(--yellow-pale);color:var(--yellow);border:2px solid rgba(217,119,6,.25);}
+        .dias-badge.dois{background:#eff6ff;color:var(--accent);border:2px solid rgba(37,99,235,.2);}
+        .dias-badge .num{font-size:24px;line-height:1;}
+        .dias-badge .label{font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
+        .lembrete-info{flex:1;min-width:0;}
+        .lembrete-nome{font-size:15px;font-weight:800;margin-bottom:6px;color:var(--text);}
+        .lembrete-meta{font-size:12px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;font-weight:600;}
+        .lembrete-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
+        .enviado-tag{font-size:11px;background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.3);padding:4px 12px;border-radius:20px;font-weight:700;white-space:nowrap;}
+        .avaliacao-tag.aguardando{font-size:11px;background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);padding:3px 10px;border-radius:20px;font-weight:700;white-space:nowrap;}
+        .nota-badge{font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+        .nota-badge.alta{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
+        .nota-badge.media{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
+        .nota-badge.baixa{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
+
+        /* ── HISTÓRICO ──────────────────────────────────────────── */
+        .historico-item{background:var(--bg2);border:1.5px solid rgba(22,163,74,.2);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:8px;box-shadow:var(--shadow);transition:all .2s;}
+        .historico-item:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);}
+        .historico-check{font-size:22px;flex-shrink:0;}
+        .historico-info{flex:1;min-width:0;}
+        .historico-nome{font-size:14px;font-weight:800;color:var(--text);}
+        .historico-meta{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;}
+        .historico-nota{font-size:12px;font-family:'JetBrains Mono',monospace;font-weight:800;margin-top:3px;}
+        .historico-data{font-size:11px;color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:600;white-space:nowrap;text-align:right;flex-shrink:0;}
+
+        /* ── ALERTA ─────────────────────────────────────────────── */
+        .page-alert{border-radius:10px;padding:13px 18px;margin-bottom:18px;font-size:13px;font-weight:600;display:none;align-items:center;gap:10px;}
+        .page-alert.success{background:var(--green-pale);border:1.5px solid rgba(22,163,74,.3);color:#166534;display:flex;}
+        .page-alert.error{background:var(--red-pale);border:1.5px solid rgba(200,16,46,.2);color:var(--red);display:flex;}
+
+        /* ── EMPTY / LOADING ────────────────────────────────────── */
+        .empty{text-align:center;padding:60px 20px;color:var(--muted);}
+        .empty .icon{font-size:44px;margin-bottom:12px;}
+        .empty p{font-size:14px;font-weight:600;}
+        .loading-msg{text-align:center;padding:40px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
+        .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* ── DEBUG ──────────────────────────────────────────────── */
+        #debug{position:fixed;bottom:16px;left:16px;background:rgba(255,255,255,.96);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);max-width:280px;z-index:998;backdrop-filter:blur(10px);box-shadow:var(--shadow-lg);}
+        .debug-line{padding:1px 0;}
+        .debug-line.ok{color:var(--green);}
+        .debug-line.err{color:var(--red);}
+        .debug-line.warn{color:var(--yellow);}
+
+        @media(max-width:768px){
+            header{padding:0 14px;gap:10px;}
+            .header-title{display:none;}
+            main{padding:20px 14px;}
+            .lembrete-card{flex-wrap:wrap;}
+            .lembrete-actions{flex-direction:row;width:100%;justify-content:flex-end;}
+            .tabs-row{gap:2px;}
+            .tab-btn{font-size:11px;padding:9px 8px;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="/treinamento/logo.png" alt="Divino Fogão"
+             onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
+        <span class="logo-fallback">🍽️ DIVINO FOGÃO</span>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">Lembretes de Treinamento</div>
+    <a href="/treinamento" class="header-back">← Voltar ao Dashboard</a>
+</header>
+
+<div id="statusBar">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Inicializando...</span>
+</div>
+
+<main>
+
+    <div id="pageAlert" class="page-alert"></div>
+
+    <!-- STAT CHIPS -->
+    <div class="stat-chips">
+        <div class="stat-chip">
+            <div class="stat-chip-label">🔴 Hoje</div>
+            <div class="stat-chip-value" id="chipHoje" style="color:var(--red)">—</div>
+        </div>
+        <div class="stat-chip">
+            <div class="stat-chip-label">🟡 Amanhã</div>
+            <div class="stat-chip-value" id="chipAmanha" style="color:var(--yellow)">—</div>
+        </div>
+        <div class="stat-chip">
+            <div class="stat-chip-label">🔵 2 Dias</div>
+            <div class="stat-chip-value" id="chipDois" style="color:var(--accent)">—</div>
+        </div>
+        <div class="stat-chip">
+            <div class="stat-chip-label">✅ Enviados</div>
+            <div class="stat-chip-value" id="chipEnviados" style="color:var(--green)">—</div>
+        </div>
+        <div class="stat-chip">
+            <div class="stat-chip-label">⏳ Pendentes</div>
+            <div class="stat-chip-value" id="chipPendentes" style="color:var(--red)">—</div>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-row">
+        <button class="tab-btn active" onclick="mudarTab('lembretes',this)">
+            🔔 Lembretes do Dia
+            <span class="tab-badge" id="badgeLembretes">0</span>
+        </button>
+        <button class="tab-btn" onclick="mudarTab('historico',this)">
+            📋 Histórico Completo
+            <span class="tab-badge green" id="badgeHistorico">0</span>
+        </button>
+    </div>
+
+    <!-- ══ TAB LEMBRETES ══ -->
+    <div class="tab-content active" id="tab-lembretes">
+        <div class="section-header">
+            <div>
+                <h2>Lembretes do Dia</h2>
+                <p>Colaboradores com treinamento nos próximos 2 dias</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                <button class="btn btn-primary" onclick="enviarTodosLembretes()" id="btnEnviarTodos">
+                    📤 Enviar Todos Pendentes
+                </button>
+                <button class="btn btn-secondary" onclick="carregarLembretes()">↻ Atualizar</button>
+            </div>
+        </div>
+
+        <div class="filtros-row">
+            <button class="filtro-btn ativo" onclick="aplicarFiltro('todos',this)">Todos</button>
+            <button class="filtro-btn" onclick="aplicarFiltro('hoje',this)">🔴 Hoje</button>
+            <button class="filtro-btn" onclick="aplicarFiltro('amanha',this)">🟡 Amanhã</button>
+            <button class="filtro-btn" onclick="aplicarFiltro('dois',this)">🔵 2 Dias</button>
+            <button class="filtro-btn" onclick="aplicarFiltro('pendentes',this)">⏳ Pendentes</button>
+            <button class="filtro-btn" onclick="aplicarFiltro('enviados',this)">✅ Enviados</button>
+        </div>
+
+        <div id="listaLembretes">
+            <div class="loading-msg"><div class="spinner"></div> Carregando lembretes...</div>
+        </div>
+    </div>
+
+    <!-- ══ TAB HISTÓRICO ══ -->
+    <div class="tab-content" id="tab-historico">
+        <div class="section-header">
+            <div>
+                <h2>Histórico de Lembretes</h2>
+                <p>Todos os lembretes enviados com status de avaliação</p>
+            </div>
+            <button class="btn btn-secondary" onclick="carregarHistorico()">↻ Atualizar</button>
+        </div>
+        <div id="listaHistorico">
+            <div class="loading-msg"><div class="spinner"></div> Carregando histórico...</div>
+        </div>
+    </div>
+
+</main>
+
+<div id="debug"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   LEMBRETES.HTML — JS
+   Todas as funções originais preservadas (carregarLembretes,
+   enviarLembrete, carregarHistorico) + extras desta página.
+   API base: /treinamento  (mesmo padrão do dashboard)
+   ══════════════════════════════════════════════════════════════ */
+
+const API      = '/treinamento';
+const debugEl  = document.getElementById('debug');
+
+/* ── DEBUG ── */
+function log(msg, tipo) {
+    tipo = tipo || '';
+    const l = document.createElement('div');
+    l.className = 'debug-line ' + tipo;
+    const h = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    l.textContent = h + ' ' + msg;
+    debugEl.appendChild(l);
+    while (debugEl.children.length > 7) debugEl.removeChild(debugEl.firstChild);
+}
+
+/* ── ALERTA ── */
+function pageAlert(tipo, msg) {
+    const el = document.getElementById('pageAlert');
+    el.className = 'page-alert ' + tipo;
+    el.innerHTML = (tipo === 'success' ? '✅ ' : '⚠️ ') + msg;
+    el.style.display = 'flex';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (tipo === 'success') setTimeout(function () { el.style.display = 'none'; }, 5000);
+}
+
+/* ── STATUS ── */
+async function verificarStatus() {
+    const dot = document.getElementById('statusDot');
+    const txt = document.getElementById('statusText');
+    try {
+        const r = await fetch(API + '/status');
+        const d = await r.json();
+        if (d.status === 'pronto' && d.total > 0) {
+            dot.className = 'status-dot ready';
+            txt.textContent = '✓ Sistema pronto — ' + d.total + ' colaboradores';
+            log('Cache: ' + d.total, 'ok');
+        } else {
+            dot.className = 'status-dot';
+            txt.textContent = '⏳ Carregando planilha...';
+            setTimeout(verificarStatus, 2500);
+        }
+    } catch (e) {
+        dot.className = 'status-dot error';
+        txt.textContent = '⚠️ Servidor offline';
+        setTimeout(verificarStatus, 5000);
+    }
+}
+
+/* ── TABS ── */
+function mudarTab(id, el) {
+    document.querySelectorAll('.tab-content').forEach(function (t) { t.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+    document.getElementById('tab-' + id).classList.add('active');
+    el.classList.add('active');
+    if (id === 'historico') carregarHistorico();
+}
+
+/* ── ESTADO LOCAL ── */
+let _todosLembretes = [];
+let _filtroAtivo    = 'todos';
+
+/* ── ATUALIZA CHIPS ── */
+function atualizarChips(data) {
+    const hoje   = data.filter(function (f) { return f.diffDias === 0; }).length;
+    const amanha = data.filter(function (f) { return f.diffDias === 1; }).length;
+    const dois   = data.filter(function (f) { return f.diffDias === 2; }).length;
+    const env    = data.filter(function (f) { return f.lembreteEnviado; }).length;
+    const pend   = data.filter(function (f) { return !f.lembreteEnviado; }).length;
+    document.getElementById('chipHoje').textContent      = hoje;
+    document.getElementById('chipAmanha').textContent    = amanha;
+    document.getElementById('chipDois').textContent      = dois;
+    document.getElementById('chipEnviados').textContent  = env;
+    document.getElementById('chipPendentes').textContent = pend;
+    const badge = document.getElementById('badgeLembretes');
+    badge.textContent = pend;
+    badge.style.display = pend > 0 ? '' : 'none';
+}
+
+/* ── FILTRO ── */
+function aplicarFiltro(tipo, btn) {
+    _filtroAtivo = tipo;
+    document.querySelectorAll('.filtro-btn').forEach(function (b) { b.classList.remove('ativo'); });
+    if (btn) btn.classList.add('ativo');
+    renderLista(_todosLembretes);
+}
+
+/* ── RENDER LISTA ── */
+function renderLista(data) {
+    const ct = document.getElementById('listaLembretes');
+    let lista = data;
+    if (_filtroAtivo === 'hoje')      lista = data.filter(function (f) { return f.diffDias === 0; });
+    if (_filtroAtivo === 'amanha')    lista = data.filter(function (f) { return f.diffDias === 1; });
+    if (_filtroAtivo === 'dois')      lista = data.filter(function (f) { return f.diffDias === 2; });
+    if (_filtroAtivo === 'pendentes') lista = data.filter(function (f) { return !f.lembreteEnviado; });
+    if (_filtroAtivo === 'enviados')  lista = data.filter(function (f) { return f.lembreteEnviado; });
+
+    if (!lista.length) {
+        ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>' +
+            (_filtroAtivo === 'todos' ? 'Nenhum treinamento nos próximos 2 dias' : 'Nenhum resultado para este filtro') +
+            '</p></div>';
+        return;
+    }
+
+    ct.innerHTML = lista.map(function (f) {
+        const di = f.diffDias === 0 ? { cls: 'hoje',   num: '!', lbl: 'HOJE'  }
+                 : f.diffDias === 1 ? { cls: 'amanha', num: '1', lbl: 'DIA'   }
+                 :                    { cls: 'dois',   num: '2', lbl: 'DIAS'  };
+
+        let at = '';
+        if (f.notaAvaliacao !== '' && f.notaAvaliacao !== undefined) {
+            const n = parseFloat(f.notaAvaliacao);
+            at = '<span class="nota-badge ' + (n >= 8 ? 'alta' : n >= 6 ? 'media' : 'baixa') +
+                 '">⭐ Nota: ' + f.notaAvaliacao + '/10</span>';
+        } else if (f.emailAvaliacaoEnviado) {
+            at = '<span class="avaliacao-tag aguardando">⏳ Avaliação pendente</span>';
+        }
+
+        const js = JSON.stringify(f).replace(/"/g, '&quot;');
+        return '<div class="lembrete-card ' +
+            (f.lembreteEnviado ? 'enviado' : '') +
+            (f.diffDias === 0 && !f.lembreteEnviado ? ' urgente' : '') +
+            '" id="lc-' + f.rowIndex + '">' +
+            '<div class="dias-badge ' + di.cls + '"><div class="num">' + di.num + '</div><div class="label">' + di.lbl + '</div></div>' +
+            '<div class="lembrete-info">' +
+            '<div class="lembrete-nome">' + f.nome + '</div>' +
+            '<div class="lembrete-meta">' +
+            '<span>🏪 ' + f.loja + '</span>' +
+            '<span>👔 ' + f.funcao + '</span>' +
+            '<span>📅 ' + f.inicioTrein + '</span>' +
+            (f.telefone ? '<span>📞 ' + f.telefone + '</span>' : '') +
+            (f.email ? '<span>✉️ ' + f.email + '</span>' : '') +
+            '</div></div>' +
+            '<div class="lembrete-actions">' +
+            (f.lembreteEnviado
+                ? '<span class="enviado-tag">✓ Enviado</span>'
+                : '<button class="btn btn-green" onclick=\'enviarLembrete(' + js + ')\'>📤 Enviar lembrete</button>') +
+            at +
+            '</div></div>';
+    }).join('');
+}
+
+/* ── CARREGAR LEMBRETES ─────────────────────────────────────────────
+   Mantém compatibilidade: aceita array direto OU { lista: [] }
+   (mesmo FIX da versão original do dashboard)
+   ────────────────────────────────────────────────────────────────── */
+async function carregarLembretes() {
+    const ct = document.getElementById('listaLembretes');
+    ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
+    try {
+        const r    = await fetch(API + '/lembretes');
+        const raw  = await r.json();
+        const data = Array.isArray(raw) ? raw : (raw.lista || []);  // ★ FIX original
+
+        _todosLembretes = data;
+        atualizarChips(data);
+
+        if (!data.length) {
+            ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>Nenhum treinamento nos próximos 2 dias</p></div>';
+            return;
+        }
+        renderLista(data);
+        log('Lembretes: ' + data.length, 'ok');
+    } catch (e) {
+        log('Erro lembretes: ' + e.message, 'err');
+        ct.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro ao carregar</p></div>';
+    }
+}
+
+/* ── ENVIAR LEMBRETE ────────────────────────────────────────────────
+   Função original preservada integralmente
+   ────────────────────────────────────────────────────────────────── */
+async function enviarLembrete(f) {
+    const card = document.getElementById('lc-' + f.rowIndex);
+    const btn  = card ? card.querySelector('button') : null;
+    if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Enviando...'; }
+    log('📤 ' + f.nome, 'warn');
+    try {
+        const r = await fetch(API + '/enviar-lembrete', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(f),
+        });
+        const d = await r.json();
+        if (d.sucesso) {
+            log('✓ Enviado: ' + f.nome, 'ok');
+            // Atualizar estado local
+            const idx = _todosLembretes.findIndex(function (x) { return x.rowIndex === f.rowIndex; });
+            if (idx !== -1) {
+                _todosLembretes[idx].lembreteEnviado = true;
+            }
+            // Atualizar card visual
+            if (card) {
+                card.classList.add('enviado');
+                card.classList.remove('urgente');
+                const actions = card.querySelector('.lembrete-actions');
+                if (actions) {
+                    actions.innerHTML = '<span class="enviado-tag">✓ Enviado</span>' +
+                        '<span class="avaliacao-tag aguardando">⏳ Avaliação pendente</span>';
+                }
+            }
+            atualizarChips(_todosLembretes);
+            const b = document.getElementById('badgeLembretes');
+            b.textContent = Math.max(0, parseInt(b.textContent || '0') - 1);
+            pageAlert('success', 'Lembrete enviado para <strong>' + f.nome + '</strong>!');
+        } else {
+            if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar lembrete'; }
+            pageAlert('error', d.erro || 'Erro ao enviar lembrete.');
+        }
+        if (d.erros) d.erros.forEach(function (e) { log('⚠ ' + e, 'warn'); });
+    } catch (e) {
+        log('Erro envio: ' + e.message, 'err');
+        if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar lembrete'; }
+        pageAlert('error', 'Erro de conexão: ' + e.message);
+    }
+}
+
+/* ── ENVIAR TODOS PENDENTES ── */
+async function enviarTodosLembretes() {
+    const pendentes = _todosLembretes.filter(function (f) { return !f.lembreteEnviado; });
+    if (!pendentes.length) { pageAlert('success', 'Todos os lembretes já foram enviados! 🎉'); return; }
+    if (!confirm('Enviar lembretes para ' + pendentes.length + ' colaboradores?')) return;
+
+    const btn = document.getElementById('btnEnviarTodos');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Enviando ' + pendentes.length + '...';
+
+    let enviados = 0, erros = 0;
+    for (const f of pendentes) {
+        try {
+            const r = await fetch(API + '/enviar-lembrete', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(f),
+            });
+            const d = await r.json();
+            if (d.sucesso) {
+                enviados++;
+                const idx = _todosLembretes.findIndex(function (x) { return x.rowIndex === f.rowIndex; });
+                if (idx !== -1) _todosLembretes[idx].lembreteEnviado = true;
+                log('✓ ' + f.nome, 'ok');
+            } else { erros++; log('✗ ' + f.nome, 'err'); }
+        } catch (e) { erros++; log('Erro: ' + f.nome, 'err'); }
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '📤 Enviar Todos Pendentes';
+    atualizarChips(_todosLembretes);
+    renderLista(_todosLembretes);
+    document.getElementById('badgeLembretes').textContent =
+        _todosLembretes.filter(function (f) { return !f.lembreteEnviado; }).length;
+    pageAlert(erros === 0 ? 'success' : 'error', enviados + ' enviados · ' + erros + ' erros.');
+}
+
+/* ── CARREGAR HISTÓRICO ─────────────────────────────────────────────
+   Função original preservada integralmente
+   ────────────────────────────────────────────────────────────────── */
+async function carregarHistorico() {
+    const ct = document.getElementById('listaHistorico');
+    ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
+    try {
+        const r    = await fetch(API + '/lembretes/historico');
+        const raw  = await r.json();
+        const data = Array.isArray(raw) ? raw : (raw.resultado || []);  // ★ FIX original
+
+        document.getElementById('badgeHistorico').textContent = data.length;
+
+        if (!data.length) {
+            ct.innerHTML = '<div class="empty"><div class="icon">📋</div><p>Nenhum lembrete enviado ainda</p></div>';
+            return;
+        }
+
+        ct.innerHTML = data.map(function (h) {
+            let nh = '';
+            if (h.notaAvaliacao) {
+                const n = parseFloat(h.notaAvaliacao);
+                nh = '<div class="historico-nota" style="color:' +
+                    (n >= 8 ? 'var(--green)' : n >= 6 ? 'var(--yellow)' : 'var(--red)') +
+                    '">⭐ Nota: ' + h.notaAvaliacao + '/10</div>';
+            } else if (h.emailAvaliacao === 'SIM') {
+                nh = '<div class="historico-nota" style="color:var(--yellow)">⏳ Avaliação pendente</div>';
+            }
+            return '<div class="historico-item">' +
+                '<div class="historico-check">✅</div>' +
+                '<div class="historico-info">' +
+                '<div class="historico-nome">' + h.nome + '</div>' +
+                '<div class="historico-meta">' + h.loja + ' · ' + h.funcao +
+                ' · Início: ' + h.inicioTrein + (h.fimTrein ? ' · Fim: ' + h.fimTrein : '') + '</div>' +
+                nh + '</div>' +
+                '<div class="historico-data">' + (h.lembrete || '').replace('Lembrete enviado em ', '') + '</div>' +
+                '</div>';
+        }).join('');
+
+        log('Histórico: ' + data.length, 'ok');
+    } catch (e) {
+        log('Erro histórico: ' + e.message, 'err');
+        ct.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro ao carregar</p></div>';
+    }
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function () {
+    verificarStatus();
+    carregarLembretes();
+
+    // Se a URL tiver #historico, abrir direto na aba de histórico
+    if (window.location.hash === '#historico') {
+        const btnHist = document.querySelectorAll('.tab-btn')[1];
+        if (btnHist) mudarTab('historico', btnHist);
+    }
+});
+</script>
+
+</body>
+</html>
