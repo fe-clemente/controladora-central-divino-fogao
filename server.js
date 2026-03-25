@@ -176,6 +176,11 @@ app.post('/treinamento/chamados/sincronizar',     apenasLocal, (req, res, next) 
 app.post('/treinamento/turnover/sincronizar',     apenasLocal, (req, res, next) => { req.url = '/turnover/sincronizar';     treinamentoRoutes(req, res, next); });
 app.post('/treinamento/universidade/sincronizar', apenasLocal, (req, res, next) => { req.url = '/universidade/sincronizar'; treinamentoRoutes(req, res, next); });
 
+// ─── ROTAS PÚBLICAS — sem autenticação ───────────────────────
+// Avaliação de treinamento: acessível por franqueados externos
+app.get('/treinamento/avaliacao',         (req, res, next) => { req.url = '/avaliacao';         treinamentoRoutes(req, res, next); });
+app.get('/treinamento/avaliacao/dados',   (req, res, next) => { req.url = '/avaliacao/dados';   treinamentoRoutes(req, res, next); });
+app.post('/treinamento/avaliacao/registrar', (req, res, next) => { req.url = '/avaliacao/registrar'; treinamentoRoutes(req, res, next); });
 // Registra todos os módulos detectados
 for (const mod of modulos) {
     try {

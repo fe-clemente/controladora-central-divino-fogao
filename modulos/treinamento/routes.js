@@ -66,9 +66,8 @@ uploadsCache.inicializar().catch(e => console.error('UPLOADS init falhou:', e.me
 lembretesCache.inicializar().catch(e => console.error('LEMBRETES init falhou:', e.message)); // ★ NOVO
 
 // ─── Helper de link de avaliação ─────────────────────────────────────────────
-function gerarLinkAvaliacao(rowIndex, baseUrl) {
-  return `${baseUrl}/avaliacao?row=${rowIndex}`;
-}
+const { router: avaliacaoRouter, gerarLinkAvaliacao } = require('./services/avaliacao');
+router.use('/avaliacao', avaliacaoRouter);  // ← ADICIONE ESTA LINHA
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // PÁGINAS HTML — DEVEM VIR ANTES do express.static para não serem interceptadas
@@ -299,10 +298,12 @@ router.post('/enviar-lembrete', async (req, res) => {
     const f = req.body;
     if (f.rowIndex === undefined) return res.status(400).json({ erro: 'rowIndex obrigatório' });
 
-    const baseUrl       = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
-    const linkAvaliacao = gerarLinkAvaliacao(f.rowIndex, baseUrl);
+    const baseUrl            = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
+    // Gera dois links — um para cada tipo de avaliador
+    const linkOrigem         = gerarLinkAvaliacao(f.rowIndex, baseUrl);               // tipo padrão = 'origem'
+    const linkTreinadora     = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'treinadora'); // tipo = 'treinadora'
 
-    lembretesCache.marcarEnviado(f.rowIndex);                             // ★ NOVO — atualiza cache local
+    lembretesCache.marcarEnviado(f.rowIndex);
 
     res.json({ sucesso: true });
 
@@ -311,8 +312,8 @@ router.post('/enviar-lembrete', async (req, res) => {
         .catch(e => console.error('[LEMBRETE] WhatsApp:', e.message));
     }
 
-    if (f.email) {
-      enviarEmailLembrete(f, linkAvaliacao)
+    if (f.email || f.emailLojaAvaliadora) {
+      enviarEmailLembrete(f, linkOrigem, linkTreinadora)
         .then(() => marcarEmailAvaliacaoEnviado(f.rowIndex))
         .catch(e => console.error('[LEMBRETE] Email:', e.message));
     }

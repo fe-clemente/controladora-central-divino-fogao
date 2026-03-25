@@ -381,8 +381,10 @@ function renderLista(data) {
             '<span>👔 ' + f.funcao + '</span>' +
             '<span>📅 ' + f.inicioTrein + '</span>' +
             (f.telefone ? '<span>📞 ' + f.telefone + '</span>' : '') +
-            (f.email ? '<span>✉️ ' + f.email + '</span>' : '') +
-            '</div></div>' +
+(f.email ? '<span>✉️ ' + f.email + '</span>' : '') +
+(f.emailLojaAvaliadora ? '<span>🏭 ' + f.emailLojaAvaliadora + '</span>' : '') +
+
+'</div></div>' +
             '<div class="lembrete-actions">' +
             (f.lembreteEnviado
                 ? '<span class="enviado-tag">✓ Enviado</span>'
@@ -402,7 +404,7 @@ async function carregarLembretes() {
     try {
         const r    = await fetch(API + '/lembretes');
         const raw  = await r.json();
-        const data = Array.isArray(raw) ? raw : (raw.lista || []);  // ★ FIX original
+        const data = Array.isArray(raw) ? raw : (raw.lista || raw || []);
 
         _todosLembretes = data;
         atualizarChips(data);
@@ -511,8 +513,7 @@ async function carregarHistorico() {
     try {
         const r    = await fetch(API + '/lembretes/historico');
         const raw  = await r.json();
-        const data = Array.isArray(raw) ? raw : (raw.resultado || []);  // ★ FIX original
-
+        const data = Array.isArray(raw) ? raw : (raw.historico || []);
         document.getElementById('badgeHistorico').textContent = data.length;
 
         if (!data.length) {
@@ -537,8 +538,8 @@ async function carregarHistorico() {
                 '<div class="historico-meta">' + h.loja + ' · ' + h.funcao +
                 ' · Início: ' + h.inicioTrein + (h.fimTrein ? ' · Fim: ' + h.fimTrein : '') + '</div>' +
                 nh + '</div>' +
-                '<div class="historico-data">' + (h.lembrete || '').replace('Lembrete enviado em ', '') + '</div>' +
-                '</div>';
+       '<div class="historico-data">' + (h.lembrete || '').replace('Lembrete enviado em ', '') + '</div>' +
+        '</div>';
         }).join('');
 
         log('Histórico: ' + data.length, 'ok');
