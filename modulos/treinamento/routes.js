@@ -12,16 +12,16 @@ const PUBLIC = path.join(__dirname, 'public');
 // ─── Multer — memória, sem disco ──────────────────────────────────────────────
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB
+  limits: { fileSize: 50 * 1024 * 1024 },
 });
 
 // ─── Services ────────────────────────────────────────────────────────────────
 const sultsCache        = require('./services/sultsCache');
-const chamadosCache = require('./services/chamadosCache');
+const chamadosCache     = require('./services/chamadosCache');
 const turnoverCache     = require('./services/turnoverCache');
 const universidadeCache = require('./services/universidadeCache');
 const uploadsCache      = require('./services/uploadsCache');
-const lembretesCache    = require('./services/lembretesCache');           // ★ NOVO
+const lembretesCache    = require('./services/lembretesCache');
 const { gravarSultsNaPlanilha }  = require('./services/gravarSultsPlanilha');
 const { enviarWhatsAppLembrete } = require('./services/whatsapp');
 const { enviarEmailLembrete }    = require('./services/email');
@@ -37,6 +37,7 @@ const {
 
 const {
   getSheetsData,
+  atualizarCelula,                   // ★ necessário para gravar AJ/AX/AY
   marcarLembreteEnviado,
   marcarEmailAvaliacaoEnviado,
   preencherAvaliacao,
@@ -63,14 +64,14 @@ chamadosCache.inicializar().catch(e => console.error('CHAMADOS init falhou:', e.
 universidadeCache.inicializar().catch(e => console.error('Universidade init falhou:', e.message));
 turnoverCache.inicializar().catch(e => console.error('TURNOVER init falhou:', e.message));
 uploadsCache.inicializar().catch(e => console.error('UPLOADS init falhou:', e.message));
-lembretesCache.inicializar().catch(e => console.error('LEMBRETES init falhou:', e.message)); // ★ NOVO
+lembretesCache.inicializar().catch(e => console.error('LEMBRETES init falhou:', e.message));
 
 // ─── Helper de link de avaliação ─────────────────────────────────────────────
 const { router: avaliacaoRouter, gerarLinkAvaliacao } = require('./services/avaliacao');
-router.use('/avaliacao', avaliacaoRouter);  // ← ADICIONE ESTA LINHA
+router.use('/avaliacao', avaliacaoRouter);
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// PÁGINAS HTML — DEVEM VIR ANTES do express.static para não serem interceptadas
+// PÁGINAS HTML
 // ═══════════════════════════════════════════════════════════════════════════════
 router.get('/', (req, res) =>
   res.sendFile(path.join(PUBLIC, 'dashborard-treinamento.html'))
@@ -82,11 +83,9 @@ router.get('/turnover',     (req, res) => res.sendFile(path.join(PUBLIC, 'turnov
 router.get('/universidade', (req, res) => res.sendFile(path.join(PUBLIC, 'universidade.html')));
 router.get('/valores',      (req, res) => res.sendFile(path.join(PUBLIC, 'valores.html')));
 router.get('/uploads',      (req, res) => res.sendFile(path.join(PUBLIC, 'uploads.html')));
-router.get('/cadastro',    (req, res) => res.sendFile(path.join(PUBLIC, 'cadastro.html')));
-// /lembretes — tratado diretamente na rota da API abaixo (serve HTML ou JSON por Accept header)
+router.get('/cadastro',     (req, res) => res.sendFile(path.join(PUBLIC, 'cadastro.html')));
 
-// ─── Arquivos estáticos do módulo (CSS, JS, imagens) ─────────────────────────
-// ATENÇÃO: deve ficar DEPOIS das rotas HTML para não interceptar paths sem extensão
+// ─── Arquivos estáticos ───────────────────────────────────────────────────────
 router.use(express.static(PUBLIC, { index: false, extensions: false }));
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -261,51 +260,116 @@ router.post('/buscar', async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// LEMBRETES  ★ ATUALIZADO — integrado com lembretesCache
+// LEMBRETES  ★ rowIndex 0-based → atualizarCelula grava na linha correta
 // ═══════════════════════════════════════════════════════════════════════════════
 router.get('/lembretes', async (req, res) => {
-  // Browser navega (Accept: text/html,*/*) → serve página HTML
-  // fetch() com Accept: application/json ou Accept: */* sem text/html → serve JSON
   const accept = req.headers.accept || '';
   const isHtmlRequest = accept.includes('text/html') && !accept.includes('application/json');
   if (isHtmlRequest) {
     return res.sendFile(path.join(PUBLIC, 'lembretes.html'));
   }
   try {
-    const lista = await getFuncionariosParaLembrete();
+    const lista     = await getFuncionariosParaLembrete();
     const historico = lembretesCache.getDados()?.historico || [];
     lembretesCache.setDados(lista, historico);
     res.json(lista);
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
-router.get('/lembretes/status', (req, res) => {                           // ★ NOVO
+router.get('/lembretes/status', (req, res) => {
   res.json(lembretesCache.getStatus());
 });
 
 router.get('/lembretes/historico', async (req, res) => {
   try {
-    const historico = await getHistoricoLembretes();
-    // Atualiza cache local
+    const { inicio, fim, mes, ano } = req.query;
+
+    let historico = await getHistoricoLembretes();
+
+    function parseDMY(str) {
+      if (!str) return null;
+      const p = String(str).trim().split('/');
+      if (p.length === 3) {
+        const dt = new Date(+p[2], +p[1] - 1, +p[0], 0, 0, 0, 0);
+        return isNaN(dt.getTime()) ? null : dt;
+      }
+      return null;
+    }
+
+    if (inicio || fim) {
+      const dtInicio = parseDMY(inicio);
+      const dtFim    = parseDMY(fim);
+      historico = historico.filter(h => {
+        const dt = parseDMY(h.inicioTrein);
+        if (!dt) return false;
+        if (dtInicio && dt < dtInicio) return false;
+        if (dtFim    && dt > dtFim)    return false;
+        return true;
+      });
+    }
+
+    if (mes) {
+      const mesN = parseInt(mes, 10);
+      historico = historico.filter(h => {
+        const dt = parseDMY(h.inicioTrein);
+        return dt && (dt.getMonth() + 1) === mesN;
+      });
+    }
+
+    if (ano) {
+      const anoN = parseInt(ano, 10);
+      historico = historico.filter(h => {
+        const dt = parseDMY(h.inicioTrein);
+        return dt && dt.getFullYear() === anoN;
+      });
+    }
+
     const lista = lembretesCache.getDados()?.lista || [];
     lembretesCache.setDados(lista, historico);
+
     res.json({ total: historico.length, historico });
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
+// ★ POST /enviar-lembrete
+// rowIndex: 0-based (vindo de getFuncionariosParaLembrete)
+// atualizarCelula: linhaReal = rowIndex + 9  ✅
 router.post('/enviar-lembrete', async (req, res) => {
   try {
     const f = req.body;
-    if (f.rowIndex === undefined) return res.status(400).json({ erro: 'rowIndex obrigatório' });
 
-    const baseUrl            = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
-    // Gera dois links — um para cada tipo de avaliador
-    const linkOrigem         = gerarLinkAvaliacao(f.rowIndex, baseUrl);               // tipo padrão = 'origem'
-    const linkTreinadora     = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'treinadora'); // tipo = 'treinadora'
+    if (f.rowIndex === undefined)
+      return res.status(400).json({ sucesso: false, erro: 'rowIndex obrigatório.' });
 
-    lembretesCache.marcarEnviado(f.rowIndex);
+    if (!['5dias', '2dias', 'hoje'].includes(f.tipo))
+      return res.status(400).json({ sucesso: false, erro: 'tipo deve ser: 5dias, 2dias ou hoje.' });
 
-    res.json({ sucesso: true });
+    const dataHora = new Date().toLocaleString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    });
+    const textoLembrete = `Lembrete enviado em ${dataHora}`;
+
+    // tipo → campo do COLUNA_MAP
+    const colunaMap = {
+      '5dias': 'lembrete5Dias',  // → AJ (índice 35)
+      '2dias': 'lembrete2Dias',  // → AX (índice 49)
+      'hoje':  'lembreteHoje',   // → AY (índice 50)
+    };
+
+    // ✅ Grava na coluna correta
+    await atualizarCelula(f.rowIndex, colunaMap[f.tipo], textoLembrete);
+
+    // Atualiza cache local
+    lembretesCache.marcarEnviado(f.rowIndex, f.tipo);
+
+    // Responde imediatamente
+    res.json({ sucesso: true, lembrete: textoLembrete, tipo: f.tipo });
+
+    // ── Background: WhatsApp + e-mail ─────────────────────────────────────
+    const baseUrl        = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
+    const linkOrigem     = gerarLinkAvaliacao(f.rowIndex, baseUrl);
+    const linkTreinadora = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'treinadora');
 
     if (f.telefone) {
       enviarWhatsAppLembrete({ ...f, diffDias: f.diffDias ?? 0 })
@@ -318,15 +382,14 @@ router.post('/enviar-lembrete', async (req, res) => {
         .catch(e => console.error('[LEMBRETE] Email:', e.message));
     }
 
-    await marcarLembreteEnviado(f.rowIndex);
-
   } catch (e) {
-    if (!res.headersSent) res.status(500).json({ erro: e.message });
+    console.error('[LEMBRETE] Erro:', e.message);
+    if (!res.headersSent) res.status(500).json({ sucesso: false, erro: e.message });
   }
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// HISTÓRICO
+// HISTÓRICO (legado)
 // ═══════════════════════════════════════════════════════════════════════════════
 router.get('/historico', async (req, res) => {
   try {
@@ -489,10 +552,10 @@ router.get('/sults/resumo', async (req, res) => {
     if (!dados) dados = await sultsCache.sincronizarEAtualizar('auto');
     if (!dados) return res.status(503).json({ erro: 'Dados indisponíveis' });
     res.json({
-      totalUnidades:    dados.totalUnidades,
+      totalUnidades:     dados.totalUnidades,
       totalFuncionarios: dados.totalFuncionarios,
-      totalImplantacao: dados.totalUnidadesImplantacao,
-      sincronizadoEm:   dados.sincronizadoEm,
+      totalImplantacao:  dados.totalUnidadesImplantacao,
+      sincronizadoEm:    dados.sincronizadoEm,
     });
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
@@ -603,9 +666,9 @@ router.post('/uploads/arquivo', upload.array('arquivos', 20), async (req, res) =
       return res.status(400).json({ ok: false, erro: 'Nenhum arquivo enviado' });
 
     const { pastaId } = req.body;
-    const destino    = pastaId || PASTA_RAIZ_ID;
-    const resultados = [];
-    const erros      = [];
+    const destino     = pastaId || PASTA_RAIZ_ID;
+    const resultados  = [];
+    const erros       = [];
 
     for (const file of req.files) {
       try {
@@ -662,7 +725,6 @@ router.post('/ia-treinamento/perguntar', async (req, res) => {
   }
 });
 
-// Compatibilidade — páginas antigas que chamam /ia/analisar
 router.post('/ia/analisar', async (req, res) => {
   try {
     const { pergunta, contexto = '', ano } = req.body;
@@ -678,7 +740,6 @@ router.post('/ia/analisar', async (req, res) => {
   }
 });
 
-// Alias antigo — /ia
 router.post('/ia', async (req, res) => {
   try {
     const { pergunta, contexto = '', ano } = req.body;
@@ -694,7 +755,6 @@ router.post('/ia', async (req, res) => {
   }
 });
 
-// Turnover via IA — monta contexto automaticamente do cache
 router.post('/ia/turnover', async (req, res) => {
   try {
     const { pergunta } = req.body;
@@ -717,7 +777,7 @@ router.post('/ia/turnover', async (req, res) => {
 router.get('/health', (req, res) => res.json({
   modulo:    'treinamento',
   status:    'online',
-  lembretes: lembretesCache.getStatus(),                                  // ★ NOVO
+  lembretes: lembretesCache.getStatus(),
   ia:        process.env.GEMINI_API_KEY ? 'configurada' : 'sem GEMINI_API_KEY',
   model:     process.env.GEMINI_MODEL || 'gemini-2.0-flash',
 }));

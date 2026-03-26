@@ -13,6 +13,7 @@
             --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
             --accent:#2563eb; --green:#16a34a; --green-pale:#f0fdf4;
             --yellow:#d97706; --yellow-pale:#fffbeb;
+            --purple:#7c3aed; --purple-pale:#f5f3ff;
             --shadow:0 2px 12px rgba(0,0,0,0.08);
             --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
         }
@@ -66,6 +67,15 @@
         .filtro-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-pale);}
         .filtro-btn.ativo{background:var(--red-pale);color:var(--red);border-color:rgba(200,16,46,.3);}
 
+        /* ── PERÍODO FILTER BAR ─────────────────────────────────── */
+        .periodo-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:18px;box-shadow:var(--shadow);display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;}
+        .periodo-bar label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);display:block;margin-bottom:5px;}
+        .periodo-bar input[type="date"],.periodo-bar select{font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:8px 12px;outline:none;transition:border .15s;cursor:pointer;}
+        .periodo-bar input[type="date"]:focus,.periodo-bar select:focus{border-color:var(--red);}
+        .periodo-bar .sep{color:var(--muted);font-size:13px;font-weight:700;padding-bottom:8px;}
+        .periodo-result{margin-left:auto;font-size:12px;font-weight:700;color:var(--muted);padding-bottom:8px;white-space:nowrap;}
+        .periodo-result span{color:var(--red);}
+
         /* ── BOTÕES ─────────────────────────────────────────────── */
         .btn{padding:10px 20px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;}
         .btn-primary{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
@@ -74,39 +84,67 @@
         .btn-secondary:hover{background:var(--bg2);border-color:#ccc;}
         .btn-green{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(22,163,74,.25);}
         .btn-green:hover{background:#15803d;transform:translateY(-1px);}
+        .btn-purple{background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(124,58,237,.25);}
+        .btn-purple:hover{background:#6d28d9;transform:translateY(-1px);}
+        .btn-yellow{background:var(--yellow);color:#fff;box-shadow:0 2px 8px rgba(217,119,6,.25);}
+        .btn-yellow:hover{background:#b45309;transform:translateY(-1px);}
         .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
 
-        /* ── CARDS LEMBRETE ─────────────────────────────────────── */
-        .lembrete-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:18px;box-shadow:var(--shadow);transition:all .2s;margin-bottom:10px;}
+        /* ── CARD LEMBRETE ──────────────────────────────────────── */
+        .lembrete-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);transition:all .2s;margin-bottom:12px;}
         .lembrete-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);}
-        .lembrete-card.enviado{opacity:.75;background:var(--green-pale);border-color:rgba(22,163,74,.25);}
         .lembrete-card.urgente{border-left:4px solid var(--red);}
-        .dias-badge{flex-shrink:0;width:64px;height:64px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;}
+        .lembrete-card.dois-dias{border-left:4px solid var(--yellow);}
+        .lembrete-card.cinco-dias{border-left:4px solid var(--purple);}
+
+        /* cabeçalho do card */
+        .card-top{display:flex;align-items:center;gap:16px;margin-bottom:14px;}
+        .dias-badge{flex-shrink:0;width:66px;height:66px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;}
         .dias-badge.hoje{background:#fff0f2;color:var(--red);border:2px solid rgba(200,16,46,.25);}
-        .dias-badge.amanha{background:var(--yellow-pale);color:var(--yellow);border:2px solid rgba(217,119,6,.25);}
-        .dias-badge.dois{background:#eff6ff;color:var(--accent);border:2px solid rgba(37,99,235,.2);}
-        .dias-badge .num{font-size:24px;line-height:1;}
-        .dias-badge .label{font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
-        .lembrete-info{flex:1;min-width:0;}
-        .lembrete-nome{font-size:15px;font-weight:800;margin-bottom:6px;color:var(--text);}
-        .lembrete-meta{font-size:12px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;font-weight:600;}
-        .lembrete-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
-        .enviado-tag{font-size:11px;background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.3);padding:4px 12px;border-radius:20px;font-weight:700;white-space:nowrap;}
-        .avaliacao-tag.aguardando{font-size:11px;background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);padding:3px 10px;border-radius:20px;font-weight:700;white-space:nowrap;}
+        .dias-badge.dois{background:var(--yellow-pale);color:var(--yellow);border:2px solid rgba(217,119,6,.25);}
+        .dias-badge.cinco{background:var(--purple-pale);color:var(--purple);border:2px solid rgba(124,58,237,.2);}
+        .dias-badge .num{font-size:22px;line-height:1;}
+        .dias-badge .label{font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+        .card-pessoa{flex:1;min-width:0;}
+        .card-nome{font-size:15px;font-weight:800;margin-bottom:5px;color:var(--text);}
+        .card-meta{font-size:12px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;font-weight:600;}
+
+        /* linha de lembretes */
+        .lembretes-linha{display:flex;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1.5px solid var(--border);align-items:center;}
+        .lem-slot{display:flex;align-items:center;gap:7px;}
+        .lem-slot-label{font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap;}
+
+        /* tags de status */
+        .tag{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
+        .tag-enviado{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.25);}
+        .tag-aguardando{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
+        .tag-pendente{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
+
+        /* separador entre slots */
+        .lem-sep{color:var(--border);font-size:18px;font-weight:300;flex-shrink:0;}
+
+        /* nota avaliação */
         .nota-badge{font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;padding:3px 10px;border-radius:20px;white-space:nowrap;}
         .nota-badge.alta{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
         .nota-badge.media{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
         .nota-badge.baixa{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
 
         /* ── HISTÓRICO ──────────────────────────────────────────── */
-        .historico-item{background:var(--bg2);border:1.5px solid rgba(22,163,74,.2);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:8px;box-shadow:var(--shadow);transition:all .2s;}
-        .historico-item:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);}
-        .historico-check{font-size:22px;flex-shrink:0;}
+        .historico-card{background:var(--bg2);border:1.5px solid rgba(22,163,74,.2);border-radius:14px;padding:16px 20px;margin-bottom:10px;box-shadow:var(--shadow);transition:all .2s;}
+        .historico-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);}
+        .historico-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
+        .historico-check{font-size:22px;flex-shrink:0;margin-top:1px;}
         .historico-info{flex:1;min-width:0;}
         .historico-nome{font-size:14px;font-weight:800;color:var(--text);}
         .historico-meta{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;}
-        .historico-nota{font-size:12px;font-family:'JetBrains Mono',monospace;font-weight:800;margin-top:3px;}
-        .historico-data{font-size:11px;color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:600;white-space:nowrap;text-align:right;flex-shrink:0;}
+        .historico-linha{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1.5px solid var(--border);align-items:center;}
+        .hl-item{display:flex;flex-direction:column;gap:2px;}
+        .hl-tipo{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+        .hl-data{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;}
+        .hl-data.enviado{color:var(--green);}
+        .hl-data.nao{color:var(--border);font-style:italic;}
+        .hl-sep{width:1px;height:32px;background:var(--border);flex-shrink:0;}
 
         /* ── ALERTA ─────────────────────────────────────────────── */
         .page-alert{border-radius:10px;padding:13px 18px;margin-bottom:18px;font-size:13px;font-weight:600;display:none;align-items:center;gap:10px;}
@@ -132,10 +170,12 @@
             header{padding:0 14px;gap:10px;}
             .header-title{display:none;}
             main{padding:20px 14px;}
-            .lembrete-card{flex-wrap:wrap;}
-            .lembrete-actions{flex-direction:row;width:100%;justify-content:flex-end;}
+            .card-top{flex-wrap:wrap;}
+            .lembretes-linha{flex-direction:column;align-items:flex-start;}
             .tabs-row{gap:2px;}
             .tab-btn{font-size:11px;padding:9px 8px;}
+            .periodo-bar{flex-direction:column;align-items:stretch;}
+            .periodo-result{margin-left:0;}
         }
     </style>
 </head>
@@ -161,19 +201,19 @@
 
     <div id="pageAlert" class="page-alert"></div>
 
-    <!-- STAT CHIPS -->
+    <!-- ── CHIPS ── -->
     <div class="stat-chips">
         <div class="stat-chip">
             <div class="stat-chip-label">🔴 Hoje</div>
             <div class="stat-chip-value" id="chipHoje" style="color:var(--red)">—</div>
         </div>
         <div class="stat-chip">
-            <div class="stat-chip-label">🟡 Amanhã</div>
-            <div class="stat-chip-value" id="chipAmanha" style="color:var(--yellow)">—</div>
+            <div class="stat-chip-label">🟡 2 Dias</div>
+            <div class="stat-chip-value" id="chipDois" style="color:var(--yellow)">—</div>
         </div>
         <div class="stat-chip">
-            <div class="stat-chip-label">🔵 2 Dias</div>
-            <div class="stat-chip-value" id="chipDois" style="color:var(--accent)">—</div>
+            <div class="stat-chip-label">🟣 5 Dias</div>
+            <div class="stat-chip-value" id="chipCinco" style="color:var(--purple)">—</div>
         </div>
         <div class="stat-chip">
             <div class="stat-chip-label">✅ Enviados</div>
@@ -185,7 +225,7 @@
         </div>
     </div>
 
-    <!-- TABS -->
+    <!-- ── TABS ── -->
     <div class="tabs-row">
         <button class="tab-btn active" onclick="mudarTab('lembretes',this)">
             🔔 Lembretes do Dia
@@ -202,7 +242,7 @@
         <div class="section-header">
             <div>
                 <h2>Lembretes do Dia</h2>
-                <p>Colaboradores com treinamento nos próximos 2 dias</p>
+                <p>Colaboradores com treinamento em 5, 2 dias ou hoje</p>
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
                 <button class="btn btn-primary" onclick="enviarTodosLembretes()" id="btnEnviarTodos">
@@ -215,8 +255,8 @@
         <div class="filtros-row">
             <button class="filtro-btn ativo" onclick="aplicarFiltro('todos',this)">Todos</button>
             <button class="filtro-btn" onclick="aplicarFiltro('hoje',this)">🔴 Hoje</button>
-            <button class="filtro-btn" onclick="aplicarFiltro('amanha',this)">🟡 Amanhã</button>
-            <button class="filtro-btn" onclick="aplicarFiltro('dois',this)">🔵 2 Dias</button>
+            <button class="filtro-btn" onclick="aplicarFiltro('dois',this)">🟡 2 Dias</button>
+            <button class="filtro-btn" onclick="aplicarFiltro('cinco',this)">🟣 5 Dias</button>
             <button class="filtro-btn" onclick="aplicarFiltro('pendentes',this)">⏳ Pendentes</button>
             <button class="filtro-btn" onclick="aplicarFiltro('enviados',this)">✅ Enviados</button>
         </div>
@@ -231,10 +271,58 @@
         <div class="section-header">
             <div>
                 <h2>Histórico de Lembretes</h2>
-                <p>Todos os lembretes enviados com status de avaliação</p>
+                <p>Todos os lembretes enviados com status de cada etapa</p>
             </div>
             <button class="btn btn-secondary" onclick="carregarHistorico()">↻ Atualizar</button>
         </div>
+
+        <!-- ── FILTRO DE PERÍODO ── -->
+        <div class="periodo-bar">
+            <div>
+                <label for="periodoInicio">Início do treinamento — de</label>
+                <input type="date" id="periodoInicio" onchange="carregarHistorico()">
+            </div>
+            <div class="sep">→</div>
+            <div>
+                <label for="periodoFim">até</label>
+                <input type="date" id="periodoFim" onchange="carregarHistorico()">
+            </div>
+            <div>
+                <label for="periodoMes">Mês</label>
+                <select id="periodoMes" onchange="carregarHistorico()">
+                    <option value="">Todos</option>
+                    <option value="1">Janeiro</option>
+                    <option value="2">Fevereiro</option>
+                    <option value="3">Março</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Maio</option>
+                    <option value="6">Junho</option>
+                    <option value="7">Julho</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
+                </select>
+            </div>
+            <div>
+                <label for="periodoAno">Ano</label>
+                <select id="periodoAno" onchange="carregarHistorico()">
+                    <option value="">Todos</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026" selected>2026</option>
+                    <option value="2027">2027</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="limparFiltroHistorico()" style="padding:8px 14px;font-size:12px;">
+                ✕ Limpar filtros
+            </button>
+            <div class="periodo-result" id="periodoResult" style="display:none">
+                Mostrando <span id="periodoCount">0</span> registro(s)
+            </div>
+        </div>
+
         <div id="listaHistorico">
             <div class="loading-msg"><div class="spinner"></div> Carregando histórico...</div>
         </div>
@@ -247,13 +335,14 @@
 <script>
 /* ══════════════════════════════════════════════════════════════
    LEMBRETES.HTML — JS
-   Todas as funções originais preservadas (carregarLembretes,
-   enviarLembrete, carregarHistorico) + extras desta página.
-   API base: /treinamento  (mesmo padrão do dashboard)
+   3 lembretes por colaborador:
+     • 5 dias antes → coluna AJ
+     • 2 dias antes → coluna AX
+     • Mesmo dia    → coluna AY
    ══════════════════════════════════════════════════════════════ */
 
-const API      = '/treinamento';
-const debugEl  = document.getElementById('debug');
+const API     = '/treinamento';
+const debugEl = document.getElementById('debug');
 
 /* ── DEBUG ── */
 function log(msg, tipo) {
@@ -263,7 +352,7 @@ function log(msg, tipo) {
     const h = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     l.textContent = h + ' ' + msg;
     debugEl.appendChild(l);
-    while (debugEl.children.length > 7) debugEl.removeChild(debugEl.firstChild);
+    while (debugEl.children.length > 8) debugEl.removeChild(debugEl.firstChild);
 }
 
 /* ── ALERTA ── */
@@ -309,22 +398,47 @@ function mudarTab(id, el) {
 }
 
 /* ── ESTADO LOCAL ── */
-let _todosLembretes = [];
-let _filtroAtivo    = 'todos';
+var _todosLembretes = [];
+var _filtroAtivo    = 'todos';
+
+/* ── HELPERS ── */
+function extrairData(texto) {
+    if (!texto) return '';
+    return texto.replace('Lembrete enviado em ', '').trim();
+}
+
+/* ── CONTA PENDENTES ── */
+function contarPendentes(lista) {
+    return lista.filter(function (f) {
+        if (f.diffDias === 5) return !f.lembrete5Enviado;
+        if (f.diffDias === 2) return !f.lembrete2Enviado;
+        if (f.diffDias === 0) return !f.lembreteHojeEnviado;
+        return false;
+    }).length;
+}
 
 /* ── ATUALIZA CHIPS ── */
-function atualizarChips(data) {
-    const hoje   = data.filter(function (f) { return f.diffDias === 0; }).length;
-    const amanha = data.filter(function (f) { return f.diffDias === 1; }).length;
-    const dois   = data.filter(function (f) { return f.diffDias === 2; }).length;
-    const env    = data.filter(function (f) { return f.lembreteEnviado; }).length;
-    const pend   = data.filter(function (f) { return !f.lembreteEnviado; }).length;
+function atualizarChips(lista) {
+    var hoje  = lista.filter(function (f) { return f.diffDias === 0; }).length;
+    var dois  = lista.filter(function (f) { return f.diffDias === 2; }).length;
+    var cinco = lista.filter(function (f) { return f.diffDias === 5; }).length;
+
+    var env = 0;
+    lista.forEach(function (f) {
+        if (f.lembrete5Enviado)    env++;
+        if (f.lembrete2Enviado)    env++;
+        if (f.lembreteHojeEnviado) env++;
+    });
+
+    var pend = contarPendentes(lista);
+
     document.getElementById('chipHoje').textContent      = hoje;
-    document.getElementById('chipAmanha').textContent    = amanha;
     document.getElementById('chipDois').textContent      = dois;
+    document.getElementById('chipCinco').textContent     = cinco;
     document.getElementById('chipEnviados').textContent  = env;
     document.getElementById('chipPendentes').textContent = pend;
-    const badge = document.getElementById('badgeLembretes');
+
+    var badge = document.getElementById('badgeLembretes');
     badge.textContent = pend;
     badge.style.display = pend > 0 ? '' : 'none';
 }
@@ -337,80 +451,137 @@ function aplicarFiltro(tipo, btn) {
     renderLista(_todosLembretes);
 }
 
+/* ── RENDER: LINHA DE LEMBRETE (1 slot) ── */
+function renderSlot(f, tipo, label, cor) {
+    var enviado, texto;
+    if (tipo === '5dias') { enviado = f.lembrete5Enviado;    texto = f.lembrete5; }
+    if (tipo === '2dias') { enviado = f.lembrete2Enviado;    texto = f.lembrete2; }
+    if (tipo === 'hoje')  { enviado = f.lembreteHojeEnviado; texto = f.lembreteHoje; }
+
+    var data = extrairData(texto);
+    var js   = JSON.stringify(f).replace(/"/g, '&quot;');
+
+    if (enviado) {
+        return '<div class="lem-slot">' +
+               '<span class="lem-slot-label">' + label + '</span>' +
+               '<span class="tag tag-enviado">✓ Enviado ' + (data ? '· ' + data : '') + '</span>' +
+               '</div>';
+    } else {
+        return '<div class="lem-slot">' +
+               '<span class="lem-slot-label">' + label + '</span>' +
+               '<button class="btn btn-' + cor + '" style="padding:6px 14px;font-size:12px;" ' +
+               'onclick=\'enviarLembrete(' + js + ',&quot;' + tipo + '&quot;)\'>' +
+               '📤 Enviar</button>' +
+               '</div>';
+    }
+}
+
 /* ── RENDER LISTA ── */
 function renderLista(data) {
-    const ct = document.getElementById('listaLembretes');
-    let lista = data;
+    var ct = document.getElementById('listaLembretes');
+    var lista = data;
+
     if (_filtroAtivo === 'hoje')      lista = data.filter(function (f) { return f.diffDias === 0; });
-    if (_filtroAtivo === 'amanha')    lista = data.filter(function (f) { return f.diffDias === 1; });
     if (_filtroAtivo === 'dois')      lista = data.filter(function (f) { return f.diffDias === 2; });
-    if (_filtroAtivo === 'pendentes') lista = data.filter(function (f) { return !f.lembreteEnviado; });
-    if (_filtroAtivo === 'enviados')  lista = data.filter(function (f) { return f.lembreteEnviado; });
+    if (_filtroAtivo === 'cinco')     lista = data.filter(function (f) { return f.diffDias === 5; });
+    if (_filtroAtivo === 'pendentes') lista = data.filter(function (f) {
+        if (f.diffDias === 5) return !f.lembrete5Enviado;
+        if (f.diffDias === 2) return !f.lembrete2Enviado;
+        if (f.diffDias === 0) return !f.lembreteHojeEnviado;
+        return false;
+    });
+    if (_filtroAtivo === 'enviados') lista = data.filter(function (f) {
+        if (f.diffDias === 5) return f.lembrete5Enviado;
+        if (f.diffDias === 2) return f.lembrete2Enviado;
+        if (f.diffDias === 0) return f.lembreteHojeEnviado;
+        return false;
+    });
 
     if (!lista.length) {
         ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>' +
-            (_filtroAtivo === 'todos' ? 'Nenhum treinamento nos próximos 2 dias' : 'Nenhum resultado para este filtro') +
+            (_filtroAtivo === 'todos' ? 'Nenhum treinamento nos próximos 5 dias' : 'Nenhum resultado para este filtro') +
             '</p></div>';
         return;
     }
 
     ct.innerHTML = lista.map(function (f) {
-        const di = f.diffDias === 0 ? { cls: 'hoje',   num: '!', lbl: 'HOJE'  }
-                 : f.diffDias === 1 ? { cls: 'amanha', num: '1', lbl: 'DIA'   }
-                 :                    { cls: 'dois',   num: '2', lbl: 'DIAS'  };
+        var di;
+        if      (f.diffDias === 0) di = { cls: 'hoje',  num: '!',  lbl: 'HOJE'  };
+        else if (f.diffDias === 2) di = { cls: 'dois',  num: '2',  lbl: 'DIAS'  };
+        else                       di = { cls: 'cinco', num: '5',  lbl: 'DIAS'  };
 
-        let at = '';
+        var cardCls = '';
+        if (f.diffDias === 0) cardCls = ' urgente';
+        else if (f.diffDias === 2) cardCls = ' dois-dias';
+        else cardCls = ' cinco-dias';
+
+        var notaHtml = '';
         if (f.notaAvaliacao !== '' && f.notaAvaliacao !== undefined) {
-            const n = parseFloat(f.notaAvaliacao);
-            at = '<span class="nota-badge ' + (n >= 8 ? 'alta' : n >= 6 ? 'media' : 'baixa') +
-                 '">⭐ Nota: ' + f.notaAvaliacao + '/10</span>';
+            var n = parseFloat(f.notaAvaliacao);
+            notaHtml = '<span class="nota-badge ' + (n >= 8 ? 'alta' : n >= 6 ? 'media' : 'baixa') +
+                       '">⭐ Nota: ' + f.notaAvaliacao + '/10</span>';
         } else if (f.emailAvaliacaoEnviado) {
-            at = '<span class="avaliacao-tag aguardando">⏳ Avaliação pendente</span>';
+            notaHtml = '<span class="tag tag-aguardando">⏳ Avaliação pendente</span>';
         }
 
-        const js = JSON.stringify(f).replace(/"/g, '&quot;');
-        return '<div class="lembrete-card ' +
-            (f.lembreteEnviado ? 'enviado' : '') +
-            (f.diffDias === 0 && !f.lembreteEnviado ? ' urgente' : '') +
-            '" id="lc-' + f.rowIndex + '">' +
+        var slotsHtml = '';
+        if (f.diffDias === 5) {
+            slotsHtml = renderSlot(f, '5dias', '🟣 Alerta 5 dias:', 'purple');
+        } else if (f.diffDias === 2) {
+            var hist5 = f.lembrete5Enviado
+                ? '<span class="tag tag-enviado" style="font-size:10px;">✓ 5 dias · ' + extrairData(f.lembrete5) + '</span>'
+                : '<span class="tag tag-pendente" style="font-size:10px;">✗ 5 dias não enviado</span>';
+            slotsHtml = '<div class="lem-slot"><span class="lem-slot-label" style="color:var(--purple);font-size:10px;">Alerta 5 dias:</span>' + hist5 + '</div>' +
+                        '<span class="lem-sep">·</span>' +
+                        renderSlot(f, '2dias', '🟡 Alerta 2 dias:', 'yellow');
+        } else if (f.diffDias === 0) {
+            var hist5h = f.lembrete5Enviado
+                ? '<span class="tag tag-enviado" style="font-size:10px;">✓ 5 dias · ' + extrairData(f.lembrete5) + '</span>'
+                : '<span class="tag tag-pendente" style="font-size:10px;">✗ 5 dias</span>';
+            var hist2h = f.lembrete2Enviado
+                ? '<span class="tag tag-enviado" style="font-size:10px;">✓ 2 dias · ' + extrairData(f.lembrete2) + '</span>'
+                : '<span class="tag tag-pendente" style="font-size:10px;">✗ 2 dias</span>';
+            slotsHtml = '<div class="lem-slot"><span class="lem-slot-label" style="color:var(--purple);font-size:10px;">Alerta 5 dias:</span>' + hist5h + '</div>' +
+                        '<span class="lem-sep">·</span>' +
+                        '<div class="lem-slot"><span class="lem-slot-label" style="color:var(--yellow);font-size:10px;">Alerta 2 dias:</span>' + hist2h + '</div>' +
+                        '<span class="lem-sep">·</span>' +
+                        renderSlot(f, 'hoje', '🔴 Alerta Hoje:', 'green');
+        }
+
+        return '<div class="lembrete-card' + cardCls + '" id="lc-' + f.rowIndex + '">' +
+            '<div class="card-top">' +
             '<div class="dias-badge ' + di.cls + '"><div class="num">' + di.num + '</div><div class="label">' + di.lbl + '</div></div>' +
-            '<div class="lembrete-info">' +
-            '<div class="lembrete-nome">' + f.nome + '</div>' +
-            '<div class="lembrete-meta">' +
+            '<div class="card-pessoa">' +
+            '<div class="card-nome">' + f.nome + '</div>' +
+            '<div class="card-meta">' +
             '<span>🏪 ' + f.loja + '</span>' +
             '<span>👔 ' + f.funcao + '</span>' +
             '<span>📅 ' + f.inicioTrein + '</span>' +
             (f.telefone ? '<span>📞 ' + f.telefone + '</span>' : '') +
-(f.email ? '<span>✉️ ' + f.email + '</span>' : '') +
-(f.emailLojaAvaliadora ? '<span>🏭 ' + f.emailLojaAvaliadora + '</span>' : '') +
-
-'</div></div>' +
-            '<div class="lembrete-actions">' +
-            (f.lembreteEnviado
-                ? '<span class="enviado-tag">✓ Enviado</span>'
-                : '<button class="btn btn-green" onclick=\'enviarLembrete(' + js + ')\'>📤 Enviar lembrete</button>') +
-            at +
-            '</div></div>';
+            (f.email    ? '<span>✉️ ' + f.email + '</span>' : '') +
+            (f.emailLojaAvaliadora ? '<span>🏭 ' + f.emailLojaAvaliadora + '</span>' : '') +
+            '</div></div>' +
+            (notaHtml ? '<div style="flex-shrink:0">' + notaHtml + '</div>' : '') +
+            '</div>' +
+            '<div class="lembretes-linha">' + slotsHtml + '</div>' +
+            '</div>';
     }).join('');
 }
 
-/* ── CARREGAR LEMBRETES ─────────────────────────────────────────────
-   Mantém compatibilidade: aceita array direto OU { lista: [] }
-   (mesmo FIX da versão original do dashboard)
-   ────────────────────────────────────────────────────────────────── */
+/* ── CARREGAR LEMBRETES ── */
 async function carregarLembretes() {
-    const ct = document.getElementById('listaLembretes');
+    var ct = document.getElementById('listaLembretes');
     ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
     try {
-        const r    = await fetch(API + '/lembretes');
-        const raw  = await r.json();
-        const data = Array.isArray(raw) ? raw : (raw.lista || raw || []);
+        var r    = await fetch(API + '/lembretes');
+        var raw  = await r.json();
+        var data = Array.isArray(raw) ? raw : (raw.lista || []);
 
         _todosLembretes = data;
         atualizarChips(data);
 
         if (!data.length) {
-            ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>Nenhum treinamento nos próximos 2 dias</p></div>';
+            ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>Nenhum treinamento em 5, 2 dias ou hoje</p></div>';
             return;
         }
         renderLista(data);
@@ -421,128 +592,203 @@ async function carregarLembretes() {
     }
 }
 
-/* ── ENVIAR LEMBRETE ────────────────────────────────────────────────
-   Função original preservada integralmente
-   ────────────────────────────────────────────────────────────────── */
-async function enviarLembrete(f) {
-    const card = document.getElementById('lc-' + f.rowIndex);
-    const btn  = card ? card.querySelector('button') : null;
-    if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Enviando...'; }
-    log('📤 ' + f.nome, 'warn');
+/* ── ENVIAR LEMBRETE (1 tipo) ── */
+async function enviarLembrete(f, tipo) {
+    var cardId = 'lc-' + f.rowIndex;
+    var card   = document.getElementById(cardId);
+    var btn    = card ? card.querySelector('[onclick*="' + tipo + '"]') : null;
+    if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'; }
+
+    log('📤 ' + f.nome + ' [' + tipo + ']', 'warn');
+
     try {
-        const r = await fetch(API + '/enviar-lembrete', {
+        var r = await fetch(API + '/enviar-lembrete', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify(f),
+            body:    JSON.stringify(Object.assign({}, f, { tipo: tipo })),
         });
-        const d = await r.json();
+        var d = await r.json();
+
         if (d.sucesso) {
-            log('✓ Enviado: ' + f.nome, 'ok');
-            // Atualizar estado local
-            const idx = _todosLembretes.findIndex(function (x) { return x.rowIndex === f.rowIndex; });
+            log('✓ ' + f.nome + ' [' + tipo + ']', 'ok');
+
+            var idx = _todosLembretes.findIndex(function (x) { return x.rowIndex === f.rowIndex; });
             if (idx !== -1) {
-                _todosLembretes[idx].lembreteEnviado = true;
+                if (tipo === '5dias') { _todosLembretes[idx].lembrete5Enviado = true; _todosLembretes[idx].lembrete5 = d.lembrete; }
+                if (tipo === '2dias') { _todosLembretes[idx].lembrete2Enviado = true; _todosLembretes[idx].lembrete2 = d.lembrete; }
+                if (tipo === 'hoje')  { _todosLembretes[idx].lembreteHojeEnviado = true; _todosLembretes[idx].lembreteHoje = d.lembrete; }
             }
-            // Atualizar card visual
-            if (card) {
-                card.classList.add('enviado');
-                card.classList.remove('urgente');
-                const actions = card.querySelector('.lembrete-actions');
-                if (actions) {
-                    actions.innerHTML = '<span class="enviado-tag">✓ Enviado</span>' +
-                        '<span class="avaliacao-tag aguardando">⏳ Avaliação pendente</span>';
-                }
-            }
+
+            // Re-renderiza toda a lista para refletir o estado atualizado
+            renderLista(_todosLembretes);
             atualizarChips(_todosLembretes);
-            const b = document.getElementById('badgeLembretes');
-            b.textContent = Math.max(0, parseInt(b.textContent || '0') - 1);
-            pageAlert('success', 'Lembrete enviado para <strong>' + f.nome + '</strong>!');
+            document.getElementById('badgeLembretes').textContent = contarPendentes(_todosLembretes);
+            pageAlert('success', 'Lembrete <strong>' + tipoLabel(tipo) + '</strong> enviado para <strong>' + f.nome + '</strong>!');
         } else {
-            if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar lembrete'; }
+            if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar'; }
             pageAlert('error', d.erro || 'Erro ao enviar lembrete.');
         }
-        if (d.erros) d.erros.forEach(function (e) { log('⚠ ' + e, 'warn'); });
+        if (d.erros && d.erros.length) d.erros.forEach(function (e) { log('⚠ ' + e, 'warn'); });
     } catch (e) {
         log('Erro envio: ' + e.message, 'err');
-        if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar lembrete'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar'; }
         pageAlert('error', 'Erro de conexão: ' + e.message);
     }
 }
 
+function tipoLabel(tipo) {
+    if (tipo === '5dias') return 'Alerta 5 dias';
+    if (tipo === '2dias') return 'Alerta 2 dias';
+    return 'Alerta Hoje';
+}
+
 /* ── ENVIAR TODOS PENDENTES ── */
 async function enviarTodosLembretes() {
-    const pendentes = _todosLembretes.filter(function (f) { return !f.lembreteEnviado; });
-    if (!pendentes.length) { pageAlert('success', 'Todos os lembretes já foram enviados! 🎉'); return; }
-    if (!confirm('Enviar lembretes para ' + pendentes.length + ' colaboradores?')) return;
+    var fila = [];
+    _todosLembretes.forEach(function (f) {
+        if (f.diffDias === 5 && !f.lembrete5Enviado)    fila.push({ f: f, tipo: '5dias' });
+        if (f.diffDias === 2 && !f.lembrete2Enviado)    fila.push({ f: f, tipo: '2dias' });
+        if (f.diffDias === 0 && !f.lembreteHojeEnviado) fila.push({ f: f, tipo: 'hoje'  });
+    });
 
-    const btn = document.getElementById('btnEnviarTodos');
+    if (!fila.length) { pageAlert('success', 'Todos os lembretes já foram enviados! 🎉'); return; }
+    if (!confirm('Enviar ' + fila.length + ' lembrete(s) pendente(s)?')) return;
+
+    var btn = document.getElementById('btnEnviarTodos');
     btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div> Enviando ' + pendentes.length + '...';
+    btn.innerHTML = '<div class="spinner"></div> Enviando ' + fila.length + '...';
 
-    let enviados = 0, erros = 0;
-    for (const f of pendentes) {
+    var enviados = 0, erros = 0;
+    for (var i = 0; i < fila.length; i++) {
+        var item = fila[i];
         try {
-            const r = await fetch(API + '/enviar-lembrete', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(f),
+            var r = await fetch(API + '/enviar-lembrete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.assign({}, item.f, { tipo: item.tipo })),
             });
-            const d = await r.json();
+            var d = await r.json();
             if (d.sucesso) {
                 enviados++;
-                const idx = _todosLembretes.findIndex(function (x) { return x.rowIndex === f.rowIndex; });
-                if (idx !== -1) _todosLembretes[idx].lembreteEnviado = true;
-                log('✓ ' + f.nome, 'ok');
-            } else { erros++; log('✗ ' + f.nome, 'err'); }
-        } catch (e) { erros++; log('Erro: ' + f.nome, 'err'); }
+                var idx = _todosLembretes.findIndex(function (x) { return x.rowIndex === item.f.rowIndex; });
+                if (idx !== -1) {
+                    if (item.tipo === '5dias') { _todosLembretes[idx].lembrete5Enviado = true; _todosLembretes[idx].lembrete5 = d.lembrete; }
+                    if (item.tipo === '2dias') { _todosLembretes[idx].lembrete2Enviado = true; _todosLembretes[idx].lembrete2 = d.lembrete; }
+                    if (item.tipo === 'hoje')  { _todosLembretes[idx].lembreteHojeEnviado = true; _todosLembretes[idx].lembreteHoje = d.lembrete; }
+                }
+                log('✓ ' + item.f.nome + ' [' + item.tipo + ']', 'ok');
+            } else { erros++; log('✗ ' + item.f.nome, 'err'); }
+        } catch (e) { erros++; log('Erro: ' + item.f.nome, 'err'); }
     }
 
     btn.disabled = false;
     btn.innerHTML = '📤 Enviar Todos Pendentes';
     atualizarChips(_todosLembretes);
     renderLista(_todosLembretes);
-    document.getElementById('badgeLembretes').textContent =
-        _todosLembretes.filter(function (f) { return !f.lembreteEnviado; }).length;
+    document.getElementById('badgeLembretes').textContent = contarPendentes(_todosLembretes);
     pageAlert(erros === 0 ? 'success' : 'error', enviados + ' enviados · ' + erros + ' erros.');
 }
 
-/* ── CARREGAR HISTÓRICO ─────────────────────────────────────────────
-   Função original preservada integralmente
-   ────────────────────────────────────────────────────────────────── */
+/* ── LIMPAR FILTRO HISTÓRICO ── */
+function limparFiltroHistorico() {
+    document.getElementById('periodoInicio').value = '';
+    document.getElementById('periodoFim').value    = '';
+    document.getElementById('periodoMes').value    = '';
+    document.getElementById('periodoAno').value    = '2026';
+    carregarHistorico();
+}
+
+/* ── CARREGAR HISTÓRICO (com filtro de período) ── */
 async function carregarHistorico() {
-    const ct = document.getElementById('listaHistorico');
+    var ct = document.getElementById('listaHistorico');
     ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
+
+    // Monta query string com filtros ativos
+    var params = new URLSearchParams();
+    var inicio = document.getElementById('periodoInicio').value;
+    var fim    = document.getElementById('periodoFim').value;
+    var mes    = document.getElementById('periodoMes').value;
+    var ano    = document.getElementById('periodoAno').value;
+
+    // Converte yyyy-mm-dd (input date) → dd/mm/yyyy (API)
+    function isoParaBR(iso) {
+        if (!iso) return '';
+        var p = iso.split('-');
+        return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : '';
+    }
+
+    if (inicio) params.set('inicio', isoParaBR(inicio));
+    if (fim)    params.set('fim',    isoParaBR(fim));
+    if (mes)    params.set('mes',    mes);
+    if (ano)    params.set('ano',    ano);
+
+    var qs = params.toString() ? '?' + params.toString() : '';
+
     try {
-        const r    = await fetch(API + '/lembretes/historico');
-        const raw  = await r.json();
-        const data = Array.isArray(raw) ? raw : (raw.historico || []);
+        var r    = await fetch(API + '/lembretes/historico' + qs);
+        var raw  = await r.json();
+        var data = Array.isArray(raw) ? raw : (raw.historico || []);
+
         document.getElementById('badgeHistorico').textContent = data.length;
 
+        // Mostra contador de resultados
+        var periodoResult = document.getElementById('periodoResult');
+        var temFiltro = inicio || fim || mes || ano;
+        if (temFiltro) {
+            document.getElementById('periodoCount').textContent = data.length;
+            periodoResult.style.display = '';
+        } else {
+            periodoResult.style.display = 'none';
+        }
+
         if (!data.length) {
-            ct.innerHTML = '<div class="empty"><div class="icon">📋</div><p>Nenhum lembrete enviado ainda</p></div>';
+            ct.innerHTML = '<div class="empty"><div class="icon">📋</div><p>' +
+                (temFiltro ? 'Nenhum resultado para este período' : 'Nenhum lembrete enviado ainda') +
+                '</p></div>';
             return;
         }
 
         ct.innerHTML = data.map(function (h) {
-            let nh = '';
+            var notaHtml = '';
             if (h.notaAvaliacao) {
-                const n = parseFloat(h.notaAvaliacao);
-                nh = '<div class="historico-nota" style="color:' +
-                    (n >= 8 ? 'var(--green)' : n >= 6 ? 'var(--yellow)' : 'var(--red)') +
-                    '">⭐ Nota: ' + h.notaAvaliacao + '/10</div>';
+                var n = parseFloat(h.notaAvaliacao);
+                notaHtml = '<span class="nota-badge ' + (n >= 8 ? 'alta' : n >= 6 ? 'media' : 'baixa') + '">⭐ ' + h.notaAvaliacao + '/10</span>';
             } else if (h.emailAvaliacao === 'SIM') {
-                nh = '<div class="historico-nota" style="color:var(--yellow)">⏳ Avaliação pendente</div>';
+                notaHtml = '<span class="tag tag-aguardando">⏳ Avaliação pendente</span>';
             }
-            return '<div class="historico-item">' +
-                '<div class="historico-check">✅</div>' +
+
+            function hlItem(tipo, label, val) {
+                var cor = tipo === '5dias' ? 'var(--purple)' : tipo === '2dias' ? 'var(--yellow)' : 'var(--red)';
+                var dataTxt = extrairData(val);
+                return '<div class="hl-item">' +
+                    '<span class="hl-tipo" style="color:' + cor + '">' + label + '</span>' +
+                    '<span class="hl-data ' + (val ? 'enviado' : 'nao') + '">' +
+                    (dataTxt || '—') + '</span></div>';
+            }
+
+            return '<div class="historico-card">' +
+                '<div class="historico-top">' +
+                '<div class="historico-check">📋</div>' +
                 '<div class="historico-info">' +
                 '<div class="historico-nome">' + h.nome + '</div>' +
-                '<div class="historico-meta">' + h.loja + ' · ' + h.funcao +
-                ' · Início: ' + h.inicioTrein + (h.fimTrein ? ' · Fim: ' + h.fimTrein : '') + '</div>' +
-                nh + '</div>' +
-       '<div class="historico-data">' + (h.lembrete || '').replace('Lembrete enviado em ', '') + '</div>' +
-        '</div>';
+                '<div class="historico-meta">' +
+                h.loja + ' · ' + h.funcao +
+                ' · Início: ' + h.inicioTrein +
+                (h.fimTrein ? ' · Fim: ' + h.fimTrein : '') +
+                '</div></div>' +
+                (notaHtml ? '<div style="flex-shrink:0;margin-left:auto;padding-left:12px;">' + notaHtml + '</div>' : '') +
+                '</div>' +
+                '<div class="historico-linha">' +
+                hlItem('5dias', '🟣 Alerta 5 dias', h.lembrete5) +
+                '<div class="hl-sep"></div>' +
+                hlItem('2dias', '🟡 Alerta 2 dias', h.lembrete2) +
+                '<div class="hl-sep"></div>' +
+                hlItem('hoje',  '🔴 Alerta Hoje',   h.lembreteHoje) +
+                '</div>' +
+                '</div>';
         }).join('');
 
-        log('Histórico: ' + data.length, 'ok');
+        log('Histórico: ' + data.length + (qs ? ' (filtrado)' : ''), 'ok');
     } catch (e) {
         log('Erro histórico: ' + e.message, 'err');
         ct.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro ao carregar</p></div>';
@@ -553,10 +799,8 @@ async function carregarHistorico() {
 document.addEventListener('DOMContentLoaded', function () {
     verificarStatus();
     carregarLembretes();
-
-    // Se a URL tiver #historico, abrir direto na aba de histórico
     if (window.location.hash === '#historico') {
-        const btnHist = document.querySelectorAll('.tab-btn')[1];
+        var btnHist = document.querySelectorAll('.tab-btn')[1];
         if (btnHist) mudarTab('historico', btnHist);
     }
 });
