@@ -444,6 +444,10 @@ router.get('/valores/premio-refeicao', async (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 // TURNOVER
 // ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
+// TURNOVER — fonte: aba "Controle TurnOver"
+// ═══════════════════════════════════════════════════════════════════════════════
+
 router.get('/turnover/dados', async (req, res) => {
   try {
     const { ano } = req.query;
@@ -463,22 +467,23 @@ router.get('/turnover/dados', async (req, res) => {
 router.get('/turnover/registros', async (req, res) => {
   try {
     const { ano } = req.query;
-    const cache = turnoverCache.getDados();
-    if (cache && cache.registros && !ano) return res.json({ registros: cache.registros });
     const { getTurnoverRegistros } = require('./services/turnover');
     res.json(await getTurnoverRegistros(ano || null));
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
-router.get('/turnover/status', (req, res) => res.json(turnoverCache.getStatus()));
+router.get('/turnover/status',  (req, res) => res.json(turnoverCache.getStatus()));
 
 router.get('/turnover/resumo', (req, res) => {
   const dados = turnoverCache.getDados();
   if (!dados) return res.status(503).json({ erro: 'Cache ainda carregando...' });
   res.json({
-    ano: dados.ano, pctTurnover: dados.pctTurnover,
-    totalAtivos: dados.totalAtivos, desligadosAno: dados.desligadosAno,
-    totalGeral: dados.totalGeral, sincronizadoEm: dados.sincronizadoEm,
+    ano:           dados.ano,
+    pctTurnover:   dados.pctTurnover,
+    totalAtivos:   dados.totalAtivos,
+    desligadosAno: dados.desligadosAno,
+    totalGeral:    dados.totalGeral,
+    sincronizadoEm: dados.sincronizadoEm,
   });
 });
 
@@ -489,16 +494,27 @@ router.post('/turnover/sincronizar', async (req, res) => {
   } catch (e) { res.status(500).json({ ok: false, erro: e.message }); }
 });
 
+// PATCH /turnover/:rowIndex — atualiza AF (continua), AG (mesmoCargo), AH (motivo)
 router.patch('/turnover/:rowIndex', async (req, res) => {
   try {
     const rowIndex = parseInt(req.params.rowIndex, 10);
     if (isNaN(rowIndex)) return res.status(400).json({ erro: 'rowIndex inválido' });
-    const { dataDeslig, motivo } = req.body;
+    const { continua, mesmoCargo, motivo } = req.body;
     const { gravarDesligamento } = require('./services/turnover');
-    await gravarDesligamento(rowIndex, dataDeslig, motivo);
+    await gravarDesligamento(rowIndex, continua, mesmoCargo, motivo);
     await turnoverCache.sincronizarEAtualizar('patch');
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// POST /turnover/importar — importa um cadastro para aba Controle TurnOver
+// Chamado automaticamente pelo POST /cadastro ao salvar um novo funcionário
+router.post('/turnover/importar', async (req, res) => {
+  try {
+    const { importarDaCadastral } = require('./services/turnover');
+    const resultado = await importarDaCadastral(req.body);
+    res.json(resultado);
+  } catch (e) { res.status(500).json({ sucesso: false, erro: e.message }); }
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -588,7 +604,13 @@ router.post('/sults/sincronizar', async (req, res) => {
 router.get('/universidade/dados', async (req, res) => {
   try {
     let dados = universidadeCache.getDados();
-    if (!dados || req.query.forcar === '1') dados = await universidadeCache.sincronizarEAtualizar('manual');
+
+    if (!dados || dados.totalLinhas === 0 || req.query.forcar === '1') {
+      dados = await universidadeCache.sincronizarEAtualizar(
+        req.query.forcar === '1' ? 'manual' : 'cache vazio'
+      );
+    }
+
     res.json(dados);
   } catch (e) {
     const dados = universidadeCache.getDados();
@@ -605,7 +627,6 @@ router.post('/universidade/sincronizar', async (req, res) => {
     res.json({ ok: true, totalLinhas: dados.totalLinhas, sincronizadoEm: dados.sincronizadoEm });
   } catch (e) { res.status(500).json({ ok: false, erro: e.message }); }
 });
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // UPLOADS — Google Drive
 // ═══════════════════════════════════════════════════════════════════════════════

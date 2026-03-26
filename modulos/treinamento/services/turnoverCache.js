@@ -1,17 +1,19 @@
 /* ═══════════════════════════════════════════════════════════════════════
    turnoverCache.js — Cache em memória para dados de Turnover
-   Padrão idêntico ao sultsCache.js
+   Fonte: aba "Controle TurnOver"
    Auto-refresh a cada 2 horas.
    ═══════════════════════════════════════════════════════════════════════ */
+
+'use strict';
 
 const { getTurnoverCadastral, getTurnoverRegistros } = require('./turnover');
 
 const INTERVALO_MS = 2 * 60 * 60 * 1000; // 2 horas
 
-let _cache       = null;
-let _ultimaSync  = null;
-let _status      = 'aguardando'; // 'aguardando' | 'sincronizando' | 'pronto' | 'erro'
-let _erroMsg     = null;
+let _cache      = null;
+let _ultimaSync = null;
+let _status     = 'aguardando'; // 'aguardando' | 'sincronizando' | 'pronto' | 'erro'
+let _erroMsg    = null;
 
 // ─── sincronizarEAtualizar() ────────────────────────────────────────────────
 async function sincronizarEAtualizar(origem) {
@@ -22,21 +24,17 @@ async function sincronizarEAtualizar(origem) {
     try {
         const anoAtual = String(new Date().getFullYear());
 
-        // Busca dados consolidados do ano atual
-const dados = await getTurnoverCadastral(anoAtual);
-const dadosTodos = await getTurnoverCadastral(null);
+        // Dados consolidados do ano atual + anos disponíveis
+        const dados     = await getTurnoverCadastral(anoAtual);
+        const dadosTodos = await getTurnoverCadastral(null);
 
-// Garante que o ano atual sempre aparece no seletor,
-// mesmo que ninguém tenha data preenchida nas colunas AJ/AK
-const anosSet = new Set(dadosTodos.anos || []);
-anosSet.add(parseInt(anoAtual));
-// Adiciona também anos anteriores como fallback
-anosSet.add(2024);
-anosSet.add(2025);
-anosSet.add(2026);
-dados.anos = [...anosSet].sort();
-        // Busca registros individuais (tabela completa)
-        const { registros } = await getTurnoverRegistros(null); // todos os anos
+        // Garante que a lista de anos sempre tem os padrões
+        const anosSet = new Set(dadosTodos.anos || []);
+        [2024, 2025, 2026].forEach(a => anosSet.add(a));
+        dados.anos = [...anosSet].sort();
+
+        // Registros individuais (todos os anos para a tabela)
+        const { registros } = await getTurnoverRegistros(null);
 
         _cache = {
             ...dados,
@@ -61,27 +59,23 @@ dados.anos = [...anosSet].sort();
 // ─── inicializar() ───────────────────────────────────────────────────────────
 async function inicializar() {
     await sincronizarEAtualizar('boot');
-
-    // Auto-refresh a cada 2 horas
     setInterval(function () {
         sincronizarEAtualizar('auto').catch(function () {});
     }, INTERVALO_MS);
 }
 
 // ─── getDados() ──────────────────────────────────────────────────────────────
-function getDados() {
-    return _cache;
-}
+function getDados() { return _cache; }
 
 // ─── getStatus() ─────────────────────────────────────────────────────────────
 function getStatus() {
     return {
-        status:        _status,
-        ultimaSync:    _ultimaSync ? new Date(_ultimaSync).toISOString() : null,
+        status:         _status,
+        ultimaSync:     _ultimaSync ? new Date(_ultimaSync).toISOString() : null,
         sincronizadoEm: _cache ? _cache.sincronizadoEm : null,
         totalRegistros: _cache ? (_cache.registros || []).length : 0,
-        pctTurnover:   _cache ? _cache.pctTurnover : null,
-        erro:          _erroMsg || null,
+        pctTurnover:    _cache ? _cache.pctTurnover : null,
+        erro:           _erroMsg || null,
     };
 }
 
