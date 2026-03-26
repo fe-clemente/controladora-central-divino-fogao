@@ -45,7 +45,6 @@ main{max-width:1300px;margin:0 auto;padding:28px 24px;}
 .page-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
 .sec-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
 .sec-label::after{content:'';flex:1;height:1.5px;background:var(--border);}
-/* Módulos */
 .modulos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:28px;}
 .mod-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:15px 17px;display:flex;align-items:center;gap:13px;box-shadow:var(--shadow);transition:all .2s;text-decoration:none;color:inherit;position:relative;overflow:hidden;}
 .mod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ti2);border-radius:14px 14px 0 0;}
@@ -55,7 +54,6 @@ main{max-width:1300px;margin:0 auto;padding:28px 24px;}
 .mod-nome{font-size:12px;font-weight:800;margin-bottom:2px;}
 .mod-id{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
 .mod-badge{font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;background:var(--green-pale);color:var(--green);border:1px solid rgba(22,163,74,.2);margin-top:3px;display:inline-block;}
-/* Health */
 .health-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px;margin-bottom:28px;}
 .health-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:14px 17px;box-shadow:var(--shadow);transition:border-color .2s;}
 .health-card:hover{border-color:var(--ti);}
@@ -67,12 +65,10 @@ main{max-width:1300px;margin:0 auto;padding:28px 24px;}
 .dot.loading{background:var(--yellow);animation:blink .7s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .hc-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;}
-/* Sync */
 .sync-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:17px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px;box-shadow:var(--shadow);flex-wrap:wrap;}
 .sync-info{font-size:13px;color:var(--muted);}
 .sync-info strong{color:var(--text);font-weight:800;}
 .sync-btns{display:flex;gap:8px;flex-wrap:wrap;}
-/* Buttons */
 .btn{padding:8px 16px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
 .btn-red{background:var(--red);color:#fff;}.btn-red:hover{background:#a50d25;}
 .btn-ti{background:var(--ti);color:#fff;}.btn-ti:hover{background:#075985;}
@@ -82,7 +78,6 @@ main{max-width:1300px;margin:0 auto;padding:28px 24px;}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
 .spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* Tables */
 .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:28px;box-shadow:var(--shadow);}
 .table-hdr{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
 .table-title{font-size:13px;font-weight:800;}
@@ -98,21 +93,34 @@ tbody tr:last-child td{border-bottom:none;}
 .tag-ti{background:var(--ti-pale);color:var(--ti);border:1px solid rgba(3,105,161,.2);}
 .tag-td{background:var(--green-pale);color:var(--green);border:1px solid rgba(22,163,74,.2);}
 .tag-other{background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
-/* Logs */
 .log-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:28px;box-shadow:var(--shadow);}
 .log-list{max-height:340px;overflow-y:auto;padding:4px 0;}
 .log-item{display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--border);transition:background .12s;}
 .log-item:last-child{border-bottom:none;}
 .log-item:hover{background:var(--bg3);}
 .log-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);width:130px;flex-shrink:0;}
-.log-user{font-size:12px;font-weight:700;width:180px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.log-user{font-size:12px;font-weight:700;width:200px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .log-action{font-size:12px;color:var(--muted);flex:1;}
-.log-modulo{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ti);}
+.log-modulo{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ti);width:80px;flex-shrink:0;}
+.log-ip{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);width:110px;flex-shrink:0;text-align:right;}
 .empty-msg{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
+/* ── Avisos ── */
+.avisos-filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.btn-setor{background:var(--bg3);border:1.5px solid var(--border);border-radius:20px;padding:5px 14px;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);font-family:'Nunito',sans-serif;transition:.15s;}
+.btn-setor:hover{border-color:var(--ti2);color:var(--ti2);}
+.btn-setor.ativo{background:var(--ti2);border-color:var(--ti2);color:#fff;}
+.aviso-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;transition:border-color .15s;}
+.aviso-card:hover{border-color:var(--ti2);}
+.aviso-card.inativo{opacity:.5;}
+.aviso-badge{font-size:10px;font-weight:800;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;}
+.aviso-badge.urgente{background:var(--red-pale);color:var(--red);}
+.aviso-badge.atualiz{background:#f0f9ff;color:#0ea5e9;}
+.aviso-badge.aviso{background:var(--yellow-pale);color:var(--yellow);}
+.aviso-badge.info{background:var(--green-pale);color:var(--green);}
 /* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
 .modal-overlay.open{display:flex;}
-.modal-box{background:var(--bg2);border-radius:18px;padding:26px 28px;max-width:560px;width:100%;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;}
+.modal-box{background:var(--bg2);border-radius:18px;padding:26px 28px;max-width:580px;width:100%;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;}
 .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;}
 .modal-title{font-size:15px;font-weight:800;}
 .modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:5px 11px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);}
@@ -121,9 +129,9 @@ tbody tr:last-child td{border-bottom:none;}
 .form-group{display:flex;flex-direction:column;gap:4px;}
 .form-group.full{grid-column:1/-1;}
 .form-group label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
-.form-control{padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;transition:border-color .2s;}
+.form-control{padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;transition:border-color .2s;width:100%;}
 .form-control:focus{border-color:var(--ti);}
-/* Checkboxes de módulos */
+textarea.form-control{resize:vertical;min-height:90px;}
 .modulos-check{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
 .mod-check-item{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;transition:all .2s;user-select:none;}
 .mod-check-item:hover{border-color:var(--ti2);}
@@ -164,9 +172,9 @@ tbody tr:last-child td{border-bottom:none;}
 
 <main>
     <div class="page-title">⚡ Painel Master</div>
-    <div class="page-sub">Gestão de usuários, módulos, sincronização e status dos serviços.</div>
+    <div class="page-sub">Gestão de usuários, módulos, avisos, sincronização e status dos serviços.</div>
 
-    <!-- Módulos detectados -->
+    <!-- Módulos -->
     <div class="sec-label">📦 Módulos ativos</div>
     <div class="modulos-grid" id="modulosGrid">
         <div class="mod-card"><div class="mod-icon">⏳</div><div class="mod-info"><div class="mod-nome">Carregando...</div></div></div>
@@ -209,12 +217,32 @@ tbody tr:last-child td{border-bottom:none;}
         </div>
     </div>
 
+    <!-- ══ AVISOS POR SETOR ══ -->
+    <div class="sec-label">📢 Avisos por Setor</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+        <div class="avisos-filtros" id="avisosFiltros">
+            <button class="btn-setor ativo" onclick="filtrarSetor(this,'todos')">Todos</button>
+            <button class="btn-setor" onclick="filtrarSetor(this,'treinamento')">🎓 Treinamento</button>
+            <button class="btn-setor" onclick="filtrarSetor(this,'ti')">🖥️ TI</button>
+            <button class="btn-setor" onclick="filtrarSetor(this,'juridico')">⚖️ Jurídico</button>
+            <button class="btn-setor" onclick="filtrarSetor(this,'marketing')">📣 Marketing</button>
+            <button class="btn-setor" onclick="filtrarSetor(this,'suprimentos')">📦 Suprimentos</button>
+        </div>
+        <button class="btn btn-red btn-sm" onclick="abrirModalAviso()">➕ Novo Aviso</button>
+    </div>
+    <div id="listaAvisos">
+        <div class="empty-msg">Carregando avisos...</div>
+    </div>
+
     <!-- Logs -->
     <div class="sec-label">📋 Logs de acesso</div>
     <div class="log-wrap">
         <div class="table-hdr">
             <div class="table-title">Acessos Recentes</div>
-            <button class="btn btn-ghost btn-sm" onclick="carregarLogs()">↻ Atualizar</button>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)" id="totalLogs"></span>
+                <button class="btn btn-ghost btn-sm" onclick="carregarLogs()">↻ Atualizar</button>
+            </div>
         </div>
         <div class="log-list" id="logList">
             <div class="empty-msg">Carregando logs...</div>
@@ -222,45 +250,93 @@ tbody tr:last-child td{border-bottom:none;}
     </div>
 </main>
 
-<!-- MODAL NOVO USUÁRIO -->
-<div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
+<!-- MODAL USUÁRIO -->
+<div class="modal-overlay" id="modalOverlay" onclick="fecharModalClick(event)">
     <div class="modal-box">
         <div class="modal-header">
             <div class="modal-title" id="modalTitulo">➕ Novo Usuário</div>
-            <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕ Fechar</button>
+            <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕</button>
         </div>
         <div id="modalBody"></div>
+    </div>
+</div>
+
+<!-- MODAL AVISO -->
+<div class="modal-overlay" id="modalAvisoOverlay" onclick="fecharModalAvisoClick(event)">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="modal-title" id="modalAvisoTitulo">📢 Novo Aviso</div>
+            <button class="modal-close" onclick="document.getElementById('modalAvisoOverlay').classList.remove('open')">✕</button>
+        </div>
+        <input type="hidden" id="avisoRowIndex">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Setor</label>
+                <select class="form-control" id="avisoSetor">
+                    <option value="todos">Todos os setores</option>
+                    <option value="treinamento">🎓 Treinamento</option>
+                    <option value="ti">🖥️ TI</option>
+                    <option value="juridico">⚖️ Jurídico</option>
+                    <option value="marketing">📣 Marketing</option>
+                    <option value="suprimentos">📦 Suprimentos</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tipo</label>
+                <select class="form-control" id="avisoTipo">
+                    <option value="info">Informativo</option>
+                    <option value="atualiz">Atualização</option>
+                    <option value="aviso">Aviso</option>
+                    <option value="urgente">Urgente</option>
+                </select>
+            </div>
+            <div class="form-group full">
+                <label>Título *</label>
+                <input type="text" class="form-control" id="avisoTituloInput" placeholder="Título do aviso">
+            </div>
+            <div class="form-group full">
+                <label>Texto</label>
+                <textarea class="form-control" id="avisoTexto" placeholder="Texto do aviso..."></textarea>
+            </div>
+            <div class="form-group full">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:13px;font-weight:700">
+                    <input type="checkbox" id="avisoAtivo" checked style="width:15px;height:15px">
+                    Aviso ativo (visível nos setores)
+                </label>
+            </div>
+        </div>
+        <button class="btn btn-red" id="btnSalvarAviso" onclick="salvarAviso()">✅ Salvar Aviso</button>
     </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const toast=(msg,ms=2800)=>{const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),ms);};
-const setStatus=(cls,msg)=>{document.getElementById('sdot').className='sdot '+cls;document.getElementById('statusTxt').textContent=msg;};
-const $=id=>document.getElementById(id);
+const toast = (msg, ms=2800) => { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), ms); };
+const setStatus = (cls, msg) => { document.getElementById('sdot').className='sdot '+cls; document.getElementById('statusTxt').textContent=msg; };
+const $ = id => document.getElementById(id);
 
 // ── Perfil ────────────────────────────────────────────────
-async function carregarPerfil(){
-    try{
-        const r=await fetch('/auth/me');const d=await r.json();
-        if(!d.logado){location.href='/login';return;}
-        if(!d.usuario.isMaster&&!d.usuario.modulos?.includes('master')){location.href='/';return;}
-        $('userName').textContent=d.usuario.nome||d.usuario.email;
-        if(d.usuario.foto){const f=$('userFoto');f.src=d.usuario.foto;f.style.display='block';}
-        $('lastUpdate').textContent=new Date().toLocaleString('pt-BR');
-    }catch{location.href='/login';}
+async function carregarPerfil() {
+    try {
+        const r = await fetch('/auth/me'); const d = await r.json();
+        if (!d.logado) { location.href='/login'; return; }
+        if (!d.usuario.isMaster && !d.usuario.modulos?.includes('master')) { location.href='/'; return; }
+        $('userName').textContent = d.usuario.nome || d.usuario.email;
+        if (d.usuario.foto) { const f=$('userFoto'); f.src=d.usuario.foto; f.style.display='block'; }
+        $('lastUpdate').textContent = new Date().toLocaleString('pt-BR');
+    } catch { location.href='/login'; }
 }
 
-// ── Módulos detectados ────────────────────────────────────
-let _modulos=[];
-async function carregarModulos(){
-    try{
-        const r=await fetch('/api/modulos');const d=await r.json();
-        _modulos=d.modulos||[];
-        const grid=$('modulosGrid');
-        if(!_modulos.length){grid.innerHTML='<div class="mod-card"><div class="mod-icon">📭</div><div class="mod-info"><div class="mod-nome">Nenhum módulo</div></div></div>';return;}
-        grid.innerHTML=_modulos.map(m=>`
+// ── Módulos ────────────────────────────────────────────────
+let _modulos = [];
+async function carregarModulos() {
+    try {
+        const r = await fetch('/api/modulos'); const d = await r.json();
+        _modulos = d.modulos || [];
+        const grid = $('modulosGrid');
+        if (!_modulos.length) { grid.innerHTML='<div class="mod-card"><div class="mod-icon">📭</div><div class="mod-info"><div class="mod-nome">Nenhum módulo</div></div></div>'; return; }
+        grid.innerHTML = _modulos.map(m=>`
             <a href="/${m.id}" style="text-decoration:none;color:inherit">
             <div class="mod-card">
                 <div class="mod-icon">${m.icon}</div>
@@ -270,48 +346,44 @@ async function carregarModulos(){
                     <span class="mod-badge">✅ ativo</span>
                 </div>
             </div></a>`).join('');
-
-        // Botões de sync dinâmicos — um por módulo
-        const syncBtns=$('syncBtns');
-        syncBtns.innerHTML=_modulos.map(m=>
+        const syncBtns = $('syncBtns');
+        syncBtns.innerHTML = _modulos.map(m=>
             `<button class="btn btn-ghost btn-sm" onclick="sincronizarModulo('${m.id}')">${m.icon} ${m.nome.split(' ')[0]}</button>`
-        ).join('')+`<button class="btn btn-red" id="btnSyncAll" onclick="sincronizarTudo()">🔄 Sync Tudo</button>`;
-    }catch(e){
-        $('modulosGrid').innerHTML=`<div class="mod-card"><div class="mod-icon">❌</div><div class="mod-info"><div class="mod-nome">Erro: ${e.message}</div></div></div>`;
+        ).join('') + `<button class="btn btn-red" id="btnSyncAll" onclick="sincronizarTudo()">🔄 Sync Tudo</button>`;
+    } catch(e) {
+        $('modulosGrid').innerHTML = `<div class="mod-card"><div class="mod-icon">❌</div><div class="mod-info"><div class="mod-nome">Erro: ${e.message}</div></div></div>`;
     }
 }
 
-// ── Health check ──────────────────────────────────────────
-async function verificarHealth(){
-    const grid=$('healthGrid');
-    const servicos=[{label:'🖥️ Servidor',url:'/health'}];
-    // Adiciona card por módulo detectado
-    _modulos.forEach(m=>servicos.push({label:`${m.icon} ${m.nome}`,url:`/${m.id}/api/ativos/`}));
-    // Endpoints fixos extras
+// ── Health ─────────────────────────────────────────────────
+async function verificarHealth() {
+    const grid = $('healthGrid');
+    const servicos = [{label:'🖥️ Servidor', url:'/health'}];
+    _modulos.forEach(m => servicos.push({label:`${m.icon} ${m.nome}`, url:`/${m.id}/api/ativos/`}));
     servicos.push(
-        {label:'TI — Chamados',url:'/ti/api/chamados/'},
-        {label:'T&D — Chamados',url:'/treinamento/chamados/'},
-        {label:'T&D — Turnover',url:'/treinamento/turnover/'}
+        {label:'TI — Chamados',   url:'/ti/api/chamados/'},
+        {label:'T&D — Chamados',  url:'/treinamento/chamados/'},
+        {label:'T&D — Turnover',  url:'/treinamento/turnover/'}
     );
-    grid.innerHTML=servicos.map((s,i)=>`
+    grid.innerHTML = servicos.map((s,i)=>`
         <div class="health-card" id="hc${i}">
             <div class="hc-label">${s.label}</div>
             <div class="hc-status"><div class="dot loading"></div>Verificando...</div>
             <div class="hc-meta">—</div>
         </div>`).join('');
-    await Promise.all(servicos.map(async(s,i)=>{
-        const card=$(`hc${i}`);const t0=Date.now();
-        try{
-            const r=await fetch(s.url,{signal:AbortSignal.timeout(5000)});
-            const ms=Date.now()-t0;
-            const data=await r.json().catch(()=>({}));
-            const ok=r.ok&&data.ok!==false&&!data.erro;
-            card.innerHTML=`
+    await Promise.all(servicos.map(async(s,i) => {
+        const card = $(`hc${i}`); const t0 = Date.now();
+        try {
+            const r = await fetch(s.url, {signal: AbortSignal.timeout(5000)});
+            const ms = Date.now() - t0;
+            const data = await r.json().catch(()=>({}));
+            const ok = r.ok && data.ok !== false && !data.erro;
+            card.innerHTML = `
                 <div class="hc-label">${s.label}</div>
                 <div class="hc-status"><div class="dot ${ok?'online':'offline'}"></div><span style="color:${ok?'var(--green)':'var(--red)'}">${ok?'Online':'Offline'}</span></div>
                 <div class="hc-meta">${ms}ms · ${new Date().toLocaleTimeString('pt-BR')}</div>`;
-        }catch{
-            card.innerHTML=`
+        } catch {
+            card.innerHTML = `
                 <div class="hc-label">${s.label}</div>
                 <div class="hc-status"><div class="dot offline"></div><span style="color:var(--muted)">Sem resposta</span></div>
                 <div class="hc-meta">—</div>`;
@@ -319,46 +391,46 @@ async function verificarHealth(){
     }));
 }
 
-// ── Sync ──────────────────────────────────────────────────
-const SYNC_ROTAS={
+// ── Sync ───────────────────────────────────────────────────
+const SYNC_ROTAS = {
     ti:['/ti/api/ativos/sincronizar','/ti/api/chamados/sincronizar','/ti/api/pix/sincronizar'],
     treinamento:['/treinamento/sults/sincronizar','/treinamento/chamados/sincronizar','/treinamento/turnover/sincronizar','/treinamento/universidade/sincronizar'],
     juridico:['/juridico/api/ativos/sincronizar'],
     suprimentos:['/suprimentos/api/sincronizar'],
     marketing:['/marketing/api/sincronizar'],
 };
-async function sincronizarModulo(id){
-    const rotas=SYNC_ROTAS[id]||[`/${id}/api/sincronizar`];
+async function sincronizarModulo(id) {
+    const rotas = SYNC_ROTAS[id] || [`/${id}/api/sincronizar`];
     toast(`🔄 Sincronizando ${id}...`);
-    await Promise.allSettled(rotas.map(r=>fetch(r,{method:'POST'}).catch(()=>{})));
+    await Promise.allSettled(rotas.map(r => fetch(r,{method:'POST'}).catch(()=>{})));
     toast(`✅ ${id} sincronizado!`);
     verificarHealth();
 }
-async function sincronizarTudo(){
-    const btn=$('btnSyncAll');
-    btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Sincronizando...';
+async function sincronizarTudo() {
+    const btn = $('btnSyncAll');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Sincronizando...';
     toast('🔄 Sincronizando todos os módulos...');
-    const todas=Object.values(SYNC_ROTAS).flat();
-    _modulos.forEach(m=>{if(!SYNC_ROTAS[m.id])todas.push(`/${m.id}/api/sincronizar`);});
-    await Promise.allSettled(todas.map(r=>fetch(r,{method:'POST'}).catch(()=>{})));
-    btn.disabled=false;btn.innerHTML='🔄 Sync Tudo';
+    const todas = Object.values(SYNC_ROTAS).flat();
+    _modulos.forEach(m => { if (!SYNC_ROTAS[m.id]) todas.push(`/${m.id}/api/sincronizar`); });
+    await Promise.allSettled(todas.map(r => fetch(r,{method:'POST'}).catch(()=>{})));
+    btn.disabled = false; btn.innerHTML = '🔄 Sync Tudo';
     toast('✅ Todos os módulos sincronizados!');
     verificarHealth();
 }
 
-// ── Usuários ──────────────────────────────────────────────
-async function carregarUsuarios(){
-    try{
-        const r=await fetch('/master/usuarios');const d=await r.json();
-        if(!d.ok){$('tblUsuarios').innerHTML=`<tr><td colspan="5"><div class="empty-msg">❌ ${d.erro}</div></td></tr>`;return;}
-        $('totalUsuarios').textContent=`${d.usuarios.length} usuário(s)`;
-        const tagCor=m=>{
-            if(m==='master')return 'tag-master';
-            if(m==='ti')return 'tag-ti';
-            if(['treinamento','vertex','td'].includes(m))return 'tag-td';
+// ── Usuários ───────────────────────────────────────────────
+async function carregarUsuarios() {
+    try {
+        const r = await fetch('/master/usuarios'); const d = await r.json();
+        if (!d.ok) { $('tblUsuarios').innerHTML=`<tr><td colspan="5"><div class="empty-msg">❌ ${d.erro}</div></td></tr>`; return; }
+        $('totalUsuarios').textContent = `${d.usuarios.length} usuário(s)`;
+        const tagCor = m => {
+            if (m==='master') return 'tag-master';
+            if (m==='ti')     return 'tag-ti';
+            if (['treinamento','vertex','td'].includes(m)) return 'tag-td';
             return 'tag-other';
         };
-        $('tblUsuarios').innerHTML=d.usuarios.map(u=>`
+        $('tblUsuarios').innerHTML = d.usuarios.map(u=>`
             <tr>
                 <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${u.email}</td>
                 <td style="font-weight:700">${u.nome||'—'}</td>
@@ -376,47 +448,44 @@ async function carregarUsuarios(){
                     }
                 </td>
             </tr>`).join('');
-    }catch(e){$('tblUsuarios').innerHTML=`<tr><td colspan="5"><div class="empty-msg">❌ ${e.message}</div></td></tr>`;}
+    } catch(e) { $('tblUsuarios').innerHTML=`<tr><td colspan="5"><div class="empty-msg">❌ ${e.message}</div></td></tr>`; }
 }
 
-async function recarregarUsuarios(){
+async function recarregarUsuarios() {
     toast('🔄 Recarregando usuários...');
-    await fetch('/master/usuarios/recarregar',{method:'POST'});
+    await fetch('/master/usuarios/recarregar', {method:'POST'});
     await carregarUsuarios();
     toast('✅ Usuários atualizados!');
 }
 
-async function desativarUsuario(email){
-    if(!confirm(`Desativar ${email}?`))return;
-    const r=await fetch('/master/usuarios/desativar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
-    const d=await r.json();
-    if(d.ok){toast('✅ Usuário desativado!');carregarUsuarios();}
-    else toast('❌ '+(d.erro||'Erro'),4000);
+async function desativarUsuario(email) {
+    if (!confirm(`Desativar ${email}?`)) return;
+    const r = await fetch('/master/usuarios/desativar', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email})});
+    const d = await r.json();
+    if (d.ok) { toast('✅ Usuário desativado!'); carregarUsuarios(); }
+    else toast('❌ '+(d.erro||'Erro'), 4000);
 }
 
-async function reativarUsuario(email){
-    if(!confirm(`Reativar ${email}?`))return;
-    const r=await fetch('/master/usuarios/reativar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
-    const d=await r.json();
-    if(d.ok){toast('✅ Usuário reativado!');carregarUsuarios();}
-    else toast('❌ '+(d.erro||'Erro'),4000);
+async function reativarUsuario(email) {
+    if (!confirm(`Reativar ${email}?`)) return;
+    const r = await fetch('/master/usuarios/reativar', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email})});
+    const d = await r.json();
+    if (d.ok) { toast('✅ Usuário reativado!'); carregarUsuarios(); }
+    else toast('❌ '+(d.erro||'Erro'), 4000);
 }
 
-// ── Modal novo usuário ────────────────────────────────────
-function abrirModalUsuario(){
-    $('modalTitulo').textContent='➕ Novo Usuário';
-    const modsList=_modulos.map(m=>
+// ── Modal Usuário ──────────────────────────────────────────
+function abrirModalUsuario() {
+    $('modalTitulo').textContent = '➕ Novo Usuário';
+    const modsList = _modulos.map(m=>
         `<label class="mod-check-item" onclick="toggleModCheck(this)">
             <input type="checkbox" name="modulos" value="${m.id}">
             <span>${m.icon} ${m.nome}</span>
-        </label>`
-    ).join('');
-    // Adiciona "master" como opção especial
-    const masterOpt=`<label class="mod-check-item" onclick="toggleModCheck(this)">
-        <input type="checkbox" name="modulos" value="master">
-        <span>⚡ Master</span>
+        </label>`).join('');
+    const masterOpt = `<label class="mod-check-item" onclick="toggleModCheck(this)">
+        <input type="checkbox" name="modulos" value="master"><span>⚡ Master</span>
     </label>`;
-    $('modalBody').innerHTML=`
+    $('modalBody').innerHTML = `
         <div class="form-grid">
             <div class="form-group full">
                 <label>Email *</label>
@@ -428,9 +497,7 @@ function abrirModalUsuario(){
             </div>
             <div class="form-group full">
                 <label>Módulos com acesso</label>
-                <div class="modulos-check" id="modulosCheck">
-                    ${modsList}${masterOpt}
-                </div>
+                <div class="modulos-check" id="modulosCheck">${modsList}${masterOpt}</div>
             </div>
             <div class="form-group">
                 <label>Status</label>
@@ -444,59 +511,191 @@ function abrirModalUsuario(){
     $('modalOverlay').classList.add('open');
 }
 
-function toggleModCheck(label){
-    const cb=label.querySelector('input');
-    cb.checked=!cb.checked;
-    label.classList.toggle('checked',cb.checked);
+function toggleModCheck(label) {
+    const cb = label.querySelector('input');
+    cb.checked = !cb.checked;
+    label.classList.toggle('checked', cb.checked);
 }
 
-async function confirmarInsertUsuario(){
-    const email=$('n-email').value.trim();
-    if(!email){toast('⚠️ Email obrigatório');return;}
-    const nome=$('n-nome').value.trim();
-    const modulos=[...$('modulosCheck').querySelectorAll('input:checked')].map(i=>i.value);
-    const ativo=$('n-ativo').value==='true';
-    const btn=$('btnInserir');
-    btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Inserindo...';
-    try{
-        const r=await fetch('/master/usuarios/inserir',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,nome,modulos,ativo})});
-        const d=await r.json();
-        btn.disabled=false;btn.innerHTML='✅ Inserir na Planilha';
-        if(d.ok){
+async function confirmarInsertUsuario() {
+    const email = $('n-email').value.trim();
+    if (!email) { toast('⚠️ Email obrigatório'); return; }
+    const nome    = $('n-nome').value.trim();
+    const modulos = [...$('modulosCheck').querySelectorAll('input:checked')].map(i=>i.value);
+    const ativo   = $('n-ativo').value === 'true';
+    const btn     = $('btnInserir');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Inserindo...';
+    try {
+        const r = await fetch('/master/usuarios/inserir', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email,nome,modulos,ativo})});
+        const d = await r.json();
+        btn.disabled = false; btn.innerHTML = '✅ Inserir na Planilha';
+        if (d.ok) {
             toast(`✅ Usuário inserido na linha ${d.linha}!`);
             $('modalOverlay').classList.remove('open');
             carregarUsuarios();
-        }else toast('❌ '+(d.erro||'Erro ao inserir'),4000);
-    }catch(e){btn.disabled=false;btn.innerHTML='✅ Inserir na Planilha';toast('❌ '+e.message,4000);}
+        } else toast('❌ '+(d.erro||'Erro ao inserir'), 4000);
+    } catch(e) { btn.disabled=false; btn.innerHTML='✅ Inserir na Planilha'; toast('❌ '+e.message, 4000); }
 }
 
-function fecharModal(e){if(e.target.id==='modalOverlay')$('modalOverlay').classList.remove('open');}
+function fecharModalClick(e) { if (e.target.id==='modalOverlay') $('modalOverlay').classList.remove('open'); }
 
-// ── Logs ──────────────────────────────────────────────────
-async function carregarLogs(){
-    try{
-        const r=await fetch('/master/logs');const d=await r.json();
-        const logs=d.logs||[];
-        const list=$('logList');
-        if(!logs.length){list.innerHTML='<div class="empty-msg">Nenhum log registrado ainda.<br><span style="font-size:11px;color:var(--muted)">Os logs aparecem aqui conforme os usuários acessam o sistema.</span></div>';return;}
-        list.innerHTML=logs.map(l=>`
+// ── Avisos ─────────────────────────────────────────────────
+let _todosAvisos   = [];
+let _filtroAtivo   = 'todos';
+
+async function carregarAvisos() {
+    try {
+        const r = await fetch('/avisos/todos'); const d = await r.json();
+        _todosAvisos = d.avisos || [];
+        renderizarAvisos();
+    } catch(e) {
+        $('listaAvisos').innerHTML = `<div class="empty-msg">❌ Erro ao carregar avisos: ${e.message}<br><span style="font-size:11px">Verifique se o avisosService está registrado no server.js</span></div>`;
+    }
+}
+
+function filtrarSetor(btn, setor) {
+    _filtroAtivo = setor;
+    document.querySelectorAll('.btn-setor').forEach(b => b.classList.remove('ativo'));
+    btn.classList.add('ativo');
+    renderizarAvisos();
+}
+
+function renderizarAvisos() {
+    const lista = $('listaAvisos');
+    const filtrado = _filtroAtivo === 'todos'
+        ? _todosAvisos
+        : _todosAvisos.filter(a => a.setor === _filtroAtivo || a.setor === 'todos');
+
+    if (!filtrado.length) {
+        lista.innerHTML = '<div class="empty-msg">Nenhum aviso encontrado para este setor.<br><span style="font-size:11px;color:var(--muted)">Clique em "Novo Aviso" para criar.</span></div>';
+        return;
+    }
+    lista.innerHTML = filtrado.map(a => `
+        <div class="aviso-card ${a.ativo ? '' : 'inativo'}">
+            <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+                    <span class="aviso-badge ${a.tipo}">${a.tipo}</span>
+                    <span style="font-size:11px;color:var(--muted);background:var(--bg3);padding:2px 10px;border-radius:999px;border:1px solid var(--border)">${a.setor}</span>
+                    ${!a.ativo ? '<span style="font-size:11px;color:var(--muted)">(inativo)</span>' : ''}
+                    ${a.data ? `<span style="font-size:11px;color:var(--muted)">${a.data}</span>` : ''}
+                </div>
+                <div style="font-size:13px;font-weight:800;margin-bottom:4px">${a.titulo}</div>
+                <div style="font-size:12px;color:var(--muted);line-height:1.5">${a.texto||''}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+                <button onclick="editarAviso(${a.rowIndex})" class="btn btn-ghost btn-sm" style="font-size:11px">✏️ Editar</button>
+                <button onclick="toggleAtivoAviso(${a.rowIndex},${a.ativo})" class="btn btn-ghost btn-sm" style="font-size:11px;color:${a.ativo?'var(--red)':'var(--green)'}">
+                    ${a.ativo ? '🚫 Desativar' : '✅ Ativar'}
+                </button>
+            </div>
+        </div>`).join('');
+}
+
+function abrirModalAviso() {
+    $('avisoRowIndex').value        = '';
+    $('avisoSetor').value           = 'todos';
+    $('avisoTipo').value            = 'info';
+    $('avisoTituloInput').value     = '';
+    $('avisoTexto').value           = '';
+    $('avisoAtivo').checked         = true;
+    $('modalAvisoTitulo').textContent = '📢 Novo Aviso';
+    $('modalAvisoOverlay').classList.add('open');
+}
+
+function editarAviso(rowIndex) {
+    const a = _todosAvisos.find(x => x.rowIndex === rowIndex);
+    if (!a) return;
+    $('avisoRowIndex').value        = a.rowIndex;
+    $('avisoSetor').value           = a.setor;
+    $('avisoTipo').value            = a.tipo;
+    $('avisoTituloInput').value     = a.titulo;
+    $('avisoTexto').value           = a.texto || '';
+    $('avisoAtivo').checked         = a.ativo;
+    $('modalAvisoTitulo').textContent = '✏️ Editar Aviso';
+    $('modalAvisoOverlay').classList.add('open');
+}
+
+function fecharModalAvisoClick(e) { if (e.target.id==='modalAvisoOverlay') $('modalAvisoOverlay').classList.remove('open'); }
+
+async function salvarAviso() {
+    const rowIndex = $('avisoRowIndex').value;
+    const dados = {
+        setor:  $('avisoSetor').value,
+        tipo:   $('avisoTipo').value,
+        titulo: $('avisoTituloInput').value.trim(),
+        texto:  $('avisoTexto').value.trim(),
+        ativo:  $('avisoAtivo').checked,
+    };
+    if (!dados.titulo) { toast('⚠️ Preencha o título.'); return; }
+    if (rowIndex) dados.rowIndex = Number(rowIndex);
+
+    const url    = rowIndex ? '/avisos/editar'  : '/avisos/inserir';
+    const method = rowIndex ? 'PATCH'           : 'POST';
+    const btn    = $('btnSalvarAviso');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Salvando...';
+
+    try {
+        const r = await fetch(url, {method, headers:{'Content-Type':'application/json'}, body:JSON.stringify(dados)});
+        const d = await r.json();
+        btn.disabled = false; btn.innerHTML = '✅ Salvar Aviso';
+        if (d.ok) {
+            toast(rowIndex ? '✅ Aviso atualizado!' : `✅ Aviso criado!`);
+            $('modalAvisoOverlay').classList.remove('open');
+            // Limpa cache no servidor e recarrega
+            await fetch('/avisos/recarregar', {method:'POST'});
+            await carregarAvisos();
+        } else toast('❌ '+(d.erro||'Erro'), 4000);
+    } catch(e) { btn.disabled=false; btn.innerHTML='✅ Salvar Aviso'; toast('❌ '+e.message, 4000); }
+}
+
+async function toggleAtivoAviso(rowIndex, ativoAtual) {
+    const a = _todosAvisos.find(x => x.rowIndex === rowIndex);
+    if (!a) return;
+    const r = await fetch('/avisos/editar', {
+        method: 'PATCH',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({...a, rowIndex, ativo: !ativoAtual}),
+    });
+    const d = await r.json();
+    if (d.ok) {
+        toast(!ativoAtual ? '✅ Aviso ativado!' : '🚫 Aviso desativado!');
+        await fetch('/avisos/recarregar', {method:'POST'});
+        await carregarAvisos();
+    } else toast('❌ '+(d.erro||'Erro'), 4000);
+}
+
+// ── Logs ───────────────────────────────────────────────────
+async function carregarLogs() {
+    const list = $('logList');
+    list.innerHTML = '<div class="empty-msg">Carregando...</div>';
+    try {
+        const r = await fetch('/master/logs'); const d = await r.json();
+        const logs = d.logs || [];
+        $('totalLogs').textContent = logs.length ? `${logs.length} registro(s)` : '';
+        if (!logs.length) {
+            list.innerHTML = '<div class="empty-msg">Nenhum log registrado ainda.<br><span style="font-size:11px;color:var(--muted)">Os logins passarão a ser registrados automaticamente.</span></div>';
+            return;
+        }
+        list.innerHTML = logs.map(l => `
             <div class="log-item">
                 <div class="log-time">${l.hora||'—'}</div>
                 <div class="log-user">${l.email||'—'}</div>
                 <div class="log-action">${l.acao||'Acesso'}</div>
                 <div class="log-modulo">${l.modulo||''}</div>
-                ${l.ip?`<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">${l.ip}</div>`:''}
+                <div class="log-ip">${l.ip||''}</div>
             </div>`).join('');
-    }catch(e){$('logList').innerHTML=`<div class="empty-msg">❌ Erro ao carregar logs: ${e.message}</div>`;}
+    } catch(e) {
+        list.innerHTML = `<div class="empty-msg">❌ Erro ao carregar logs: ${e.message}</div>`;
+    }
 }
 
-// ── Init ──────────────────────────────────────────────────
-(async()=>{
-    setStatus('syncing','Carregando...');
+// ── Init ───────────────────────────────────────────────────
+(async () => {
+    setStatus('syncing', 'Carregando...');
     await carregarPerfil();
     await carregarModulos();
-    await Promise.all([verificarHealth(),carregarUsuarios(),carregarLogs()]);
-    setStatus('ready',`${_modulos.length} módulo(s) ativos`);
+    await Promise.all([verificarHealth(), carregarUsuarios(), carregarAvisos(), carregarLogs()]);
+    setStatus('ready', `${_modulos.length} módulo(s) ativos`);
 })();
 </script>
 </body>

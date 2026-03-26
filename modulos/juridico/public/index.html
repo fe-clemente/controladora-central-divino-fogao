@@ -37,8 +37,6 @@
         main{max-width:1100px;margin:0 auto;padding:32px 24px;}
         .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
         .page-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
-
-        /* ── CARDS DE RESUMO ── */
         .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
         .card{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:var(--text);}
         .card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);border-color:var(--jur);}
@@ -47,8 +45,6 @@
         .card-val{font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
         .card-sub{font-size:11px;color:var(--muted);margin-top:6px;font-weight:600;}
         .card-link{font-size:11px;font-weight:700;margin-top:8px;display:inline-flex;align-items:center;gap:4px;}
-
-        /* ── HCARD ── */
         .hcard{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:all .2s;margin-bottom:16px;text-decoration:none;display:block;}
         .hcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
         .hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:16px 16px 0 0;}
@@ -64,8 +60,6 @@
         .hcard-link{font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;}
         .hcard-link.c-jur{color:var(--jur);}
         .hcard-link.c-yellow{color:var(--yellow);}
-
-        /* ── GA (Gestão de Ativos) ── */
         .ga-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px;}
         .ga-metric{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
         .ga-metric-val{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px;}
@@ -81,17 +75,10 @@
         .ga-valor-pill{flex:1;min-width:140px;background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;}
         .ga-valor-pill-val{font-size:20px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:3px;}
         .ga-valor-pill-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
-        .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-        .bar-label{font-size:12px;font-weight:600;color:var(--text);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        .bar-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
-        .bar-fill{height:100%;border-radius:4px;transition:width .8s ease;}
-        .bar-count{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);width:28px;text-align:right;flex-shrink:0;}
         .loading-msg{text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;}
         .sem-dados{color:var(--muted);font-size:12px;text-align:center;padding:16px;}
         .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--jur);border-radius:50%;animation:spin .7s linear infinite;}
         @keyframes spin{to{transform:rotate(360deg)}}
-
-        /* ── QUICK LINKS ── */
         .quick{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);}
         .quick-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px;}
         .quick-links{display:flex;gap:10px;flex-wrap:wrap;}
@@ -99,8 +86,6 @@
         .ql:hover{background:var(--jur-pale);border-color:var(--jur);color:var(--jur);}
         .ql.primary{background:var(--jur);color:#fff;border-color:var(--jur);}
         .ql.primary:hover{background:#6d28d9;}
-
-        /* ── IA Widget ── */
         #iaWidget{position:fixed;right:24px;bottom:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
         #iaToggle{width:60px;height:60px;border:none;border-radius:999px;cursor:pointer;background:linear-gradient(135deg,var(--jur),#6d28d9);color:#fff;font-size:24px;box-shadow:var(--shadow-lg);}
         #iaJanela{width:390px;max-width:calc(100vw - 24px);background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;box-shadow:var(--shadow-lg);overflow:hidden;display:none;}
@@ -121,26 +106,10 @@
         #btnEnviarIA{border:none;border-radius:12px;padding:0 16px;cursor:pointer;background:var(--jur);color:#fff;font-weight:800;font-family:'Nunito',sans-serif;}
         #btnEnviarIA:hover{background:#6d28d9;}
 
-        /* ── BOTÃO FLUTUANTE COMUNICADOS ── */
-        #popBtn{
-            position:fixed;right:96px;bottom:24px;z-index:9999;
-            width:60px;height:60px;border:none;border-radius:999px;cursor:pointer;
-            background:linear-gradient(135deg,var(--orange),#f97316);
-            color:#fff;font-size:24px;box-shadow:var(--shadow-lg);
-            display:flex;align-items:center;justify-content:center;
-            transition:transform .15s;
-        }
-        #popBtn:hover{transform:scale(1.08);}
-        #popBadge{
-            position:absolute;top:-4px;right:-4px;
-            background:var(--red);color:#fff;
-            font-size:10px;font-weight:900;font-family:'Nunito',sans-serif;
-            border-radius:999px;width:18px;height:18px;
-            display:flex;align-items:center;justify-content:center;
-            pointer-events:none;
-        }
-
         /* ── POPUP COMUNICADOS ── */
+        #popBtn{position:fixed;right:96px;bottom:24px;z-index:9999;width:58px;height:58px;border:none;border-radius:999px;cursor:pointer;background:linear-gradient(135deg,var(--orange),#f97316);color:#fff;font-size:22px;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center;transition:transform .15s;}
+        #popBtn:hover{transform:scale(1.08);}
+        #popBadge{position:absolute;top:-3px;right:-3px;background:var(--red);color:#fff;font-size:10px;font-weight:800;font-family:'Nunito',sans-serif;border-radius:999px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;pointer-events:none;border:2px solid #fff;}
         .pop-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .22s;}
         .pop-overlay.open{opacity:1;pointer-events:all;}
         .pop-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:100%;max-width:560px;max-height:80vh;display:flex;flex-direction:column;transform:translateY(12px);transition:transform .22s;}
@@ -187,7 +156,6 @@
         <button class="nav-btn" onclick="location.href='/juridico/controle-equipamentos'">🖥️ Gestão Ativos(funcionários)</button>
         <button class="nav-btn" onclick="location.href='/juridico/ativos'">📋 Ativos & Comodatos</button>
         <button class="nav-btn" onclick="location.href='/juridico/uploads'">📁 Uploads</button>
-        <button class="nav-btn" onclick="abrirPopup()" style="color:var(--orange)">📢 Comunicados</button>
     </nav>
 </header>
 
@@ -200,7 +168,6 @@
     <div class="page-title">⚖️ Central Jurídica</div>
     <div class="page-sub" id="pageSub">Divino Fogão — Gestão de Ativos & Comodatos</div>
 
-    <!-- ── CARDS DE RESUMO ── -->
     <div class="cards">
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--jur)">
             <div class="card-icon">📱</div>
@@ -237,7 +204,6 @@
         </a>
     </div>
 
-    <!-- ══ CARD GESTÃO DE ATIVOS — COLABORADORES ══ -->
     <a href="/juridico/controle-equipamentos" class="hcard c-yellow" id="cardGestaoAtivos">
         <div class="hcard-top">
             <div class="hcard-top-left">
@@ -256,7 +222,6 @@
         </div>
     </a>
 
-    <!-- ══ CARD ATIVOS & COMODATOS ══ -->
     <a href="/juridico/ativos" class="hcard c-jur" id="cardAtivos">
         <div class="hcard-top">
             <div class="hcard-top-left">
@@ -275,7 +240,6 @@
         </div>
     </a>
 
-    <!-- ── QUICK LINKS ── -->
     <div class="quick" style="margin-top:16px">
         <div class="quick-title">🔗 Acesso Rápido</div>
         <div class="quick-links">
@@ -286,23 +250,25 @@
     </div>
 </main>
 
-<!-- ══ BOTÃO FLUTUANTE COMUNICADOS ══ -->
-<button id="popBtn" onclick="abrirPopup()" title="Comunicados & Atualizações">
+<!-- BOTÃO FLUTUANTE -->
+<button id="popBtn" onclick="abrirPopup()" title="Comunicados & Avisos">
     📢
-    <span id="popBadge">0</span>
+    <span id="popBadge" style="display:none">0</span>
 </button>
 
-<!-- ══ POPUP COMUNICADOS ══ -->
+<!-- POPUP -->
 <div class="pop-overlay" id="popOverlay" onclick="if(event.target===this)fecharPopup()">
     <div class="pop-box">
         <div class="pop-head">
             <div>
-                <p class="pop-titulo">📢 Comunicados & Atualizações</p>
+                <p class="pop-titulo">📢 Comunicados & Avisos</p>
                 <p class="pop-data" id="popData"></p>
             </div>
             <button class="pop-close" onclick="fecharPopup()">×</button>
         </div>
-        <div class="pop-body" id="popBody"></div>
+        <div class="pop-body" id="popBody">
+            <p style="color:var(--muted);font-size:13px">Carregando...</p>
+        </div>
         <div class="pop-foot">
             <span class="pop-pag" id="popPag"></span>
             <button class="pop-btn-ok" onclick="fecharPopup()">Entendido</button>
@@ -335,16 +301,17 @@
 </div>
 
 <script>
+// ── IDENTIFICAÇÃO DO MÓDULO ───────────────────────────────────────────────────
+const API = '/juridico';
+
 const $ = id => document.getElementById(id);
 const setStatus = (cls, msg) => { $('sdot').className = 'sdot ' + cls; $('statusText').textContent = msg; };
-
-const CORES = ['var(--jur)','var(--yellow)','var(--orange)','var(--green)','var(--blue)','#0891b2','#db2777'];
 
 let dadosAtivosIA  = { ativos:[], distratados:[], desligados:[], statsAtivos:null, sincronizadoEm:null };
 let dadosUploadsIA = { pastas:[], arquivos:[] };
 let dadosGestaoIA  = {};
 
-// ── IA ──────────────────────────────────────────────────────────────────────
+// ── IA ────────────────────────────────────────────────────────────────────────
 function toggleIA() { $('iaJanela').classList.toggle('open'); if($('iaJanela').classList.contains('open')) setTimeout(()=>$('inputIA')?.focus(),60); }
 function addMsgIA(texto, tipo='bot') { const div=document.createElement('div'); div.className='ia-msg '+tipo; div.textContent=texto; $('iaMsgs').appendChild(div); $('iaMsgs').scrollTop=$('iaMsgs').scrollHeight; }
 function usarSugestaoIA(texto) { $('inputIA').value=texto; perguntarIA(); }
@@ -378,7 +345,7 @@ async function perguntarIA() {
     finally{ btn.disabled=false; btn.textContent='Enviar'; }
 }
 
-// ── CARD GESTÃO DE ATIVOS ────────────────────────────────────────────────────
+// ── GESTÃO DE ATIVOS ──────────────────────────────────────────────────────────
 async function carregarGestaoAtivos() {
     const box = $('gaConteudo');
     try {
@@ -387,8 +354,8 @@ async function carregarGestaoAtivos() {
         const d = await r.json();
         if(!d.ok||!d.equipamentos){ box.innerHTML='<div class="sem-dados">Sincronize a Gestão de Ativos para ver dados</div>'; return; }
 
-        const lista  = d.equipamentos||[], stats = d.stats||{}, total = lista.length;
-        const normS  = s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+        const lista=d.equipamentos||[], stats=d.stats||{}, total=lista.length;
+        const normS=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
         const comEquip  = lista.filter(i=>i.tipoAparelho&&i.tipoAparelho!=='').length;
         const semEquip  = total - comEquip;
         const deslig    = lista.filter(i=>normS(i.statusAtual).includes('deslig')).length;
@@ -437,13 +404,12 @@ async function carregarGestaoAtivos() {
               <div class="ga-valor-pill-val" style="color:var(--yellow)">${valorRestituido}</div>
               <div class="ga-valor-pill-lbl">💳 Total restituído (trocas)</div>
             </div>
-          </div>
-        `;
+          </div>`;
         requestAnimationFrame(()=>requestAnimationFrame(()=>{ const f=$('gaProgFill'); if(f) f.style.width=pctCad+'%'; }));
     } catch(e) { box.innerHTML=`<div class="sem-dados">Erro: ${e.message}</div>`; }
 }
 
-// ── CARD ATIVOS & COMODATOS ──────────────────────────────────────────────────
+// ── ATIVOS & COMODATOS ────────────────────────────────────────────────────────
 async function carregarAtivos() {
     try {
         const r = await fetch('/juridico/api/ativos/');
@@ -469,14 +435,13 @@ async function carregarAtivos() {
             <div class="ga-metric" style="border-color:rgba(124,58,237,.25)"><div class="ga-metric-val" style="color:var(--jur)">${nAtivos}</div><div class="ga-metric-lbl">Ativos</div></div>
             <div class="ga-metric" style="border-color:rgba(234,88,12,.25)"><div class="ga-metric-val" style="color:var(--orange)">${nDist}</div><div class="ga-metric-lbl">Distratados</div></div>
             <div class="ga-metric" style="border-color:rgba(100,116,139,.25)"><div class="ga-metric-val" style="color:#64748b">${nDesl}</div><div class="ga-metric-lbl">Desligados</div></div>
-            <div class="ga-metric" style="border-color:rgba(22,163,74,.25)"><div class="ga-metric-val" style="color:var(--green);font-size:16px">${d.statsAtivos?.valorTotalFormatado||'—'}</div><div class="ga-metric-lbl">Valor Total</div></div>
-        `;
+            <div class="ga-metric" style="border-color:rgba(22,163,74,.25)"><div class="ga-metric-val" style="color:var(--green);font-size:16px">${d.statsAtivos?.valorTotalFormatado||'—'}</div><div class="ga-metric-lbl">Valor Total</div></div>`;
 
         setStatus('ready', '✓ Dados carregados' + (d.sincronizadoEm ? ' · Sync: '+new Date(d.sincronizadoEm).toLocaleString('pt-BR') : ''));
     } catch(e) { setStatus('error','❌ '+e.message); }
 }
 
-// ── UPLOADS ──────────────────────────────────────────────────────────────────
+// ── UPLOADS ───────────────────────────────────────────────────────────────────
 async function carregarUploads() {
     try {
         const [rPastas, rArquivos] = await Promise.allSettled([
@@ -495,54 +460,64 @@ async function carregarUploads() {
     }
 }
 
-// ── POPUP COMUNICADOS ────────────────────────────────────────────────────────
+// ── COMUNICADOS (busca da API por setor) ──────────────────────────────────────
+(function() {
+    const _setor = 'juridico';
+    let _avisos  = [];
 
-/* ════════════════════════════════════════════
-   ✏️  EDITE APENAS ESTE BLOCO — COMUNICADOS
-   tipo: 'urgente' | 'atualiz' | 'aviso' | 'info'
-   ════════════════════════════════════════════ */
-const COMUNICADOS = [
-    {
-        tipo: 'aviso',
-        titulo: 'Cadastro e atualização de ativos',
-        texto: 'Até o dia 31/03 as placas de patrimônio estaram prontas para fazer a gestão de ativos.'
-    },
-    {
-        tipo: 'atualiz',
-        titulo: 'Histórico de trocas disponível',
-        texto: 'A página de Gestão de Ativos (funcionários) foi compartilhada entre T.I. e Jurídico, com funcionalidade de exclusão de registros.'
-    },
-    // ← adicione mais objetos aqui
-];
-/* ════════════════════════════════════════════ */
+    async function carregarAvisos() {
+        try {
+            const r = await fetch('/avisos?setor=' + _setor);
+            const d = await r.json();
+            _avisos = d.avisos || [];
+            const badge = $('popBadge');
+            if (_avisos.length > 0) {
+                badge.textContent    = _avisos.length;
+                badge.style.display  = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        } catch(e) {
+            console.warn('[avisos] erro ao carregar:', e.message);
+        }
+    }
 
-(function(){
-    const TIPOS = { urgente:'🔴 Urgente', atualiz:'🔵 Atualização', aviso:'🟡 Aviso', info:'🟢 Informativo' };
-    $('popData').textContent = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-    $('popBody').innerHTML = COMUNICADOS.map(c=>`
-        <div class="pop-msg">
-            <span class="pop-msg-tipo ${c.tipo}">${TIPOS[c.tipo]||c.tipo}</span>
-            <h3>${c.titulo}</h3>
-            <p>${c.texto}</p>
-        </div>`).join('');
-    $('popPag').textContent = COMUNICADOS.length + (COMUNICADOS.length===1?' comunicado':' comunicados');
-    // atualiza badge
-    const badge = $('popBadge');
-    if(badge){ badge.textContent = COMUNICADOS.length; badge.style.display = COMUNICADOS.length ? 'flex' : 'none'; }
+    function renderizarAvisos() {
+        const body = $('popBody');
+        const pag  = $('popPag');
+        const data = $('popData');
+
+        if (!_avisos.length) {
+            body.innerHTML   = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:24px 0">Nenhum aviso no momento.</p>';
+            pag.textContent  = '';
+            data.textContent = '';
+            return;
+        }
+
+        data.textContent = `${_avisos.length} aviso${_avisos.length > 1 ? 's' : ''} — Jurídico`;
+        pag.textContent  = `Total: ${_avisos.length}`;
+        body.innerHTML   = _avisos.map(a => `
+            <div class="pop-msg">
+            <span class="pop-msg-tipo ${a.tipo}">${{
+                info:     'Informativo',
+                atualiz:  'Atualização',
+                aviso:    'Aviso',
+                urgente:  'Urgente'
+            }[a.tipo] || a.tipo}</span>               
+             ${a.data ? `<span style="font-size:10px;color:var(--muted);margin-left:8px">${a.data}</span>` : ''}
+                <h3>${a.titulo}</h3>
+                <p>${a.texto}</p>
+            </div>`).join('');
+    }
+
+    window.abrirPopup  = () => { renderizarAvisos(); $('popOverlay').classList.add('open'); };
+    window.fecharPopup = () => { $('popOverlay').classList.remove('open'); };
+
+    carregarAvisos();
 })();
 
-function abrirPopup(){
-    $('popOverlay').classList.add('open');
-}
-function fecharPopup(){
-    $('popOverlay').classList.remove('open');
-    // some o badge após ler
-    const badge = $('popBadge');
-    if(badge) badge.style.display = 'none';
-}
-
-// ── INIT ─────────────────────────────────────────────────────────────────────
-setStatus('syncing','Carregando...');
+// ── INIT ──────────────────────────────────────────────────────────────────────
+setStatus('syncing', 'Carregando...');
 Promise.allSettled([carregarAtivos(), carregarGestaoAtivos(), carregarUploads()]);
 </script>
 </body>

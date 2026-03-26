@@ -5,22 +5,17 @@ const express    = require('express');
 const router     = express.Router();
 const { google } = require('googleapis');
 
-// ─── Config ───────────────────────────────────────────────────────────────────
-const SHEET_ID   = process.env.USUARIOS_SHEET_ID || '1l3U369m_jss0n1rBrQzfubm7k5kme73O--urJxme6aU';
-const ABA        = process.env.USUARIOS_ABA      || 'Gestao_Login';
-const ABA_LOG    = process.env.LOG_ABA            || 'Log_Acesso';
+const SHEET_ID = process.env.USUARIOS_SHEET_ID || '1l3U369m_jss0n1rBrQzfubm7k5kme73O--urJxme6aU';
+const ABA      = process.env.USUARIOS_ABA      || 'Gestao_Login';
+const ABA_LOG  = process.env.LOG_ABA            || 'Log_Acesso';
 
-// Planilha Gestao_Login: A=Email | B=Nome | C=Modulos | D=Ativo (SIM/NÃO)
-const COL = { email: 0, nome: 1, modulos: 2, ativo: 3 };
-
-// Planilha Log_Acesso: A=Data/Hora | B=Email | C=Ação | D=Módulo | E=IP
+const COL     = { email: 0, nome: 1, modulos: 2, ativo: 3 };
 const COL_LOG = { hora: 0, email: 1, acao: 2, modulo: 3, ip: 4 };
 
-// ─── Google Sheets Auth (leitura + escrita) ───────────────────────────────────
 async function getSheets() {
     const auth = new google.auth.GoogleAuth({
         keyFile: process.env.GOOGLE_KEY_FILE || './minha-chave.json',
-        scopes:  ['https://www.googleapis.com/auth/spreadsheets'],
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
     return google.sheets({ version: 'v4', auth: await auth.getClient() });
 }
@@ -40,7 +35,6 @@ async function lerPlanilha() {
 async function getUsuarios(forcar = false) {
     if (!forcar && _cache) return _cache;
     const rows = await lerPlanilha();
-    // Linha 1 = cabeçalho, dados a partir da linha 2
     _cache = rows.slice(1)
         .map((row, i) => ({
             rowIndex: i + 2,
@@ -54,7 +48,59 @@ async function getUsuarios(forcar = false) {
     return _cache;
 }
 
-// ─── GET /master/usuarios ─────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function extrairIP(req) {
+    // Suporte a proxy reverso (nginx, etc.)
+    const forwarded = req?.headers?.['x-forwarded-for'];
+    if (forwarded) return forwarded.split(',')[0].trim();
+    const raw = req?.ip || req?.connection?.remoteAddress || '';
+    // Normaliza ::ffff:1.2.3.4 → 1.2.3.4
+    return raw.replace(/^::ffff:/, '');
+}
+
+// ─── CORREÇÃO PRINCIPAL: gravarLog agora é síncrono e direto ─────────────────
+// ANTES: usava fila (_logQueue) com setTimeout de 3s → logs perdidos se o
+//        processo reiniciasse ou a requisição terminasse antes do flush.
+// AGORA: grava direto na planilha, sem fila, aguarda confirmação.
+// Para evitar condição de corrida com múltiplas chamadas simultâneas,
+// usamos um lock simples baseado em Promise.
+let _logLock = Promise.resolve();
+
+async function gravarLog(req, email, acao, modulo = '') {
+    const agora = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    const ip    = extrairIP(req);
+    const linha = [agora, email, acao, modulo, ip];
+
+    // Serializa as escritas para evitar sobrescrever a mesma linha
+    _logLock = _logLock.then(async () => {
+        try {
+            const sheets = await getSheets();
+            // Descobre a próxima linha vazia de forma atômica
+            const r = await sheets.spreadsheets.values.get({
+                spreadsheetId: SHEET_ID,
+                range: `'${ABA_LOG}'!A:A`,
+            });
+            const proximaLinha = (r.data.values || []).length + 1;
+            await sheets.spreadsheets.values.update({
+                spreadsheetId: SHEET_ID,
+                range: `'${ABA_LOG}'!A${proximaLinha}`,
+                valueInputOption: 'USER_ENTERED',
+                requestBody: { values: [linha] },
+            });
+            console.log(`[log] ${agora} | ${email} | ${acao} | ${modulo} | ${ip}`);
+        } catch (e) {
+            console.error('[log] Erro ao gravar:', e.message, '| dados:', linha);
+        }
+    });
+
+    // Aguarda a gravação antes de retornar (garante que o log foi gravado)
+    return _logLock;
+}
+
+module.exports.gravarLog = gravarLog;
+
+// ─── Rotas de usuários (inalteradas, apenas usando o gravarLog corrigido) ────
+
 router.get('/usuarios', async (req, res) => {
     try {
         const usuarios = await getUsuarios();
@@ -65,7 +111,6 @@ router.get('/usuarios', async (req, res) => {
     }
 });
 
-// ─── POST /master/usuarios/recarregar ─────────────────────────────────────────
 router.post('/usuarios/recarregar', async (req, res) => {
     try {
         _cache = null;
@@ -76,14 +121,11 @@ router.post('/usuarios/recarregar', async (req, res) => {
     }
 });
 
-// ─── POST /master/usuarios/inserir ───────────────────────────────────────────
-// Body: { email, nome, modulos: ['ti','juridico',...], ativo: true|false }
 router.post('/usuarios/inserir', async (req, res) => {
     try {
         const { email, nome, modulos, ativo } = req.body;
         if (!email) return res.status(400).json({ ok: false, erro: 'Email obrigatório.' });
 
-        // Verifica duplicata
         const lista = await getUsuarios();
         const jaExiste = lista.find(u => u.email === email.toLowerCase().trim());
         if (jaExiste) return res.status(400).json({ ok: false, erro: `Usuário já existe na linha ${jaExiste.rowIndex}.` });
@@ -101,16 +143,15 @@ router.post('/usuarios/inserir', async (req, res) => {
             range: `'${ABA}'!A${proximaLinha}`,
             valueInputOption: 'USER_ENTERED',
             requestBody: { values: [[
-                email.trim().toLowerCase(),       // A = Email
-                nome ? nome.trim() : '',           // B = Nome
-                modulosStr,                        // C = Módulos
-                ativo === false ? 'NÃO' : 'SIM',  // D = Ativo
+                email.trim().toLowerCase(),
+                nome ? nome.trim() : '',
+                modulosStr,
+                ativo === false ? 'NÃO' : 'SIM',
             ]] },
         });
 
         _cache = null;
         await gravarLog(req, email, 'Usuário inserido', 'master');
-        console.log(`[master] Usuário inserido: ${email} → linha ${proximaLinha}`);
         res.json({ ok: true, linha: proximaLinha });
     } catch (e) {
         console.error('[master] inserir erro:', e.message);
@@ -118,7 +159,6 @@ router.post('/usuarios/inserir', async (req, res) => {
     }
 });
 
-// ─── POST /master/usuarios/desativar ─────────────────────────────────────────
 router.post('/usuarios/desativar', async (req, res) => {
     try {
         const { email } = req.body;
@@ -145,7 +185,6 @@ router.post('/usuarios/desativar', async (req, res) => {
     }
 });
 
-// ─── POST /master/usuarios/reativar ──────────────────────────────────────────
 router.post('/usuarios/reativar', async (req, res) => {
     try {
         const { email } = req.body;
@@ -172,8 +211,6 @@ router.post('/usuarios/reativar', async (req, res) => {
     }
 });
 
-// ─── PATCH /master/usuarios/permissoes ───────────────────────────────────────
-// Body: { email, modulos: ['ti','juridico',...] }
 router.patch('/usuarios/permissoes', async (req, res) => {
     try {
         const { email, modulos } = req.body;
@@ -204,50 +241,6 @@ router.patch('/usuarios/permissoes', async (req, res) => {
     }
 });
 
-// ═════════════════════════════════════════════════════════════════════════════
-//  LOGS — persistidos na aba Log_Acesso da planilha
-// ═════════════════════════════════════════════════════════════════════════════
-
-// Fila para gravar logs em batch (evita muitas chamadas simultâneas)
-const _logQueue = [];
-let _logTimer   = null;
-
-async function flushLogs() {
-    if (!_logQueue.length) return;
-    const lote = _logQueue.splice(0, _logQueue.length);
-    try {
-        const sheets = await getSheets();
-        // Descobre próxima linha
-        const r = await sheets.spreadsheets.values.get({
-            spreadsheetId: SHEET_ID,
-            range: `'${ABA_LOG}'!A:A`,
-        });
-        const proximaLinha = (r.data.values || []).length + 1;
-        await sheets.spreadsheets.values.update({
-            spreadsheetId: SHEET_ID,
-            range: `'${ABA_LOG}'!A${proximaLinha}`,
-            valueInputOption: 'USER_ENTERED',
-            requestBody: { values: lote },
-        });
-    } catch (e) {
-        console.error('[master/log] Erro ao gravar logs:', e.message);
-    }
-}
-
-// Grava um log — coloca na fila e agenda flush em 3s
-async function gravarLog(req, email, acao, modulo = '') {
-    const agora = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-    const ip    = req?.ip || req?.connection?.remoteAddress || '';
-    _logQueue.push([agora, email, acao, modulo, ip]);
-
-    clearTimeout(_logTimer);
-    _logTimer = setTimeout(flushLogs, 3000);
-}
-
-// Também exporta para uso externo (ex: middlewarePerfil pode chamar)
-module.exports.gravarLog = gravarLog;
-
-// ─── GET /master/logs ─────────────────────────────────────────────────────────
 router.get('/logs', async (req, res) => {
     try {
         const sheets = await getSheets();
@@ -255,8 +248,7 @@ router.get('/logs', async (req, res) => {
             spreadsheetId: SHEET_ID,
             range: `'${ABA_LOG}'`,
         });
-        const rows = r.data.values || [];
-        // Linha 1 pode ser cabeçalho — pega as últimas 100 entradas, mais recentes primeiro
+        const rows  = r.data.values || [];
         const dados = rows.slice(1).slice(-100).reverse().map(row => ({
             hora:   row[COL_LOG.hora]   || '',
             email:  row[COL_LOG.email]  || '',
@@ -272,3 +264,4 @@ router.get('/logs', async (req, res) => {
 });
 
 module.exports = router;
+module.exports.gravarLog = gravarLog;

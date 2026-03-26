@@ -9,7 +9,6 @@ const { perguntarTreinamento } = require('./services/iaTreinamentoService');
 
 const PUBLIC = path.join(__dirname, 'public');
 
-// ─── Multer — memória, sem disco ──────────────────────────────────────────────
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 50 * 1024 * 1024 },
@@ -25,6 +24,7 @@ const lembretesCache    = require('./services/lembretesCache');
 const { gravarSultsNaPlanilha }  = require('./services/gravarSultsPlanilha');
 const { enviarWhatsAppLembrete } = require('./services/whatsapp');
 const { enviarEmailLembrete }    = require('./services/email');
+const linksTreinamentoService = require('./services/linksTreinamentoService');
 
 const {
   listarPastas,
@@ -37,7 +37,7 @@ const {
 
 const {
   getSheetsData,
-  atualizarCelula,                   // ★ necessário para gravar AJ/AX/AY
+  atualizarCelula,
   marcarLembreteEnviado,
   marcarEmailAvaliacaoEnviado,
   preencherAvaliacao,
@@ -66,7 +66,6 @@ turnoverCache.inicializar().catch(e => console.error('TURNOVER init falhou:', e.
 uploadsCache.inicializar().catch(e => console.error('UPLOADS init falhou:', e.message));
 lembretesCache.inicializar().catch(e => console.error('LEMBRETES init falhou:', e.message));
 
-// ─── Helper de link de avaliação ─────────────────────────────────────────────
 const { router: avaliacaoRouter, gerarLinkAvaliacao } = require('./services/avaliacao');
 router.use('/avaliacao', avaliacaoRouter);
 
@@ -84,10 +83,14 @@ router.get('/universidade', (req, res) => res.sendFile(path.join(PUBLIC, 'univer
 router.get('/valores',      (req, res) => res.sendFile(path.join(PUBLIC, 'valores.html')));
 router.get('/uploads',      (req, res) => res.sendFile(path.join(PUBLIC, 'uploads.html')));
 router.get('/cadastro',     (req, res) => res.sendFile(path.join(PUBLIC, 'cadastro.html')));
+router.get('/links', (req, res) => res.sendFile(path.join(PUBLIC, 'links.html'))
+);
+
+
+router.use('/links-api', linksTreinamentoService);
 
 // ─── Arquivos estáticos ───────────────────────────────────────────────────────
 router.use(express.static(PUBLIC, { index: false, extensions: false }));
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // STATUS / CACHE
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -260,7 +263,7 @@ router.post('/buscar', async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// LEMBRETES  ★ rowIndex 0-based → atualizarCelula grava na linha correta
+// LEMBRETES
 // ═══════════════════════════════════════════════════════════════════════════════
 router.get('/lembretes', async (req, res) => {
   const accept = req.headers.accept || '';
@@ -283,7 +286,6 @@ router.get('/lembretes/status', (req, res) => {
 router.get('/lembretes/historico', async (req, res) => {
   try {
     const { inicio, fim, mes, ano } = req.query;
-
     let historico = await getHistoricoLembretes();
 
     function parseDMY(str) {
@@ -326,62 +328,42 @@ router.get('/lembretes/historico', async (req, res) => {
 
     const lista = lembretesCache.getDados()?.lista || [];
     lembretesCache.setDados(lista, historico);
-
     res.json({ total: historico.length, historico });
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
-// ★ POST /enviar-lembrete
-// rowIndex: 0-based (vindo de getFuncionariosParaLembrete)
-// atualizarCelula: linhaReal = rowIndex + 9  ✅
 router.post('/enviar-lembrete', async (req, res) => {
   try {
     const f = req.body;
-
     if (f.rowIndex === undefined)
       return res.status(400).json({ sucesso: false, erro: 'rowIndex obrigatório.' });
-
     if (!['5dias', '2dias', 'hoje'].includes(f.tipo))
       return res.status(400).json({ sucesso: false, erro: 'tipo deve ser: 5dias, 2dias ou hoje.' });
-
     const dataHora = new Date().toLocaleString('pt-BR', {
       day: '2-digit', month: '2-digit', year: 'numeric',
       hour: '2-digit', minute: '2-digit',
     });
     const textoLembrete = `Lembrete enviado em ${dataHora}`;
-
-    // tipo → campo do COLUNA_MAP
     const colunaMap = {
-      '5dias': 'lembrete5Dias',  // → AJ (índice 35)
-      '2dias': 'lembrete2Dias',  // → AX (índice 49)
-      'hoje':  'lembreteHoje',   // → AY (índice 50)
+      '5dias': 'lembrete5Dias',
+      '2dias': 'lembrete2Dias',
+      'hoje':  'lembreteHoje',
     };
-
-    // ✅ Grava na coluna correta
     await atualizarCelula(f.rowIndex, colunaMap[f.tipo], textoLembrete);
-
-    // Atualiza cache local
     lembretesCache.marcarEnviado(f.rowIndex, f.tipo);
-
-    // Responde imediatamente
     res.json({ sucesso: true, lembrete: textoLembrete, tipo: f.tipo });
-
-    // ── Background: WhatsApp + e-mail ─────────────────────────────────────
     const baseUrl        = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
     const linkOrigem     = gerarLinkAvaliacao(f.rowIndex, baseUrl);
     const linkTreinadora = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'treinadora');
-
     if (f.telefone) {
       enviarWhatsAppLembrete({ ...f, diffDias: f.diffDias ?? 0 })
         .catch(e => console.error('[LEMBRETE] WhatsApp:', e.message));
     }
-
     if (f.email || f.emailLojaAvaliadora) {
       enviarEmailLembrete(f, linkOrigem, linkTreinadora)
         .then(() => marcarEmailAvaliacaoEnviado(f.rowIndex))
         .catch(e => console.error('[LEMBRETE] Email:', e.message));
     }
-
   } catch (e) {
     console.error('[LEMBRETE] Erro:', e.message);
     if (!res.headersSent) res.status(500).json({ sucesso: false, erro: e.message });
@@ -444,10 +426,6 @@ router.get('/valores/premio-refeicao', async (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 // TURNOVER
 // ═══════════════════════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════════════════════
-// TURNOVER — fonte: aba "Controle TurnOver"
-// ═══════════════════════════════════════════════════════════════════════════════
-
 router.get('/turnover/dados', async (req, res) => {
   try {
     const { ano } = req.query;
@@ -494,7 +472,6 @@ router.post('/turnover/sincronizar', async (req, res) => {
   } catch (e) { res.status(500).json({ ok: false, erro: e.message }); }
 });
 
-// PATCH /turnover/:rowIndex — atualiza AF (continua), AG (mesmoCargo), AH (motivo)
 router.patch('/turnover/:rowIndex', async (req, res) => {
   try {
     const rowIndex = parseInt(req.params.rowIndex, 10);
@@ -507,8 +484,6 @@ router.patch('/turnover/:rowIndex', async (req, res) => {
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
-// POST /turnover/importar — importa um cadastro para aba Controle TurnOver
-// Chamado automaticamente pelo POST /cadastro ao salvar um novo funcionário
 router.post('/turnover/importar', async (req, res) => {
   try {
     const { importarDaCadastral } = require('./services/turnover');
@@ -604,13 +579,11 @@ router.post('/sults/sincronizar', async (req, res) => {
 router.get('/universidade/dados', async (req, res) => {
   try {
     let dados = universidadeCache.getDados();
-
     if (!dados || dados.totalLinhas === 0 || req.query.forcar === '1') {
       dados = await universidadeCache.sincronizarEAtualizar(
         req.query.forcar === '1' ? 'manual' : 'cache vazio'
       );
     }
-
     res.json(dados);
   } catch (e) {
     const dados = universidadeCache.getDados();
@@ -627,6 +600,7 @@ router.post('/universidade/sincronizar', async (req, res) => {
     res.json({ ok: true, totalLinhas: dados.totalLinhas, sincronizadoEm: dados.sincronizadoEm });
   } catch (e) { res.status(500).json({ ok: false, erro: e.message }); }
 });
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // UPLOADS — Google Drive
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -685,12 +659,10 @@ router.post('/uploads/arquivo', upload.array('arquivos', 20), async (req, res) =
   try {
     if (!req.files || req.files.length === 0)
       return res.status(400).json({ ok: false, erro: 'Nenhum arquivo enviado' });
-
     const { pastaId } = req.body;
     const destino     = pastaId || PASTA_RAIZ_ID;
     const resultados  = [];
     const erros       = [];
-
     for (const file of req.files) {
       try {
         const arquivo = await uploadArquivo({
@@ -706,13 +678,7 @@ router.post('/uploads/arquivo', upload.array('arquivos', 20), async (req, res) =
         erros.push({ nome: file.originalname, erro: e.message });
       }
     }
-
-    res.json({
-      ok:       erros.length === 0,
-      enviados: resultados.length,
-      arquivos: resultados,
-      erros:    erros.length ? erros : undefined,
-    });
+    res.json({ ok: erros.length === 0, enviados: resultados.length, arquivos: resultados, erros: erros.length ? erros : undefined });
   } catch (e) {
     console.error('[UPLOADS] Erro no upload:', e.message);
     res.status(500).json({ ok: false, erro: e.message });
