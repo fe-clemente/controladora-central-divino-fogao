@@ -20,6 +20,7 @@ const upload = multer({
 // ─── Services ────────────────────────────────────────────────
 const ativosService   = require('./services/ativosService');
 const jurUploadsCache = require('./services/uploadscache');
+const linksJuridico = require('./services/linksJuridico');
 const {
     listarPastas,
     criarPasta,
@@ -43,6 +44,7 @@ router.use(express.static(path.join(__dirname, 'public')));
 router.get('/', (req, res) => {
     const index  = path.join(__dirname, 'public', 'index.html');
     const ativos = path.join(__dirname, 'public', 'ativos.html');
+    const links = path.join(__dirname, 'public', 'links.html');
     if (fs.existsSync(index)) return res.sendFile(index);
     return res.sendFile(ativos);
 });
@@ -53,6 +55,11 @@ router.get('/uploads',                    (req, res) => res.sendFile(path.join(_
 router.get('/uploads.html',               (req, res) => res.sendFile(path.join(__dirname, 'public', 'uploads.html')));
 router.get('/controle-equipamentos',      (req, res) => res.sendFile(path.join(__dirname, 'public', 'controle-equipamentos.html')));
 router.get('/controle-equipamentos.html', (req, res) => res.sendFile(path.join(__dirname, 'public', 'controle-equipamentos.html')));
+router.get('/links', (req, res) => res.sendFile(path.join(__dirname, 'public', 'links.html')));
+router.get('/links.html', (req, res) => res.sendFile(path.join(__dirname, 'public', 'links.html')));
+router.use('/links-api', linksJuridico);
+
+
 
 // opcional, caso você crie uma página própria da IA
 router.get('/iajuridico', (req, res) => {
