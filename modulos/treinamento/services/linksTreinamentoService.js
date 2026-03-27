@@ -23,14 +23,6 @@ async function getSheetClient() {
 const DATA_DIR  = path.join(__dirname, '../../../cache');
 const DATA_FILE = path.join(DATA_DIR, 'links_treinamento.json');
 
-const LINKS_INICIAIS = [
-    { id:1,  nome:'SULTS — Divino Fogão',          url:'https://divinofogao.sults.com.br/solucoes',                                                                grupo:'Sistemas',    tipo:'sistema', descricao:'Plataforma SULTS' },
-    { id:2,  nome:'SULTS API Developers',           url:'https://developers.sults.com.br/',                                                                         grupo:'Sistemas',    tipo:'sistema', descricao:'Documentação da API SULTS' },
-    { id:3,  nome:'Google Admin — E-mails',         url:'https://admin.google.com/',                                                                                 grupo:'Sistemas',    tipo:'sistema', descricao:'Gestão de e-mails Google Workspace' },
-    { id:4,  nome:'ClickUp — Projetos',             url:'https://app.clickup.com/90133044789/v/l/li/901325450229',                                                   grupo:'Sistemas',    tipo:'sistema', descricao:'Gestão de tarefas e projetos' },
-    { id:5,  nome:'Planilha de Treinamentos',       url:'https://docs.google.com/spreadsheets/d/1l3U369m_jss0n1rBrQzfubm7k5kme73O--urJxme6aU/edit',                grupo:'Planilhas',   tipo:'planilha', descricao:'Planilha principal de treinamentos' },
-];
-
 function lerLinksCache() {
     try { if (!fs.existsSync(DATA_FILE)) return null; return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
     catch { return null; }
@@ -40,15 +32,7 @@ function salvarLinksCache(links) {
     catch (e) { console.error('[links-trein-cache]', e.message); }
 }
 function getLinksCache() {
-    const salvo = lerLinksCache();
-    if (salvo) {
-        const ids  = new Set(salvo.map(l => l.id));
-        const novos = LINKS_INICIAIS.filter(l => !ids.has(l.id));
-        if (novos.length) { const merged = [...salvo, ...novos]; salvarLinksCache(merged); return merged; }
-        return salvo;
-    }
-    salvarLinksCache(LINKS_INICIAIS);
-    return LINKS_INICIAIS;
+    return lerLinksCache() || [];
 }
 function proximoId(links) { return links.length ? Math.max(...links.map(l => l.id)) + 1 : 1; }
 function detectarTipo(url) {
@@ -130,17 +114,11 @@ async function appendLinkSheet(link) {
 
 async function getLinks() {
     const sheetLinks = await lerLinksSheet();
-    if (sheetLinks !== null && sheetLinks.length > 0) {
+    if (sheetLinks !== null) {
         salvarLinksCache(sheetLinks);
         return sheetLinks;
     }
-    const cacheLinks = getLinksCache();
-    if (sheetLinks !== null && sheetLinks.length === 0) {
-        console.log('[links-trein] Planilha vazia — populando com', cacheLinks.length, 'links...');
-        try { await salvarTodosLinksSheet(cacheLinks); }
-        catch (e) { console.error('[links-trein] Erro ao popular planilha:', e.message); }
-    }
-    return cacheLinks;
+    return getLinksCache();
 }
 
 // ── ROTAS ────────────────────────────────────────────────────────────────────
@@ -215,20 +193,16 @@ router.get('/grupos', async (req, res) => {
 
 router.post('/sincronizar', async (req, res) => {
     try {
-        const cacheLinks = getLinksCache();
         const sheetLinks = await lerLinksSheet();
-        let linksFinais;
-        if (sheetLinks !== null && sheetLinks.length > 0) {
+        if (sheetLinks !== null) {
             salvarLinksCache(sheetLinks);
-            linksFinais = sheetLinks;
-        } else {
-            linksFinais = cacheLinks;
-            await salvarTodosLinksSheet(cacheLinks);
+            return res.json({ ok: true, total: sheetLinks.length, msg: `Sincronizado: ${sheetLinks.length} links.` });
         }
-        res.json({ ok: true, total: linksFinais.length, msg: `Sincronizado: ${linksFinais.length} links.` });
+        const fallback = getLinksCache();
+        res.json({ ok: true, total: fallback.length, msg: `Cache local: ${fallback.length} links (planilha indisponível).` });
     } catch (e) {
         const fallback = getLinksCache();
-        res.json({ ok: true, total: fallback.length, msg: `Cache: ${fallback.length} links (planilha indisponível: ${e.message})` });
+        res.json({ ok: true, total: fallback.length, msg: `Cache: ${fallback.length} links (erro: ${e.message})` });
     }
 });
 
