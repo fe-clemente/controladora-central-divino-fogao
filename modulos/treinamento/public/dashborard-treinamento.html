@@ -985,56 +985,67 @@ verificarStatus();
 </div>
 
 <script>
-/* ════════════════════════════════════════════
-   ✏️  EDITE APENAS ESTE BLOCO — COMUNICADOS
-   tipo: 'urgente' | 'atualiz' | 'aviso' | 'info'
-   ════════════════════════════════════════════ */
-const COMUNICADOS = [
-    {
-        tipo: 'info',
-        titulo: 'Bem-vindo à Central de Treinamentos',
-        texto: 'Utilize o menu acima para navegar entre Dashboard, Lembretes, Busca e demais módulos.'
-    },
-     {
-        tipo: 'atualiz',
-        titulo: 'Nova função no envio de lembretes ',
-        texto: 'Foi adicionado a função para envio de lembrebre de 5 dias, 2 dias e no dia do treinamento.'
-    },
-     {
-        tipo: 'atualiz',
-        titulo: 'Nova função histórico de lembretes - 26/03/2026',
-        texto: 'Adicionado filtro por período ' 
-    },
-       {
-        tipo: 'atualiz',
-        titulo: 'Página Turnover - 26/03/2026',
-        texto: 'Atualizado e refatorada a página ' 
-    },
-    // ← adicione mais comunicados aqui
-];
-/* ════════════════════════════════════════════ */
+(function() {
+    const _setor = 'treinamento';
+    let _avisos  = [];
 
-(function(){
-    const TIPOS = { urgente:'🔴 Urgente', atualiz:'🔵 Atualização', aviso:'🟡 Aviso', info:'🟢 Informativo' };
-    const gi = id => document.getElementById(id);
-    gi('popData').textContent = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-    gi('popBody').innerHTML = COMUNICADOS.map(c=>`
-        <div class="pop-msg">
-            <span class="pop-msg-tipo ${c.tipo}">${TIPOS[c.tipo]||c.tipo}</span>
-            <h3>${c.titulo}</h3>
-            <p>${c.texto}</p>
-        </div>`).join('');
-    gi('popPag').textContent = COMUNICADOS.length + (COMUNICADOS.length===1?' comunicado':' comunicados');
-    const badge = gi('popBadge');
-    if(badge){ badge.textContent = COMUNICADOS.length; badge.style.display = COMUNICADOS.length ? 'flex' : 'none'; }
+    async function carregarAvisos() {
+        try {
+            const r = await fetch(`/avisos?setor=${_setor}`);
+            const d = await r.json();
+            _avisos = d.avisos || [];
+            const badge = document.getElementById('popBadge');
+            if (_avisos.length > 0) {
+                badge.textContent = _avisos.length;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        } catch(e) {
+            console.warn('[avisos] erro ao carregar:', e.message);
+        }
+    }
+
+    function renderizarAvisos() {
+        const body = document.getElementById('popBody');
+        const pag  = document.getElementById('popPag');
+        const data = document.getElementById('popData');
+
+        if (!_avisos.length) {
+            body.innerHTML = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:24px 0">Nenhum aviso no momento.</p>';
+            pag.textContent  = '';
+            data.textContent = '';
+            return;
+        }
+
+        data.textContent = `${_avisos.length} aviso${_avisos.length > 1 ? 's' : ''} para Treinamento`;
+        pag.textContent  = `Total: ${_avisos.length}`;
+
+        const TIPOS = { urgente:'🔴 Urgente', atualiz:'🔵 Atualização', aviso:'🟡 Aviso', info:'🟢 Informativo' };
+
+        body.innerHTML = _avisos.map(a => `
+            <div class="pop-msg">
+                <span class="pop-msg-tipo ${a.tipo}">${TIPOS[a.tipo] || a.tipo}</span>
+                ${a.data ? `<span style="font-size:10px;color:var(--muted);margin-left:8px">${a.data}</span>` : ''}
+                <h3>${a.titulo}</h3>
+                <p>${a.texto}</p>
+            </div>
+        `).join('');
+    }
+
+    window.abrirPopup = function() {
+        renderizarAvisos();
+        document.getElementById('popOverlay').classList.add('open');
+    };
+
+    window.fecharPopup = function() {
+        document.getElementById('popOverlay').classList.remove('open');
+        const badge = document.getElementById('popBadge');
+        if (badge) badge.style.display = 'none';
+    };
+
+    carregarAvisos();
 })();
-
-function abrirPopup(){ document.getElementById('popOverlay').classList.add('open'); }
-function fecharPopup(){
-    document.getElementById('popOverlay').classList.remove('open');
-    const badge = document.getElementById('popBadge');
-    if(badge) badge.style.display = 'none';
-}
 </script>
 
 
