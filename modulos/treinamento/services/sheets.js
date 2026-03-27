@@ -10,7 +10,7 @@ const ABA_VALORES   = 'Valores';
 // ═══════════════════════════════════════════════════════════════════════════════
 // MAPEAMENTO — ABA: Cadastral 2026 (dados a partir da linha 9)
 // ═══════════════════════════════════════════════════════════════════════════════
-// A=0   nº
+// A=0   nº sequencial
 // B=1   loja treinada
 // C=2   nome completo
 // D=3   CPF
@@ -39,9 +39,11 @@ const ABA_VALORES   = 'Valores';
 // AI=34 (legado — lembrete único antigo)
 // AJ=35 ★ lembrete 5 dias
 // AN=39 loja treinadora avaliou?
-// AO=40 email loja avaliadora
-// AQ=42 nota da loja treinadora
-// AR=43 obs da loja treinadora
+// AO=40 email loja treinadora      ← CORRIGIDO
+// AP=41 loja treinadora            ← CORRIGIDO
+// AQ=42 endereço loja treinadora   ← CORRIGIDO
+// AR=43 nota da loja treinadora
+// AS=44 obs da loja treinadora
 // AW=48 observações avaliação
 // AX=49 ★ lembrete 2 dias
 // AY=50 ★ lembrete hoje
@@ -81,15 +83,10 @@ async function getSheetsData() {
     return res.data.values || [];
 }
 
-// ─── getRows() — retorna objetos nomeados (usado pelo lembretes.js) ───────────
-// Convenção UNIFICADA (0-based):
-//   idx = 0  → linha 9 da planilha
-//   rowIndex = idx (0-based)
-//   atualizarCelula(): linhaReal = rowIndex + 9
+// ─── getRows() — retorna objetos nomeados ─────────────────────────────────────
 async function getRows() {
     const rows = await getSheetsData();
     return rows.map((row, idx) => ({
-        // ★ rowIndex 0-based — padrão único do projeto
         rowIndex:            idx,
         numero:              row[0]  || '',
         loja:                row[1]  || '',
@@ -119,8 +116,10 @@ async function getRows() {
         notaAvaliacao:       row[33] || '',
         avaliacaoTreinadora: row[39] || '',
         emailLojaAvaliadora: row[40] || '',
-        notaTreinadora:      row[42] || '',
-        obsTreinadora:       row[43] || '',
+        lojaTreinadora:      row[41] || '',
+        enderecoLojaTreinadora: row[42] || '',
+        notaTreinadora:      row[43] || '',
+        obsTreinadora:       row[44] || '',
         // ★ LEMBRETES (3 estágios)
         lembrete5Dias: row[35] || '',   // AJ — 5 dias antes
         lembrete2Dias: row[49] || '',   // AX — 2 dias antes
@@ -129,18 +128,13 @@ async function getRows() {
 }
 
 // ─── atualizarCelula() ────────────────────────────────────────────────────────
-// rowIndex: 0-based (idx do array retornado por getSheetsData/getRows)
-//   idx=0 → linha 9 da planilha → linhaReal = 0 + 9 = 9  ✅
-//   idx=1 → linha 10            → linhaReal = 1 + 9 = 10 ✅
-// campo:  chave do COLUNA_MAP
-// valor:  string a gravar
+// rowIndex: 0-based → linhaReal = rowIndex + 9
 async function atualizarCelula(rowIndex, campo, valor) {
     const colLetra = COLUNA_MAP[campo];
     if (!colLetra) {
         throw new Error(`[sheets] Campo desconhecido: "${campo}". Verifique COLUNA_MAP.`);
     }
 
-    // rowIndex = 0-based → linhaReal = rowIndex + 9
     const linhaReal = rowIndex + 9;
 
     const auth   = await getAuth();
@@ -167,7 +161,6 @@ async function getValoresSheetData() {
 }
 
 // ─── MARCAR LEMBRETE ENVIADO (legado) ─────────────────────────────────────────
-// rowIndex: 0-based → linhaReal = rowIndex + 9
 async function marcarLembreteEnviado(rowIndex) {
     const linhaReal = rowIndex + 9;
     const auth      = await getAuth();
@@ -182,7 +175,6 @@ async function marcarLembreteEnviado(rowIndex) {
 }
 
 // ─── MARCAR EMAIL AVALIAÇÃO ENVIADO ──────────────────────────────────────────
-// rowIndex: 0-based → linhaReal = rowIndex + 9
 async function marcarEmailAvaliacaoEnviado(rowIndex) {
     const linhaReal = rowIndex + 9;
     const auth      = await getAuth();
@@ -196,7 +188,6 @@ async function marcarEmailAvaliacaoEnviado(rowIndex) {
 }
 
 // ─── PREENCHER AVALIAÇÃO ──────────────────────────────────────────────────────
-// rowIndex: 0-based → linhaReal = rowIndex + 9
 async function preencherAvaliacao(rowIndex, nota, dataFim, observacoes) {
     const linhaReal = rowIndex + 9;
     const auth      = await getAuth();
@@ -252,7 +243,6 @@ async function gravarAvaliacao(rowIndex, nota) {
 }
 
 // ─── PREENCHER AVALIAÇÃO DA LOJA TREINADORA ──────────────────────────────────
-// rowIndex: 0-based → linhaReal = rowIndex + 9
 async function preencherAvaliacaoTreinadora(rowIndex, nota, dataFim, observacoes) {
     const linhaReal = rowIndex + 9;
     const auth      = await getAuth();
@@ -327,45 +317,46 @@ async function buscarColaboradorExato({ cpf, nome }) {
 }
 
 // ─── MONTAR COLABORADOR ───────────────────────────────────────────────────────
-// index: 0-based
 function montarColaborador(row, index) {
     return {
-        rowIndex:            index,          // 0-based
-        linhaReal:           index + 9,      // linha real na planilha
-        numero:              row[0]  || '',
-        loja:                row[1]  || '',
-        nome:                row[2]  || '',
-        cpf:                 row[3]  || '',
-        rg:                  row[4]  || '',
-        funcao:              row[5]  || '',
-        turno:               row[6]  || '',
-        email:               row[12] || '',
-        telefone:            row[13] || '',
-        inicioTrein:         row[14] || '',
-        fimTrein:            row[15] || '',
-        diasTreinados:       row[16] || '',
-        solicitador:         row[17] || '',
-        local:               row[18] || '',
-        treinador:           row[19] || '',
-        modelo:              row[23] || '',
-        emailAvaliacao:      row[24] || '',
-        avaliacaoOk:         row[25] || '',
-        pago:                row[26] || '',
-        premio:              row[27] || '',
-        refeicao:            row[28] || '',
-        valorTotal:          row[29] || '',
-        mes:                 row[30] || '',
-        ano:                 row[31] || '',
-        aprovado:            row[32] || '',
-        notaAvaliacao:       row[33] || '',
-        lembreteEnviado:     row[34] || '',   // AI legado
-        lembrete5Dias:       row[35] || '',   // AJ
-        lembrete2Dias:       row[49] || '',   // AX
-        lembreteHoje:        row[50] || '',   // AY
-        avaliacaoTreinadora: row[39] || '',
-        emailLojaAvaliadora: row[40] || '',
-        notaTreinadora:      row[42] || '',
-        obsTreinadora:       row[43] || '',
+        rowIndex:               index,
+        linhaReal:              index + 9,
+        numero:                 row[0]  || '',
+        loja:                   row[1]  || '',
+        nome:                   row[2]  || '',
+        cpf:                    row[3]  || '',
+        rg:                     row[4]  || '',
+        funcao:                 row[5]  || '',
+        turno:                  row[6]  || '',
+        email:                  row[12] || '',
+        telefone:               row[13] || '',
+        inicioTrein:            row[14] || '',
+        fimTrein:               row[15] || '',
+        diasTreinados:          row[16] || '',
+        solicitador:            row[17] || '',
+        local:                  row[18] || '',
+        treinador:              row[19] || '',
+        modelo:                 row[23] || '',
+        emailAvaliacao:         row[24] || '',
+        avaliacaoOk:            row[25] || '',
+        pago:                   row[26] || '',
+        premio:                 row[27] || '',
+        refeicao:               row[28] || '',
+        valorTotal:             row[29] || '',
+        mes:                    row[30] || '',
+        ano:                    row[31] || '',
+        aprovado:               row[32] || '',
+        notaAvaliacao:          row[33] || '',
+        lembreteEnviado:        row[34] || '',   // AI legado
+        lembrete5Dias:          row[35] || '',   // AJ
+        avaliacaoTreinadora:    row[39] || '',
+        emailLojaAvaliadora:    row[40] || '',   // AO
+        lojaTreinadora:         row[41] || '',   // AP
+        enderecoLojaTreinadora: row[42] || '',   // AQ
+        notaTreinadora:         row[43] || '',   // AR
+        obsTreinadora:          row[44] || '',   // AS
+        lembrete2Dias:          row[49] || '',   // AX
+        lembreteHoje:           row[50] || '',   // AY
     };
 }
 
@@ -377,7 +368,6 @@ async function getFuncionarioPorRowIndex(rowIndex) {
 }
 
 // ─── LEMBRETES — lista para o dia ────────────────────────────────────────────
-// rowIndex: 0-based → compatível com atualizarCelula (linhaReal = rowIndex + 9)
 async function getFuncionariosParaLembrete() {
     const rows = await getSheetsData();
 
@@ -413,7 +403,7 @@ async function getFuncionariosParaLembrete() {
         if (![5, 2, 0].includes(diffDias)) return;
 
         resultado.push({
-            rowIndex:              index,        // ★ 0-based
+            rowIndex:              index,
             linhaReal:             index + 9,
             diffDias,
             lembrete5Enviado:      !!(row[35] || ''),
@@ -448,7 +438,7 @@ async function getHistoricoLembretes() {
     return rows
         .filter(row => row[35] || row[49] || row[50] || row[34])
         .map((row, index) => ({
-            rowIndex:       index,       // 0-based
+            rowIndex:       index,
             nome:           row[2]  || '',
             loja:           row[1]  || '',
             funcao:         row[5]  || '',
@@ -535,43 +525,88 @@ async function getOpcoesListas() {
     };
 }
 
+// ─── HELPER: parse de datas DD/MM/YYYY ou YYYY-MM-DD ─────────────────────────
+function parseDDMMYYYY(str) {
+    if (!str) return null;
+    const a = String(str).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (a) return new Date(+a[3], +a[2] - 1, +a[1]);
+    const b = String(str).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (b) return new Date(+b[1], +b[2] - 1, +b[3]);
+    return null;
+}
+
 // ─── CADASTRAR FUNCIONÁRIO ────────────────────────────────────────────────────
+// CORREÇÕES:
+//   1. Número sequencial automático (COL A = índice 0)
+//   2. Fim do treinamento          (COL P = índice 15)
+//   3. Dias treinados calculado    (COL Q = índice 16)
+//   4. E-mail loja treinadora      (COL AO = índice 40) ← CORRIGIDO
+//   5. Loja treinadora             (COL AP = índice 41) ← CORRIGIDO
+//   6. Endereço loja treinadora    (COL AQ = índice 42) ← CORRIGIDO
 async function cadastrarFuncionario(dados) {
     const auth   = await getAuth();
     const sheets = google.sheets({ version: 'v4', auth });
-    const row    = new Array(35).fill('');
 
-    row[1]  = dados.loja        || '';
-    row[2]  = dados.nome        || '';
-    row[3]  = dados.cpf         || '';
-    row[4]  = dados.rg          || '';
-    row[5]  = dados.funcao      || '';
-    row[6]  = dados.turma       || '';
-    row[12] = dados.email       || '';
-    row[13] = dados.telefone    || '';
-    row[14] = dados.inicioTrein || '';
-    row[17] = dados.solicitador || '';
-    row[18] = dados.local       || '';
-    row[23] = dados.modelo      || '';
-    row[27] = dados.premio   !== undefined && dados.premio   !== '' ? String(dados.premio)   : '';
-    row[28] = dados.refeicao !== undefined && dados.refeicao !== '' ? String(dados.refeicao) : '';
-    row[30] = dados.mes         || '';
-    row[31] = dados.ano         || '2026';
+    // ── 1. Próximo número sequencial ──────────────────────────────────────
+    const linhasAtuais = await getSheetsData();
+    let proximoNumero  = 1;
+    linhasAtuais.forEach(row => {
+        const n = parseInt(String(row[0] || '').replace(/\D/g, ''), 10);
+        if (!isNaN(n) && n >= proximoNumero) proximoNumero = n + 1;
+    });
 
+    // ── 2. Calcular dias treinados (backend — não depende do frontend) ────
+    let diasTreinados = '';
+    const dInicio = parseDDMMYYYY(dados.inicioTrein);
+    const dFim    = parseDDMMYYYY(dados.fimTrein);
+    if (dInicio && dFim && dFim >= dInicio) {
+        const diffMs = dFim.getTime() - dInicio.getTime();
+        diasTreinados = String(Math.round(diffMs / (1000 * 60 * 60 * 24)) + 1);
+    }
+
+    // ── 3. Montar linha (índice 0-based, precisa de 43 posições para AQ) ──
+    const row = new Array(43).fill('');
+
+    row[0]  = String(proximoNumero);           // A  — nº sequencial
+    row[1]  = dados.loja        || '';         // B  — loja treinada
+    row[2]  = dados.nome        || '';         // C  — nome completo
+    row[3]  = dados.cpf         || '';         // D  — CPF
+    row[4]  = dados.rg          || '';         // E  — RG
+    row[5]  = dados.funcao      || '';         // F  — função
+    row[6]  = dados.turma       || '';         // G  — turno de trabalho
+    row[12] = dados.email       || '';         // M  — e-mail
+    row[13] = dados.telefone    || '';         // N  — telefone
+    row[14] = dados.inicioTrein || '';         // O  — início treinamento
+    row[15] = dados.fimTrein    || '';         // P  — fim treinamento    ← NOVO
+    row[16] = diasTreinados;                   // Q  — dias treinados     ← NOVO
+    row[17] = dados.solicitador || '';         // R  — solicitado por
+    row[18] = dados.local       || '';         // S  — local treinamento
+    row[23] = dados.modelo      || '';         // X  — modelo treinamento
+    row[26] = dados.pago        || '';         // AA — pago
+    row[27] = dados.premio      !== undefined && dados.premio      !== '' ? String(dados.premio)      : ''; // AB — prêmio
+    row[28] = dados.refeicao    !== undefined && dados.refeicao    !== '' ? String(dados.refeicao)    : ''; // AC — refeição
+    row[29] = dados.valorTotal  !== undefined && dados.valorTotal  !== '' ? String(dados.valorTotal)  : ''; // AD — valor total
+    row[30] = dados.mes         || '';         // AE — mês treinamento
+    row[31] = dados.ano         || '2026';     // AF — ano treinamento
+    row[40] = dados.emailLojaTreinadora    || ''; // AO — e-mail loja treinadora  ← CORRIGIDO
+    row[41] = dados.lojaTreinadora         || ''; // AP — loja treinadora          ← CORRIGIDO
+    row[42] = dados.enderecoLojaTreinadora || ''; // AQ — endereço loja treinadora ← CORRIGIDO
+
+    // ── 4. Append na planilha ─────────────────────────────────────────────
     const response = await sheets.spreadsheets.values.append({
-        spreadsheetId: SPREADSHEET_ID,
-        range: `'${ABA_CADASTRAL}'!A9:AY`,
+        spreadsheetId:    SPREADSHEET_ID,
+        range:            `'${ABA_CADASTRAL}'!A9:AQ`,
         valueInputOption: 'USER_ENTERED',
         insertDataOption: 'INSERT_ROWS',
-        requestBody: { values: [row] },
+        requestBody:      { values: [row] },
     });
 
     const updatedRange = response.data.updates?.updatedRange || '';
     const m            = updatedRange.match(/(\d+)$/);
     const linhaReal    = m ? parseInt(m[1]) : null;
 
-    console.log(`✅ Novo cadastro: ${dados.nome} — ${updatedRange}`);
-    return { sucesso: true, linhaReal, range: updatedRange };
+    console.log(`✅ Novo cadastro: ${dados.nome} — nº ${proximoNumero} — ${updatedRange}`);
+    return { sucesso: true, linhaReal, range: updatedRange, numero: proximoNumero };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1096,7 +1131,7 @@ async function getTurnoverCadastral(anoFiltro) {
 }
 
 async function gravarDesligamento(rowIndex, dataDeslig, motivo) {
-    const linhaReal = rowIndex + 9;  // 0-based
+    const linhaReal = rowIndex + 9;
     const auth      = await getAuth();
     const sheets    = google.sheets({ version: 'v4', auth });
     await sheets.spreadsheets.values.update({
