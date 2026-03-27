@@ -92,6 +92,15 @@
         .outro-wrap.visible{display:flex;flex-direction:column;gap:6px;}
         .outro-wrap label{font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;}
 
+        /* ── SELECT COM BUSCA (loja nativa) ── */
+        .sel-busca-wrap{position:relative;display:flex;flex-direction:column;gap:0;}
+        .sel-busca-input{width:100%;padding:7px 12px 7px 30px;border:1.5px solid var(--border);border-bottom:none;border-radius:10px 10px 0 0;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;color:var(--text);background:var(--bg3);outline:none;transition:border-color .2s;}
+        .sel-busca-input:focus{border-color:var(--red);}
+        .sel-busca-icon{position:absolute;top:9px;left:10px;font-size:12px;color:var(--muted);pointer-events:none;}
+        .sel-busca-wrap select.form-control{border-radius:0 0 10px 10px;border-top:1px dashed var(--border);}
+        .novo-loja-badge{font-size:10px;color:var(--green);font-weight:700;margin-top:3px;display:none;}
+        .novo-loja-badge.vis{display:block;}
+
         /* ── HISTÓRICO RECENTE ── */
         .historico-recente{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:22px 26px;box-shadow:var(--shadow);margin-top:24px;}
         .historico-recente h3{font-size:14px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px;}
@@ -164,9 +173,23 @@
                 <!-- Loja Nativa (COL B) -->
                 <div class="form-field">
                     <label>Loja Nativa <span class="req">*</span> <span class="col-hint">COL B</span></label>
-                    <select class="form-control" id="cad-loja">
-                        <option value="">— Selecionar loja —</option>
-                    </select>
+                    <div class="sel-busca-wrap">
+                        <span class="sel-busca-icon">🔍</span>
+                        <input type="text" class="sel-busca-input" id="busca-loja"
+                               placeholder="Buscar loja..." autocomplete="off"
+                               oninput="filtrarLoja(this.value)">
+                        <select class="form-control" id="cad-loja" onchange="onChangeLojaNativa(this)">
+                            <option value="">— Selecionar loja —</option>
+                        </select>
+                    </div>
+                    <!-- Campo "Outro" loja nativa -->
+                    <div class="outro-wrap" id="outro-loja-nativa-wrap">
+                        <label>Nome da nova loja <span class="req">*</span></label>
+                        <input type="text" class="form-control" id="cad-loja-outro"
+                               placeholder="Digite o nome da loja"
+                               oninput="onInputLojaNativaOutro(this)">
+                        <span class="novo-loja-badge" id="novo-loja-badge">✅ Nova loja será adicionada à lista</span>
+                    </div>
                 </div>
 
                 <!-- Nome Completo (COL C) — ocupa toda a linha -->
@@ -303,12 +326,11 @@
                     <label>Modelo de Treinamento <span class="col-hint">COL X</span></label>
                     <select class="form-control" id="cad-modelo">
                         <option value="">— Selecionar —</option>
-                        <option>Inaguração</option>
+                        <option>Inauguração</option>
                         <option>Reforma</option>
                         <option>P. Desenvolvimento</option>
                         <option>Delivery</option>
                         <option>Financeiro ERP</option>
-                        <option>Delivery</option>
                         <option>Central de Integração</option>
                         <option>Solicitar Dados</option>
                     </select>
@@ -448,16 +470,16 @@ function fillSel(id, lista, ph) {
         o.textContent = v;
         s.appendChild(o);
     });
-    // Opção "Outro" apenas para loja treinadora
-    if (id === 'cad-loja-treinadora') {
+    // Opção "Outro" para loja nativa e loja treinadora
+    if (id === 'cad-loja-treinadora' || id === 'cad-loja') {
         const outro       = document.createElement('option');
         outro.value       = '__outro__';
-        outro.textContent = '✏️ Outro (digitar)';
+        outro.textContent = '✏️ Outro (nova loja)';
         s.appendChild(outro);
     }
 }
 
-/* ─── TOGGLE CAMPO "OUTRO" ───────────────────────────────────────────────── */
+/* ─── TOGGLE CAMPO "OUTRO" — LOJA TREINADORA ────────────────────────────── */
 function toggleOutroLoja(sel) {
     const wrap = document.getElementById('outro-loja-wrap');
     if (sel.value === '__outro__') {
@@ -467,6 +489,77 @@ function toggleOutroLoja(sel) {
         wrap.classList.remove('visible');
         document.getElementById('cad-loja-treinadora-outro').value = '';
     }
+}
+
+/* ─── LOJA NATIVA — busca no select ─────────────────────────────────────── */
+// Cache completo das lojas para filtro
+var _todasLojas = [];
+
+function filtrarLoja(termo) {
+    const sel = document.getElementById('cad-loja');
+    const t   = termo.toLowerCase().trim();
+    // Rebuild options mantendo seleção
+    const val = sel.value;
+    sel.innerHTML = '<option value="">— Selecionar loja —</option>';
+    const filtradas = t ? _todasLojas.filter(function(l) {
+        return l.toLowerCase().includes(t);
+    }) : _todasLojas;
+    filtradas.forEach(function(l) {
+        const o = document.createElement('option');
+        o.value = l; o.textContent = l;
+        if (l === val) o.selected = true;
+        sel.appendChild(o);
+    });
+    // Sempre adiciona "Outro"
+    const outro = document.createElement('option');
+    outro.value = '__outro__'; outro.textContent = '✏️ Outro (nova loja)';
+    if (val === '__outro__') outro.selected = true;
+    sel.appendChild(outro);
+}
+
+function onChangeLojaNativa(sel) {
+    const wrap  = document.getElementById('outro-loja-nativa-wrap');
+    const badge = document.getElementById('novo-loja-badge');
+    if (sel.value === '__outro__') {
+        wrap.classList.add('visible');
+        document.getElementById('cad-loja-outro').focus();
+        badge.classList.remove('vis');
+    } else {
+        wrap.classList.remove('visible');
+        document.getElementById('cad-loja-outro').value = '';
+        badge.classList.remove('vis');
+    }
+}
+
+function onInputLojaNativaOutro(input) {
+    const badge = document.getElementById('novo-loja-badge');
+    if (input.value.trim().length > 1) {
+        badge.classList.add('vis');
+    } else {
+        badge.classList.remove('vis');
+    }
+}
+
+// Retorna o valor final da loja nativa
+function getLojaNativa() {
+    const sel = document.getElementById('cad-loja').value;
+    if (sel === '__outro__') {
+        return document.getElementById('cad-loja-outro').value.trim();
+    }
+    return sel;
+}
+
+// Após salvar com sucesso, adiciona nova loja à lista se for nova
+function adicionarNovaLojaSeNecessario(nomeLoja) {
+    if (!nomeLoja) return;
+    if (_todasLojas.includes(nomeLoja)) return;
+    _todasLojas.push(nomeLoja);
+    _todasLojas.sort(function(a, b) { return a.localeCompare(b, 'pt-BR'); });
+    // Reinsere no select
+    filtrarLoja(document.getElementById('busca-loja').value);
+    // Seleciona a nova loja
+    document.getElementById('cad-loja').value = nomeLoja;
+    log('+ Nova loja: ' + nomeLoja, 'ok');
 }
 
 /* ─── OBTER VALOR DA LOJA TREINADORA ─────────────────────────────────────── */
@@ -484,6 +577,7 @@ async function carregarOpcoes() {
     try {
         const r = await fetch(API + '/cadastro/opcoes');
         const d = await r.json();
+        _todasLojas = (d.lojas || []).slice(); // cache para busca
         fillSel('cad-loja',            d.lojas,         '— Selecionar loja —');
         fillSel('cad-loja-treinadora', d.lojas,         '— Selecionar loja —');
         fillSel('cad-funcao',          d.funcoes,       '— Selecionar função —');
@@ -555,8 +649,12 @@ function limparCadastro() {
     ['cad-nome','cad-cpf','cad-rg','cad-email','cad-telefone',
      'cad-local','cad-premio','cad-refeicao','cad-dias',
      'cad-loja-treinadora-outro','cad-email-loja-treinadora',
-     'cad-endereco-loja-treinadora']
+     'cad-endereco-loja-treinadora','cad-loja-outro','busca-loja']
         .forEach(function(id) { document.getElementById(id).value = ''; });
+
+    // Reset campo outro loja nativa
+    document.getElementById('outro-loja-nativa-wrap').classList.remove('visible');
+    document.getElementById('novo-loja-badge').classList.remove('vis');
 
     // Datas
     document.getElementById('cad-inicio').value = '';
@@ -605,13 +703,13 @@ function adicionarHistorico(nome, loja, funcao, linha, numero) {
 async function salvarCadastro() {
     // — Validações obrigatórias —
     const nome   = document.getElementById('cad-nome').value.trim();
-    const loja   = document.getElementById('cad-loja').value;
+    const loja   = getLojaNativa();  // usa getLojaNativa() para suportar "outro"
     const funcao = document.getElementById('cad-funcao').value;
     const inicio = document.getElementById('cad-inicio').value;
     const mes    = document.getElementById('cad-mes').value;
 
     if (!nome)   { alertCad('error', 'Nome completo é obrigatório.');    return; }
-    if (!loja)   { alertCad('error', 'Selecione a loja nativa.');        return; }
+    if (!loja)   { alertCad('error', 'Selecione ou digite a loja nativa.'); return; }
     if (!funcao) { alertCad('error', 'Selecione a função.');             return; }
     if (!inicio) { alertCad('error', 'Informe a data de início.');       return; }
     if (!mes)    { alertCad('error', 'Selecione o mês do treinamento.'); return; }
@@ -677,6 +775,7 @@ async function salvarCadastro() {
                 'Funcionário <strong>' + nome + '</strong> cadastrado!' +
                 ' (nº ' + (d.numero || '—') + ' · linha ' + d.linhaReal + ')');
             adicionarHistorico(nome, loja, funcao, d.linhaReal, d.numero);
+            adicionarNovaLojaSeNecessario(loja); // grava nova loja na lista local
             limparCadastro();
         } else {
             alertCad('error', d.erro || 'Erro ao salvar na planilha.');
