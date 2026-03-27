@@ -152,11 +152,12 @@
     <div class="hd"></div>
     <div class="h-title">Jurídico</div>
     <nav>
-        <button class="nav-btn active" onclick="location.href='/juridico/'">📊 Dashboard</button>
-        <button class="nav-btn" onclick="location.href='/juridico/controle-equipamentos'">🖥️ Gestão Ativos(funcionários)</button>
-        <button class="nav-btn" onclick="location.href='/juridico/ativos'">📋 Ativos & Comodatos</button>
-        <button class="nav-btn" onclick="location.href='/juridico/links'">🔗 Links</button>
-        <button class="nav-btn" onclick="location.href='/juridico/uploads'">📁 Uploads</button>        
+        <button class="nav-btn active"  onclick="location.href='/juridico/'">📊 Dashboard</button>
+        <button class="nav-btn"         onclick="location.href='/juridico/ativos'">📋 Comodatos Jurídico</button>
+        <button class="nav-btn"         onclick="location.href='/juridico/controle-equipamentos'">📋 Ativos Central</button>
+        <button class="nav-btn"         onclick="location.href='/juridico/links'">🔗 Links</button>
+        <button class="nav-btn"         onclick="location.href='/juridico/sults'">🏪 Sults (lojas - Funcionários)</button>
+        <button class="nav-btn"         onclick="location.href='/juridico/uploads'">📁 Uploads</button>
     </nav>
 </header>
 
@@ -169,7 +170,9 @@
     <div class="page-title">⚖️ Central Jurídica</div>
     <div class="page-sub" id="pageSub">Divino Fogão — Gestão de Ativos & Comodatos</div>
 
-    <div class="cards">
+    <!-- ══ CARDS PRINCIPAIS ══ -->
+    <div class="cards" id="cardsGrid">
+        <!-- Comodatos -->
         <a class="card" href="/juridico/ativos" style="border-top:3px solid var(--jur)">
             <div class="card-icon">📱</div>
             <div class="card-label">Comodatos Ativos</div>
@@ -194,6 +197,37 @@
             <div class="card-val" style="color:var(--green);font-size:18px" id="c-valor">—</div>
             <div class="card-sub">patrimônio em comodato</div>
         </a>
+
+        <!-- ══ CARDS SULTS (mesmo padrão do treinamento) ══ -->
+        <a class="card" href="/juridico/sults" style="border-top:3px solid #1565c0">
+            <div class="card-icon">🏪</div>
+            <div class="card-label">Unidades Ativas</div>
+            <div class="card-val" style="color:#1565c0;font-size:28px" id="c-sults-unidades">
+                <span class="spinner" style="border-top-color:#1565c0"></span>
+            </div>
+            <div class="card-sub" id="c-sults-unidades-sub">em operação</div>
+            <div class="card-link" style="color:#1565c0">Ver unidades →</div>
+        </a>
+        <a class="card" href="/juridico/sults" style="border-top:3px solid #00695c">
+            <div class="card-icon">👥</div>
+            <div class="card-label">Funcionários SULTS</div>
+            <div class="card-val" style="color:#00695c;font-size:28px" id="c-sults-func">
+                <span class="spinner" style="border-top-color:#00695c"></span>
+            </div>
+            <div class="card-sub" id="c-sults-func-sub">cadastrados no SULTS</div>
+            <div class="card-link" style="color:#00695c">Ver funcionários →</div>
+        </a>
+
+        <!-- ══ CARD LINKS ══ -->
+        <a class="card" href="/juridico/links" style="border-top:3px solid var(--jur-light)">
+            <div class="card-icon">🔗</div>
+            <div class="card-label">Links Úteis</div>
+            <div class="card-val" style="color:var(--jur-light);font-size:28px" id="c-links">—</div>
+            <div class="card-sub" id="c-links-sub">links cadastrados</div>
+            <div class="card-link" style="color:var(--jur-light)">Ver links →</div>
+        </a>
+
+        <!-- ══ CARD UPLOADS ══ -->
         <a class="card" href="/juridico/uploads" style="border-top:3px solid var(--blue)" id="cardUploads">
             <div class="card-icon">📁</div>
             <div class="card-label">Arquivos no Drive</div>
@@ -205,6 +239,7 @@
         </a>
     </div>
 
+    <!-- ══ HCARD — GESTÃO DE ATIVOS ══ -->
     <a href="/juridico/controle-equipamentos" class="hcard c-yellow" id="cardGestaoAtivos">
         <div class="hcard-top">
             <div class="hcard-top-left">
@@ -214,15 +249,14 @@
                     <div class="hcard-desc">Controle de equipamentos por funcionário · progresso de cadastro · patrimônio</div>
                 </div>
             </div>
-            <div class="hcard-top-right">
-                <span class="hcard-link c-yellow">Ver detalhes →</span>
-            </div>
+            <span class="hcard-link c-yellow">Ver detalhes →</span>
         </div>
         <div id="gaConteudo">
             <div class="loading-msg"><div class="spinner" style="border-top-color:var(--yellow)"></div> Carregando...</div>
         </div>
     </a>
 
+    <!-- ══ HCARD — ATIVOS & COMODATOS ══ -->
     <a href="/juridico/ativos" class="hcard c-jur" id="cardAtivos">
         <div class="hcard-top">
             <div class="hcard-top-left">
@@ -232,26 +266,27 @@
                     <div class="hcard-desc">Comodatos ativos, distratados e desligados — visão completa</div>
                 </div>
             </div>
-            <div class="hcard-top-right">
-                <span class="hcard-link c-jur">Ver detalhes →</span>
-            </div>
+            <span class="hcard-link c-jur">Ver detalhes →</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px" id="ativosGrid">
             <div class="loading-msg" style="grid-column:1/-1"><div class="spinner"></div></div>
         </div>
     </a>
 
+    <!-- ══ ACESSO RÁPIDO ══ -->
     <div class="quick" style="margin-top:16px">
         <div class="quick-title">🔗 Acesso Rápido</div>
         <div class="quick-links">
-            <a class="ql primary" href="/juridico/ativos">📋 Ver Todos os Ativos & Comodatos</a>
-            <a class="ql" href="/juridico/controle-equipamentos">🖥️ Gestão de Ativos</a>
-            <a class="ql" href="/juridico/uploads" style="border-color:rgba(14,165,233,.4);color:var(--blue)">📁 Uploads Drive</a>
+            <a class="ql primary"                                          href="/juridico/ativos">📋 Todos os Ativos & Comodatos</a>
+            <a class="ql"                                                   href="/juridico/controle-equipamentos">🖥️ Gestão de Ativos</a>
+            <a class="ql" style="border-color:rgba(14,165,233,.4);color:var(--blue)" href="/juridico/uploads">📁 Uploads Drive</a>
+            <a class="ql" style="border-color:rgba(21,101,192,.4);color:#1565c0"     href="/juridico/sults">🏪 SULTS — Unidades</a>
+            <a class="ql" style="border-color:rgba(124,58,237,.3);color:var(--jur-light)" href="/juridico/links">🔗 Links Úteis</a>
         </div>
     </div>
 </main>
 
-<!-- BOTÃO FLUTUANTE -->
+<!-- BOTÃO FLUTUANTE COMUNICADOS -->
 <button id="popBtn" onclick="abrirPopup()" title="Comunicados & Avisos">
     📢
     <span id="popBadge" style="display:none">0</span>
@@ -288,10 +323,11 @@
             <button class="ia-sug" onclick="usarSugestaoIA('Faça um resumo executivo do módulo jurídico.')">Resumo executivo</button>
             <button class="ia-sug" onclick="usarSugestaoIA('Quantos ativos, distratados e desligados existem hoje?')">Totais do módulo</button>
             <button class="ia-sug" onclick="usarSugestaoIA('Qual é o valor total atual dos ativos?')">Valor total</button>
+            <button class="ia-sug" onclick="usarSugestaoIA('Quais unidades têm mais funcionários no SULTS?')">Top unidades SULTS</button>
             <button class="ia-sug" onclick="usarSugestaoIA('Quais colaboradores estão sem equipamento?')">Sem equipamento</button>
         </div>
         <div id="iaMsgs">
-            <div class="ia-msg bot">Olá! Posso analisar os dados atuais do Jurídico com base no que estiver carregado nesta tela.</div>
+            <div class="ia-msg bot">Olá! Posso analisar os dados atuais do Jurídico, Ativos, SULTS e muito mais.</div>
         </div>
         <div class="ia-foot">
             <input id="inputIA" type="text" placeholder="Pergunte sobre os dados do Jurídico..." onkeydown="if(event.key==='Enter') perguntarIA()">
@@ -302,15 +338,14 @@
 </div>
 
 <script>
-// ── IDENTIFICAÇÃO DO MÓDULO ───────────────────────────────────────────────────
 const API = '/juridico';
-
 const $ = id => document.getElementById(id);
 const setStatus = (cls, msg) => { $('sdot').className = 'sdot ' + cls; $('statusText').textContent = msg; };
 
 let dadosAtivosIA  = { ativos:[], distratados:[], desligados:[], statsAtivos:null, sincronizadoEm:null };
 let dadosUploadsIA = { pastas:[], arquivos:[] };
 let dadosGestaoIA  = {};
+let dadosSultsIA   = {};
 
 // ── IA ────────────────────────────────────────────────────────────────────────
 function toggleIA() { $('iaJanela').classList.toggle('open'); if($('iaJanela').classList.contains('open')) setTimeout(()=>$('inputIA')?.focus(),60); }
@@ -321,12 +356,13 @@ function montarContextoIA() {
     return JSON.stringify({
         pagina: 'index jurídico',
         resumo: {
-            ativos: dadosAtivosIA.ativos.length,
-            distratados: dadosAtivosIA.distratados.length,
-            desligados: dadosAtivosIA.desligados.length,
-            valorTotalAtivos: dadosAtivosIA.statsAtivos?.valorTotalFormatado || 'não informado',
-            totalPastasDrive: dadosUploadsIA.pastas.length,
-            totalArquivosDrive: dadosUploadsIA.arquivos.length,
+            ativos:              dadosAtivosIA.ativos.length,
+            distratados:         dadosAtivosIA.distratados.length,
+            desligados:          dadosAtivosIA.desligados.length,
+            valorTotalAtivos:    dadosAtivosIA.statsAtivos?.valorTotalFormatado || 'não informado',
+            totalPastasDrive:    dadosUploadsIA.pastas.length,
+            totalArquivosDrive:  dadosUploadsIA.arquivos.length,
+            sults: dadosSultsIA,
         },
         gestaoAtivos: dadosGestaoIA,
         amostraAtivos: dadosAtivosIA.ativos.slice(0,20),
@@ -344,6 +380,44 @@ async function perguntarIA() {
         addMsgIA(d.resposta||'Sem resposta.','bot');
     } catch(e){ addMsgIA('Erro ao consultar IA: '+e.message,'bot'); }
     finally{ btn.disabled=false; btn.textContent='Enviar'; }
+}
+
+// ── SULTS ─────────────────────────────────────────────────────────────────────
+async function carregarSults() {
+    try {
+        const r = await fetch(API + '/sults/resumo');
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const s = await r.json();
+        dadosSultsIA = s;
+
+        const media = s.totalUnidades ? Math.round(s.totalFuncionarios / s.totalUnidades) : '—';
+
+        $('c-sults-unidades').textContent     = s.totalUnidades  || '—';
+        $('c-sults-unidades-sub').textContent = (s.totalImplantacao || 0) + ' em implantação';
+
+        $('c-sults-func').textContent     = s.totalFuncionarios || '—';
+        $('c-sults-func-sub').textContent = 'média ' + media + ' por unidade';
+    } catch(e) {
+        $('c-sults-unidades').textContent = '—';
+        $('c-sults-func').textContent     = '—';
+        console.warn('[SULTS card]', e.message);
+    }
+}
+
+// ── LINKS ─────────────────────────────────────────────────────────────────────
+async function carregarLinks() {
+    try {
+        const r = await fetch(API + '/links-api/listar');
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = await r.json();
+        const total = Array.isArray(d) ? d.length : (d.total || d.links?.length || 0);
+        $('c-links').textContent     = total || '—';
+        $('c-links-sub').textContent = total + ' link' + (total !== 1 ? 's' : '') + ' cadastrado' + (total !== 1 ? 's' : '');
+    } catch(e) {
+        $('c-links').textContent     = '—';
+        $('c-links-sub').textContent = 'ver links →';
+        console.warn('[Links card]', e.message);
+    }
 }
 
 // ── GESTÃO DE ATIVOS ──────────────────────────────────────────────────────────
@@ -418,10 +492,10 @@ async function carregarAtivos() {
         if(!d.ok){ $('ativosGrid').innerHTML='<div class="sem-dados" style="grid-column:1/-1">Sincronize os ativos para ver dados</div>'; return; }
 
         dadosAtivosIA = {
-            ativos:      d.ativos||[],
-            distratados: d.distratados||[],
-            desligados:  d.desligados||[],
-            statsAtivos: d.statsAtivos||null,
+            ativos:         d.ativos||[],
+            distratados:    d.distratados||[],
+            desligados:     d.desligados||[],
+            statsAtivos:    d.statsAtivos||null,
             sincronizadoEm: d.sincronizadoEm||null,
         };
 
@@ -461,7 +535,7 @@ async function carregarUploads() {
     }
 }
 
-// ── COMUNICADOS (busca da API por setor) ──────────────────────────────────────
+// ── COMUNICADOS ───────────────────────────────────────────────────────────────
 (function() {
     const _setor = 'juridico';
     let _avisos  = [];
@@ -473,39 +547,26 @@ async function carregarUploads() {
             _avisos = d.avisos || [];
             const badge = $('popBadge');
             if (_avisos.length > 0) {
-                badge.textContent    = _avisos.length;
-                badge.style.display  = 'flex';
+                badge.textContent   = _avisos.length;
+                badge.style.display = 'flex';
             } else {
                 badge.style.display = 'none';
             }
-        } catch(e) {
-            console.warn('[avisos] erro ao carregar:', e.message);
-        }
+        } catch(e) { console.warn('[avisos]', e.message); }
     }
 
     function renderizarAvisos() {
-        const body = $('popBody');
-        const pag  = $('popPag');
-        const data = $('popData');
-
+        const body = $('popBody'); const pag = $('popPag'); const data = $('popData');
         if (!_avisos.length) {
-            body.innerHTML   = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:24px 0">Nenhum aviso no momento.</p>';
-            pag.textContent  = '';
-            data.textContent = '';
-            return;
+            body.innerHTML = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:24px 0">Nenhum aviso no momento.</p>';
+            pag.textContent = ''; data.textContent = ''; return;
         }
-
         data.textContent = `${_avisos.length} aviso${_avisos.length > 1 ? 's' : ''} — Jurídico`;
         pag.textContent  = `Total: ${_avisos.length}`;
         body.innerHTML   = _avisos.map(a => `
             <div class="pop-msg">
-            <span class="pop-msg-tipo ${a.tipo}">${{
-                info:     'Informativo',
-                atualiz:  'Atualização',
-                aviso:    'Aviso',
-                urgente:  'Urgente'
-            }[a.tipo] || a.tipo}</span>               
-             ${a.data ? `<span style="font-size:10px;color:var(--muted);margin-left:8px">${a.data}</span>` : ''}
+                <span class="pop-msg-tipo ${a.tipo}">${{info:'Informativo',atualiz:'Atualização',aviso:'Aviso',urgente:'Urgente'}[a.tipo]||a.tipo}</span>
+                ${a.data ? `<span style="font-size:10px;color:var(--muted);margin-left:8px">${a.data}</span>` : ''}
                 <h3>${a.titulo}</h3>
                 <p>${a.texto}</p>
             </div>`).join('');
@@ -513,13 +574,18 @@ async function carregarUploads() {
 
     window.abrirPopup  = () => { renderizarAvisos(); $('popOverlay').classList.add('open'); };
     window.fecharPopup = () => { $('popOverlay').classList.remove('open'); };
-
     carregarAvisos();
 })();
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 setStatus('syncing', 'Carregando...');
-Promise.allSettled([carregarAtivos(), carregarGestaoAtivos(), carregarUploads()]);
+Promise.allSettled([
+    carregarAtivos(),
+    carregarGestaoAtivos(),
+    carregarUploads(),
+    carregarSults(),
+    carregarLinks(),
+]);
 </script>
 </body>
 </html>

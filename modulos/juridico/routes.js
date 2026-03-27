@@ -20,7 +20,8 @@ const upload = multer({
 // ─── Services ────────────────────────────────────────────────
 const ativosService   = require('./services/ativosService');
 const jurUploadsCache = require('./services/uploadscache');
-const linksJuridico = require('./services/linksJuridico');
+const sultsCache      = require('./services/sultsCache');
+const linksJuridico   = require('./services/linksJuridico');
 const {
     listarPastas,
     criarPasta,
@@ -30,9 +31,12 @@ const {
     PASTA_RAIZ_ID,
 } = require('./services/drive');
 
-// ─── Inicializar cache de uploads ────────────────────────────
+// ─── Inicializar caches ──────────────────────────────────────
 jurUploadsCache.inicializar().catch(e =>
     console.error('[JURIDICO-UPLOADS] Cache init falhou:', e.message)
+);
+sultsCache.inicializar().catch(e =>
+    console.error('[JURIDICO-SULTS] Cache init falhou:', e.message)
 );
 
 // ─── Arquivos estáticos ──────────────────────────────────────
@@ -44,7 +48,6 @@ router.use(express.static(path.join(__dirname, 'public')));
 router.get('/', (req, res) => {
     const index  = path.join(__dirname, 'public', 'index.html');
     const ativos = path.join(__dirname, 'public', 'ativos.html');
-    const links = path.join(__dirname, 'public', 'links.html');
     if (fs.existsSync(index)) return res.sendFile(index);
     return res.sendFile(ativos);
 });
@@ -55,11 +58,12 @@ router.get('/uploads',                    (req, res) => res.sendFile(path.join(_
 router.get('/uploads.html',               (req, res) => res.sendFile(path.join(__dirname, 'public', 'uploads.html')));
 router.get('/controle-equipamentos',      (req, res) => res.sendFile(path.join(__dirname, 'public', 'controle-equipamentos.html')));
 router.get('/controle-equipamentos.html', (req, res) => res.sendFile(path.join(__dirname, 'public', 'controle-equipamentos.html')));
-router.get('/links', (req, res) => res.sendFile(path.join(__dirname, 'public', 'links.html')));
-router.get('/links.html', (req, res) => res.sendFile(path.join(__dirname, 'public', 'links.html')));
+router.get('/links',                      (req, res) => res.sendFile(path.join(__dirname, 'public', 'links.html')));
+router.get('/links.html',                 (req, res) => res.sendFile(path.join(__dirname, 'public', 'links.html')));
+router.get('/sults',                      (req, res) => res.sendFile(path.join(__dirname, 'public', 'sults.html')));
+router.get('/sults.html',                 (req, res) => res.sendFile(path.join(__dirname, 'public', 'sults.html')));
+
 router.use('/links-api', linksJuridico);
-
-
 
 // opcional, caso você crie uma página própria da IA
 router.get('/iajuridico', (req, res) => {
@@ -148,6 +152,57 @@ router.get('/ia/health', (req, res) => {
         modulo: 'juridico',
         ia: 'online',
     });
+});
+
+// ══════════════════════════════════════════════════════════════
+// SULTS
+// ══════════════════════════════════════════════════════════════
+router.get('/sults/dados', async (req, res) => {
+    try {
+        let dados = sultsCache.getDados();
+        if (!dados) dados = await sultsCache.sincronizarEAtualizar('auto');
+        if (!dados) return res.status(503).json({ erro: 'Dados indisponíveis' });
+        res.json(dados);
+    } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+router.get('/sults/resumo', async (req, res) => {
+    try {
+        let dados = sultsCache.getDados();
+        if (!dados) dados = await sultsCache.sincronizarEAtualizar('auto');
+        if (!dados) return res.status(503).json({ erro: 'Dados indisponíveis' });
+        res.json({
+            totalUnidades:     dados.totalUnidades,
+            totalFuncionarios: dados.totalFuncionarios,
+            totalImplantacao:  dados.totalUnidadesImplantacao,
+            sincronizadoEm:    dados.sincronizadoEm,
+        });
+    } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+router.get('/sults/unidade/:id', async (req, res) => {
+    try {
+        let dados = sultsCache.getDados();
+        if (!dados) dados = await sultsCache.sincronizarEAtualizar('auto');
+        if (!dados) return res.status(503).json({ erro: 'Dados indisponíveis' });
+        const unidade = dados.unidades?.find(u => String(u.id) === String(req.params.id));
+        if (!unidade) return res.status(404).json({ erro: 'Unidade não encontrada' });
+        res.json(unidade);
+    } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+router.get('/sults/status', (req, res) => res.json(sultsCache.getStatus()));
+
+router.post('/sults/sincronizar', async (req, res) => {
+    try {
+        const dados = await sultsCache.sincronizarEAtualizar('manual');
+        res.json({
+            sucesso:           true,
+            totalUnidades:     dados.totalUnidades,
+            totalFuncionarios: dados.totalFuncionarios,
+            sincronizadoEm:    dados.sincronizadoEm,
+        });
+    } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
 // ══════════════════════════════════════════════════════════════
@@ -285,6 +340,7 @@ router.get('/health', (req, res) => res.json({
     status: 'online',
     ia: true,
     uploads: jurUploadsCache.getStatus(),
+    sults:   sultsCache.getStatus(),
 }));
 
 module.exports = router;

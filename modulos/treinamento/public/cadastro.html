@@ -77,6 +77,15 @@
         .btn-secondary:hover{background:var(--bg2);border-color:#ccc;}
         .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
 
+        /* ── SUBSECTION (Loja Treinadora) ── */
+        .subsection{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:16px;}
+        .subsection-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+
+        /* ── CAMPO "OUTRO" ── */
+        .outro-wrap{margin-top:10px;display:none;}
+        .outro-wrap.visible{display:flex;flex-direction:column;gap:6px;}
+        .outro-wrap label{font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;}
+
         /* ── HISTÓRICO RECENTE ── */
         .historico-recente{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:22px 26px;box-shadow:var(--shadow);margin-top:24px;}
         .historico-recente h3{font-size:14px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px;}
@@ -142,14 +151,19 @@
         <div class="form-section">
             <div class="form-section-title">👤 Identificação do Colaborador</div>
             <div class="form-grid">
+
+                <!-- Loja Nativa (COL B) -->
                 <div class="form-field">
-                    <label>Loja <span class="req">*</span> <span class="col-hint">COL B</span></label>
+                    <label>Loja Nativa <span class="req">*</span> <span class="col-hint">COL B</span></label>
                     <select class="form-control" id="cad-loja"><option value="">— Selecionar loja —</option></select>
                 </div>
+
+                <!-- Nome Completo (COL C) -->
                 <div class="form-field" style="grid-column:1/-1;">
                     <label>Nome Completo <span class="req">*</span> <span class="col-hint">COL C</span></label>
                     <input type="text" class="form-control" id="cad-nome" placeholder="Nome completo do colaborador">
                 </div>
+
                 <div class="form-field">
                     <label>CPF <span class="col-hint">COL D</span></label>
                     <input type="text" class="form-control" id="cad-cpf" placeholder="000.000.000-00" maxlength="14">
@@ -175,6 +189,41 @@
                     <input type="text" class="form-control" id="cad-telefone" placeholder="(00) 00000-0000" maxlength="15">
                 </div>
             </div>
+
+            <!-- ── LOJA TREINADORA ── -->
+            <div class="subsection">
+                <div class="subsection-title">🏫 Loja Treinadora</div>
+                <div class="form-grid">
+
+                    <!-- Loja Treinadora (COL AP) -->
+                    <div class="form-field">
+                        <label>Loja Treinadora <span class="col-hint">COL AP</span></label>
+                        <select class="form-control" id="cad-loja-treinadora" onchange="toggleOutroLoja(this)">
+                            <option value="">— Selecionar loja —</option>
+                        </select>
+                        <!-- Campo "Outro" -->
+                        <div class="outro-wrap" id="outro-loja-wrap">
+                            <label>Nome da loja (outro) <span class="col-hint">COL AP</span></label>
+                            <input type="text" class="form-control" id="cad-loja-treinadora-outro" placeholder="Digite o nome da loja treinadora">
+                        </div>
+                    </div>
+
+                    <!-- E-mail Loja Treinadora (COL AO) -->
+                    <div class="form-field">
+                        <label>E-mail Loja Treinadora <span class="col-hint">COL AO</span></label>
+                        <input type="email" class="form-control" id="cad-email-loja-treinadora" placeholder="email@loja.com">
+                    </div>
+
+                    <!-- Endereço Loja Treinadora (COL AQ) -->
+                    <div class="form-field" style="grid-column:1/-1;">
+                        <label>Endereço Loja Treinadora <span class="col-hint">COL AQ</span></label>
+                        <input type="text" class="form-control" id="cad-endereco-loja-treinadora" placeholder="Ex: Rua das Flores, 100 — Centro, São Paulo/SP">
+                    </div>
+
+                </div>
+            </div>
+            <!-- ── FIM LOJA TREINADORA ── -->
+
         </div>
 
         <!-- ── TREINAMENTO ── -->
@@ -313,6 +362,34 @@ function fillSel(id, lista, ph) {
         o.value = v; o.textContent = v;
         s.appendChild(o);
     });
+    // Adiciona opção "Outro" ao select de loja treinadora
+    if (id === 'cad-loja-treinadora') {
+        const outro = document.createElement('option');
+        outro.value = '__outro__';
+        outro.textContent = '✏️ Outro (digitar)';
+        s.appendChild(outro);
+    }
+}
+
+/* ── TOGGLE CAMPO "OUTRO" DA LOJA TREINADORA ── */
+function toggleOutroLoja(sel) {
+    const wrap = document.getElementById('outro-loja-wrap');
+    if (sel.value === '__outro__') {
+        wrap.classList.add('visible');
+        document.getElementById('cad-loja-treinadora-outro').focus();
+    } else {
+        wrap.classList.remove('visible');
+        document.getElementById('cad-loja-treinadora-outro').value = '';
+    }
+}
+
+/* ── OBTER VALOR DA LOJA TREINADORA ── */
+function getLojaTrienadora() {
+    const sel = document.getElementById('cad-loja-treinadora').value;
+    if (sel === '__outro__') {
+        return document.getElementById('cad-loja-treinadora-outro').value.trim();
+    }
+    return sel;
 }
 
 /* ── CARREGAR OPÇÕES ── */
@@ -321,10 +398,11 @@ async function carregarOpcoes() {
     try {
         const r = await fetch(API + '/cadastro/opcoes');
         const d = await r.json();
-        fillSel('cad-loja',       d.lojas,        '— Selecionar loja —');
-        fillSel('cad-funcao',     d.funcoes,       '— Selecionar função —');
-        fillSel('cad-turma',      d.turmas,        '— Selecionar turma —');
-        fillSel('cad-solicitador',d.solicitadores, '— Selecionar —');
+        fillSel('cad-loja',              d.lojas,        '— Selecionar loja —');
+        fillSel('cad-loja-treinadora',   d.lojas,        '— Selecionar loja —');
+        fillSel('cad-funcao',            d.funcoes,      '— Selecionar função —');
+        fillSel('cad-turma',             d.turmas,       '— Selecionar turma —');
+        fillSel('cad-solicitador',       d.solicitadores,'— Selecionar —');
         log('✓ Listas carregadas', 'ok');
     } catch (e) {
         log('Erro listas: ' + e.message, 'err');
@@ -351,10 +429,13 @@ function alertCad(tipo, msg) {
 
 /* ── LIMPAR ── */
 function limparCadastro() {
-    ['cad-loja','cad-funcao','cad-turma','cad-solicitador','cad-modelo','cad-mes','cad-pago']
+    ['cad-loja','cad-funcao','cad-turma','cad-solicitador','cad-modelo','cad-mes','cad-pago',
+     'cad-loja-treinadora']
         .forEach(function(id) { document.getElementById(id).value = ''; });
-    ['cad-nome','cad-cpf','cad-rg','cad-email','cad-telefone','cad-local','cad-premio','cad-refeicao']
+    ['cad-nome','cad-cpf','cad-rg','cad-email','cad-telefone','cad-local','cad-premio','cad-refeicao',
+     'cad-loja-treinadora-outro','cad-email-loja-treinadora','cad-endereco-loja-treinadora']
         .forEach(function(id) { document.getElementById(id).value = ''; });
+    document.getElementById('outro-loja-wrap').classList.remove('visible');
     document.getElementById('cad-inicio').value = '';
     document.getElementById('cad-ano').value    = '2026';
     calcTotal();
@@ -396,30 +477,36 @@ async function salvarCadastro() {
     const mes    = document.getElementById('cad-mes').value;
 
     if (!nome)   { alertCad('error', 'Nome completo é obrigatório.');        return; }
-    if (!loja)   { alertCad('error', 'Selecione a loja.');                   return; }
+    if (!loja)   { alertCad('error', 'Selecione a loja nativa.');            return; }
     if (!funcao) { alertCad('error', 'Selecione a função.');                 return; }
     if (!inicio) { alertCad('error', 'Informe a data de início.');           return; }
     if (!mes)    { alertCad('error', 'Selecione o mês do treinamento.');     return; }
+
+    const lojaTrienadora = getLojaTrienadora();
 
     const premio   = parseFloat(document.getElementById('cad-premio').value)   || 0;
     const refeicao = parseFloat(document.getElementById('cad-refeicao').value) || 0;
 
     const dados = {
         loja, nome,
-        cpf:        document.getElementById('cad-cpf').value.trim(),
-        rg:         document.getElementById('cad-rg').value.trim(),
+        cpf:                    document.getElementById('cad-cpf').value.trim(),
+        rg:                     document.getElementById('cad-rg').value.trim(),
         funcao,
-        turma:      document.getElementById('cad-turma').value,
-        email:      document.getElementById('cad-email').value.trim(),
-        telefone:   document.getElementById('cad-telefone').value.trim(),
-        inicioTrein:dt(inicio),
-        solicitador:document.getElementById('cad-solicitador').value,
-        local:      document.getElementById('cad-local').value.trim(),
-        modelo:     document.getElementById('cad-modelo').value,
+        turma:                  document.getElementById('cad-turma').value,
+        email:                  document.getElementById('cad-email').value.trim(),
+        telefone:               document.getElementById('cad-telefone').value.trim(),
+        inicioTrein:            dt(inicio),
+        solicitador:            document.getElementById('cad-solicitador').value,
+        local:                  document.getElementById('cad-local').value.trim(),
+        modelo:                 document.getElementById('cad-modelo').value,
         premio, refeicao, valorTotal: premio + refeicao,
-        pago:       document.getElementById('cad-pago').value,
+        pago:                   document.getElementById('cad-pago').value,
         mes,
-        ano:        document.getElementById('cad-ano').value || '2026',
+        ano:                    document.getElementById('cad-ano').value || '2026',
+        // ── Loja Treinadora ──
+        emailLojaTreinadora:    document.getElementById('cad-email-loja-treinadora').value.trim(),    // COL AO
+        lojaTreinadora:         lojaTrienadora,                                                        // COL AP
+        enderecoLojaTreinadora: document.getElementById('cad-endereco-loja-treinadora').value.trim(), // COL AQ
     };
 
     const btn = document.getElementById('btnSalvar');
