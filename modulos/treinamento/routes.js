@@ -64,6 +64,7 @@ const {
   marcarWhatsappAvaliacaoFunc,
   getFuncionariosParaAvaliacaoLembrete,
   getHistoricoAvaliacaoLembretes,
+  getAvaliacoesKpi,
 } = require('./services/sheets');
 
 // ─── Inicializar caches ───────────────────────────────────────────────────────
@@ -95,6 +96,7 @@ router.get('/uploads',      (req, res) => res.sendFile(path.join(PUBLIC, 'upload
 router.get('/cadastro',     (req, res) => res.sendFile(path.join(PUBLIC, 'cadastro.html')));
 router.get('/links', (req, res) => res.sendFile(path.join(PUBLIC, 'links.html'))
 );
+router.get('/kpi-avaliacoes', (req, res) => res.sendFile(path.join(PUBLIC, 'avaliacoesKPI.html')));
 
 
 router.use('/links-api', linksTreinamentoService);
@@ -149,6 +151,16 @@ router.get('/dashboard/cadastral', async (req, res) => {
 router.get('/dashboard/perfil-desenvolvimento', async (req, res) => {
   try { res.json(await getPerfilDesenvolvimento(req.query.ano || '2026')); }
   catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ★ KPI DE AVALIAÇÕES
+// ═══════════════════════════════════════════════════════════════════════════════
+router.get('/kpi-avaliacoes/dados', async (req, res) => {
+  try {
+    const { ano, mes } = req.query;
+    res.json(await getAvaliacoesKpi(ano || '2026', mes || null));
+  } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════

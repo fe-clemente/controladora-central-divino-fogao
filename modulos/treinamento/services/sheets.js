@@ -1374,6 +1374,215 @@ async function gravarDesligamento(rowIndex, dataDeslig, motivo) {
     console.log(`[sheets] ✅ Desligamento gravado em Controle TurnOver linha ${linhaReal} — data=${dataDeslig || '—'} motivo=${motivo || '—'}`);
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// ★ KPI DE AVALIAÇÕES
+// ═══════════════════════════════════════════════════════════════════════════════
+async function getAvaliacoesKpi(ano, mes) {
+    const rows = await getSheetsData();
+    ano = String(ano || new Date().getFullYear());
+
+    const MESES_NOMES = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+    // Filtra rows com nome e ano correspondente
+    const todos = [];
+    rows.forEach((row, idx) => {
+        if (!row[2]) return;
+        const anoRow = String(row[31] || '').trim();
+        if (anoRow !== ano) return;
+        const mesRow = parseInt(row[30] || '0');
+        if (mes && String(mesRow) !== String(mes)) return;
+
+        todos.push({
+            rowIndex: idx,
+            nome: (row[2] || '').trim(),
+            loja: (row[1] || '').trim(),
+            funcao: (row[5] || '').trim(),
+            mes: mesRow,
+            mesNome: MESES_NOMES[mesRow] || '?',
+            inicioTrein: row[14] || '',
+            fimTrein: row[15] || '',
+            // Lembretes
+            lembrete5: (row[35] || '').trim(),
+            lembrete2: (row[49] || '').trim(),
+            lembreteHoje: (row[50] || '').trim(),
+            // Avaliação
+            avaliacaoEnviadaLojas: (row[36] || '').trim(),   // AK
+            avaliacaoOkOrigem: (row[25] || '').trim(),       // Z
+            notaOrigem: (row[33] || '').trim(),              // AH
+            observacoes: (row[48] || '').trim(),              // AW
+            avaliacaoTreinadora: (row[39] || '').trim(),      // AN
+            notaTreinadora: (row[43] || '').trim(),           // AR
+            obsTreinadora: (row[44] || '').trim(),            // AS
+            whatsappAvaliacaoFunc: (row[37] || '').trim(),    // AL
+            emailLojaAvaliadora: (row[40] || '').trim(),      // AO
+            lojaTreinadora: (row[41] || '').trim(),           // AP
+        });
+    });
+
+    const total = todos.length;
+    const comFimTrein = todos.filter(r => r.fimTrein);
+
+    // ── LEMBRETES ─────────────────────────────────────────────
+    const lem5 = todos.filter(r => r.lembrete5).length;
+    const lem2 = todos.filter(r => r.lembrete2).length;
+    const lemH = todos.filter(r => r.lembreteHoje).length;
+    const totalLembretesEnviados = lem5 + lem2 + lemH;
+    const totalLembretesPossiveis = total * 3;
+    const aderenciaLembretes = totalLembretesPossiveis > 0
+        ? +((totalLembretesEnviados / totalLembretesPossiveis) * 100).toFixed(1) : 0;
+
+    // ── AVALIAÇÃO ENVIADA (col AK) ────────────────────────────
+    const avalEnviadas = todos.filter(r => r.avaliacaoEnviadaLojas).length;
+    const avalNaoEnviadas = comFimTrein.length - avalEnviadas;
+
+    // ── LOJA ORIGEM (col Z) ───────────────────────────────────
+    const origemAvaliou = todos.filter(r => r.avaliacaoOkOrigem.toUpperCase() === 'SIM').length;
+    const origemPendente = avalEnviadas - origemAvaliou;
+    const aderenciaOrigem = avalEnviadas > 0
+        ? +((origemAvaliou / avalEnviadas) * 100).toFixed(1) : 0;
+
+    const notasOrigem = todos.filter(r => r.notaOrigem && !isNaN(parseFloat(r.notaOrigem)));
+    const mediaOrigem = notasOrigem.length > 0
+        ? +(notasOrigem.reduce((s, r) => s + parseFloat(r.notaOrigem), 0) / notasOrigem.length).toFixed(1) : null;
+
+    // ── LOJA TREINADORA (col AN) ──────────────────────────────
+    const treinAvaliou = todos.filter(r => r.avaliacaoTreinadora.toUpperCase() === 'SIM').length;
+    const treinPendente = avalEnviadas - treinAvaliou;
+    const aderenciaTrein = avalEnviadas > 0
+        ? +((treinAvaliou / avalEnviadas) * 100).toFixed(1) : 0;
+
+    const notasTrein = todos.filter(r => r.notaTreinadora && !isNaN(parseFloat(r.notaTreinadora)));
+    const mediaTrein = notasTrein.length > 0
+        ? +(notasTrein.reduce((s, r) => s + parseFloat(r.notaTreinadora), 0) / notasTrein.length).toFixed(1) : null;
+
+    // ── WHATSAPP FUNCIONÁRIO (col AL) ─────────────────────────
+    const whatsEnviados = todos.filter(r => r.whatsappAvaliacaoFunc).length;
+    const aderenciaWhats = avalEnviadas > 0
+        ? +((whatsEnviados / avalEnviadas) * 100).toFixed(1) : 0;
+
+    // ── POR LOJA ORIGEM — quem avalia e quem não avalia ───────
+    const porLojaOrigem = {};
+    todos.forEach(r => {
+        if (!r.loja) return;
+        if (!porLojaOrigem[r.loja]) porLojaOrigem[r.loja] = { loja: r.loja, total: 0, avaliou: 0, pendente: 0, somaNotas: 0, qtNotas: 0 };
+        porLojaOrigem[r.loja].total++;
+        if (r.avaliacaoOkOrigem.toUpperCase() === 'SIM') {
+            porLojaOrigem[r.loja].avaliou++;
+            if (r.notaOrigem && !isNaN(parseFloat(r.notaOrigem))) {
+                porLojaOrigem[r.loja].somaNotas += parseFloat(r.notaOrigem);
+                porLojaOrigem[r.loja].qtNotas++;
+            }
+        } else if (r.avaliacaoEnviadaLojas) {
+            porLojaOrigem[r.loja].pendente++;
+        }
+    });
+    const lojasOrigem = Object.values(porLojaOrigem).map(l => ({
+        ...l,
+        media: l.qtNotas > 0 ? +(l.somaNotas / l.qtNotas).toFixed(1) : null,
+        pctAderencia: l.total > 0 ? +((l.avaliou / l.total) * 100).toFixed(0) : 0,
+    })).sort((a, b) => b.total - a.total);
+
+    // ── POR LOJA TREINADORA ───────────────────────────────────
+    const porLojaTrein = {};
+    todos.forEach(r => {
+        const lt = r.lojaTreinadora || r.emailLojaAvaliadora || '';
+        if (!lt) return;
+        if (!porLojaTrein[lt]) porLojaTrein[lt] = { loja: lt, total: 0, avaliou: 0, pendente: 0, somaNotas: 0, qtNotas: 0 };
+        porLojaTrein[lt].total++;
+        if (r.avaliacaoTreinadora.toUpperCase() === 'SIM') {
+            porLojaTrein[lt].avaliou++;
+            if (r.notaTreinadora && !isNaN(parseFloat(r.notaTreinadora))) {
+                porLojaTrein[lt].somaNotas += parseFloat(r.notaTreinadora);
+                porLojaTrein[lt].qtNotas++;
+            }
+        } else if (r.avaliacaoEnviadaLojas) {
+            porLojaTrein[lt].pendente++;
+        }
+    });
+    const lojasTreinadoras = Object.values(porLojaTrein).map(l => ({
+        ...l,
+        media: l.qtNotas > 0 ? +(l.somaNotas / l.qtNotas).toFixed(1) : null,
+        pctAderencia: l.total > 0 ? +((l.avaliou / l.total) * 100).toFixed(0) : 0,
+    })).sort((a, b) => b.total - a.total);
+
+    // ── POR MÊS ───────────────────────────────────────────────
+    const porMesMap = {};
+    for (let i = 1; i <= 12; i++) porMesMap[i] = {
+        ordem: i, mes: MESES_NOMES[i], total: 0,
+        lem5: 0, lem2: 0, lemH: 0,
+        avalEnviadas: 0, origemAvaliou: 0, treinAvaliou: 0, whatsEnviados: 0,
+        somaOrigem: 0, qtOrigem: 0, somaTrein: 0, qtTrein: 0,
+    };
+    todos.forEach(r => {
+        if (!r.mes || r.mes < 1 || r.mes > 12) return;
+        const m = porMesMap[r.mes];
+        m.total++;
+        if (r.lembrete5) m.lem5++;
+        if (r.lembrete2) m.lem2++;
+        if (r.lembreteHoje) m.lemH++;
+        if (r.avaliacaoEnviadaLojas) m.avalEnviadas++;
+        if (r.avaliacaoOkOrigem.toUpperCase() === 'SIM') {
+            m.origemAvaliou++;
+            if (r.notaOrigem && !isNaN(parseFloat(r.notaOrigem))) { m.somaOrigem += parseFloat(r.notaOrigem); m.qtOrigem++; }
+        }
+        if (r.avaliacaoTreinadora.toUpperCase() === 'SIM') {
+            m.treinAvaliou++;
+            if (r.notaTreinadora && !isNaN(parseFloat(r.notaTreinadora))) { m.somaTrein += parseFloat(r.notaTreinadora); m.qtTrein++; }
+        }
+        if (r.whatsappAvaliacaoFunc) m.whatsEnviados++;
+    });
+    const porMes = Object.values(porMesMap).filter(m => m.total > 0).map(m => ({
+        ...m,
+        mediaOrigem: m.qtOrigem > 0 ? +(m.somaOrigem / m.qtOrigem).toFixed(1) : null,
+        mediaTrein: m.qtTrein > 0 ? +(m.somaTrein / m.qtTrein).toFixed(1) : null,
+        pctOrigem: m.avalEnviadas > 0 ? +((m.origemAvaliou / m.avalEnviadas) * 100).toFixed(0) : 0,
+        pctTrein: m.avalEnviadas > 0 ? +((m.treinAvaliou / m.avalEnviadas) * 100).toFixed(0) : 0,
+        totalLembretes: m.lem5 + m.lem2 + m.lemH,
+    }));
+
+    // ── RANKING FUNCIONÁRIOS WHATSAPP ─────────────────────────
+    const funcWhats = todos
+        .filter(r => r.avaliacaoEnviadaLojas)
+        .map(r => ({
+            nome: r.nome, loja: r.loja, funcao: r.funcao,
+            respondeu: !!r.whatsappAvaliacaoFunc,
+            notaOrigem: r.notaOrigem || '—',
+            notaTrein: r.notaTreinadora || '—',
+        }));
+
+    return {
+        ano,
+        mes: mes || null,
+        total,
+        resumo: {
+            totalTreinamentos: total,
+            comFimTrein: comFimTrein.length,
+            avalEnviadas,
+            avalNaoEnviadas,
+            origemAvaliou,
+            origemPendente,
+            treinAvaliou,
+            treinPendente,
+            whatsEnviados,
+            mediaOrigem,
+            mediaTrein,
+            aderenciaOrigem,
+            aderenciaTrein,
+            aderenciaWhats,
+        },
+        lembretes: {
+            lem5, lem2, lemH,
+            totalEnviados: totalLembretesEnviados,
+            totalPossiveis: totalLembretesPossiveis,
+            aderencia: aderenciaLembretes,
+        },
+        lojasOrigem,
+        lojasTreinadoras,
+        porMes,
+        funcionarios: funcWhats,
+    };
+}
+
 // ─── EXPORTS ──────────────────────────────────────────────────────────────────
 module.exports = {
     getRows,
@@ -1407,4 +1616,5 @@ module.exports = {
     marcarWhatsappAvaliacaoFunc,
     getFuncionariosParaAvaliacaoLembrete,
     getHistoricoAvaliacaoLembretes,
+    getAvaliacoesKpi,
 };

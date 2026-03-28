@@ -218,19 +218,16 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
 <nav>
 <!-- 1 -->  <button class="tab-btn active" onclick="mudarTab('dashboard',this)">📊 Dashboard</button>
 <!-- 2 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/lembretes'">
-             🔔 Lembretes <span class="tab-badge" id="badgeLembretes">...</span>
-            </button>
+             🔔 Lembretes <span class="tab-badge" id="badgeLembretes">...</span> </button>
 <!-- 3 -->  <button class="tab-btn" onclick="mudarTab('busca',this)">🔍 Busca</button>
-<!-- 4 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/sults'">
-             🏪 Sults Lojas/Colab <span id="sults-sub" style="font-size:10px;font-family:monospace;color:inherit;opacity:.7"></span>
-            </button>
-<!-- 5 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/chamados'">📞 Chamados T&D</button>
-<!-- 6 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/universidade'">🎓 Universidade</button>
-<!-- 7 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/turnover'">🔄 Turnover</button>
-<!-- 8 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/cadastro'">➕ Cadastro</button>
- <!-- 8 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/links'">🔗 Links</button>
-<!-- 10 --> <button class="tab-btn" onclick="window.location.href='/treinamento/uploads'">📁 Uploads</button>
-
+<button class="tab-btn" onclick="window.location.href='/treinamento/kpi-avaliacoes'">📊 KPI Avaliações</button>
+ <!-- 5 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/sults'">🏪 Sults Lojas/Colab <span id="sults-sub" style="font-size:10px;font-family:monospace;color:inherit;opacity:.7"></span> </button>
+<!-- 6 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/chamados'">📞 Chamados T&D</button>
+<!-- 7 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/universidade'">🎓 Universidade</button>
+<!-- 8 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/turnover'">🔄 Turnover</button>
+<!-- 9 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/cadastro'">➕ Cadastro</button>
+ <!-- 10 -->  <button class="tab-btn" onclick="window.location.href='/treinamento/links'">🔗 Links</button>
+<!-- 11 --> <button class="tab-btn" onclick="window.location.href='/treinamento/uploads'">📁 Uploads</button>
 
 </nav>
 </header>
@@ -284,30 +281,87 @@ onerror="this.style.display='none';document.querySelector('.logo-fallback').styl
         <div class="stats-row" id="statsRow"><div class="loading-msg"><div class="spinner"></div></div></div>
         <div class="chart-section" id="chartSection"></div>
 
-        <!-- Card preview Lembretes — substitui as tabs antigas -->
-        <div class="chart-card chart-card-full" style="margin-top:16px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-                <div class="chart-title" style="margin:0">🔔 Lembretes de Treinamento</div>
-                <a href="/treinamento/lembretes" class="btn btn-primary" style="text-decoration:none;font-size:12px">
-                    📋 Abrir página de Lembretes →
-                </a>
-            </div>
-            <div id="lembretesDashPreview">
-                <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
-            </div>
+<div class="chart-card chart-card-full" id="secTurnoverDashCard" style="margin-top:16px">
+    <div class="chart-card-header" onclick="accToggle(this)">
+        <div style="display:flex;align-items:center;gap:12px;flex:1">
+            <div class="chart-title" style="margin:0">🔄 Turnover — Motivos e Lojas</div>
+            <button class="btn" style="font-size:12px" onclick="event.stopPropagation();window.location.href='/treinamento/turnover'">📊 Ver página completa</button>
         </div>
-
-        <!-- Turnover inline -->
-        <div class="chart-card chart-card-full" id="secTurnoverDashCard" style="margin-top:16px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-                <div class="chart-title" style="margin:0">🔄 Turnover — Motivos e Lojas</div>
-                <button class="btn" style="font-size:12px" onclick="window.location.href='/treinamento/turnover'">📊 Ver página completa</button>
-            </div>
-            <div id="secTurnoverDash"><span style="color:var(--muted);font-size:12px">Carregando dados de turnover…</span></div>
+        <div class="acc-toggle">
+            <svg viewBox="0 0 14 14" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round">
+                <polyline points="2,4 7,10 12,4"/>
+            </svg>
         </div>
     </div>
+    <div class="acc-body">
+        <div id="secTurnoverDash"><span style="color:var(--muted);font-size:12px">Carregando dados de turnover…</span></div>
+    </div>
+</div>
 
-    <!-- CADASTRO — movido para /treinamento/cadastro -->
+<!-- Card KPI Avaliações — adicionar logo após o Turnover, ANTES do </div> que fecha tab-dashboard: -->
+<div class="chart-card chart-card-full" style="margin-top:16px">
+    <div class="chart-card-header" onclick="accToggle(this)">
+        <div style="display:flex;align-items:center;gap:12px;flex:1">
+            <div class="chart-title" style="margin:0">📊 KPI de Avaliações</div>
+            <a href="/treinamento/kpi-avaliacoes" class="btn btn-primary"
+               style="text-decoration:none;font-size:12px" onclick="event.stopPropagation()">
+                📊 Abrir KPI completo →
+            </a>
+        </div>
+        <div class="acc-toggle">
+            <svg viewBox="0 0 14 14" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round">
+                <polyline points="2,4 7,10 12,4"/>
+            </svg>
+        </div>
+    </div>
+    <div class="acc-body">
+        <div id="kpiAvaliacoesDashPreview">
+            <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+        </div>
+    </div>
+</div>
+
+<!-- DEPOIS: -->
+<div class="chart-card chart-card-full" id="secTurnoverDashCard" style="margin-top:16px">
+    <div class="chart-card-header" onclick="accToggle(this)">
+        <div style="display:flex;align-items:center;gap:12px;flex:1">
+            <div class="chart-title" style="margin:0">🔄 Turnover — Motivos e Lojas</div>
+            <button class="btn" style="font-size:12px" onclick="event.stopPropagation();window.location.href='/treinamento/turnover'">📊 Ver página completa</button>
+        </div>
+        <div class="acc-toggle">
+            <svg viewBox="0 0 14 14" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round">
+                <polyline points="2,4 7,10 12,4"/>
+            </svg>
+        </div>
+    </div>
+    <div class="acc-body">
+        <div id="secTurnoverDash"><span style="color:var(--muted);font-size:12px">Carregando dados de turnover…</span></div>
+    </div>
+</div>
+
+<!-- Card KPI Avaliações — adicionar logo após o Turnover, ANTES do </div> que fecha tab-dashboard: -->
+<div class="chart-card chart-card-full" style="margin-top:16px">
+    <div class="chart-card-header" onclick="accToggle(this)">
+        <div style="display:flex;align-items:center;gap:12px;flex:1">
+            <div class="chart-title" style="margin:0">📊 KPI de Avaliações</div>
+            <a href="/treinamento/kpi-avaliacoes" class="btn btn-primary"
+               style="text-decoration:none;font-size:12px" onclick="event.stopPropagation()">
+                📊 Abrir KPI completo →
+            </a>
+        </div>
+        <div class="acc-toggle">
+            <svg viewBox="0 0 14 14" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round">
+                <polyline points="2,4 7,10 12,4"/>
+            </svg>
+        </div>
+    </div>
+    <div class="acc-body">
+        <div id="kpiAvaliacoesDashPreview">
+            <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+        </div>
+    </div>
+</div>
+
 
 </main>
 
@@ -594,6 +648,125 @@ async function carregarLembretesPreview() {
     }
 }
 
+async function carregarKpiAvaliacoesPreview() {
+    var wrap = document.getElementById('kpiAvaliacoesDashPreview');
+    if (!wrap) return;
+    try {
+        var ano = (document.getElementById('filtroAno') || {value:'2026'}).value || '2026';
+        var r   = await fetch(API + '/kpi-avaliacoes/dados?ano=' + ano);
+        var d   = await r.json();
+        if (d.erro) throw new Error(d.erro);
+ 
+        var s = d.resumo;
+        var l = d.lembretes;
+ 
+        // ── helpers ──────────────────────────────────────────────
+        function kp(icon, label, valor, sub, cor) {
+            return '<div style="text-align:center;flex:1;min-width:80px">' +
+                '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:5px">' + icon + ' ' + label + '</div>' +
+                '<div style="font-size:24px;font-weight:900;font-family:JetBrains Mono,monospace;color:' + cor + ';line-height:1">' + valor + '</div>' +
+                '<div style="font-size:11px;color:var(--muted);margin-top:3px;font-weight:600">' + sub + '</div>' +
+                '</div>';
+        }
+ 
+        function barAdh(pct) {
+            var c = pct >= 75 ? 'var(--green)' : pct >= 50 ? 'var(--yellow)' : 'var(--red)';
+            return '<div style="display:flex;align-items:center;gap:8px">' +
+                '<div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden">' +
+                '<div style="width:' + pct + '%;height:100%;background:' + c + ';border-radius:3px"></div>' +
+                '</div>' +
+                '<span style="font-size:11px;font-weight:800;font-family:JetBrains Mono,monospace;color:' + c + ';min-width:34px;text-align:right">' + pct + '%</span>' +
+                '</div>';
+        }
+ 
+        function notaBadge(v) {
+            if (!v && v !== 0) return '<span style="color:var(--muted);font-size:20px;font-weight:700">—</span>';
+            var n = parseFloat(v);
+            var cor = n >= 8 ? 'var(--green)' : n >= 6 ? 'var(--yellow)' : 'var(--red)';
+            return '<span style="font-size:22px;font-weight:900;font-family:JetBrains Mono,monospace;color:' + cor + '">' + v + '</span>';
+        }
+ 
+        // ── lojas com pendência (origem) ──────────────────────────
+        var lojasPend = (d.lojasOrigem || []).filter(function(lo) { return lo.pendente > 0; }).slice(0, 5);
+        var lojasHtml = lojasPend.length
+            ? lojasPend.map(function(lo) {
+                var c = lo.pctAderencia >= 75 ? 'var(--green)' : lo.pctAderencia >= 50 ? 'var(--yellow)' : 'var(--red)';
+                return '<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">' +
+                    '<span style="font-size:12px;font-weight:700;flex:2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + lo.loja + '">' + lo.loja + '</span>' +
+                    '<span style="font-size:11px;color:var(--muted);flex-shrink:0">' + lo.avaliou + '/' + lo.total + '</span>' +
+                    '<span style="font-size:11px;font-weight:800;color:' + c + ';font-family:JetBrains Mono,monospace;min-width:34px;text-align:right">' + lo.pctAderencia + '%</span>' +
+                    '</div>';
+            }).join('')
+            : '<div style="text-align:center;padding:14px 0;color:var(--green);font-size:13px;font-weight:700">✅ Todas as lojas responderam!</div>';
+ 
+        // ── renderiza ─────────────────────────────────────────────
+        wrap.innerHTML =
+ 
+            // linha KPIs
+            '<div style="display:flex;gap:6px;flex-wrap:wrap;padding-bottom:16px;margin-bottom:16px;border-bottom:1.5px solid var(--border)">' +
+            kp('📋', 'Treinamentos',    s.totalTreinamentos,  ano,                              'var(--text)') +
+            kp('📧', 'Aval. Enviadas',  s.avalEnviadas,       s.avalNaoEnviadas + ' pendentes', '#ea580c') +
+            kp('🏪', 'Origem',          s.origemAvaliou,      s.aderenciaOrigem + '% ader.',    'var(--red)') +
+            kp('🏭', 'Treinadora',      s.treinAvaliou,       s.aderenciaTrein + '% ader.',     'var(--accent)') +
+            kp('📱', 'WhatsApp Func.',  s.whatsEnviados,      s.aderenciaWhats + '% ader.',     '#7c3aed') +
+            kp('🔔', 'Lembretes',       l.totalEnviados,      l.aderencia + '% de ' + l.totalPossiveis, 'var(--green)') +
+            '</div>' +
+ 
+            // grid 3 colunas
+            '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">' +
+ 
+            // col 1 — aderência
+            '<div>' +
+            '<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px">📈 Aderência</div>' +
+            '<div style="margin-bottom:9px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">Loja Origem</div>' + barAdh(s.aderenciaOrigem) + '</div>' +
+            '<div style="margin-bottom:9px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">Loja Treinadora</div>' + barAdh(s.aderenciaTrein) + '</div>' +
+            '<div><div style="font-size:12px;font-weight:700;margin-bottom:4px">WhatsApp Func.</div>' + barAdh(s.aderenciaWhats) + '</div>' +
+            '</div>' +
+ 
+            // col 2 — notas + lembretes por tipo
+            '<div>' +
+            '<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px">⭐ Notas Médias</div>' +
+            '<div style="display:flex;gap:10px;margin-bottom:14px">' +
+            '<div style="flex:1;text-align:center;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 6px">' +
+            '<div style="font-size:9px;font-weight:700;color:var(--muted);margin-bottom:5px">ORIGEM</div>' + notaBadge(s.mediaOrigem) + '</div>' +
+            '<div style="flex:1;text-align:center;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 6px">' +
+            '<div style="font-size:9px;font-weight:700;color:var(--muted);margin-bottom:5px">TREINADORA</div>' + notaBadge(s.mediaTrein) + '</div>' +
+            '</div>' +
+            '<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">🔔 Lembretes por Tipo</div>' +
+            '<div style="display:flex;gap:6px">' +
+            '<div style="flex:1;text-align:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 4px">' +
+            '<div style="font-size:9px;color:var(--muted);font-weight:700;margin-bottom:3px">5 DIAS</div>' +
+            '<div style="font-size:18px;font-weight:800;color:#7c3aed">' + (l.lem5 || 0) + '</div></div>' +
+            '<div style="flex:1;text-align:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 4px">' +
+            '<div style="font-size:9px;color:var(--muted);font-weight:700;margin-bottom:3px">2 DIAS</div>' +
+            '<div style="font-size:18px;font-weight:800;color:var(--yellow)">' + (l.lem2 || 0) + '</div></div>' +
+            '<div style="flex:1;text-align:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 4px">' +
+            '<div style="font-size:9px;color:var(--muted);font-weight:700;margin-bottom:3px">DIA</div>' +
+            '<div style="font-size:18px;font-weight:800;color:var(--red)">' + (l.lemH || 0) + '</div></div>' +
+            '</div>' +
+            '</div>' +
+ 
+            // col 3 — lojas com pendência
+            '<div>' +
+            '<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px">⏳ Lojas com Pendência</div>' +
+            lojasHtml +
+            (lojasPend.length ? '<div style="font-size:10px;color:var(--muted);margin-top:5px;text-align:right">Loja · Resp/Total · %</div>' : '') +
+            '</div>' +
+ 
+            '</div>' + // fecha grid
+ 
+            // link
+            '<div style="margin-top:14px;text-align:center">' +
+            '<a href="/treinamento/kpi-avaliacoes" style="display:inline-flex;align-items:center;gap:6px;padding:9px 20px;background:var(--red);color:#fff;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none" onmouseover="this.style.background=\'#e8192e\'" onmouseout="this.style.background=\'var(--red)\'">📊 Ver KPI completo de avaliações →</a>' +
+            '</div>';
+ 
+    } catch(e) {
+        if (wrap) wrap.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">' +
+            '⚠️ Não foi possível carregar — <a href="/treinamento/kpi-avaliacoes" style="color:var(--red);font-weight:700">abrir KPI completo</a></div>';
+    }
+
+}
+
 /* ── HELPERS VISUAIS ── */
 function fmtR(v){ return 'R$\u00a0'+parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function mkVChart(itens, cor){
@@ -638,6 +811,7 @@ async function carregarDashboard(){
         _dashCarregado = false;
     }
     carregarLembretesPreview();
+    carregarKpiAvaliacoesPreview();
 }
 
 function renderDash(d, ano){
@@ -797,27 +971,28 @@ function buildSec(titulo,arr,tipo,cor,ano,withAnoSel){
         case 'avaliacoes': rows=arr.map(function(x,i){ return {onclick:"dashMes('avaliacoes',"+i+")",cells:[{v:'<b>'+x.mes+'</b> <span style="font-size:10px;color:var(--accent)">▶</span>'},{v:x.totalAval||0,st:'color:var(--muted)'},{v:'<span style="color:var(--green);font-weight:700">'+(x.simAval||0)+'</span>'},{v:'<span style="color:var(--yellow);font-weight:700">'+(x.naoAval||0)+'</span>'}]}; }); tab=mkTable(['Mês','Total','✓ Avaliados','✗ Pendentes'],rows); break;
         default: rows=arr.map(function(x,i){ return {onclick:"dashMes('perfil',"+i+")",cells:[{v:'<b>'+x.mes+'</b>'},{v:x.totalPerfil||0,st:'font-family:JetBrains Mono,monospace'}]}; }); tab=mkTable(['Mês','Concluídos'],rows);
     }
-    var header=withAnoSel
-        ? '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div class="chart-title" style="margin:0">'+titulo+'</div>'+anoSelEl('perfilAno',ano,'trocarPerfilAno(this.value)')+'</div>'
-        : '<div class="chart-title">'+titulo+' <span style="font-size:10px;font-weight:400;color:var(--muted)">(clique no mês para detalhar)</span></div>';
-    return '<div class="chart-card chart-card-full" id="sec-'+tipo+'">'+header+chart+tab+'</div>';
+    var tituloHeader = withAnoSel
+        ? '<div style="display:flex;align-items:center;gap:10px;flex:1"><div class="chart-title" style="margin:0">'+titulo+'</div>'+anoSelEl('perfilAno',ano,'trocarPerfilAno(this.value)')+'</div>'
+        : '<div class="chart-title" style="margin:0">'+titulo+' <span style="font-size:10px;font-weight:400;color:var(--muted)">(clique no mês para detalhar)</span></div>';
+    return '<div class="chart-card chart-card-full" id="sec-'+tipo+'">' +
+        '<div class="chart-card-header" onclick="accToggle(this)">' + tituloHeader + accIcon(false) + '</div>' +
+        '<div class="acc-body"><div style="padding-top:4px">' + chart + tab + '</div></div>' +
+        '</div>';
 }
 
-async function trocarPerfilAno(novoAno){
-    var c1=document.getElementById('sec-perfilModelo'); var c2=document.getElementById('sec-perfilFuncao');
-    var spin='<div class="loading-msg"><div class="spinner"></div></div>';
-    if(c1) c1.innerHTML=spin; if(c2) c2.innerHTML=spin;
-    try {
-        var d=_cad[novoAno];
-        if(!d){ var r=await fetch(API+'/dashboard/cadastral?ano='+novoAno); d=await r.json(); _cad[novoAno]=d; }
-        var novoM=buildPerfilSec('sec-perfilModelo','📋 Perfil — Modo de Treinamento (col X) — '+novoAno,d.perfilModelo,d.allModelos,novoAno,false);
-        var novoF=buildPerfilSec('sec-perfilFuncao','👤 Perfil do Treinando — Quantidade por Função (col F) — '+novoAno,d.perfilFuncao,d.allFuncoes,novoAno,true);
-        if(c1) c1.outerHTML=novoM||'<div id="sec-perfilModelo"></div>';
-        var c2b=document.getElementById('sec-perfilFuncao'); if(c2b) c2b.outerHTML=novoF||'<div id="sec-perfilFuncao"></div>';
-    } catch(e){
-        var e1=document.getElementById('sec-perfilModelo'); if(e1) e1.innerHTML='<p style="color:var(--muted)">Erro: '+e.message+'</p>';
-        var e2=document.getElementById('sec-perfilFuncao'); if(e2) e2.innerHTML='<p style="color:var(--muted)">Erro: '+e.message+'</p>';
-    }
+function buildPerfilSec(id,titulo,dados,cats,ano,comAnoSel){
+    if(!dados||!dados.length||!cats||!cats.length) return '';
+    var tipo=id.replace('sec-perfil','').toLowerCase()||'modelo';
+    _perfilCache[tipo]=dados; _perfilCache[tipo+'_cats']=cats;
+    var grafico=barrasEmpilhadas(dados,cats,tipo);
+    var tabela=tabelaCruzada(dados,cats,'Mês',tipo);
+    var tituloHeader = comAnoSel
+        ? '<div style="display:flex;align-items:center;gap:10px;flex:1"><div class="chart-title" style="margin:0">'+titulo+'</div>'+anoSelEl(id+'AnoSel',ano,'trocarPerfilAno(this.value)')+'</div>'
+        : '<div class="chart-title" style="margin:0">'+titulo+'</div>';
+    return '<div class="chart-card chart-card-full" id="'+id+'">' +
+        '<div class="chart-card-header" onclick="accToggle(this)">' + tituloHeader + accIcon(false) + '</div>' +
+        '<div class="acc-body"><div style="padding-top:4px">' + grafico + tabela + '</div></div>' +
+        '</div>';
 }
 
 function scrollSec(tipo){
@@ -920,6 +1095,18 @@ verificarStatus();
 
 <!-- ══ BOTÃO FLUTUANTE COMUNICADOS ══ -->
 <style>
+    /* ── ACCORDION ── */
+.chart-card-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.chart-card-header .chart-title{margin-bottom:0;}
+.chart-card-header:hover .acc-toggle{background:rgba(200,16,46,.08);}
+.acc-toggle{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;margin-left:12px;}
+.acc-toggle svg{transition:transform .25s ease;width:14px;height:14px;}
+.acc-toggle.open svg{transform:rotate(180deg);}
+.acc-toggle.open{background:rgba(200,16,46,.08);border-color:rgba(200,16,46,.25);}
+.acc-body{overflow:hidden;transition:max-height .32s ease,opacity .25s ease,margin-top .25s ease;max-height:0;opacity:0;margin-top:0;}
+.acc-body.open{max-height:4000px;opacity:1;margin-top:14px;}
+
+
 #popBtn{
     position:fixed;right:96px;bottom:24px;z-index:9999;
     width:58px;height:58px;border:none;border-radius:999px;cursor:pointer;
@@ -985,6 +1172,21 @@ verificarStatus();
 </div>
 
 <script>
+
+    /* ── ACCORDION ── */
+function accToggle(header) {
+    var toggle = header.querySelector('.acc-toggle');
+    var body   = header.nextElementSibling;
+    var isOpen = body.classList.contains('open');
+    body.classList.toggle('open');
+    toggle.classList.toggle('open');
+    toggle.querySelector('svg').setAttribute('stroke', isOpen ? 'var(--muted)' : '#c8102e');
+}
+function accIcon(open) {
+    var cor = open ? '#c8102e' : 'var(--muted)';
+    return '<div class="acc-toggle'+(open?' open':'')+'"><svg viewBox="0 0 14 14" fill="none" stroke="'+cor+'" stroke-width="2" stroke-linecap="round"><polyline points="2,4 7,10 12,4"/></svg></div>';
+}
+
 (function() {
     const _setor = 'treinamento';
     let _avisos  = [];
