@@ -26,6 +26,10 @@ const { enviarWhatsAppLembrete } = require('./services/whatsapp');
 const { enviarEmailLembrete, enviarEmailLembreteSimples, enviarEmailAvaliacao, enviarWhatsAppAvaliacaoFuncionario } = require('./services/email');
 const linksTreinamentoService = require('./services/linksTreinamentoService');
 
+// ★ NOVO — busca separada com cache
+const buscaCache   = require('./services/buscaCache');
+const buscaService = require('./services/busca');
+
 // ★ NOVO — cache de lembretes de avaliação
 const avaliacaoLembretesCache = require('./services/avaliacaoLembretesCache');
 
@@ -64,7 +68,7 @@ const {
   marcarWhatsappAvaliacaoFunc,
   getFuncionariosParaAvaliacaoLembrete,
   getHistoricoAvaliacaoLembretes,
-  getAvaliacoesKpi,
+  getKpiAvaliacoes,
 } = require('./services/sheets');
 
 // ─── Inicializar caches ───────────────────────────────────────────────────────
@@ -74,6 +78,7 @@ universidadeCache.inicializar().catch(e => console.error('Universidade init falh
 turnoverCache.inicializar().catch(e => console.error('TURNOVER init falhou:', e.message));
 uploadsCache.inicializar().catch(e => console.error('UPLOADS init falhou:', e.message));
 lembretesCache.inicializar().catch(e => console.error('LEMBRETES init falhou:', e.message));
+buscaCache.inicializar().catch(e => console.error('BUSCA-CACHE init falhou:', e.message));
 // ★ NOVO
 avaliacaoLembretesCache.inicializar().catch(e => console.error('AVALIACAO-LEMBRETES init falhou:', e.message));
 
@@ -97,6 +102,9 @@ router.get('/cadastro',     (req, res) => res.sendFile(path.join(PUBLIC, 'cadast
 router.get('/links', (req, res) => res.sendFile(path.join(PUBLIC, 'links.html'))
 );
 router.get('/kpi-avaliacoes', (req, res) => res.sendFile(path.join(PUBLIC, 'avaliacoesKPI.html')));
+router.get('/busca', (req, res) => res.sendFile(path.join(PUBLIC, 'busca.html')));
+
+router.use('/busca-api', buscaService);
 
 
 router.use('/links-api', linksTreinamentoService);
@@ -159,7 +167,7 @@ router.get('/dashboard/perfil-desenvolvimento', async (req, res) => {
 router.get('/kpi-avaliacoes/dados', async (req, res) => {
   try {
     const { ano, mes } = req.query;
-    res.json(await getAvaliacoesKpi(ano || '2026', mes || null));
+    res.json(await getKpiAvaliacoes(ano || '2026', mes || null));
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divino Fogão — Busca de Colaboradores</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --red:#c8102e;--red-light:#e8192e;--red-pale:#fff0f2;
+            --bg:#f5f3ef;--bg2:#ffffff;--bg3:#faf8f5;
+            --border:#e8e2d9;--text:#1e1a16;--muted:#8a7f74;
+            --accent:#2563eb;--accent-pale:#eff6ff;
+            --green:#16a34a;--green-pale:#f0fdf4;
+            --yellow:#d97706;--yellow-pale:#fffbeb;
+            --purple:#7c3aed;--purple-pale:#f5f3ff;
+            --shadow:0 2px 12px rgba(0,0,0,.08);
+            --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+        .logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
+        .logo img{height:52px;width:auto;display:block;}
+        .logo-fallback{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1px;display:none;}
+        .header-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+        .header-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
+        nav{display:flex;gap:2px;margin-left:auto;}
+        .tab-btn{background:none;border:none;color:var(--muted);padding:20px 14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;text-decoration:none;}
+        .tab-btn:hover{color:var(--text);background:var(--bg3);}
+        .tab-btn.active{color:var(--red);border-bottom-color:var(--red);background:var(--red-pale);}
+
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:6px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+        .status-dot{width:7px;height:7px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
+        .status-dot.ok{background:var(--green);animation:none;}
+        .status-dot.err{background:var(--red);animation:none;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+        main{max-width:1200px;margin:0 auto;padding:28px 24px;}
+
+        .busca-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+        @media(max-width:900px){.busca-grid{grid-template-columns:1fr;}}
+        .busca-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow);}
+        .busca-box-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+        .busca-box-title .badge{background:var(--accent);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:800;}
+        .busca-box-title .badge.ia{background:linear-gradient(135deg,var(--red),#8b0000);}
+        .search-wrap{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:5px 5px 5px 14px;display:flex;align-items:center;gap:8px;transition:border-color .2s,box-shadow .2s;margin-bottom:10px;}
+        .search-wrap:focus-within{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.08);}
+        .search-input{flex:1;border:none;outline:none;background:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:var(--text);}
+        .search-input::placeholder{color:var(--muted);font-weight:400;}
+        .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+        .btn-primary{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
+        .btn-primary:hover{background:var(--red-light);transform:translateY(-1px);}
+        .btn-ia{background:linear-gradient(135deg,var(--red),#8b0000);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
+        .btn-ia:hover{transform:translateY(-1px);}
+        .btn-secondary{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+        .btn-secondary:hover{background:var(--bg2);}
+        .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
+        .timer-txt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-height:16px;margin-top:6px;}
+
+        .ia-resultado{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:14px;font-size:13px;line-height:1.65;color:var(--text);white-space:pre-wrap;display:none;margin-top:8px;max-height:260px;overflow-y:auto;}
+        .ia-resultado.visivel{display:block;}
+
+        .resultados-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+        .resultados-title{font-size:13px;font-weight:800;color:var(--muted);}
+        .resultados-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+
+        .cards-lista{display:flex;flex-direction:column;gap:10px;}
+
+        .colab-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .2s,border-color .2s;}
+        .colab-card:hover{box-shadow:var(--shadow-lg);border-color:#d5cec4;}
+        .colab-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none;}
+        .colab-avatar{width:40px;height:40px;border-radius:10px;background:var(--red-pale);border:1.5px solid rgba(200,16,46,.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--red);flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+        .colab-info{flex:1;min-width:0;}
+        .colab-nome{font-size:14px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .colab-sub{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+        .colab-badges{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;flex-shrink:0;}
+        .badge-sm{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+        .badge-green{background:var(--green-pale);color:var(--green);border:1px solid rgba(22,163,74,.2);}
+        .badge-red{background:var(--red-pale);color:var(--red);border:1px solid rgba(200,16,46,.2);}
+        .badge-yellow{background:var(--yellow-pale);color:var(--yellow);border:1px solid rgba(217,119,6,.2);}
+        .badge-accent{background:var(--accent-pale);color:var(--accent);border:1px solid rgba(37,99,235,.2);}
+        .badge-purple{background:var(--purple-pale);color:var(--purple);border:1px solid rgba(124,58,237,.2);}
+        .colab-acc-btn{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+        .colab-acc-btn svg{transition:transform .25s;width:12px;height:12px;}
+        .colab-acc-btn.open svg{transform:rotate(180deg);}
+        .colab-acc-btn.open{background:var(--red-pale);border-color:rgba(200,16,46,.25);}
+
+        .colab-body{overflow:hidden;max-height:0;opacity:0;transition:max-height .32s ease,opacity .25s ease;}
+        .colab-body.open{max-height:1200px;opacity:1;}
+        .colab-body-inner{padding:0 20px 18px;border-top:1px solid var(--border);}
+        .colab-section{margin-top:14px;}
+        .colab-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+        .colab-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;}
+        .field{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;}
+        .field-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:3px;}
+        .field-value{font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .field-value.mono{font-family:'JetBrains Mono',monospace;}
+        .field-value.ok{color:var(--green);}
+        .field-value.nok{color:var(--red);}
+        .field-value.muted{color:var(--muted);}
+
+        .paginacao{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:20px;flex-wrap:wrap;}
+        .pag-btn{min-width:36px;height:36px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;padding:0 10px;}
+        .pag-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-pale);}
+        .pag-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
+        .pag-btn:disabled{opacity:.4;cursor:not-allowed;}
+        .pag-info{font-size:12px;color:var(--muted);font-weight:600;font-family:'JetBrains Mono',monospace;}
+
+        .loading-msg{text-align:center;padding:40px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
+        .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .empty{text-align:center;padding:48px 20px;color:var(--muted);}
+        .empty .icon{font-size:40px;margin-bottom:10px;}
+        .empty p{font-size:14px;font-weight:600;}
+
+        .sync-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);flex-wrap:wrap;}
+        .sync-info{flex:1;font-size:12px;color:var(--muted);font-weight:600;}
+        .sync-info strong{color:var(--text);}
+
+        @media(max-width:768px){
+            header{padding:0 14px;gap:10px;}
+            .header-title{display:none;}
+            main{padding:18px 14px;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="/treinamento/logo.png" alt="Divino Fogão"
+             onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
+        <span class="logo-fallback">🍽️ DIVINO FOGÃO</span>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">Busca de Colaboradores</div>
+    <nav>
+        <a href="/treinamento/"               class="tab-btn">📊 Dashboard</a>
+        <a href="/treinamento/lembretes"      class="tab-btn">🔔 Lembretes</a>
+        <a href="/treinamento/busca"          class="tab-btn active">🔍 Colaboradores</a>
+        <a href="/treinamento/kpi-avaliacoes" class="tab-btn">📊 KPI Avaliações</a>
+        <a href="/treinamento/sults"          class="tab-btn">🏪 Sults</a>
+        <a href="/treinamento/chamados"       class="tab-btn">📞 Chamados T&amp;D</a>
+        <a href="/treinamento/universidade"   class="tab-btn">🎓 Universidade</a>
+        <a href="/treinamento/turnover"       class="tab-btn">🔄 Turnover</a>
+        <a href="/treinamento/cadastro"       class="tab-btn">➕ Cadastro</a>
+        <a href="/treinamento/uploads"        class="tab-btn">📁 Uploads</a>
+        <a href="/treinamento/links"          class="tab-btn">🔗 Links</a>
+    </nav>
+</header>
+
+<div id="statusBar">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusTxt">Verificando cache...</span>
+    <span style="margin-left:auto">
+        <button class="btn btn-secondary" style="padding:4px 12px;font-size:11px" onclick="sincronizar()" id="btnSync">↻ Sincronizar</button>
+    </span>
+</div>
+
+<main>
+
+    <div class="sync-bar">
+        <div class="sync-info" id="syncInfo">⏳ Carregando informações do cache...</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace" id="syncTimer"></div>
+    </div>
+
+    <div class="busca-grid">
+        <div class="busca-box">
+            <div class="busca-box-title">
+                🗄️ Busca no Cache
+                <span class="badge">RÁPIDA</span>
+            </div>
+            <div class="search-wrap">
+                <span style="font-size:16px">🔍</span>
+                <input type="text" class="search-input" id="inputCache"
+                    placeholder="Nome, CPF, loja, função, RG ou telefone..."
+                    oninput="buscaCache()">
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <button class="btn btn-primary" onclick="buscaCache()">Buscar</button>
+                <button class="btn btn-secondary" onclick="limparCache()">✕ Limpar</button>
+                <span class="timer-txt" id="timerCache"></span>
+            </div>
+        </div>
+        <div class="busca-box">
+            <div class="busca-box-title">
+                🤖 Busca com IA
+                <span class="badge ia">GEMINI</span>
+            </div>
+            <div class="search-wrap">
+                <span style="font-size:16px">💬</span>
+                <input type="text" class="search-input" id="inputIA"
+                    placeholder="Ex: Quem treinou em março e ainda não foi avaliado?"
+                    onkeydown="if(event.key==='Enter')buscaIA()">
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <button class="btn btn-ia" onclick="buscaIA()" id="btnIA">🤖 Perguntar</button>
+                <button class="btn btn-secondary" onclick="limparIA()">✕ Limpar</button>
+                <span class="timer-txt" id="timerIA"></span>
+            </div>
+            <div class="ia-resultado" id="iaResultado"></div>
+        </div>
+    </div>
+
+    <div id="areaResultados">
+        <div class="resultados-header">
+            <div class="resultados-title" id="resultadosTitulo">📋 Todos os Colaboradores</div>
+            <div class="resultados-count" id="resultadosCount"></div>
+        </div>
+        <div class="cards-lista" id="listaCards">
+            <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+        </div>
+        <div class="paginacao" id="paginacao"></div>
+    </div>
+
+</main>
+
+<script>
+var API_BUS = '/treinamento/busca-api';
+var _paginaAtual = 1;
+var _termoBusca  = '';
+var _debounceT   = null;
+var _syncInterval = null;
+
+/* ── STATUS ── */
+async function atualizarStatus() {
+    try {
+        var r = await fetch(API_BUS + '/status');
+        var d = await r.json();
+        var dot = document.getElementById('statusDot');
+        var txt = document.getElementById('statusTxt');
+        var inf = document.getElementById('syncInfo');
+        if (d.ok) {
+            dot.className = 'status-dot ok';
+            txt.textContent = '✓ Cache pronto — ' + d.total + ' colaboradores';
+            var ua = d.ultimaSync ? new Date(d.ultimaSync).toLocaleString('pt-BR') : '—';
+            inf.innerHTML = '<strong>' + d.total + '</strong> colaboradores · Última sync: ' + ua;
+        } else if (d.sincronizando) {
+            dot.className = 'status-dot';
+            txt.textContent = '⏳ Sincronizando...';
+            inf.innerHTML = '⏳ Sincronizando planilha...';
+        } else {
+            dot.className = 'status-dot err';
+            txt.textContent = '⚠️ ' + (d.erro || 'Erro no cache');
+            inf.innerHTML = '⚠️ ' + (d.erro || 'Erro');
+        }
+    } catch(e) {
+        document.getElementById('statusDot').className = 'status-dot err';
+        document.getElementById('statusTxt').textContent = '⚠️ Servidor offline';
+    }
+}
+
+async function sincronizar() {
+    var btn = document.getElementById('btnSync');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>';
+    try {
+        await fetch(API_BUS + '/sincronizar', { method: 'POST' });
+        await atualizarStatus();
+        carregarPagina(1, _termoBusca);
+    } catch(e) { alert('Erro: ' + e.message); }
+    finally { btn.disabled = false; btn.innerHTML = '↻ Sincronizar'; }
+}
+
+/* ── COUNTDOWN — a cada 30s ── */
+function iniciarCountdown() {
+    clearInterval(_syncInterval);
+    var proxEl = document.getElementById('syncTimer');
+    _syncInterval = setInterval(function() {
+        fetch(API_BUS + '/status').then(function(r){ return r.json(); }).then(function(d) {
+            if (!d.proximaSync) { proxEl.textContent = ''; return; }
+            var diff = Math.max(0, Math.round((new Date(d.proximaSync) - Date.now()) / 1000));
+            var m = Math.floor(diff / 60);
+            var s = diff % 60;
+            proxEl.textContent = 'Próxima sync em ' + m + ':' + (s < 10 ? '0' : '') + s;
+        }).catch(function(){});
+    }, 30000);
+}
+
+/* ── BUSCA CACHE ── */
+function buscaCache() {
+    clearTimeout(_debounceT);
+    _debounceT = setTimeout(function() {
+        var q = document.getElementById('inputCache').value.trim();
+        _termoBusca = q;
+        _paginaAtual = 1;
+        document.getElementById('resultadosTitulo').textContent = q ? '🔍 Resultado: "' + q + '"' : '📋 Todos os Colaboradores';
+        carregarPagina(1, q);
+    }, 350);
+}
+
+function limparCache() {
+    document.getElementById('inputCache').value = '';
+    _termoBusca = '';
+    _paginaAtual = 1;
+    document.getElementById('resultadosTitulo').textContent = '📋 Todos os Colaboradores';
+    document.getElementById('timerCache').textContent = '';
+    carregarPagina(1, '');
+}
+
+async function carregarPagina(pagina, termo) {
+    _paginaAtual = pagina;
+    var lista = document.getElementById('listaCards');
+    var contEl = document.getElementById('resultadosCount');
+    lista.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
+    var t0 = Date.now();
+    try {
+        var url = API_BUS + '/cache?pagina=' + pagina + '&porPagina=20';
+        if (termo) url += '&q=' + encodeURIComponent(termo);
+        var r = await fetch(url);
+        var d = await r.json();
+        var dt = ((Date.now() - t0) / 1000).toFixed(2);
+        document.getElementById('timerCache').textContent = dt + 's · ' + d.total + ' resultado(s)';
+        contEl.textContent = 'Pág. ' + d.pagina + '/' + d.totalPaginas + ' · ' + d.total + ' total';
+        if (!d.itens || !d.itens.length) {
+            lista.innerHTML = '<div class="empty"><div class="icon">😕</div><p>Nenhum resultado' + (termo ? ' para "' + termo + '"' : '') + '</p></div>';
+            document.getElementById('paginacao').innerHTML = '';
+            return;
+        }
+        lista.innerHTML = d.itens.map(function(c) { return renderCard(c); }).join('');
+        renderPaginacao(d);
+    } catch(e) {
+        lista.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro: ' + e.message + '</p></div>';
+    }
+}
+
+/* ── BUSCA IA ── */
+async function buscaIA() {
+    var q = document.getElementById('inputIA').value.trim();
+    var res = document.getElementById('iaResultado');
+    var btn = document.getElementById('btnIA');
+    if (!q) return;
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Consultando...';
+    res.className = 'ia-resultado visivel';
+    res.textContent = '⏳ Consultando Gemini...';
+    var t0 = Date.now();
+    try {
+        var r = await fetch(API_BUS + '/ia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pergunta: q }) });
+        var d = await r.json();
+        document.getElementById('timerIA').textContent = ((Date.now() - t0) / 1000).toFixed(2) + 's';
+        if (d.ok) {
+            res.innerHTML = d.resposta.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+        } else { res.textContent = '❌ ' + d.erro; }
+    } catch(e) { res.textContent = '❌ Erro: ' + e.message; }
+    finally { btn.disabled = false; btn.innerHTML = '🤖 Perguntar'; }
+}
+
+function limparIA() {
+    document.getElementById('inputIA').value = '';
+    document.getElementById('iaResultado').className = 'ia-resultado';
+    document.getElementById('timerIA').textContent = '';
+}
+
+/* ── RENDER CARD ── */
+function renderCard(c) {
+    var iniciais = (c.nome || '?').split(' ').slice(0,2).map(function(p){ return p[0]; }).join('').toUpperCase();
+    var badges = '';
+    if (c.pago && c.pago.toUpperCase() === 'SIM') badges += '<span class="badge-sm badge-green">✓ Pago</span>';
+    if (c.aprovado && c.aprovado.trim())           badges += '<span class="badge-sm badge-accent">✓ Aprovado</span>';
+    if (c.nota)                                    badges += '<span class="badge-sm badge-yellow">⭐ ' + c.nota + '</span>';
+    if (c.avaliacaoEnviadaLojas)                   badges += '<span class="badge-sm badge-purple">📧 Aval.</span>';
+
+    return '<div class="colab-card">' +
+        '<div class="colab-header" onclick="toggleCard(this)">' +
+            '<div class="colab-avatar">' + iniciais + '</div>' +
+            '<div class="colab-info">' +
+                '<div class="colab-nome">' + esc(c.nome) + ' <span style="font-size:11px;color:var(--muted);font-family:JetBrains Mono,monospace">#' + esc(c.numero) + '</span></div>' +
+                '<div class="colab-sub">' +
+                    (c.loja   ? '<span>🏪 ' + esc(c.loja)    + '</span>' : '') +
+                    (c.funcao ? '<span>👔 ' + esc(c.funcao)   + '</span>' : '') +
+                    (c.fimTrein ? '<span>📅 ' + esc(c.fimTrein) + '</span>' : '') +
+                '</div>' +
+            '</div>' +
+            (badges ? '<div class="colab-badges">' + badges + '</div>' : '') +
+            '<div class="colab-acc-btn"><svg viewBox="0 0 12 12" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="2,3 6,9 10,3"/></svg></div>' +
+        '</div>' +
+        '<div class="colab-body"><div class="colab-body-inner">' +
+            renderSecao('👤 Dados Pessoais', [
+                ['Nº', c.numero],['CPF', c.cpf, true],['RG', c.rg, true],
+                ['Turno', c.turno],['Telefone', c.telefone, true],['E-mail', c.email],
+            ]) +
+            renderSecao('🏫 Treinamento', [
+                ['Início', c.inicioTrein],['Fim', c.fimTrein],['Dias', c.diasTreinados],
+                ['Local', c.local],['Treinador', c.treinador],['Solicitado por', c.solicitadoPor],
+                ['Modelo', c.modelo],['Loja Treinadora', c.nomeLojaTreinadora],
+            ]) +
+            renderSecao('💰 Financeiro', [
+                ['Pago', c.pago, false, c.pago && c.pago.toUpperCase()==='SIM' ? 'ok' : 'muted'],
+                ['Prêmio', c.valorPremio ? 'R$ ' + c.valorPremio : '—', true],
+                ['Refeição', c.valorRefeicao ? 'R$ ' + c.valorRefeicao : '—', true],
+                ['Total', c.valorTotal ? 'R$ ' + c.valorTotal : '—', true],
+                ['Mês', c.mes],['Ano', c.ano],['Aprovado', c.aprovado],['Nota', c.nota, true],
+            ]) +
+            renderSecao('📋 Avaliação', [
+                ['Avaliação OK', c.avaliacaoOk, false, c.avaliacaoOk && c.avaliacaoOk.toUpperCase()==='SIM' ? 'ok' : 'muted'],
+                ['Aval. Enviada', c.avaliacaoEnviadaLojas ? '✓ ' + c.avaliacaoEnviadaLojas : '—'],
+                ['WhatsApp Func.', c.whatsappAvaliacaoFunc ? '✓ ' + c.whatsappAvaliacaoFunc : '—'],
+                ['Loja Avaliou', c.lojaTreinadoraAvaliou, false, c.lojaTreinadoraAvaliou && c.lojaTreinadoraAvaliou.toUpperCase()==='SIM' ? 'ok' : 'muted'],
+                ['Nota Treinadora', c.notaLojaTreinadora, true],
+                ['Obs Treinadora', c.obsLojaTreinadora],
+                ['Lembrete 5d', c.lembreteEnviado],['Lembrete 2d', c.lembrete2Dias],['Lembrete Hoje', c.lembreteHoje],
+            ]) +
+        '</div></div></div>';
+}
+
+function renderSecao(titulo, campos) {
+    return '<div class="colab-section"><div class="colab-section-title">' + titulo + '</div><div class="colab-fields">' +
+        campos.map(function(f) {
+            var label = f[0], valor = f[1] || '—', mono = f[2], cls = f[3] || '';
+            if (!valor || valor === '—') cls = 'muted';
+            return '<div class="field"><div class="field-label">' + label + '</div><div class="field-value' + (mono ? ' mono' : '') + (cls ? ' ' + cls : '') + '" title="' + esc(String(valor)) + '">' + esc(String(valor)) + '</div></div>';
+        }).join('') + '</div></div>';
+}
+
+function toggleCard(header) {
+    var body = header.nextElementSibling;
+    var btn = header.querySelector('.colab-acc-btn');
+    body.classList.toggle('open');
+    btn.classList.toggle('open');
+    btn.querySelector('svg').setAttribute('stroke', body.classList.contains('open') ? '#c8102e' : 'var(--muted)');
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── PAGINAÇÃO ── */
+function renderPaginacao(d) {
+    var el = document.getElementById('paginacao');
+    if (d.totalPaginas <= 1) { el.innerHTML = ''; return; }
+    var html = '<button class="pag-btn" onclick="carregarPagina(' + (d.pagina-1) + ',_termoBusca)" ' + (d.pagina<=1?'disabled':'') + '>‹</button>';
+    var ini = Math.max(1, d.pagina-2), fim = Math.min(d.totalPaginas, d.pagina+2);
+    if (ini > 1) { html += '<button class="pag-btn" onclick="carregarPagina(1,_termoBusca)">1</button>'; if (ini>2) html += '<span class="pag-info">…</span>'; }
+    for (var i = ini; i <= fim; i++) html += '<button class="pag-btn' + (i===d.pagina?' active':'') + '" onclick="carregarPagina(' + i + ',_termoBusca)">' + i + '</button>';
+    if (fim < d.totalPaginas) { if (fim<d.totalPaginas-1) html += '<span class="pag-info">…</span>'; html += '<button class="pag-btn" onclick="carregarPagina(' + d.totalPaginas + ',_termoBusca)">' + d.totalPaginas + '</button>'; }
+    html += '<button class="pag-btn" onclick="carregarPagina(' + (d.pagina+1) + ',_termoBusca)" ' + (d.pagina>=d.totalPaginas?'disabled':'') + '>›</button>';
+    html += '<span class="pag-info" style="margin-left:8px">' + d.total + ' resultados</span>';
+    el.innerHTML = html;
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+    atualizarStatus();
+    carregarPagina(1, '');
+    iniciarCountdown();
+});
+</script>
+
+</body>
+</html>
