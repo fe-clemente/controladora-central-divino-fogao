@@ -14,13 +14,13 @@
             --accent:#2563eb; --green:#16a34a; --green-pale:#f0fdf4;
             --yellow:#d97706; --yellow-pale:#fffbeb;
             --purple:#7c3aed; --purple-pale:#f5f3ff;
+            --orange:#ea580c; --orange-pale:#fff7ed;
             --shadow:0 2px 12px rgba(0,0,0,0.08);
             --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
         }
         *{margin:0;padding:0;box-sizing:border-box;}
         body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-        /* ── HEADER ─────────────────────────────────────────────── */
         header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
         .logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
         .logo img{height:52px;width:auto;display:block;}
@@ -30,44 +30,39 @@
         .header-back{margin-left:auto;background:var(--bg3);border:1.5px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
         .header-back:hover{background:var(--red-pale);color:var(--red);border-color:rgba(200,16,46,.2);}
 
-        /* ── STATUS BAR ─────────────────────────────────────────── */
         #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;}
         .status-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
         .status-dot.ready{background:var(--green);animation:none;}
         .status-dot.error{background:var(--red);animation:none;}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-        /* ── MAIN ───────────────────────────────────────────────── */
         main{max-width:1100px;margin:0 auto;padding:32px 24px;}
 
-        /* ── STAT CHIPS ─────────────────────────────────────────── */
         .stat-chips{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;}
         .stat-chip{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 20px;box-shadow:var(--shadow);min-width:110px;}
         .stat-chip-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;}
         .stat-chip-value{font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;}
 
-        /* ── TABS ───────────────────────────────────────────────── */
         .tabs-row{display:flex;gap:2px;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:5px;margin-bottom:24px;box-shadow:var(--shadow);}
         .tab-btn{flex:1;background:none;border:none;color:var(--muted);padding:11px 16px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;border-radius:10px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;}
         .tab-btn:hover{color:var(--text);background:var(--bg3);}
         .tab-btn.active{color:var(--red);background:var(--red-pale);box-shadow:0 2px 8px rgba(200,16,46,.12);}
+        .tab-btn.active-orange{color:var(--orange);background:var(--orange-pale);box-shadow:0 2px 8px rgba(234,88,12,.12);}
         .tab-badge{background:var(--red);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;min-width:20px;text-align:center;}
         .tab-badge.green{background:var(--green);}
+        .tab-badge.orange{background:var(--orange);}
         .tab-content{display:none;}
         .tab-content.active{display:block;}
 
-        /* ── SECTION HEADER ─────────────────────────────────────── */
         .section-header{margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
         .section-header h2{font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px;}
         .section-header p{color:var(--muted);font-size:13px;}
 
-        /* ── FILTROS ────────────────────────────────────────────── */
         .filtros-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
         .filtro-btn{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:20px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;}
         .filtro-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-pale);}
         .filtro-btn.ativo{background:var(--red-pale);color:var(--red);border-color:rgba(200,16,46,.3);}
 
-        /* ── PERÍODO FILTER BAR ─────────────────────────────────── */
         .periodo-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:18px;box-shadow:var(--shadow);display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;}
         .periodo-bar label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);display:block;margin-bottom:5px;}
         .periodo-bar input[type="date"],.periodo-bar select{font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:8px 12px;outline:none;transition:border .15s;cursor:pointer;}
@@ -76,7 +71,6 @@
         .periodo-result{margin-left:auto;font-size:12px;font-weight:700;color:var(--muted);padding-bottom:8px;white-space:nowrap;}
         .periodo-result span{color:var(--red);}
 
-        /* ── BOTÕES ─────────────────────────────────────────────── */
         .btn{padding:10px 20px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;}
         .btn-primary{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
         .btn-primary:hover{background:var(--red-light);transform:translateY(-1px);}
@@ -88,21 +82,23 @@
         .btn-purple:hover{background:#6d28d9;transform:translateY(-1px);}
         .btn-yellow{background:var(--yellow);color:#fff;box-shadow:0 2px 8px rgba(217,119,6,.25);}
         .btn-yellow:hover{background:#b45309;transform:translateY(-1px);}
+        .btn-orange{background:var(--orange);color:#fff;box-shadow:0 2px 8px rgba(234,88,12,.25);}
+        .btn-orange:hover{background:#c2410c;transform:translateY(-1px);}
         .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
 
-        /* ── CARD LEMBRETE ──────────────────────────────────────── */
         .lembrete-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);transition:all .2s;margin-bottom:12px;}
         .lembrete-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);}
         .lembrete-card.urgente{border-left:4px solid var(--red);}
         .lembrete-card.dois-dias{border-left:4px solid var(--yellow);}
         .lembrete-card.cinco-dias{border-left:4px solid var(--purple);}
+        .lembrete-card.avaliacao{border-left:4px solid var(--orange);}
 
-        /* cabeçalho do card */
         .card-top{display:flex;align-items:center;gap:16px;margin-bottom:14px;}
         .dias-badge{flex-shrink:0;width:66px;height:66px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;}
         .dias-badge.hoje{background:#fff0f2;color:var(--red);border:2px solid rgba(200,16,46,.25);}
         .dias-badge.dois{background:var(--yellow-pale);color:var(--yellow);border:2px solid rgba(217,119,6,.25);}
         .dias-badge.cinco{background:var(--purple-pale);color:var(--purple);border:2px solid rgba(124,58,237,.2);}
+        .dias-badge.aval{background:var(--orange-pale);color:var(--orange);border:2px solid rgba(234,88,12,.25);}
         .dias-badge .num{font-size:22px;line-height:1;}
         .dias-badge .label{font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
 
@@ -110,29 +106,25 @@
         .card-nome{font-size:15px;font-weight:800;margin-bottom:5px;color:var(--text);}
         .card-meta{font-size:12px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;font-weight:600;}
 
-        /* linha de lembretes */
         .lembretes-linha{display:flex;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1.5px solid var(--border);align-items:center;}
         .lem-slot{display:flex;align-items:center;gap:7px;}
         .lem-slot-label{font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap;}
 
-        /* tags de status */
         .tag{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
         .tag-enviado{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.25);}
         .tag-aguardando{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
         .tag-pendente{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
 
-        /* separador entre slots */
         .lem-sep{color:var(--border);font-size:18px;font-weight:300;flex-shrink:0;}
 
-        /* nota avaliação */
         .nota-badge{font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;padding:3px 10px;border-radius:20px;white-space:nowrap;}
         .nota-badge.alta{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
         .nota-badge.media{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
         .nota-badge.baixa{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
 
-        /* ── HISTÓRICO ──────────────────────────────────────────── */
         .historico-card{background:var(--bg2);border:1.5px solid rgba(22,163,74,.2);border-radius:14px;padding:16px 20px;margin-bottom:10px;box-shadow:var(--shadow);transition:all .2s;}
         .historico-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);}
+        .historico-card.hist-aval{border-color:rgba(234,88,12,.2);}
         .historico-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
         .historico-check{font-size:22px;flex-shrink:0;margin-top:1px;}
         .historico-info{flex:1;min-width:0;}
@@ -146,12 +138,10 @@
         .hl-data.nao{color:var(--border);font-style:italic;}
         .hl-sep{width:1px;height:32px;background:var(--border);flex-shrink:0;}
 
-        /* ── ALERTA ─────────────────────────────────────────────── */
         .page-alert{border-radius:10px;padding:13px 18px;margin-bottom:18px;font-size:13px;font-weight:600;display:none;align-items:center;gap:10px;}
         .page-alert.success{background:var(--green-pale);border:1.5px solid rgba(22,163,74,.3);color:#166534;display:flex;}
         .page-alert.error{background:var(--red-pale);border:1.5px solid rgba(200,16,46,.2);color:var(--red);display:flex;}
 
-        /* ── EMPTY / LOADING ────────────────────────────────────── */
         .empty{text-align:center;padding:60px 20px;color:var(--muted);}
         .empty .icon{font-size:44px;margin-bottom:12px;}
         .empty p{font-size:14px;font-weight:600;}
@@ -159,7 +149,31 @@
         .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
         @keyframes spin{to{transform:rotate(360deg)}}
 
-        /* ── DEBUG ──────────────────────────────────────────────── */
+        /* ── ACCORDION / DROPDOWN ───────────────────────────────── */
+        .accordion-toggle{width:100%;background:none;border:none;border-top:1.5px solid var(--border);margin-top:10px;padding:10px 0 2px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);transition:color .15s;}
+        .accordion-toggle:hover{color:var(--text);}
+        .accordion-toggle .arrow{display:inline-block;transition:transform .2s;font-size:10px;}
+        .accordion-toggle.open .arrow{transform:rotate(180deg);}
+        .accordion-body{display:none;padding:14px 0 0;animation:fadeIn .2s ease;}
+        .accordion-body.open{display:block;}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+        .acc-section{margin-bottom:14px;}
+        .acc-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+        .acc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;}
+        .acc-item{background:var(--bg3);border-radius:10px;padding:10px 14px;border-left:3px solid var(--border);}
+        .acc-item.red{border-left-color:var(--red);}
+        .acc-item.green{border-left-color:var(--green);}
+        .acc-item.purple{border-left-color:var(--purple);}
+        .acc-item.yellow{border-left-color:var(--yellow);}
+        .acc-item.orange{border-left-color:var(--orange);}
+        .acc-item.blue{border-left-color:var(--accent);}
+        .acc-item-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:3px;}
+        .acc-item-value{font-size:12px;color:var(--text);line-height:1.5;font-weight:600;}
+        .acc-item-value.muted{color:var(--muted);font-style:italic;font-weight:400;}
+        .acc-obs{background:var(--bg3);border-radius:10px;padding:12px 16px;margin-top:6px;}
+        .acc-obs-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px;}
+        .acc-obs-text{font-size:13px;color:var(--text);line-height:1.6;}
+
         #debug{position:fixed;bottom:16px;left:16px;background:rgba(255,255,255,.96);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);max-width:280px;z-index:998;backdrop-filter:blur(10px);box-shadow:var(--shadow-lg);}
         .debug-line{padding:1px 0;}
         .debug-line.ok{color:var(--green);}
@@ -172,7 +186,7 @@
             main{padding:20px 14px;}
             .card-top{flex-wrap:wrap;}
             .lembretes-linha{flex-direction:column;align-items:flex-start;}
-            .tabs-row{gap:2px;}
+            .tabs-row{gap:2px;flex-wrap:wrap;}
             .tab-btn{font-size:11px;padding:9px 8px;}
             .periodo-bar{flex-direction:column;align-items:stretch;}
             .periodo-result{margin-left:0;}
@@ -223,17 +237,29 @@
             <div class="stat-chip-label">⏳ Pendentes</div>
             <div class="stat-chip-value" id="chipPendentes" style="color:var(--red)">—</div>
         </div>
+        <div class="stat-chip">
+            <div class="stat-chip-label">🎓 Avaliações</div>
+            <div class="stat-chip-value" id="chipAvaliacoes" style="color:var(--orange)">—</div>
+        </div>
     </div>
 
-    <!-- ── TABS ── -->
+    <!-- ── TABS (4 abas) ── -->
     <div class="tabs-row">
         <button class="tab-btn active" onclick="mudarTab('lembretes',this)">
-            🔔 Lembretes do Dia
+            🔔 Lembretes
             <span class="tab-badge" id="badgeLembretes">0</span>
         </button>
         <button class="tab-btn" onclick="mudarTab('historico',this)">
-            📋 Histórico Completo
+            📋 Histórico
             <span class="tab-badge green" id="badgeHistorico">0</span>
+        </button>
+        <button class="tab-btn" onclick="mudarTab('avaliacoes',this)">
+            🎓 Avaliações
+            <span class="tab-badge orange" id="badgeAvaliacoes">0</span>
+        </button>
+        <button class="tab-btn" onclick="mudarTab('hist-avaliacoes',this)">
+            📊 Hist. Avaliação
+            <span class="tab-badge green" id="badgeHistAval">0</span>
         </button>
     </div>
 
@@ -276,7 +302,6 @@
             <button class="btn btn-secondary" onclick="carregarHistorico()">↻ Atualizar</button>
         </div>
 
-        <!-- ── FILTRO DE PERÍODO ── -->
         <div class="periodo-bar">
             <div>
                 <label for="periodoInicio">Início do treinamento — de</label>
@@ -291,33 +316,23 @@
                 <label for="periodoMes">Mês</label>
                 <select id="periodoMes" onchange="carregarHistorico()">
                     <option value="">Todos</option>
-                    <option value="1">Janeiro</option>
-                    <option value="2">Fevereiro</option>
-                    <option value="3">Março</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Maio</option>
-                    <option value="6">Junho</option>
-                    <option value="7">Julho</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Setembro</option>
-                    <option value="10">Outubro</option>
-                    <option value="11">Novembro</option>
-                    <option value="12">Dezembro</option>
+                    <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+                    <option value="3">Março</option><option value="4">Abril</option>
+                    <option value="5">Maio</option><option value="6">Junho</option>
+                    <option value="7">Julho</option><option value="8">Agosto</option>
+                    <option value="9">Setembro</option><option value="10">Outubro</option>
+                    <option value="11">Novembro</option><option value="12">Dezembro</option>
                 </select>
             </div>
             <div>
                 <label for="periodoAno">Ano</label>
                 <select id="periodoAno" onchange="carregarHistorico()">
                     <option value="">Todos</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026" selected>2026</option>
-                    <option value="2027">2027</option>
+                    <option value="2024">2024</option><option value="2025">2025</option>
+                    <option value="2026" selected>2026</option><option value="2027">2027</option>
                 </select>
             </div>
-            <button class="btn btn-secondary" onclick="limparFiltroHistorico()" style="padding:8px 14px;font-size:12px;">
-                ✕ Limpar filtros
-            </button>
+            <button class="btn btn-secondary" onclick="limparFiltroHistorico()" style="padding:8px 14px;font-size:12px;">✕ Limpar</button>
             <div class="periodo-result" id="periodoResult" style="display:none">
                 Mostrando <span id="periodoCount">0</span> registro(s)
             </div>
@@ -328,36 +343,87 @@
         </div>
     </div>
 
+    <!-- ══ TAB AVALIAÇÕES (NOVA) ══ -->
+    <div class="tab-content" id="tab-avaliacoes">
+        <div class="section-header">
+            <div>
+                <h2>🎓 Avaliações Pendentes</h2>
+                <p>Colaboradores cujo treinamento termina hoje — enviar email de avaliação para as lojas</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                <button class="btn btn-orange" onclick="enviarTodasAvaliacoes()" id="btnEnviarTodasAval">
+                    📤 Enviar Todas Pendentes
+                </button>
+                <button class="btn btn-secondary" onclick="carregarAvaliacoes()">↻ Atualizar</button>
+            </div>
+        </div>
+
+        <div id="listaAvaliacoes">
+            <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+        </div>
+    </div>
+
+    <!-- ══ TAB HISTÓRICO AVALIAÇÃO (NOVA) ══ -->
+    <div class="tab-content" id="tab-hist-avaliacoes">
+        <div class="section-header">
+            <div>
+                <h2>📊 Histórico de Avaliações</h2>
+                <p>Emails de avaliação já enviados, notas e status do WhatsApp do funcionário</p>
+            </div>
+            <button class="btn btn-secondary" onclick="carregarHistoricoAvaliacoes()">↻ Atualizar</button>
+        </div>
+
+        <div class="periodo-bar">
+            <div>
+                <label for="avalMes">Mês (fim trein.)</label>
+                <select id="avalMes" onchange="carregarHistoricoAvaliacoes()">
+                    <option value="">Todos</option>
+                    <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+                    <option value="3">Março</option><option value="4">Abril</option>
+                    <option value="5">Maio</option><option value="6">Junho</option>
+                    <option value="7">Julho</option><option value="8">Agosto</option>
+                    <option value="9">Setembro</option><option value="10">Outubro</option>
+                    <option value="11">Novembro</option><option value="12">Dezembro</option>
+                </select>
+            </div>
+            <div>
+                <label for="avalAno">Ano</label>
+                <select id="avalAno" onchange="carregarHistoricoAvaliacoes()">
+                    <option value="">Todos</option>
+                    <option value="2025">2025</option>
+                    <option value="2026" selected>2026</option><option value="2027">2027</option>
+                </select>
+            </div>
+            <div class="periodo-result" id="avalResult" style="display:none">
+                Mostrando <span id="avalCount">0</span> registro(s)
+            </div>
+        </div>
+
+        <div id="listaHistAval">
+            <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+        </div>
+    </div>
+
 </main>
 
 <div id="debug"></div>
 
 <script>
-/* ══════════════════════════════════════════════════════════════
-   LEMBRETES.HTML — JS
-   3 lembretes por colaborador:
-     • 5 dias antes → coluna AJ
-     • 2 dias antes → coluna AX
-     • Mesmo dia    → coluna AY
-   ══════════════════════════════════════════════════════════════ */
-
 const API     = '/treinamento';
 const debugEl = document.getElementById('debug');
 
-/* ── DEBUG ── */
 function log(msg, tipo) {
     tipo = tipo || '';
-    const l = document.createElement('div');
+    var l = document.createElement('div');
     l.className = 'debug-line ' + tipo;
-    const h = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    var h = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     l.textContent = h + ' ' + msg;
     debugEl.appendChild(l);
     while (debugEl.children.length > 8) debugEl.removeChild(debugEl.firstChild);
 }
 
-/* ── ALERTA ── */
 function pageAlert(tipo, msg) {
-    const el = document.getElementById('pageAlert');
+    var el = document.getElementById('pageAlert');
     el.className = 'page-alert ' + tipo;
     el.innerHTML = (tipo === 'success' ? '✅ ' : '⚠️ ') + msg;
     el.style.display = 'flex';
@@ -365,17 +431,15 @@ function pageAlert(tipo, msg) {
     if (tipo === 'success') setTimeout(function () { el.style.display = 'none'; }, 5000);
 }
 
-/* ── STATUS ── */
 async function verificarStatus() {
-    const dot = document.getElementById('statusDot');
-    const txt = document.getElementById('statusText');
+    var dot = document.getElementById('statusDot');
+    var txt = document.getElementById('statusText');
     try {
-        const r = await fetch(API + '/status');
-        const d = await r.json();
+        var r = await fetch(API + '/status');
+        var d = await r.json();
         if (d.status === 'pronto' && d.total > 0) {
             dot.className = 'status-dot ready';
             txt.textContent = '✓ Sistema pronto — ' + d.total + ' colaboradores';
-            log('Cache: ' + d.total, 'ok');
         } else {
             dot.className = 'status-dot';
             txt.textContent = '⏳ Carregando planilha...';
@@ -391,23 +455,23 @@ async function verificarStatus() {
 /* ── TABS ── */
 function mudarTab(id, el) {
     document.querySelectorAll('.tab-content').forEach(function (t) { t.classList.remove('active'); });
-    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active', 'active-orange'); });
     document.getElementById('tab-' + id).classList.add('active');
-    el.classList.add('active');
+    el.classList.add(id === 'avaliacoes' || id === 'hist-avaliacoes' ? 'active-orange' : 'active');
     if (id === 'historico') carregarHistorico();
+    if (id === 'avaliacoes') carregarAvaliacoes();
+    if (id === 'hist-avaliacoes') carregarHistoricoAvaliacoes();
 }
 
-/* ── ESTADO LOCAL ── */
 var _todosLembretes = [];
 var _filtroAtivo    = 'todos';
+var _todosAvaliacoes = [];
 
-/* ── HELPERS ── */
 function extrairData(texto) {
     if (!texto) return '';
-    return texto.replace('Lembrete enviado em ', '').trim();
+    return texto.replace('Lembrete enviado em ', '').replace('Enviado em ', '').trim();
 }
 
-/* ── CONTA PENDENTES ── */
 function contarPendentes(lista) {
     return lista.filter(function (f) {
         if (f.diffDias === 5) return !f.lembrete5Enviado;
@@ -417,33 +481,27 @@ function contarPendentes(lista) {
     }).length;
 }
 
-/* ── ATUALIZA CHIPS ── */
 function atualizarChips(lista) {
     var hoje  = lista.filter(function (f) { return f.diffDias === 0; }).length;
     var dois  = lista.filter(function (f) { return f.diffDias === 2; }).length;
     var cinco = lista.filter(function (f) { return f.diffDias === 5; }).length;
-
     var env = 0;
     lista.forEach(function (f) {
         if (f.lembrete5Enviado)    env++;
         if (f.lembrete2Enviado)    env++;
         if (f.lembreteHojeEnviado) env++;
     });
-
     var pend = contarPendentes(lista);
-
     document.getElementById('chipHoje').textContent      = hoje;
     document.getElementById('chipDois').textContent      = dois;
     document.getElementById('chipCinco').textContent     = cinco;
     document.getElementById('chipEnviados').textContent  = env;
     document.getElementById('chipPendentes').textContent = pend;
-
     var badge = document.getElementById('badgeLembretes');
     badge.textContent = pend;
     badge.style.display = pend > 0 ? '' : 'none';
 }
 
-/* ── FILTRO ── */
 function aplicarFiltro(tipo, btn) {
     _filtroAtivo = tipo;
     document.querySelectorAll('.filtro-btn').forEach(function (b) { b.classList.remove('ativo'); });
@@ -451,36 +509,23 @@ function aplicarFiltro(tipo, btn) {
     renderLista(_todosLembretes);
 }
 
-/* ── RENDER: LINHA DE LEMBRETE (1 slot) ── */
 function renderSlot(f, tipo, label, cor) {
     var enviado, texto;
     if (tipo === '5dias') { enviado = f.lembrete5Enviado;    texto = f.lembrete5; }
     if (tipo === '2dias') { enviado = f.lembrete2Enviado;    texto = f.lembrete2; }
     if (tipo === 'hoje')  { enviado = f.lembreteHojeEnviado; texto = f.lembreteHoje; }
-
     var data = extrairData(texto);
     var js   = JSON.stringify(f).replace(/"/g, '&quot;');
-
     if (enviado) {
-        return '<div class="lem-slot">' +
-               '<span class="lem-slot-label">' + label + '</span>' +
-               '<span class="tag tag-enviado">✓ Enviado ' + (data ? '· ' + data : '') + '</span>' +
-               '</div>';
+        return '<div class="lem-slot"><span class="lem-slot-label">' + label + '</span><span class="tag tag-enviado">✓ Enviado ' + (data ? '· ' + data : '') + '</span></div>';
     } else {
-        return '<div class="lem-slot">' +
-               '<span class="lem-slot-label">' + label + '</span>' +
-               '<button class="btn btn-' + cor + '" style="padding:6px 14px;font-size:12px;" ' +
-               'onclick=\'enviarLembrete(' + js + ',&quot;' + tipo + '&quot;)\'>' +
-               '📤 Enviar</button>' +
-               '</div>';
+        return '<div class="lem-slot"><span class="lem-slot-label">' + label + '</span><button class="btn btn-' + cor + '" style="padding:6px 14px;font-size:12px;" onclick=\'enviarLembrete(' + js + ',&quot;' + tipo + '&quot;)\'>📤 Enviar</button></div>';
     }
 }
 
-/* ── RENDER LISTA ── */
 function renderLista(data) {
     var ct = document.getElementById('listaLembretes');
     var lista = data;
-
     if (_filtroAtivo === 'hoje')      lista = data.filter(function (f) { return f.diffDias === 0; });
     if (_filtroAtivo === 'dois')      lista = data.filter(function (f) { return f.diffDias === 2; });
     if (_filtroAtivo === 'cinco')     lista = data.filter(function (f) { return f.diffDias === 5; });
@@ -496,79 +541,31 @@ function renderLista(data) {
         if (f.diffDias === 0) return f.lembreteHojeEnviado;
         return false;
     });
-
     if (!lista.length) {
-        ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>' +
-            (_filtroAtivo === 'todos' ? 'Nenhum treinamento nos próximos 5 dias' : 'Nenhum resultado para este filtro') +
-            '</p></div>';
+        ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>' + (_filtroAtivo === 'todos' ? 'Nenhum treinamento nos próximos 5 dias' : 'Nenhum resultado para este filtro') + '</p></div>';
         return;
     }
-
     ct.innerHTML = lista.map(function (f) {
         var di;
         if      (f.diffDias === 0) di = { cls: 'hoje',  num: '!',  lbl: 'HOJE'  };
         else if (f.diffDias === 2) di = { cls: 'dois',  num: '2',  lbl: 'DIAS'  };
         else                       di = { cls: 'cinco', num: '5',  lbl: 'DIAS'  };
-
-        var cardCls = '';
-        if (f.diffDias === 0) cardCls = ' urgente';
-        else if (f.diffDias === 2) cardCls = ' dois-dias';
-        else cardCls = ' cinco-dias';
-
-        var notaHtml = '';
-        if (f.notaAvaliacao !== '' && f.notaAvaliacao !== undefined) {
-            var n = parseFloat(f.notaAvaliacao);
-            notaHtml = '<span class="nota-badge ' + (n >= 8 ? 'alta' : n >= 6 ? 'media' : 'baixa') +
-                       '">⭐ Nota: ' + f.notaAvaliacao + '/10</span>';
-        } else if (f.emailAvaliacaoEnviado) {
-            notaHtml = '<span class="tag tag-aguardando">⏳ Avaliação pendente</span>';
-        }
-
+        var cardCls = f.diffDias === 0 ? ' urgente' : f.diffDias === 2 ? ' dois-dias' : ' cinco-dias';
         var slotsHtml = '';
         if (f.diffDias === 5) {
             slotsHtml = renderSlot(f, '5dias', '🟣 Alerta 5 dias:', 'purple');
         } else if (f.diffDias === 2) {
-            var hist5 = f.lembrete5Enviado
-                ? '<span class="tag tag-enviado" style="font-size:10px;">✓ 5 dias · ' + extrairData(f.lembrete5) + '</span>'
-                : '<span class="tag tag-pendente" style="font-size:10px;">✗ 5 dias não enviado</span>';
-            slotsHtml = '<div class="lem-slot"><span class="lem-slot-label" style="color:var(--purple);font-size:10px;">Alerta 5 dias:</span>' + hist5 + '</div>' +
-                        '<span class="lem-sep">·</span>' +
-                        renderSlot(f, '2dias', '🟡 Alerta 2 dias:', 'yellow');
+            var hist5 = f.lembrete5Enviado ? '<span class="tag tag-enviado" style="font-size:10px;">✓ 5d · ' + extrairData(f.lembrete5) + '</span>' : '<span class="tag tag-pendente" style="font-size:10px;">✗ 5d</span>';
+            slotsHtml = '<div class="lem-slot"><span class="lem-slot-label" style="color:var(--purple);font-size:10px;">5 dias:</span>' + hist5 + '</div><span class="lem-sep">·</span>' + renderSlot(f, '2dias', '🟡 Alerta 2 dias:', 'yellow');
         } else if (f.diffDias === 0) {
-            var hist5h = f.lembrete5Enviado
-                ? '<span class="tag tag-enviado" style="font-size:10px;">✓ 5 dias · ' + extrairData(f.lembrete5) + '</span>'
-                : '<span class="tag tag-pendente" style="font-size:10px;">✗ 5 dias</span>';
-            var hist2h = f.lembrete2Enviado
-                ? '<span class="tag tag-enviado" style="font-size:10px;">✓ 2 dias · ' + extrairData(f.lembrete2) + '</span>'
-                : '<span class="tag tag-pendente" style="font-size:10px;">✗ 2 dias</span>';
-            slotsHtml = '<div class="lem-slot"><span class="lem-slot-label" style="color:var(--purple);font-size:10px;">Alerta 5 dias:</span>' + hist5h + '</div>' +
-                        '<span class="lem-sep">·</span>' +
-                        '<div class="lem-slot"><span class="lem-slot-label" style="color:var(--yellow);font-size:10px;">Alerta 2 dias:</span>' + hist2h + '</div>' +
-                        '<span class="lem-sep">·</span>' +
-                        renderSlot(f, 'hoje', '🔴 Alerta Hoje:', 'green');
+            var h5 = f.lembrete5Enviado ? '<span class="tag tag-enviado" style="font-size:10px;">✓ 5d · ' + extrairData(f.lembrete5) + '</span>' : '<span class="tag tag-pendente" style="font-size:10px;">✗ 5d</span>';
+            var h2 = f.lembrete2Enviado ? '<span class="tag tag-enviado" style="font-size:10px;">✓ 2d · ' + extrairData(f.lembrete2) + '</span>' : '<span class="tag tag-pendente" style="font-size:10px;">✗ 2d</span>';
+            slotsHtml = '<div class="lem-slot"><span class="lem-slot-label" style="color:var(--purple);font-size:10px;">5d:</span>' + h5 + '</div><span class="lem-sep">·</span><div class="lem-slot"><span class="lem-slot-label" style="color:var(--yellow);font-size:10px;">2d:</span>' + h2 + '</div><span class="lem-sep">·</span>' + renderSlot(f, 'hoje', '🔴 Alerta Hoje:', 'green');
         }
-
-        return '<div class="lembrete-card' + cardCls + '" id="lc-' + f.rowIndex + '">' +
-            '<div class="card-top">' +
-            '<div class="dias-badge ' + di.cls + '"><div class="num">' + di.num + '</div><div class="label">' + di.lbl + '</div></div>' +
-            '<div class="card-pessoa">' +
-            '<div class="card-nome">' + f.nome + '</div>' +
-            '<div class="card-meta">' +
-            '<span>🏪 ' + f.loja + '</span>' +
-            '<span>👔 ' + f.funcao + '</span>' +
-            '<span>📅 ' + f.inicioTrein + '</span>' +
-            (f.telefone ? '<span>📞 ' + f.telefone + '</span>' : '') +
-            (f.email    ? '<span>✉️ ' + f.email + '</span>' : '') +
-            (f.emailLojaAvaliadora ? '<span>🏭 ' + f.emailLojaAvaliadora + '</span>' : '') +
-            '</div></div>' +
-            (notaHtml ? '<div style="flex-shrink:0">' + notaHtml + '</div>' : '') +
-            '</div>' +
-            '<div class="lembretes-linha">' + slotsHtml + '</div>' +
-            '</div>';
+        return '<div class="lembrete-card' + cardCls + '" id="lc-' + f.rowIndex + '"><div class="card-top"><div class="dias-badge ' + di.cls + '"><div class="num">' + di.num + '</div><div class="label">' + di.lbl + '</div></div><div class="card-pessoa"><div class="card-nome">' + f.nome + '</div><div class="card-meta"><span>🏪 ' + f.loja + '</span><span>👔 ' + f.funcao + '</span><span>📅 ' + f.inicioTrein + '</span>' + (f.telefone ? '<span>📞 ' + f.telefone + '</span>' : '') + (f.email ? '<span>✉️ ' + f.email + '</span>' : '') + (f.emailLojaAvaliadora ? '<span>🏭 ' + f.emailLojaAvaliadora + '</span>' : '') + '</div></div></div><div class="lembretes-linha">' + slotsHtml + '</div></div>';
     }).join('');
 }
 
-/* ── CARREGAR LEMBRETES ── */
 async function carregarLembretes() {
     var ct = document.getElementById('listaLembretes');
     ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
@@ -576,14 +573,9 @@ async function carregarLembretes() {
         var r    = await fetch(API + '/lembretes');
         var raw  = await r.json();
         var data = Array.isArray(raw) ? raw : (raw.lista || []);
-
         _todosLembretes = data;
         atualizarChips(data);
-
-        if (!data.length) {
-            ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>Nenhum treinamento em 5, 2 dias ou hoje</p></div>';
-            return;
-        }
+        if (!data.length) { ct.innerHTML = '<div class="empty"><div class="icon">🎉</div><p>Nenhum treinamento em 5, 2 dias ou hoje</p></div>'; return; }
         renderLista(data);
         log('Lembretes: ' + data.length, 'ok');
     } catch (e) {
@@ -592,57 +584,38 @@ async function carregarLembretes() {
     }
 }
 
-/* ── ENVIAR LEMBRETE (1 tipo) ── */
 async function enviarLembrete(f, tipo) {
-    var cardId = 'lc-' + f.rowIndex;
-    var card   = document.getElementById(cardId);
-    var btn    = card ? card.querySelector('[onclick*="' + tipo + '"]') : null;
+    var card = document.getElementById('lc-' + f.rowIndex);
+    var btn  = card ? card.querySelector('[onclick*="' + tipo + '"]') : null;
     if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'; }
-
-    log('📤 ' + f.nome + ' [' + tipo + ']', 'warn');
-
     try {
         var r = await fetch(API + '/enviar-lembrete', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify(Object.assign({}, f, { tipo: tipo })),
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.assign({}, f, { tipo: tipo })),
         });
         var d = await r.json();
-
         if (d.sucesso) {
-            log('✓ ' + f.nome + ' [' + tipo + ']', 'ok');
-
             var idx = _todosLembretes.findIndex(function (x) { return x.rowIndex === f.rowIndex; });
             if (idx !== -1) {
                 if (tipo === '5dias') { _todosLembretes[idx].lembrete5Enviado = true; _todosLembretes[idx].lembrete5 = d.lembrete; }
                 if (tipo === '2dias') { _todosLembretes[idx].lembrete2Enviado = true; _todosLembretes[idx].lembrete2 = d.lembrete; }
                 if (tipo === 'hoje')  { _todosLembretes[idx].lembreteHojeEnviado = true; _todosLembretes[idx].lembreteHoje = d.lembrete; }
             }
-
-            // Re-renderiza toda a lista para refletir o estado atualizado
             renderLista(_todosLembretes);
             atualizarChips(_todosLembretes);
-            document.getElementById('badgeLembretes').textContent = contarPendentes(_todosLembretes);
             pageAlert('success', 'Lembrete <strong>' + tipoLabel(tipo) + '</strong> enviado para <strong>' + f.nome + '</strong>!');
         } else {
             if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar'; }
-            pageAlert('error', d.erro || 'Erro ao enviar lembrete.');
+            pageAlert('error', d.erro || 'Erro ao enviar.');
         }
-        if (d.erros && d.erros.length) d.erros.forEach(function (e) { log('⚠ ' + e, 'warn'); });
     } catch (e) {
-        log('Erro envio: ' + e.message, 'err');
         if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar'; }
-        pageAlert('error', 'Erro de conexão: ' + e.message);
+        pageAlert('error', 'Erro: ' + e.message);
     }
 }
 
-function tipoLabel(tipo) {
-    if (tipo === '5dias') return 'Alerta 5 dias';
-    if (tipo === '2dias') return 'Alerta 2 dias';
-    return 'Alerta Hoje';
-}
+function tipoLabel(tipo) { return tipo === '5dias' ? 'Alerta 5 dias' : tipo === '2dias' ? 'Alerta 2 dias' : 'Alerta Hoje'; }
 
-/* ── ENVIAR TODOS PENDENTES ── */
 async function enviarTodosLembretes() {
     var fila = [];
     _todosLembretes.forEach(function (f) {
@@ -650,46 +623,31 @@ async function enviarTodosLembretes() {
         if (f.diffDias === 2 && !f.lembrete2Enviado)    fila.push({ f: f, tipo: '2dias' });
         if (f.diffDias === 0 && !f.lembreteHojeEnviado) fila.push({ f: f, tipo: 'hoje'  });
     });
-
     if (!fila.length) { pageAlert('success', 'Todos os lembretes já foram enviados! 🎉'); return; }
     if (!confirm('Enviar ' + fila.length + ' lembrete(s) pendente(s)?')) return;
-
     var btn = document.getElementById('btnEnviarTodos');
-    btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div> Enviando ' + fila.length + '...';
-
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Enviando...';
     var enviados = 0, erros = 0;
     for (var i = 0; i < fila.length; i++) {
-        var item = fila[i];
         try {
-            var r = await fetch(API + '/enviar-lembrete', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Object.assign({}, item.f, { tipo: item.tipo })),
-            });
+            var r = await fetch(API + '/enviar-lembrete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({}, fila[i].f, { tipo: fila[i].tipo })) });
             var d = await r.json();
             if (d.sucesso) {
                 enviados++;
-                var idx = _todosLembretes.findIndex(function (x) { return x.rowIndex === item.f.rowIndex; });
+                var idx = _todosLembretes.findIndex(function (x) { return x.rowIndex === fila[i].f.rowIndex; });
                 if (idx !== -1) {
-                    if (item.tipo === '5dias') { _todosLembretes[idx].lembrete5Enviado = true; _todosLembretes[idx].lembrete5 = d.lembrete; }
-                    if (item.tipo === '2dias') { _todosLembretes[idx].lembrete2Enviado = true; _todosLembretes[idx].lembrete2 = d.lembrete; }
-                    if (item.tipo === 'hoje')  { _todosLembretes[idx].lembreteHojeEnviado = true; _todosLembretes[idx].lembreteHoje = d.lembrete; }
+                    if (fila[i].tipo === '5dias') { _todosLembretes[idx].lembrete5Enviado = true; _todosLembretes[idx].lembrete5 = d.lembrete; }
+                    if (fila[i].tipo === '2dias') { _todosLembretes[idx].lembrete2Enviado = true; _todosLembretes[idx].lembrete2 = d.lembrete; }
+                    if (fila[i].tipo === 'hoje')  { _todosLembretes[idx].lembreteHojeEnviado = true; _todosLembretes[idx].lembreteHoje = d.lembrete; }
                 }
-                log('✓ ' + item.f.nome + ' [' + item.tipo + ']', 'ok');
-            } else { erros++; log('✗ ' + item.f.nome, 'err'); }
-        } catch (e) { erros++; log('Erro: ' + item.f.nome, 'err'); }
+            } else erros++;
+        } catch (e) { erros++; }
     }
-
-    btn.disabled = false;
-    btn.innerHTML = '📤 Enviar Todos Pendentes';
-    atualizarChips(_todosLembretes);
-    renderLista(_todosLembretes);
-    document.getElementById('badgeLembretes').textContent = contarPendentes(_todosLembretes);
+    btn.disabled = false; btn.innerHTML = '📤 Enviar Todos Pendentes';
+    atualizarChips(_todosLembretes); renderLista(_todosLembretes);
     pageAlert(erros === 0 ? 'success' : 'error', enviados + ' enviados · ' + erros + ' erros.');
 }
 
-/* ── LIMPAR FILTRO HISTÓRICO ── */
 function limparFiltroHistorico() {
     document.getElementById('periodoInicio').value = '';
     document.getElementById('periodoFim').value    = '';
@@ -698,110 +656,329 @@ function limparFiltroHistorico() {
     carregarHistorico();
 }
 
-/* ── CARREGAR HISTÓRICO (com filtro de período) ── */
 async function carregarHistorico() {
     var ct = document.getElementById('listaHistorico');
     ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
-
-    // Monta query string com filtros ativos
     var params = new URLSearchParams();
     var inicio = document.getElementById('periodoInicio').value;
     var fim    = document.getElementById('periodoFim').value;
     var mes    = document.getElementById('periodoMes').value;
     var ano    = document.getElementById('periodoAno').value;
-
-    // Converte yyyy-mm-dd (input date) → dd/mm/yyyy (API)
-    function isoParaBR(iso) {
-        if (!iso) return '';
-        var p = iso.split('-');
-        return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : '';
-    }
-
+    function isoParaBR(iso) { if (!iso) return ''; var p = iso.split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : ''; }
     if (inicio) params.set('inicio', isoParaBR(inicio));
     if (fim)    params.set('fim',    isoParaBR(fim));
-    if (mes)    params.set('mes',    mes);
-    if (ano)    params.set('ano',    ano);
-
+    if (mes)    params.set('mes', mes);
+    if (ano)    params.set('ano', ano);
     var qs = params.toString() ? '?' + params.toString() : '';
-
     try {
         var r    = await fetch(API + '/lembretes/historico' + qs);
         var raw  = await r.json();
         var data = Array.isArray(raw) ? raw : (raw.historico || []);
-
         document.getElementById('badgeHistorico').textContent = data.length;
-
-        // Mostra contador de resultados
-        var periodoResult = document.getElementById('periodoResult');
         var temFiltro = inicio || fim || mes || ano;
-        if (temFiltro) {
-            document.getElementById('periodoCount').textContent = data.length;
-            periodoResult.style.display = '';
-        } else {
-            periodoResult.style.display = 'none';
-        }
-
-        if (!data.length) {
-            ct.innerHTML = '<div class="empty"><div class="icon">📋</div><p>' +
-                (temFiltro ? 'Nenhum resultado para este período' : 'Nenhum lembrete enviado ainda') +
-                '</p></div>';
-            return;
-        }
-
+        if (temFiltro) { document.getElementById('periodoCount').textContent = data.length; document.getElementById('periodoResult').style.display = ''; }
+        else { document.getElementById('periodoResult').style.display = 'none'; }
+        if (!data.length) { ct.innerHTML = '<div class="empty"><div class="icon">📋</div><p>' + (temFiltro ? 'Nenhum resultado' : 'Nenhum lembrete enviado') + '</p></div>'; return; }
         ct.innerHTML = data.map(function (h) {
-            var notaHtml = '';
-            if (h.notaAvaliacao) {
-                var n = parseFloat(h.notaAvaliacao);
-                notaHtml = '<span class="nota-badge ' + (n >= 8 ? 'alta' : n >= 6 ? 'media' : 'baixa') + '">⭐ ' + h.notaAvaliacao + '/10</span>';
-            } else if (h.emailAvaliacao === 'SIM') {
-                notaHtml = '<span class="tag tag-aguardando">⏳ Avaliação pendente</span>';
-            }
-
             function hlItem(tipo, label, val) {
                 var cor = tipo === '5dias' ? 'var(--purple)' : tipo === '2dias' ? 'var(--yellow)' : 'var(--red)';
                 var dataTxt = extrairData(val);
-                return '<div class="hl-item">' +
-                    '<span class="hl-tipo" style="color:' + cor + '">' + label + '</span>' +
-                    '<span class="hl-data ' + (val ? 'enviado' : 'nao') + '">' +
-                    (dataTxt || '—') + '</span></div>';
+                return '<div class="hl-item"><span class="hl-tipo" style="color:' + cor + '">' + label + '</span><span class="hl-data ' + (val ? 'enviado' : 'nao') + '">' + (dataTxt || '—') + '</span></div>';
             }
-
-            return '<div class="historico-card">' +
-                '<div class="historico-top">' +
-                '<div class="historico-check">📋</div>' +
-                '<div class="historico-info">' +
-                '<div class="historico-nome">' + h.nome + '</div>' +
-                '<div class="historico-meta">' +
-                h.loja + ' · ' + h.funcao +
-                ' · Início: ' + h.inicioTrein +
-                (h.fimTrein ? ' · Fim: ' + h.fimTrein : '') +
-                '</div></div>' +
-                (notaHtml ? '<div style="flex-shrink:0;margin-left:auto;padding-left:12px;">' + notaHtml + '</div>' : '') +
-                '</div>' +
-                '<div class="historico-linha">' +
-                hlItem('5dias', '🟣 Alerta 5 dias', h.lembrete5) +
-                '<div class="hl-sep"></div>' +
-                hlItem('2dias', '🟡 Alerta 2 dias', h.lembrete2) +
-                '<div class="hl-sep"></div>' +
-                hlItem('hoje',  '🔴 Alerta Hoje',   h.lembreteHoje) +
-                '</div>' +
-                '</div>';
+            return '<div class="historico-card"><div class="historico-top"><div class="historico-check">📋</div><div class="historico-info"><div class="historico-nome">' + h.nome + '</div><div class="historico-meta">' + h.loja + ' · ' + h.funcao + ' · Início: ' + h.inicioTrein + (h.fimTrein ? ' · Fim: ' + h.fimTrein : '') + '</div></div></div><div class="historico-linha">' + hlItem('5dias', '🟣 5 dias', h.lembrete5) + '<div class="hl-sep"></div>' + hlItem('2dias', '🟡 2 dias', h.lembrete2) + '<div class="hl-sep"></div>' + hlItem('hoje', '🔴 Hoje', h.lembreteHoje) + '</div></div>';
         }).join('');
-
-        log('Histórico: ' + data.length + (qs ? ' (filtrado)' : ''), 'ok');
     } catch (e) {
-        log('Erro histórico: ' + e.message, 'err');
         ct.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro ao carregar</p></div>';
     }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ★ NOVAS FUNÇÕES — ABA AVALIAÇÕES
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+async function carregarAvaliacoes() {
+    var ct = document.getElementById('listaAvaliacoes');
+    ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
+    try {
+        var r    = await fetch(API + '/lembretes-avaliacao');
+        var raw  = await r.json();
+        var data = raw.lista || [];
+        _todosAvaliacoes = data;
+
+        var pendentes = data.filter(function (f) { return !f.emailAvaliacaoEnviado; }).length;
+        document.getElementById('badgeAvaliacoes').textContent = pendentes;
+        document.getElementById('badgeAvaliacoes').style.display = pendentes > 0 ? '' : 'none';
+        document.getElementById('chipAvaliacoes').textContent = data.length;
+
+        if (!data.length) {
+            ct.innerHTML = '<div class="empty"><div class="icon">🎓</div><p>Nenhum treinamento termina hoje</p></div>';
+            return;
+        }
+
+        ct.innerHTML = data.map(function (f) {
+            var js = JSON.stringify(f).replace(/"/g, '&quot;');
+
+            // Status do email de avaliação
+            var emailHtml;
+            if (f.emailAvaliacaoEnviado) {
+                emailHtml = '<span class="tag tag-enviado">✓ Email avaliação enviado · ' + extrairData(f.avaliacaoEnviadaLojas) + '</span>';
+            } else {
+                emailHtml = '<button class="btn btn-orange" style="padding:7px 16px;font-size:12px;" onclick=\'enviarAvaliacaoEmail(' + js + ')\'>📤 Enviar Email de Avaliação</button>';
+            }
+
+            // Status das notas das lojas
+            var notaOrigemHtml = f.avaliadoPorOrigem
+                ? '<span class="tag tag-enviado">✓ Origem: ' + f.notaOrigem + '/10</span>'
+                : '<span class="tag tag-aguardando">⏳ Origem: aguardando</span>';
+            var notaTreinHtml = f.avaliadoPorTreinadora
+                ? '<span class="tag tag-enviado">✓ Treinadora: ' + f.notaTreinadora + '/10</span>'
+                : '<span class="tag tag-aguardando">⏳ Treinadora: aguardando</span>';
+
+            // Status WhatsApp funcionário
+            var whatsHtml;
+            if (f.whatsappFuncEnviado) {
+                whatsHtml = '<span class="tag tag-enviado">✓ WhatsApp func. enviado</span>';
+            } else if (f.avaliadoPorOrigem && f.avaliadoPorTreinadora) {
+                whatsHtml = '<button class="btn btn-green" style="padding:6px 14px;font-size:12px;" onclick=\'enviarWhatsAppFunc(' + js + ')\'>📱 Enviar WhatsApp p/ Funcionário</button>';
+            } else {
+                whatsHtml = '<span class="tag tag-pendente" style="font-size:10px;">Aguardando lojas avaliarem</span>';
+            }
+
+            // Observações (se lojas já avaliaram)
+            var obsAvalHtml = '';
+            if (f.observacoes || f.obsTreinadora) {
+                obsAvalHtml = '<div style="margin-top:10px;padding-top:10px;border-top:1.5px solid var(--border);display:flex;gap:12px;flex-wrap:wrap;">';
+                if (f.observacoes) {
+                    obsAvalHtml += '<div style="flex:1;min-width:200px;background:var(--bg3);border-radius:8px;padding:10px 14px;border-left:3px solid var(--red);">' +
+                        '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px;">🏪 Obs. Loja Origem</div>' +
+                        '<div style="font-size:12px;color:var(--text);line-height:1.5;">' + f.observacoes + '</div></div>';
+                }
+                if (f.obsTreinadora) {
+                    obsAvalHtml += '<div style="flex:1;min-width:200px;background:var(--bg3);border-radius:8px;padding:10px 14px;border-left:3px solid var(--green);">' +
+                        '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px;">🏭 Obs. Loja Treinadora</div>' +
+                        '<div style="font-size:12px;color:var(--text);line-height:1.5;">' + f.obsTreinadora + '</div></div>';
+                }
+                obsAvalHtml += '</div>';
+            }
+
+            return '<div class="lembrete-card avaliacao" id="av-' + f.rowIndex + '">' +
+                '<div class="card-top">' +
+                '<div class="dias-badge aval"><div class="num">🎓</div><div class="label">AVAL</div></div>' +
+                '<div class="card-pessoa">' +
+                '<div class="card-nome">' + f.nome + '</div>' +
+                '<div class="card-meta">' +
+                '<span>🏪 ' + f.loja + '</span><span>👔 ' + f.funcao + '</span>' +
+                '<span>📅 ' + f.inicioTrein + ' → ' + f.fimTrein + '</span>' +
+                (f.telefone ? '<span>📞 ' + f.telefone + '</span>' : '') +
+                '</div></div></div>' +
+                '<div class="lembretes-linha">' +
+                '<div class="lem-slot"><span class="lem-slot-label">📧 Email lojas:</span>' + emailHtml + '</div>' +
+                '<span class="lem-sep">·</span>' +
+                '<div class="lem-slot">' + notaOrigemHtml + '</div>' +
+                '<span class="lem-sep">·</span>' +
+                '<div class="lem-slot">' + notaTreinHtml + '</div>' +
+                '<span class="lem-sep">·</span>' +
+                '<div class="lem-slot"><span class="lem-slot-label">📱 Func:</span>' + whatsHtml + '</div>' +
+                '</div>' +
+                obsAvalHtml +
+                '</div>';
+        }).join('');
+
+        log('Avaliações: ' + data.length, 'ok');
+    } catch (e) {
+        log('Erro avaliações: ' + e.message, 'err');
+        ct.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro ao carregar</p></div>';
+    }
+}
+
+async function enviarAvaliacaoEmail(f) {
+    var card = document.getElementById('av-' + f.rowIndex);
+    var btn  = card ? card.querySelector('.btn-orange') : null;
+    if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'; }
+    try {
+        var r = await fetch(API + '/enviar-lembrete-avaliacao', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(f),
+        });
+        var d = await r.json();
+        if (d.sucesso) {
+            pageAlert('success', 'Email de avaliação enviado para as lojas de <strong>' + f.nome + '</strong>!');
+            carregarAvaliacoes();
+        } else {
+            if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar Email de Avaliação'; }
+            pageAlert('error', d.erro || 'Erro ao enviar.');
+        }
+    } catch (e) {
+        if (btn) { btn.disabled = false; btn.innerHTML = '📤 Enviar Email de Avaliação'; }
+        pageAlert('error', 'Erro: ' + e.message);
+    }
+}
+
+async function enviarTodasAvaliacoes() {
+    var fila = _todosAvaliacoes.filter(function (f) { return !f.emailAvaliacaoEnviado; });
+    if (!fila.length) { pageAlert('success', 'Todas as avaliações já foram enviadas! 🎉'); return; }
+    if (!confirm('Enviar ' + fila.length + ' email(s) de avaliação?')) return;
+    var btn = document.getElementById('btnEnviarTodasAval');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Enviando...';
+    var enviados = 0, erros = 0;
+    for (var i = 0; i < fila.length; i++) {
+        try {
+            var r = await fetch(API + '/enviar-lembrete-avaliacao', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(fila[i]) });
+            var d = await r.json();
+            if (d.sucesso) enviados++; else erros++;
+        } catch (e) { erros++; }
+    }
+    btn.disabled = false; btn.innerHTML = '📤 Enviar Todas Pendentes';
+    carregarAvaliacoes();
+    pageAlert(erros === 0 ? 'success' : 'error', enviados + ' enviados · ' + erros + ' erros.');
+}
+
+async function enviarWhatsAppFunc(f) {
+    var card = document.getElementById('av-' + f.rowIndex);
+    var btn  = card ? card.querySelector('.btn-green') : null;
+    if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'; }
+    try {
+        var r = await fetch(API + '/enviar-whatsapp-avaliacao-funcionario', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(f),
+        });
+        var d = await r.json();
+        if (d.sucesso) {
+            pageAlert('success', 'WhatsApp enviado para <strong>' + f.nome + '</strong> avaliar a loja!');
+            carregarAvaliacoes();
+        } else {
+            if (btn) { btn.disabled = false; btn.innerHTML = '📱 Enviar WhatsApp p/ Funcionário'; }
+            pageAlert('error', d.erro || 'Erro ao enviar.');
+        }
+    } catch (e) {
+        if (btn) { btn.disabled = false; btn.innerHTML = '📱 Enviar WhatsApp p/ Funcionário'; }
+        pageAlert('error', 'Erro: ' + e.message);
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ★ NOVA FUNÇÃO — ABA HISTÓRICO AVALIAÇÃO
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+async function carregarHistoricoAvaliacoes() {
+    var ct = document.getElementById('listaHistAval');
+    ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
+    var params = new URLSearchParams();
+    var mes = document.getElementById('avalMes').value;
+    var ano = document.getElementById('avalAno').value;
+    if (mes) params.set('mes', mes);
+    if (ano) params.set('ano', ano);
+    var qs = params.toString() ? '?' + params.toString() : '';
+    try {
+        var r    = await fetch(API + '/lembretes-avaliacao/historico' + qs);
+        var raw  = await r.json();
+        var data = raw.historico || [];
+        document.getElementById('badgeHistAval').textContent = data.length;
+        var temFiltro = mes || ano;
+        if (temFiltro) { document.getElementById('avalCount').textContent = data.length; document.getElementById('avalResult').style.display = ''; }
+        else { document.getElementById('avalResult').style.display = 'none'; }
+        if (!data.length) {
+            ct.innerHTML = '<div class="empty"><div class="icon">📊</div><p>' + (temFiltro ? 'Nenhum resultado' : 'Nenhuma avaliação enviada ainda') + '</p></div>';
+            return;
+        }
+        ct.innerHTML = data.map(function (h, i) {
+            var notaO = h.notaOrigem ? '<span class="nota-badge ' + (parseFloat(h.notaOrigem) >= 8 ? 'alta' : parseFloat(h.notaOrigem) >= 6 ? 'media' : 'baixa') + '">Origem: ' + h.notaOrigem + '/10</span>' : '<span class="tag tag-aguardando" style="font-size:10px;">⏳ Origem</span>';
+            var notaT = h.notaTreinadora ? '<span class="nota-badge ' + (parseFloat(h.notaTreinadora) >= 8 ? 'alta' : parseFloat(h.notaTreinadora) >= 6 ? 'media' : 'baixa') + '">Trein: ' + h.notaTreinadora + '/10</span>' : '<span class="tag tag-aguardando" style="font-size:10px;">⏳ Trein.</span>';
+            var whatsTag = h.whatsappAvaliacaoFunc ? '<span class="tag tag-enviado" style="font-size:10px;">✓ WhatsApp func.</span>' : '<span class="tag tag-pendente" style="font-size:10px;">✗ WhatsApp func.</span>';
+
+            var uid = 'acc-' + h.rowIndex + '-' + i;
+
+            // ── SEÇÃO 1: Histórico de Alertas ──
+            var sec1 = '<div class="acc-section">' +
+                '<div class="acc-section-title">🔔 Histórico de alertas</div>' +
+                '<div class="acc-grid">' +
+                '<div class="acc-item purple"><div class="acc-item-label">🟣 Alerta 5 dias</div><div class="acc-item-value ' + (h.lembrete5 ? '' : 'muted') + '">' + (extrairData(h.lembrete5) || 'Não enviado') + '</div></div>' +
+                '<div class="acc-item yellow"><div class="acc-item-label">🟡 Alerta 2 dias</div><div class="acc-item-value ' + (h.lembrete2 ? '' : 'muted') + '">' + (extrairData(h.lembrete2) || 'Não enviado') + '</div></div>' +
+                '<div class="acc-item red"><div class="acc-item-label">🔴 Alerta dia</div><div class="acc-item-value ' + (h.lembreteHoje ? '' : 'muted') + '">' + (extrairData(h.lembreteHoje) || 'Não enviado') + '</div></div>' +
+                '<div class="acc-item orange"><div class="acc-item-label">📧 Avaliação enviada</div><div class="acc-item-value">' + extrairData(h.avaliacaoEnviadaLojas) + '</div></div>' +
+                '</div></div>';
+
+            // ── SEÇÃO 2: Avaliações das Lojas ──
+            var origemNota = h.notaOrigem ? h.notaOrigem + '/10' : 'Pendente';
+            var treinNota  = h.notaTreinadora ? h.notaTreinadora + '/10' : 'Pendente';
+
+            var sec2 = '<div class="acc-section">' +
+                '<div class="acc-section-title">📋 Avaliações das lojas</div>' +
+                '<div class="acc-grid">' +
+                '<div class="acc-item red"><div class="acc-item-label">🏪 Loja Origem — Nota</div><div class="acc-item-value ' + (h.notaOrigem ? '' : 'muted') + '">' + origemNota + '</div></div>' +
+                '<div class="acc-item green"><div class="acc-item-label">🏭 Loja Treinadora — Nota</div><div class="acc-item-value ' + (h.notaTreinadora ? '' : 'muted') + '">' + treinNota + '</div></div>' +
+                '</div>';
+
+            if (h.observacoes) {
+                sec2 += '<div class="acc-obs" style="border-left:3px solid var(--red);"><div class="acc-obs-label">🏪 Observação — Loja Origem</div><div class="acc-obs-text">' + h.observacoes + '</div></div>';
+            }
+            if (h.obsTreinadora) {
+                sec2 += '<div class="acc-obs" style="border-left:3px solid var(--green);margin-top:6px;"><div class="acc-obs-label">🏭 Observação — Loja Treinadora</div><div class="acc-obs-text">' + h.obsTreinadora + '</div></div>';
+            }
+            if (!h.observacoes && !h.obsTreinadora) {
+                sec2 += '<div style="font-size:12px;color:var(--muted);font-style:italic;margin-top:6px;">Nenhuma observação registrada.</div>';
+            }
+            sec2 += '</div>';
+
+            // ── SEÇÃO 3: Avaliação do Funcionário ──
+            var funcStatus = h.whatsappAvaliacaoFunc
+                ? '<div class="acc-item green"><div class="acc-item-label">📱 WhatsApp enviado</div><div class="acc-item-value">' + extrairData(h.whatsappAvaliacaoFunc) + '</div></div>'
+                : '<div class="acc-item"><div class="acc-item-label">📱 WhatsApp func.</div><div class="acc-item-value muted">Não enviado</div></div>';
+
+            var sec3 = '<div class="acc-section">' +
+                '<div class="acc-section-title">👤 Avaliação do funcionário</div>' +
+                '<div class="acc-grid">' + funcStatus + '</div></div>';
+
+            return '<div class="historico-card hist-aval">' +
+                '<div class="historico-top"><div class="historico-check">🎓</div>' +
+                '<div class="historico-info"><div class="historico-nome">' + h.nome + '</div>' +
+                '<div class="historico-meta">' + h.loja + ' · ' + h.funcao + (h.turno ? ' · ' + h.turno : '') + ' · Início: ' + h.inicioTrein + ' · Fim: ' + h.fimTrein + '</div></div>' +
+                '<div style="flex-shrink:0;display:flex;gap:6px;flex-wrap:wrap;">' + notaO + notaT + '</div></div>' +
+                '<div class="historico-linha">' +
+                '<div class="hl-item"><span class="hl-tipo" style="color:var(--orange)">📧 Avaliação</span><span class="hl-data enviado">' + extrairData(h.avaliacaoEnviadaLojas) + '</span></div>' +
+                '<div class="hl-sep"></div>' +
+                '<div class="hl-item"><span class="hl-tipo">🏪 Origem</span><span class="hl-data ' + (h.avaliacaoOkOrigem === 'SIM' ? 'enviado' : 'nao') + '">' + (h.avaliacaoOkOrigem === 'SIM' ? '✓ Avaliou' : '⏳ Pendente') + '</span></div>' +
+                '<div class="hl-sep"></div>' +
+                '<div class="hl-item"><span class="hl-tipo">🏭 Treinadora</span><span class="hl-data ' + (h.avaliacaoTreinadora === 'SIM' ? 'enviado' : 'nao') + '">' + (h.avaliacaoTreinadora === 'SIM' ? '✓ Avaliou' : '⏳ Pendente') + '</span></div>' +
+                '<div class="hl-sep"></div>' +
+                '<div class="hl-item">' + whatsTag + '</div>' +
+                '</div>' +
+                '<button class="accordion-toggle" onclick="toggleAccordion(this,\'' + uid + '\')">' +
+                '<span class="arrow">▼</span> Ver detalhes completos' +
+                '</button>' +
+                '<div class="accordion-body" id="' + uid + '">' +
+                sec1 + sec2 + sec3 +
+                '</div>' +
+                '</div>';
+        }).join('');
+        log('Hist. Avaliação: ' + data.length, 'ok');
+    } catch (e) {
+        ct.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro ao carregar</p></div>';
+    }
+}
+
+
+/* ── ACCORDION TOGGLE ── */
+function toggleAccordion(btn, id) {
+    var body = document.getElementById(id);
+    var isOpen = body.classList.contains('open');
+    body.classList.toggle('open');
+    btn.classList.toggle('open');
+    btn.innerHTML = '<span class="arrow">▼</span> ' + (isOpen ? 'Ver detalhes completos' : 'Ocultar detalhes');
+}
+
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', function () {
     verificarStatus();
     carregarLembretes();
-    if (window.location.hash === '#historico') {
-        var btnHist = document.querySelectorAll('.tab-btn')[1];
-        if (btnHist) mudarTab('historico', btnHist);
+    var hash = window.location.hash.replace('#', '');
+    if (hash && document.getElementById('tab-' + hash)) {
+        var btns = document.querySelectorAll('.tab-btn');
+        var map = { 'lembretes': 0, 'historico': 1, 'avaliacoes': 2, 'hist-avaliacoes': 3 };
+        if (map[hash] !== undefined && btns[map[hash]]) mudarTab(hash, btns[map[hash]]);
     }
 });
 </script>

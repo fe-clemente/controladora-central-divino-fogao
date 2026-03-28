@@ -23,8 +23,11 @@ const uploadsCache      = require('./services/uploadsCache');
 const lembretesCache    = require('./services/lembretesCache');
 const { gravarSultsNaPlanilha }  = require('./services/gravarSultsPlanilha');
 const { enviarWhatsAppLembrete } = require('./services/whatsapp');
-const { enviarEmailLembrete }    = require('./services/email');
+const { enviarEmailLembrete, enviarEmailLembreteSimples, enviarEmailAvaliacao, enviarWhatsAppAvaliacaoFuncionario } = require('./services/email');
 const linksTreinamentoService = require('./services/linksTreinamentoService');
+
+// ★ NOVO — cache de lembretes de avaliação
+const avaliacaoLembretesCache = require('./services/avaliacaoLembretesCache');
 
 const {
   listarPastas,
@@ -56,6 +59,11 @@ const {
   getDashboardValores,
   getValoresPeriodos,
   getCadastralDashboardData,
+  // ★ NOVAS FUNÇÕES do sheets.js
+  marcarAvaliacaoEnviadaLojas,
+  marcarWhatsappAvaliacaoFunc,
+  getFuncionariosParaAvaliacaoLembrete,
+  getHistoricoAvaliacaoLembretes,
 } = require('./services/sheets');
 
 // ─── Inicializar caches ───────────────────────────────────────────────────────
@@ -65,6 +73,8 @@ universidadeCache.inicializar().catch(e => console.error('Universidade init falh
 turnoverCache.inicializar().catch(e => console.error('TURNOVER init falhou:', e.message));
 uploadsCache.inicializar().catch(e => console.error('UPLOADS init falhou:', e.message));
 lembretesCache.inicializar().catch(e => console.error('LEMBRETES init falhou:', e.message));
+// ★ NOVO
+avaliacaoLembretesCache.inicializar().catch(e => console.error('AVALIACAO-LEMBRETES init falhou:', e.message));
 
 const { router: avaliacaoRouter, gerarLinkAvaliacao } = require('./services/avaliacao');
 router.use('/avaliacao', avaliacaoRouter);
@@ -332,6 +342,9 @@ router.get('/lembretes/historico', async (req, res) => {
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// ★ POST /enviar-lembrete — ALTERADO: SEM link de avaliação
+// ═══════════════════════════════════════════════════════════════════════════════
 router.post('/enviar-lembrete', async (req, res) => {
   try {
     const f = req.body;
@@ -339,6 +352,7 @@ router.post('/enviar-lembrete', async (req, res) => {
       return res.status(400).json({ sucesso: false, erro: 'rowIndex obrigatório.' });
     if (!['5dias', '2dias', 'hoje'].includes(f.tipo))
       return res.status(400).json({ sucesso: false, erro: 'tipo deve ser: 5dias, 2dias ou hoje.' });
+
     const dataHora = new Date().toLocaleString('pt-BR', {
       day: '2-digit', month: '2-digit', year: 'numeric',
       hour: '2-digit', minute: '2-digit',
@@ -349,24 +363,178 @@ router.post('/enviar-lembrete', async (req, res) => {
       '2dias': 'lembrete2Dias',
       'hoje':  'lembreteHoje',
     };
+
+    // Grava na planilha
     await atualizarCelula(f.rowIndex, colunaMap[f.tipo], textoLembrete);
     lembretesCache.marcarEnviado(f.rowIndex, f.tipo);
+
+    // Responde imediatamente
     res.json({ sucesso: true, lembrete: textoLembrete, tipo: f.tipo });
-    const baseUrl        = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
-    const linkOrigem     = gerarLinkAvaliacao(f.rowIndex, baseUrl);
-    const linkTreinadora = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'treinadora');
+
+    // ── WhatsApp para funcionário (SEM link de avaliação) ──────────────
     if (f.telefone) {
       enviarWhatsAppLembrete({ ...f, diffDias: f.diffDias ?? 0 })
         .catch(e => console.error('[LEMBRETE] WhatsApp:', e.message));
     }
+
+    // ── Email SIMPLES para lojas (SEM link de avaliação) ──────────────
     if (f.email || f.emailLojaAvaliadora) {
-      enviarEmailLembrete(f, linkOrigem, linkTreinadora)
-        .then(() => marcarEmailAvaliacaoEnviado(f.rowIndex))
-        .catch(e => console.error('[LEMBRETE] Email:', e.message));
+      enviarEmailLembreteSimples(f)
+        .catch(e => console.error('[LEMBRETE] Email simples:', e.message));
     }
+
+    // ★ NÃO gera mais links de avaliação aqui
+    // ★ NÃO chama mais gerarLinkAvaliacao() aqui
+    // ★ NÃO chama mais marcarEmailAvaliacaoEnviado() aqui
+
   } catch (e) {
     console.error('[LEMBRETE] Erro:', e.message);
     if (!res.headersSent) res.status(500).json({ sucesso: false, erro: e.message });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ★ NOVAS ROTAS — LEMBRETES DE AVALIAÇÃO (fimTrein = hoje)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * GET /lembretes-avaliacao
+ * Lista funcionários cujo fimTrein (col P) = hoje
+ * e email de avaliação ainda não foi enviado (col AK vazia)
+ */
+router.get('/lembretes-avaliacao', async (req, res) => {
+  try {
+    const lista = await getFuncionariosParaAvaliacaoLembrete();
+    const pendentes = lista.filter(f => !f.emailAvaliacaoEnviado).length;
+    avaliacaoLembretesCache.setDados(lista, avaliacaoLembretesCache.getDados()?.historico || []);
+    res.json({ lista, total: lista.length, pendentes });
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
+/**
+ * GET /lembretes-avaliacao/status
+ */
+router.get('/lembretes-avaliacao/status', (req, res) => {
+  res.json(avaliacaoLembretesCache.getStatus());
+});
+
+/**
+ * GET /lembretes-avaliacao/historico
+ * Histórico de emails de avaliação já enviados (col AK preenchida)
+ */
+router.get('/lembretes-avaliacao/historico', async (req, res) => {
+  try {
+    const { mes, ano } = req.query;
+    let historico = await getHistoricoAvaliacaoLembretes();
+
+    function parseDMY(str) {
+      if (!str) return null;
+      const p = String(str).trim().split('/');
+      if (p.length === 3) {
+        const dt = new Date(+p[2], +p[1] - 1, +p[0], 0, 0, 0, 0);
+        return isNaN(dt.getTime()) ? null : dt;
+      }
+      return null;
+    }
+
+    if (mes) {
+      const mesN = parseInt(mes, 10);
+      historico = historico.filter(h => {
+        const dt = parseDMY(h.fimTrein);
+        return dt && (dt.getMonth() + 1) === mesN;
+      });
+    }
+    if (ano) {
+      const anoN = parseInt(ano, 10);
+      historico = historico.filter(h => {
+        const dt = parseDMY(h.fimTrein);
+        return dt && dt.getFullYear() === anoN;
+      });
+    }
+
+    avaliacaoLembretesCache.setDados(
+      avaliacaoLembretesCache.getDados()?.lista || [],
+      historico
+    );
+    res.json({ total: historico.length, historico });
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
+/**
+ * POST /enviar-lembrete-avaliacao
+ * Envia email COM link de avaliação para as lojas (dia final do treinamento)
+ * Body: { rowIndex, nome, loja, funcao, email, emailLojaAvaliadora, inicioTrein, fimTrein, ... }
+ */
+router.post('/enviar-lembrete-avaliacao', async (req, res) => {
+  try {
+    const f = req.body;
+    if (f.rowIndex === undefined)
+      return res.status(400).json({ sucesso: false, erro: 'rowIndex obrigatório.' });
+
+    const baseUrl = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
+
+    // ★ Gera links de avaliação — AQUI sim, no dia final
+    const linkOrigem     = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'origem');
+    const linkTreinadora = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'treinadora');
+
+    // Envia email COM link para as lojas
+    await enviarEmailAvaliacao(f, linkOrigem, linkTreinadora);
+
+    // Marca na planilha col AK
+    await marcarAvaliacaoEnviadaLojas(f.rowIndex);
+
+    // Atualiza cache
+    avaliacaoLembretesCache.marcarEnviado(f.rowIndex);
+
+    console.log(`✅ Email avaliação enviado: ${f.nome} (row ${f.rowIndex})`);
+    res.json({ sucesso: true, linkOrigem, linkTreinadora });
+
+  } catch (e) {
+    console.error('[LEMBRETE-AVALIACAO] Erro:', e.message);
+    res.status(500).json({ sucesso: false, erro: e.message });
+  }
+});
+
+/**
+ * POST /enviar-whatsapp-avaliacao-funcionario
+ * Envia WhatsApp para o funcionário avaliar a loja (após ambas lojas avaliarem)
+ * Body: { rowIndex, nome, telefone, loja, ... }
+ */
+router.post('/enviar-whatsapp-avaliacao-funcionario', async (req, res) => {
+  try {
+    const f = req.body;
+    if (f.rowIndex === undefined)
+      return res.status(400).json({ sucesso: false, erro: 'rowIndex obrigatório.' });
+    if (!f.telefone)
+      return res.status(400).json({ sucesso: false, erro: 'Telefone obrigatório.' });
+
+    const baseUrl = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
+
+    // Gera link para funcionário avaliar a loja
+    const linkFuncionario = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'funcionario');
+
+    // Envia WhatsApp com link
+    await enviarWhatsAppAvaliacaoFuncionario({
+      ...f,
+      linkAvaliacao: linkFuncionario,
+    });
+
+    // Marca na planilha col AL
+    await marcarWhatsappAvaliacaoFunc(f.rowIndex);
+
+    // Atualiza cache
+    avaliacaoLembretesCache.marcarWhatsappFuncEnviado(f.rowIndex);
+
+    console.log(`✅ WhatsApp avaliação funcionário: ${f.nome} (row ${f.rowIndex})`);
+    res.json({ sucesso: true, linkFuncionario });
+
+  } catch (e) {
+    console.error('[WHATSAPP-AVALIACAO] Erro:', e.message);
+    res.status(500).json({ sucesso: false, erro: e.message });
   }
 });
 
@@ -765,6 +933,7 @@ router.get('/health', (req, res) => res.json({
   modulo:    'treinamento',
   status:    'online',
   lembretes: lembretesCache.getStatus(),
+  avaliacaoLembretes: avaliacaoLembretesCache.getStatus(),
   ia:        process.env.GEMINI_API_KEY ? 'configurada' : 'sem GEMINI_API_KEY',
   model:     process.env.GEMINI_MODEL || 'gemini-2.0-flash',
 }));

@@ -27,7 +27,7 @@ function tr2(bg, label, val) {
     </tr>`;
 }
 
-// ─── HTML DO LEMBRETE (compartilhado pelos dois tipos) ────────────────────────
+// ─── HTML DO LEMBRETE (compartilhado — LEGADO, mantido para compatibilidade) ─
 function _htmlLembrete(funcionario, diasTexto, linkAvaliacao, tipo) {
     const tituloBloco = tipo === 'treinadora'
         ? '📋 AVALIAÇÃO DA LOJA TREINADORA'
@@ -116,13 +116,12 @@ function _htmlLembrete(funcionario, diasTexto, linkAvaliacao, tipo) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// EMAIL DE LEMBRETE
-// Envia para col M (loja origem) e col AO (loja treinadora) se existir
-// Cada uma recebe seu próprio link de avaliação
+// EMAIL DE LEMBRETE (LEGADO — mantido para compatibilidade)
+// Envia para col M (loja origem) e col AO (loja treinadora) COM link avaliação
 // ═══════════════════════════════════════════════════════════════════════════════
 async function enviarEmailLembrete(funcionario, linkAvaliacaoOrigem, linkAvaliacaoTreinadora) {
-    const emailOrigem     = sanitizarEmail(funcionario.email);               // col M
-    const emailTreinadora = sanitizarEmail(funcionario.emailLojaAvaliadora); // col AO
+    const emailOrigem     = sanitizarEmail(funcionario.email);
+    const emailTreinadora = sanitizarEmail(funcionario.emailLojaAvaliadora);
 
     if (!emailOrigem && !emailTreinadora) {
         throw new Error(`Nenhum email válido (col M ou AO) para ${funcionario.nome}`);
@@ -134,7 +133,6 @@ async function enviarEmailLembrete(funcionario, linkAvaliacaoOrigem, linkAvaliac
 
     const erros = [];
 
-    // ── Envia para loja de ORIGEM (col M) ─────────────────────────────────────
     if (emailOrigem && linkAvaliacaoOrigem) {
         const emailCC    = (emailOrigem !== EMAIL_FIXO) ? EMAIL_FIXO : null;
         const htmlOrigem = _htmlLembrete(funcionario, diasTexto, linkAvaliacaoOrigem, 'origem');
@@ -153,7 +151,6 @@ async function enviarEmailLembrete(funcionario, linkAvaliacaoOrigem, linkAvaliac
         }
     }
 
-    // ── Envia para loja TREINADORA (col AO) ───────────────────────────────────
     if (emailTreinadora && linkAvaliacaoTreinadora) {
         const emailCC2      = (emailTreinadora !== EMAIL_FIXO && emailTreinadora !== sanitizarEmail(funcionario.email))
             ? EMAIL_FIXO : null;
@@ -178,8 +175,6 @@ async function enviarEmailLembrete(funcionario, linkAvaliacaoOrigem, linkAvaliac
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // EMAIL DE RESULTADO — vai para treinamento@divinofogao.com.br
-// Disparado após qualquer avaliador registrar a nota no formulário avaliacao.html
-// tipo: 'origem' | 'treinadora'
 // ═══════════════════════════════════════════════════════════════════════════════
 async function enviarEmailResultadoAvaliacao(funcionario, nota, dataFim, observacoes, tipo = 'origem') {
     const corNota   = nota >= 8 ? '#16a34a' : nota >= 6 ? '#d97706' : '#dc2626';
@@ -189,7 +184,6 @@ async function enviarEmailResultadoAvaliacao(funcionario, nota, dataFim, observa
     const tipoLabel = tipo === 'treinadora' ? 'Loja Treinadora' : 'Loja de Origem';
     const colsLabel = tipo === 'treinadora' ? 'AN, AQ, AR, P' : 'Z, AH';
 
-    // Sempre vai para EMAIL_FIXO; se col M diferente, coloca como CC também
     const emailColM = sanitizarEmail(funcionario.email);
     const emailTo   = EMAIL_FIXO;
     const emailCC   = (emailColM && emailColM !== EMAIL_FIXO) ? emailColM : null;
@@ -203,7 +197,6 @@ async function enviarEmailResultadoAvaliacao(funcionario, nota, dataFim, observa
         <tr><td align="center" style="padding:30px 0;">
           <table width="580" cellpadding="0" cellspacing="0"
                  style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
-
             <tr>
               <td style="background:linear-gradient(135deg,#c8102e,#8b0000);padding:36px 40px;text-align:center;">
                 <h1 style="color:#fff;margin:0;font-size:26px;letter-spacing:2px;">DIVINO FOGÃO</h1>
@@ -212,14 +205,10 @@ async function enviarEmailResultadoAvaliacao(funcionario, nota, dataFim, observa
                 </p>
               </td>
             </tr>
-
             <tr><td style="padding:36px 40px;">
-
               <p style="color:#333;font-size:15px;margin-bottom:24px;">
                 Uma avaliação de treinamento foi registrada pela <strong>${tipoLabel}</strong>:
               </p>
-
-              <!-- NOTA DESTAQUE -->
               <div style="text-align:center;margin-bottom:28px;padding:24px;background:#f9fafb;border-radius:10px;border:1.5px solid #e5e7eb;">
                 <p style="margin:0 0 6px;font-size:13px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Nota Final</p>
                 <div style="font-size:60px;font-weight:900;color:${corNota};line-height:1;">
@@ -227,8 +216,6 @@ async function enviarEmailResultadoAvaliacao(funcionario, nota, dataFim, observa
                 </div>
                 <p style="margin:8px 0 0;font-size:15px;font-weight:700;color:${corNota};">${emojiNota} ${labelNota}</p>
               </div>
-
-              <!-- DADOS -->
               <table width="100%" cellpadding="0" cellspacing="0"
                      style="margin-bottom:24px;border-radius:8px;overflow:hidden;border:1px solid #e9ecef;">
                 <tr style="background:#1e293b;">
@@ -243,27 +230,22 @@ async function enviarEmailResultadoAvaliacao(funcionario, nota, dataFim, observa
                 ${tr2('#fff',   '📞 Telefone',            funcionario.telefone || '—')}
                 ${tr2('#f8f9fa','✉️ E-mail',               funcionario.email || '—')}
               </table>
-
               ${observacoes ? `
               <div style="background:#f0f9ff;border-left:4px solid #0ea5e9;border-radius:6px;padding:16px;margin-bottom:20px;">
                 <p style="margin:0 0 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#0369a1;">Observações</p>
                 <p style="margin:0;color:#0c4a6e;font-size:14px;line-height:1.6;">${observacoes}</p>
               </div>` : ''}
-
               <div style="background:#fef3c7;border-radius:8px;padding:14px;">
                 <p style="margin:0;color:#92400e;font-size:12px;">
                   📊 Avaliação [${tipoLabel} → colunas ${colsLabel}] registrada automaticamente na planilha.
                 </p>
               </div>
-
             </td></tr>
-
             <tr>
               <td style="background:#f8f9fa;padding:18px 40px;text-align:center;border-top:1px solid #e9ecef;">
                 <p style="margin:0;color:#9ca3af;font-size:11px;">Divino Fogão — Sistema Automático de Treinamentos</p>
               </td>
             </tr>
-
           </table>
         </td></tr>
       </table>
@@ -281,4 +263,323 @@ async function enviarEmailResultadoAvaliacao(funcionario, nota, dataFim, observa
     console.log(`✅ Email resultado [${tipoLabel}] → ${emailTo}${emailCC ? ' CC: ' + emailCC : ''} | ${funcionario.nome} nota ${nota}`);
 }
 
-module.exports = { enviarEmailLembrete, enviarEmailResultadoAvaliacao };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ★ NOVA FUNÇÃO 1 — Email de lembrete SIMPLES (SEM link de avaliação)
+// Envia para col M (loja origem) e col AO (loja treinadora)
+// Apenas informa que o funcionário vai treinar
+// ═══════════════════════════════════════════════════════════════════════════════
+async function enviarEmailLembreteSimples(funcionario) {
+    const emailOrigem     = sanitizarEmail(funcionario.email);
+    const emailTreinadora = sanitizarEmail(funcionario.emailLojaAvaliadora);
+
+    if (!emailOrigem && !emailTreinadora) {
+        console.log(`[EMAIL] Sem destinatários para lembrete simples: ${funcionario.nome}`);
+        return;
+    }
+
+    const diasTexto = funcionario.diffDias === 0 ? 'HOJE'
+        : funcionario.diffDias === 2 ? 'em 2 dias'
+        : funcionario.diffDias === 5 ? 'em 5 dias'
+        : `em ${funcionario.diffDias} dias`;
+
+    const html = `<!DOCTYPE html>
+    <html><head><meta charset="UTF-8"></head>
+    <body style="margin:0;padding:0;font-family:'Segoe UI',sans-serif;background:#f4f4f4;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr><td align="center" style="padding:30px 0;">
+          <table width="620" cellpadding="0" cellspacing="0"
+                 style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+            <tr>
+              <td style="background:linear-gradient(135deg,#c8102e,#8b0000);padding:40px;text-align:center;">
+                <h1 style="color:#fff;margin:0;font-size:28px;letter-spacing:2px;">DIVINO FOGÃO</h1>
+                <p style="color:rgba(255,255,255,0.8);margin:8px 0 0;font-size:14px;">Sistema de Treinamentos</p>
+              </td>
+            </tr>
+            <tr><td style="padding:40px 40px 0;">
+              <div style="background:#fff3cd;border-left:4px solid #ffc107;padding:15px;border-radius:6px;">
+                <p style="margin:0;font-size:18px;font-weight:bold;color:#856404;">
+                  🔔 Treinamento começa <span style="color:#c8102e;">${diasTexto}</span>!
+                </p>
+              </div>
+            </td></tr>
+            <tr><td style="padding:28px 40px 0;">
+              <p style="color:#333;font-size:15px;margin:0 0 8px;">
+                Prezado(a) responsável,
+              </p>
+              <p style="color:#555;line-height:1.6;font-size:14px;margin:0 0 24px;">
+                Este é um lembrete automático informando que o colaborador abaixo
+                tem treinamento previsto para iniciar <strong>${diasTexto}</strong>.
+                Por favor, certifique-se de que tudo está preparado.
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0"
+                     style="border-radius:8px;overflow:hidden;border:1px solid #e9ecef;margin-bottom:24px;">
+                <tr style="background:#c8102e;">
+                  <td colspan="2" style="padding:12px 20px;color:#fff;font-weight:bold;font-size:14px;">
+                    👤 DETALHES DO TREINAMENTO
+                  </td>
+                </tr>
+                ${tr2('#fff',    '👤 Nome',    funcionario.nome)}
+                ${tr2('#f8f9fa','🏪 Loja',    funcionario.loja)}
+                ${tr2('#fff',   '👔 Função',   funcionario.funcao)}
+                ${tr2('#f8f9fa','⏰ Turno',    funcionario.turno || '—')}
+                ${tr2('#fff',   '📅 Início',   funcionario.inicioTrein)}
+                ${tr2('#f8f9fa','📅 Fim previsto', funcionario.fimTrein || '—')}
+              </table>
+              <div style="background:#f0f9ff;border-left:4px solid #0ea5e9;border-radius:6px;padding:14px;margin-bottom:28px;">
+                <p style="margin:0;color:#0369a1;font-size:13px;">
+                  ℹ️ A avaliação do colaborador será solicitada no <strong>dia final do treinamento</strong>,
+                  quando você receberá um e-mail com o link para avaliar.
+                </p>
+              </div>
+              <div style="background:#fef9e7;border-radius:8px;padding:14px;border-left:4px solid #f59e0b;margin-bottom:28px;">
+                <p style="margin:0;color:#92400e;font-size:13px;">
+                  ✅ <strong>Importante:</strong> O colaborador deve trazer documentos e usar calçado de segurança.
+                </p>
+              </div>
+            </td></tr>
+            <tr>
+              <td style="background:#f8f9fa;padding:20px;text-align:center;border-top:1px solid #e9ecef;">
+                <p style="margin:0;color:#999;font-size:12px;">Divino Fogão — Departamento de Treinamentos</p>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+      </table>
+    </body></html>`;
+
+    const erros = [];
+
+    // ── Envia para loja de ORIGEM (col M) ─────────────────────────────────
+    if (emailOrigem) {
+        const emailCC = (emailOrigem !== EMAIL_FIXO) ? EMAIL_FIXO : null;
+        try {
+            await transporter.sendMail({
+                from:    '"Divino Fogão Treinamentos" <fernando.clemente@divinofogao.com.br>',
+                to:      emailOrigem,
+                ...(emailCC ? { cc: emailCC } : {}),
+                subject: `🔔 Lembrete: Treinamento ${diasTexto} — ${funcionario.loja} | ${funcionario.nome}`,
+                html,
+            });
+            console.log(`✅ Email lembrete simples [origem] → ${emailOrigem}`);
+        } catch (e) {
+            console.error(`❌ Falha email simples [origem] ${emailOrigem}:`, e.message);
+            erros.push(e.message);
+        }
+    }
+
+    // ── Envia para loja TREINADORA (col AO) ───────────────────────────────
+    if (emailTreinadora) {
+        const emailCC2 = (emailTreinadora !== EMAIL_FIXO && emailTreinadora !== emailOrigem)
+            ? EMAIL_FIXO : null;
+        try {
+            await transporter.sendMail({
+                from:    '"Divino Fogão Treinamentos" <fernando.clemente@divinofogao.com.br>',
+                to:      emailTreinadora,
+                ...(emailCC2 ? { cc: emailCC2 } : {}),
+                subject: `🔔 Lembrete: Trainee chegando ${diasTexto} — ${funcionario.nome} | Loja ${funcionario.loja}`,
+                html,
+            });
+            console.log(`✅ Email lembrete simples [treinadora] → ${emailTreinadora}`);
+        } catch (e) {
+            console.error(`❌ Falha email simples [treinadora] ${emailTreinadora}:`, e.message);
+            erros.push(e.message);
+        }
+    }
+
+    if (erros.length > 0 && !emailOrigem && !emailTreinadora) {
+        throw new Error('Falha em todos os envios: ' + erros.join(' | '));
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ★ NOVA FUNÇÃO 2 — Email de AVALIAÇÃO (COM link)
+// Envia no dia final do treinamento (fimTrein = hoje)
+// Para: loja origem (col M) e loja treinadora (col AO), cada um com seu link
+// ═══════════════════════════════════════════════════════════════════════════════
+async function enviarEmailAvaliacao(funcionario, linkOrigem, linkTreinadora) {
+    const emailOrigem     = sanitizarEmail(funcionario.email);
+    const emailTreinadora = sanitizarEmail(funcionario.emailLojaAvaliadora);
+
+    if (!emailOrigem && !emailTreinadora) {
+        throw new Error(`Nenhum email válido (col M ou AO) para avaliação de ${funcionario.nome}`);
+    }
+
+    const erros = [];
+
+    // ── Email para loja de ORIGEM (col M) ─────────────────────────────────
+    if (emailOrigem && linkOrigem) {
+        const htmlOrigem = _htmlEmailAvaliacao(funcionario, linkOrigem, 'origem');
+        const emailCC    = (emailOrigem !== EMAIL_FIXO) ? EMAIL_FIXO : null;
+        try {
+            await transporter.sendMail({
+                from:    '"Divino Fogão Treinamentos" <fernando.clemente@divinofogao.com.br>',
+                to:      emailOrigem,
+                ...(emailCC ? { cc: emailCC } : {}),
+                subject: `🎓 Avaliação de Treinamento — ${funcionario.nome} | ${funcionario.loja}`,
+                html:    htmlOrigem,
+            });
+            console.log(`✅ Email avaliação [origem] → ${emailOrigem}`);
+        } catch (e) {
+            console.error(`❌ Falha email avaliação [origem] ${emailOrigem}:`, e.message);
+            erros.push(`Origem: ${e.message}`);
+        }
+    }
+
+    // ── Email para loja TREINADORA (col AO) ───────────────────────────────
+    if (emailTreinadora && linkTreinadora) {
+        const htmlTreinadora = _htmlEmailAvaliacao(funcionario, linkTreinadora, 'treinadora');
+        const emailCC2       = (emailTreinadora !== EMAIL_FIXO && emailTreinadora !== emailOrigem)
+            ? EMAIL_FIXO : null;
+        try {
+            await transporter.sendMail({
+                from:    '"Divino Fogão Treinamentos" <fernando.clemente@divinofogao.com.br>',
+                to:      emailTreinadora,
+                ...(emailCC2 ? { cc: emailCC2 } : {}),
+                subject: `🎓 Avaliação de Trainee — ${funcionario.nome} | Loja ${funcionario.loja}`,
+                html:    htmlTreinadora,
+            });
+            console.log(`✅ Email avaliação [treinadora] → ${emailTreinadora}`);
+        } catch (e) {
+            console.error(`❌ Falha email avaliação [treinadora] ${emailTreinadora}:`, e.message);
+            erros.push(`Treinadora: ${e.message}`);
+        }
+    }
+
+    if (erros.length === 2) throw new Error('Falha em ambos os envios de avaliação: ' + erros.join(' | '));
+}
+
+// ─── HTML do email de avaliação (COM botão/link) ──────────────────────────────
+function _htmlEmailAvaliacao(funcionario, linkAvaliacao, tipo) {
+    const tituloBloco = tipo === 'treinadora'
+        ? '📋 AVALIAÇÃO DA LOJA TREINADORA'
+        : '📋 AVALIAÇÃO DO TREINAMENTO';
+    const descBloco = tipo === 'treinadora'
+        ? `O colaborador abaixo concluiu o treinamento na sua loja.<br>
+           Use o botão abaixo para registrar a <strong>nota, observações e data de término</strong>.`
+        : `O treinamento do colaborador abaixo foi concluído.<br>
+           Use o botão abaixo para registrar a nota do colaborador (0 a 10).<br>
+           <strong>Os dados serão salvos automaticamente na planilha de controle.</strong>`;
+    const tituloParagrafo = tipo === 'treinadora'
+        ? `Prezado(a) responsável pela loja treinadora,`
+        : `Prezado(a) responsável pela <strong>${funcionario.loja}</strong>,`;
+
+    return `<!DOCTYPE html>
+    <html><head><meta charset="UTF-8"></head>
+    <body style="margin:0;padding:0;font-family:'Segoe UI',sans-serif;background:#f4f4f4;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr><td align="center" style="padding:30px 0;">
+          <table width="620" cellpadding="0" cellspacing="0"
+                 style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+            <tr>
+              <td style="background:linear-gradient(135deg,#c8102e,#8b0000);padding:40px;text-align:center;">
+                <h1 style="color:#fff;margin:0;font-size:28px;letter-spacing:2px;">DIVINO FOGÃO</h1>
+                <p style="color:rgba(255,255,255,0.8);margin:8px 0 0;font-size:14px;">Sistema de Treinamentos</p>
+              </td>
+            </tr>
+            <tr><td style="padding:40px 40px 0;">
+              <div style="background:#dcfce7;border-left:4px solid #16a34a;padding:15px;border-radius:6px;">
+                <p style="margin:0;font-size:18px;font-weight:bold;color:#15803d;">
+                  🎓 Treinamento concluído — Avaliação necessária!
+                </p>
+              </div>
+            </td></tr>
+            <tr><td style="padding:28px 40px 0;">
+              <p style="color:#333;font-size:15px;margin:0 0 8px;">${tituloParagrafo}</p>
+              <p style="color:#555;line-height:1.6;font-size:14px;margin:0 0 24px;">
+                O período de treinamento do colaborador abaixo chegou ao fim.
+                Por favor, avalie o desempenho do colaborador clicando no botão abaixo.
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0"
+                     style="border-radius:8px;overflow:hidden;border:1px solid #e9ecef;margin-bottom:24px;">
+                <tr style="background:#c8102e;">
+                  <td colspan="2" style="padding:12px 20px;color:#fff;font-weight:bold;font-size:14px;">
+                    👤 DETALHES DO TREINAMENTO
+                  </td>
+                </tr>
+                ${tr2('#fff',    '👤 Nome',     funcionario.nome)}
+                ${tr2('#f8f9fa','🏪 Loja',     funcionario.loja)}
+                ${tr2('#fff',   '👔 Função',    funcionario.funcao)}
+                ${tr2('#f8f9fa','⏰ Turno',     funcionario.turno || '—')}
+                ${tr2('#fff',   '📅 Início',    funcionario.inicioTrein)}
+                ${tr2('#f8f9fa','📅 Fim',       funcionario.fimTrein || '—')}
+              </table>
+              <table width="100%" cellpadding="0" cellspacing="0"
+                     style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #16a34a;
+                            border-radius:12px;margin-bottom:24px;">
+                <tr><td style="padding:28px;text-align:center;">
+                  <p style="margin:0 0 6px;font-size:17px;font-weight:bold;color:#15803d;">${tituloBloco}</p>
+                  <p style="margin:0 0 20px;color:#166534;font-size:13px;line-height:1.6;">${descBloco}</p>
+                  <a href="${linkAvaliacao}"
+                     style="display:inline-block;background:#16a34a;color:#fff;text-decoration:none;
+                            padding:16px 36px;border-radius:10px;font-size:16px;font-weight:bold;
+                            letter-spacing:0.3px;box-shadow:0 4px 14px rgba(22,163,74,0.4);">
+                    ✅ &nbsp; Avaliar Colaborador Agora
+                  </a>
+                  <p style="margin:14px 0 0;font-size:11px;color:#6b7280;">
+                    Se o botão não funcionar, copie e cole este link no navegador:<br>
+                    <a href="${linkAvaliacao}" style="color:#16a34a;word-break:break-all;">${linkAvaliacao}</a>
+                  </p>
+                  <p style="margin:10px 0 0;font-size:11px;color:#9ca3af;">
+                    Este link é válido por 30 dias.
+                  </p>
+                </td></tr>
+              </table>
+            </td></tr>
+            <tr>
+              <td style="background:#f8f9fa;padding:20px;text-align:center;border-top:1px solid #e9ecef;">
+                <p style="margin:0;color:#999;font-size:12px;">Divino Fogão — Departamento de Treinamentos</p>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+      </table>
+    </body></html>`;
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ★ NOVA FUNÇÃO 3 — WhatsApp para funcionário avaliar a LOJA
+// Enviado após ambas as lojas avaliarem o funcionário
+// Retorna a mensagem formatada (envio real feito pelo whatsapp.js)
+// ═══════════════════════════════════════════════════════════════════════════════
+async function enviarWhatsAppAvaliacaoFuncionario(dados) {
+    const { nome, telefone, loja, linkAvaliacao } = dados;
+
+    if (!telefone) {
+        console.log(`[WHATSAPP] Sem telefone para avaliação do funcionário: ${nome}`);
+        return;
+    }
+
+    // Importa dinamicamente o whatsapp.js para evitar dependência circular
+    const { enviarMensagemWhatsApp } = require('./whatsapp');
+
+    const mensagem = [
+        `Olá ${nome}! 👋`,
+        ``,
+        `Seu treinamento na loja *${loja}* foi concluído! 🎉`,
+        ``,
+        `Gostaríamos que você avaliasse como foi sua experiência de treinamento.`,
+        `Sua opinião é muito importante para melhorarmos nossos processos.`,
+        ``,
+        `📋 *Clique aqui para avaliar:*`,
+        linkAvaliacao,
+        ``,
+        `_Divino Fogão — Equipe de Treinamentos_`,
+    ].join('\n');
+
+    await enviarMensagemWhatsApp(telefone, mensagem);
+    console.log(`✅ WhatsApp avaliação funcionário → ${telefone}`);
+}
+
+
+// ─── EXPORTS ──────────────────────────────────────────────────────────────────
+module.exports = {
+    enviarEmailLembrete,
+    enviarEmailResultadoAvaliacao,
+    // ★ NOVAS FUNÇÕES — Fluxo Separado
+    enviarEmailLembreteSimples,
+    enviarEmailAvaliacao,
+    enviarWhatsAppAvaliacaoFuncionario,
+};
