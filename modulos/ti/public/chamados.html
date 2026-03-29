@@ -175,6 +175,30 @@
         .cache-banner{background:var(--yellow-pale);border:1.5px solid rgba(217,119,6,.25);border-radius:10px;padding:8px 14px;font-size:11px;font-weight:700;color:var(--yellow);display:flex;align-items:center;gap:8px;margin-bottom:14px;}
         .cache-banner button{background:none;border:1.5px solid rgba(217,119,6,.4);border-radius:7px;padding:3px 10px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--yellow);cursor:pointer;}
         .cache-banner button:hover{background:rgba(217,119,6,.1);}
+
+        /* ── Nav Dropdown ── */
+        .nav-dropdown{position:relative;}
+        .nav-btn-drop{display:inline-flex;align-items:center;gap:4px;}
+        .nav-drop-arrow{font-size:10px;transition:transform .2s;}
+        .nav-dropdown.open .nav-drop-arrow{transform:rotate(180deg);}
+        .nav-drop-menu{
+            display:none;position:absolute;top:100%;right:0;
+            background:var(--bg2);border:1.5px solid var(--border);
+            border-radius:12px;padding:6px;min-width:260px;
+            box-shadow:var(--shadow-lg);z-index:200;margin-top:2px;
+        }
+        .nav-dropdown.open .nav-drop-menu{display:block;}
+        .nav-drop-item{
+            display:flex;align-items:center;gap:10px;
+            padding:10px 12px;border-radius:9px;
+            text-decoration:none;color:var(--text);
+            transition:background .15s;
+        }
+        .nav-drop-item:hover{background:var(--bg3);}
+        .ndi-icon{font-size:18px;flex-shrink:0;}
+        .ndi-info{display:flex;flex-direction:column;gap:1px;}
+        .ndi-label{font-size:13px;font-weight:700;}
+        .ndi-desc{font-size:11px;color:var(--muted);font-weight:600;}
     </style>
 </head>
 <body>
@@ -196,7 +220,22 @@
     <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
     <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
     <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
-    
+
+    <!-- ── Dropdown Relatórios ── -->
+    <div class="nav-dropdown" id="navRelatorios">
+        <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
+            📊 Relatórios <span class="nav-drop-arrow">▾</span>
+        </button>
+        <div class="nav-drop-menu">
+            <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
+                <span class="ndi-icon">📋</span>
+                <span class="ndi-info">
+                    <span class="ndi-label">Check-in / Check-out</span>
+                    <span class="ndi-desc">Presença e localização de consultores</span>
+                </span>
+            </a>
+        </div>
+    </div>
 </nav>
 </header>
 
@@ -1184,6 +1223,19 @@ function exportCSV() {
 }
 
 carregar();
+</script>
+
+<script>
+function toggleNavDrop(id){
+    var el=document.getElementById(id);
+    el.classList.toggle('open');
+}
+// Fecha dropdown ao clicar fora
+document.addEventListener('click',function(e){
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(d){
+        if(!d.contains(e.target)) d.classList.remove('open');
+    });
+});
 </script>
 </body>
 </html>

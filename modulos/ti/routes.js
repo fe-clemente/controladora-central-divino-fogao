@@ -25,6 +25,7 @@ const pixRoutes      = require('./services/pixService');
 const linksRoutes    = require('./services/linksExternosService');
 const tiUploadsCache = require('./services/uploadsCache');
 const { perguntarTI } = require('./services/iaTiService');
+const checkoutCache  = require('./services/relatoriocheckoutCache');
 
 const {
     listarPastas,
@@ -35,8 +36,9 @@ const {
     PASTA_RAIZ_ID,
 } = require('./services/drive');
 
-// ─── Inicializar cache de uploads ────────────────────────────
+// ─── Inicializar caches ───────────────────────────────────────
 tiUploadsCache.inicializar().catch(e => console.error('[TI-UPLOADS] Cache init falhou:', e.message));
+checkoutCache.inicializar().catch(e => console.error('[CHECKOUT-CACHE] Cache init falhou:', e.message));
 
 // ─── Apenas localhost ────────────────────────────────────────
 const apenasLocal = (req, res, next) => {
@@ -87,15 +89,20 @@ router.get('/chamados',              servirHtml('chamados.html'));
 router.get('/pix',                   servirHtml('pix.html'));
 router.get('/linkexterno',           servirHtml('linkexterno.html'));
 router.get('/uploads',               servirHtml('uploads.html'));
+router.get('/relatorio-checkout',    servirHtml('relatorioCheckoutConsultores.html'));
 
-router.get('/ativos.html',                servirHtml('ativos.html'));
-router.get('/controle-equipamentos.html', servirHtml('controle-equipamentos.html'));
-router.get('/migracao.html',              servirHtml('migracao.html'));
-router.get('/projetos.html',              servirHtml('projetos.html'));
-router.get('/chamados.html',              servirHtml('chamados.html'));
-router.get('/pix.html',                   servirHtml('pix.html'));
-router.get('/linkexterno.html',           servirHtml('linkexterno.html'));
-router.get('/uploads.html',               servirHtml('uploads.html'));
+router.get('/ativos.html',                    servirHtml('ativos.html'));
+router.get('/controle-equipamentos.html',     servirHtml('controle-equipamentos.html'));
+router.get('/migracao.html',                  servirHtml('migracao.html'));
+router.get('/projetos.html',                  servirHtml('projetos.html'));
+router.get('/chamados.html',                  servirHtml('chamados.html'));
+router.get('/pix.html',                       servirHtml('pix.html'));
+router.get('/linkexterno.html',               servirHtml('linkexterno.html'));
+router.get('/uploads.html',                   servirHtml('uploads.html'));
+router.get('/relatorioCheckoutConsultores.html', servirHtml('relatorioCheckoutConsultores.html'));
+router.get('/relatorioCheckoutConsultores.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'services', 'relatorioCheckout.js'));
+});
 
 // ═══════════════════════════════════════════════════════════════
 // APIs EXISTENTES
@@ -163,6 +170,81 @@ router.put('/api/chamados/:id/concluir', async (req, res) => {
         res.json({ ok: true });
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
+
+// ═══════════════════════════════════════════════════════════════
+// RELATÓRIO CHECKIN / CHECKOUT
+// ═══════════════════════════════════════════════════════════════
+
+router.get('/api/relatorio-checkout/dados', (req, res) => {
+    try {
+        const d = checkoutCache.getDados();
+        if (!d) return res.json({ ok: false, erro: 'Sem dados — clique em Sincronizar.', avaliacoes: [] });
+        res.json({ ok: true, ...d });
+    } catch (e) {
+        res.json({ ok: false, erro: e.message, avaliacoes: [] });
+    }
+});
+
+router.get('/api/relatorio-checkout/status', (req, res) => {
+    try { res.json(checkoutCache.getStatus()); }
+    catch (e) { res.json({ erro: e.message }); }
+});
+
+router.post('/api/relatorio-checkout/sincronizar', apenasLocal, async (req, res) => {
+    try {
+        const { dias, dtStart, dtEnd } = req.body;
+
+        let opcoes;
+        if (dtStart && dtEnd) {
+            // Intervalo livre
+            opcoes = { dtStart, dtEnd };
+        } else {
+            // Últimos N dias (padrão 30)
+            opcoes = Number(dias) || 30;
+        }
+
+        // Dispara sem await — responde imediatamente, processa em background
+        checkoutCache.sincronizarEAtualizar('manual', opcoes).catch(e =>
+            console.error('[CHECKOUT] Erro na sync:', e.message)
+        );
+
+        res.json({ ok: true, mensagem: dtStart ? `Sincronização iniciada — ${dtStart} → ${dtEnd}` : `Sincronização iniciada — últimos ${opcoes} dias.` });
+    } catch (e) {
+        res.json({ ok: false, erro: e.message });
+    }
+});
+
+// Streaming ao vivo — registros já processados desde um offset
+router.get('/api/relatorio-checkout/ao-vivo', (req, res) => {
+    try {
+        const offset = parseInt(req.query.offset) || 0;
+        const aoVivo = checkoutCache.getStatus().registrosAoVivo || [];
+        res.json({ ok: true, registros: aoVivo.slice(offset), total: aoVivo.length });
+    } catch (e) {
+        res.json({ ok: false, registros: [], erro: e.message });
+    }
+});
+
+router.post('/api/relatorio-checkout/geocodificar-pendentes', async (req, res) => {
+    try {
+        const resultado = await checkoutCache.geocodificarPendentes();
+        res.json({ ok: true, ...resultado });
+    } catch (e) {
+        res.json({ ok: false, erro: e.message });
+    }
+});
+
+router.delete('/api/relatorio-checkout/cache', apenasLocal, (req, res) => {
+    try { res.json(checkoutCache.limparCache()); }
+    catch (e) { res.json({ ok: false, erro: e.message }); }
+});
+
+router.delete('/api/relatorio-checkout/geo-cache', apenasLocal, (req, res) => {
+    try { res.json(checkoutCache.limparGeoCache()); }
+    catch (e) { res.json({ ok: false, erro: e.message }); }
+});
+
+console.log('\x1b[32m[TI]\x1b[0m relatorioCheckoutCache carregado');
 
 // ═══════════════════════════════════════════════════════════════
 // UPLOADS — Google Drive (TI)
@@ -296,6 +378,7 @@ router.get('/health', (req, res) => res.json({
     modulo: 'ti',
     status: 'online',
     uploads: tiUploadsCache.getStatus(),
+    checkout: checkoutCache.getStatus(),
 }));
 
 module.exports = router;

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Check-in / Check-out — Consultores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:#c8102e; --red-pale:#fff0f2;
+            --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+            --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+            --green:#16a34a; --green-pale:#f0fdf4;
+            --yellow:#d97706; --yellow-pale:#fffbeb;
+            --orange:#ea580c; --orange-pale:#fff7ed;
+            --ti:#0369a1; --ti-light:#0ea5e9; --ti-pale:#f0f9ff;
+            --shadow:0 2px 12px rgba(0,0,0,0.08);
+            --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+        .logo{padding:10px 0;}.logo img{height:48px;display:block;}
+        .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
+        .hd{width:1px;height:32px;background:var(--border);}
+        .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
+        nav{display:flex;gap:2px;margin-left:auto;}
+        .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+        .nav-btn:hover{color:var(--text);background:var(--bg3);}
+        .nav-btn.active{color:var(--ti);border-bottom-color:var(--ti);background:var(--ti-pale);}
+        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
+        .sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--yellow);animation:pulse 1.5s infinite;}
+        .sdot.ready{background:var(--green);animation:none;}
+        .sdot.error{background:var(--red);animation:none;}
+        .sdot.syncing{background:var(--ti-light);animation:pulse .8s infinite;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+        .progress-bar{flex:1;max-width:280px;height:5px;background:var(--border);border-radius:3px;overflow:hidden;display:none;}
+        .progress-bar.active{display:block;}
+        .progress-bar-fill{height:100%;background:var(--ti);border-radius:3px;transition:width .3s ease;width:0%;}
+        main{max-width:1400px;margin:0 auto;padding:28px 24px;}
+        .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
+        .page-sub{font-size:13px;color:var(--muted);margin-bottom:24px;}
+        .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+        .btn-ti{background:var(--ti);color:#fff;box-shadow:0 2px 8px rgba(3,105,161,.3);}
+        .btn-ti:hover{background:#075985;}
+        .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+        .btn-ghost:hover{background:var(--bg2);}
+        .btn-sm{font-size:12px;padding:7px 13px;}
+        .btn:disabled{opacity:.5;cursor:not-allowed;}
+        .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+        .spinner.dark{border:2px solid var(--border);border-top-color:var(--ti);}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* ── Sync Panel ── */
+        .sync-panel{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:20px;box-shadow:var(--shadow);}
+        .sync-panel h3{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:14px;}
+        .sync-grid{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+        .sync-group{display:flex;flex-direction:column;gap:5px;}
+        .sync-group label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
+        .sync-group input,.sync-group select{font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;background:var(--bg2);color:var(--text);outline:none;transition:border-color .2s;-webkit-appearance:none;}
+        .sync-group input:focus,.sync-group select:focus{border-color:var(--ti);}
+        .sync-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+        .sync-mode-tabs{display:flex;border:1.5px solid var(--border);border-radius:9px;overflow:hidden;}
+        .sync-mode-tab{padding:8px 16px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;background:var(--bg3);color:var(--muted);transition:all .18s;}
+        .sync-mode-tab.active{background:var(--ti);color:#fff;}
+        .sheets-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;background:var(--green-pale);border:1.5px solid rgba(22,163,74,.2);color:var(--green);font-size:12px;font-weight:700;text-decoration:none;transition:all .18s;}
+        .sheets-link:hover{background:var(--green);color:#fff;}
+
+        /* ── Live Feed ── */
+        #liveFeed{display:none;background:var(--bg2);border:1.5px solid var(--ti);border-radius:14px;padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow);}
+        #liveFeed.visible{display:block;}
+        .live-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px;}
+        .live-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--ti);display:flex;align-items:center;gap:8px;}
+        .live-dot{width:8px;height:8px;border-radius:50%;background:var(--ti-light);animation:pulse .8s infinite;flex-shrink:0;}
+        .live-counter{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:900;color:var(--ti);}
+        .live-of{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+        #liveLog{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px;height:130px;overflow-y:auto;color:var(--text);}
+        .live-row{padding:2px 0;border-bottom:1px solid var(--border);}
+        .live-row:last-child{border-bottom:none;}
+        .live-ok  {color:var(--green);}
+        .live-warn{color:var(--yellow);}
+        .live-info{color:var(--ti);}
+        .live-err {color:var(--red);}
+
+        /* ── Filtros ── */
+        .filtros-panel{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow);}
+        .filtros-panel h3{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:14px;}
+        .filtros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;align-items:end;}
+        .filtro-group label{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:5px;}
+        .filtro-group input,.filtro-group select{width:100%;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;background:var(--bg2);color:var(--text);outline:none;transition:border-color .2s;-webkit-appearance:none;}
+        .filtro-group input:focus,.filtro-group select:focus{border-color:var(--ti);}
+        .filtro-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+        .filtros-actions{display:flex;gap:8px;margin-top:14px;}
+
+        /* ── KPIs ── */
+        .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px;}
+        .kpi-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+        .kpi-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;}
+        .kpi-card.kpi-total::before  {background:var(--ti);}
+        .kpi-card.kpi-sim::before    {background:var(--green);}
+        .kpi-card.kpi-nao::before    {background:var(--red);}
+        .kpi-card.kpi-semgps::before {background:var(--yellow);}
+        .kpi-card.kpi-conform::before{background:#7c3aed;}
+        .kpi-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;}
+        .kpi-value{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:900;line-height:1;}
+        .kpi-card.kpi-total .kpi-value  {color:var(--ti);}
+        .kpi-card.kpi-sim .kpi-value    {color:var(--green);}
+        .kpi-card.kpi-nao .kpi-value    {color:var(--red);}
+        .kpi-card.kpi-semgps .kpi-value {color:var(--yellow);}
+        .kpi-card.kpi-conform .kpi-value{color:#7c3aed;}
+
+        /* ── Tabs ── */
+        .tabs{display:flex;margin-bottom:16px;border-bottom:2px solid var(--border);}
+        .tab{font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:12px 20px;background:none;border:none;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;}
+        .tab:hover{color:var(--text);background:var(--bg3);}
+        .tab.active{color:var(--ti);border-bottom-color:var(--ti);background:var(--ti-pale);}
+        .tab-content{display:none;}
+        .tab-content.active{display:block;}
+
+        /* ── Tabela ── */
+        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+        .table-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+        .table-head-title{font-size:13px;font-weight:800;}
+        .table-count{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+        .tbl-scroll{overflow-x:auto;max-height:70vh;overflow-y:auto;}
+        table{width:100%;border-collapse:collapse;font-size:12px;min-width:1400px;}
+        thead{position:sticky;top:0;z-index:10;}
+        thead th{background:var(--bg3);color:var(--muted);font-weight:800;text-transform:uppercase;font-size:10px;letter-spacing:.7px;padding:11px 10px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;transition:color .2s;}
+        thead th:hover{color:var(--ti);}
+        thead th .sort-icon{margin-left:4px;opacity:.3;}
+        thead th.sorted .sort-icon{opacity:1;color:var(--ti);}
+        tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
+        tbody tr:hover td{background:var(--bg3);}
+        tbody tr.row-new{animation:rowIn .6s ease;}
+        @keyframes rowIn{from{background:var(--ti-pale);}to{background:transparent;}}
+        tbody td{padding:10px;color:var(--text);vertical-align:middle;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        tbody tr:last-child td{border-bottom:none;}
+        .td-mono{font-family:'JetBrains Mono',monospace;font-size:11px;}
+        .td-muted{color:var(--muted);}
+        .td-endereco{font-size:11px;color:var(--muted);}
+        .td-comentario{font-size:11px;color:var(--muted);font-style:italic;}
+        .status-tag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
+        .status-sim   {background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
+        .status-nao   {background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.15);}
+        .status-semgps{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
+        .situacao-tag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+        .sit-concluido {background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
+        .sit-andamento {background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
+        .sit-validacao {background:var(--ti-pale);color:var(--ti);border:1.5px solid rgba(3,105,161,.2);}
+        .bar-cell{position:relative;min-width:160px;}
+        .bar-bg{position:absolute;left:0;top:3px;bottom:3px;border-radius:4px;opacity:.15;transition:width .4s ease;}
+        .bar-label{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+        .pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);}
+        .pagination-btns{display:flex;gap:6px;align-items:center;}
+        .empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
+        .empty-state .icon{font-size:48px;margin-bottom:12px;}
+        .empty-state p{font-size:14px;font-weight:600;}
+        ::-webkit-scrollbar{width:6px;height:6px;}
+        ::-webkit-scrollbar-track{background:var(--bg);}
+        ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+        ::-webkit-scrollbar-thumb:hover{background:#c9bfb3;}
+        @media(max-width:768px){header{padding:10px 14px;}main{padding:14px;}.filtros-grid{grid-template-columns:1fr 1fr;}.kpi-row{grid-template-columns:repeat(2,1fr);}nav{display:none;}}
+    
+    /* ── Nav Dropdown ── */
+.nav-dropdown{position:relative;}
+.nav-btn-drop{display:inline-flex;align-items:center;gap:4px;}
+.nav-drop-arrow{font-size:10px;transition:transform .2s;}
+.nav-dropdown.open .nav-drop-arrow{transform:rotate(180deg);}
+.nav-drop-menu{
+    display:none;position:absolute;top:100%;right:0;
+    background:var(--bg2);border:1.5px solid var(--border);
+    border-radius:12px;padding:6px;min-width:260px;
+    box-shadow:var(--shadow-lg);z-index:200;margin-top:2px;
+}
+.nav-dropdown.open .nav-drop-menu{display:block;}
+.nav-drop-item{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:9px;
+    text-decoration:none;color:var(--text);
+    transition:background .15s;
+}
+.nav-drop-item:hover{background:var(--bg3);}
+.ndi-icon{font-size:18px;flex-shrink:0;}
+.ndi-info{display:flex;flex-direction:column;gap:1px;}
+.ndi-label{font-size:13px;font-weight:700;}
+.ndi-desc{font-size:11px;color:var(--muted);font-weight:600;}
+
+/* ── IA T.I. Widget ── */
+#iaTiWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+#iaTiToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--ti),#075985);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(3,105,161,0.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all 0.25s;position:relative;color:#fff;}
+#iaTiToggle:hover{transform:scale(1.08);}
+#iaTiToggle.aberto{background:linear-gradient(135deg,#444,#1a1a1a);}
+.iati-unread{position:absolute;top:-3px;right:-3px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid #fff;line-height:1;}
+#iaTiJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:400px;max-height:660px;box-shadow:0 8px 32px rgba(0,0,0,.12);display:none;flex-direction:column;overflow:hidden;animation:iaTiSlideUp 0.25s ease;}
+#iaTiJanela.aberto{display:flex;}
+@keyframes iaTiSlideUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.iati-topo{background:linear-gradient(135deg,var(--ti),#075985);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.iati-topo-esq{display:flex;align-items:center;gap:10px;}
+.iati-topo-titulo{font-size:14px;font-weight:800;}
+.iati-topo-sub{font-size:11px;opacity:0.8;margin-top:1px;}
+.iati-fechar{background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.iati-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+.iati-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s;white-space:nowrap;}
+.iati-sug:hover{border-color:var(--ti);color:var(--ti);background:var(--ti-pale);}
+.iati-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:220px;max-height:380px;}
+.iati-msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
+.iati-msg.user{background:var(--ti);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+.iati-msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
+.iati-msg.ai.carregando{color:var(--muted);font-style:italic;}
+.iati-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+.iati-input{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;}
+.iati-input:focus{border-color:var(--ti);}
+.iati-input::placeholder{color:var(--muted);font-weight:400;}
+.iati-enviar{background:var(--ti);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
+.iati-enviar:disabled{opacity:0.5;cursor:not-allowed;}
+@media(max-width:768px){#iaTiJanela{width:calc(100vw - 32px);}#iaTiWidget{right:16px;bottom:16px;}}
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <span class="logo-fb">🍽️</span>
+    </div>
+    <div class="hd"></div>
+    <div class="h-title">Central de T.I.</div>
+    <nav>
+        <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos</button>
+        <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Comodato</button>
+        <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+        <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+        <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+        <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+        <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+        <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
+        <button class="nav-btn active">📋 Checkout</button>
+
+            <div class="nav-dropdown" id="navRelatorios">
+        <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
+            📊 Relatórios <span class="nav-drop-arrow">▾</span>
+        </button>
+        <div class="nav-drop-menu">
+            <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
+                <span class="ndi-icon">📋</span>
+                <span class="ndi-info">
+                    <span class="ndi-label">Check-in / Check-out</span>
+                    <span class="ndi-desc">Presença e localização de consultores</span>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    </nav>
+</header>
+
+<div id="statusBar">
+    <div class="sdot" id="sdot"></div>
+    <span id="statusTexto">Carregando...</span>
+    <div class="progress-bar" id="progressBar">
+        <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+        <span id="statusSync" style="font-size:11px;color:var(--muted);"></span>
+        <button class="btn btn-ghost btn-sm" id="btnGeocodificar" onclick="geocodificarPendentes()">📍 Corrigir Endereços</button>
+        <button class="btn btn-ghost btn-sm" id="btnExportar" onclick="exportarCSV()" disabled>📤 Exportar CSV</button>
+    </span>
+</div>
+
+<main>
+    <div class="page-title">📋 Relatório Check-in / Check-out</div>
+    <div class="page-sub">Monitoramento de presença e localização dos consultores nas visitas</div>
+
+    <!-- Painel Sync -->
+    <div class="sync-panel">
+        <h3>🔄 Sincronizar dados da API SULTS</h3>
+        <div class="sync-grid">
+            <div class="sync-group">
+                <label>Modo</label>
+                <div class="sync-mode-tabs">
+                    <button class="sync-mode-tab active" id="tabModoUltimos" onclick="setModoSync('ultimos')">Últimos N dias</button>
+                    <button class="sync-mode-tab" id="tabModoIntervalo" onclick="setModoSync('intervalo')">Intervalo de datas</button>
+                </div>
+            </div>
+            <div class="sync-group" id="grupoUltimos">
+                <label>Período</label>
+                <select id="syncDias">
+                    <option value="7">Últimos 7 dias</option>
+                    <option value="15">Últimos 15 dias</option>
+                    <option value="20">Últimos 20 dias</option>
+                    <option value="30" selected>Últimos 30 dias</option>
+                    <option value="40">Últimos 40 dias</option>
+                    <option value="60">Últimos 60 dias</option>
+                    <option value="90">Últimos 90 dias</option>
+                </select>
+            </div>
+            <div class="sync-group" id="grupoIntervalo" style="display:none;">
+                <label>Data início</label>
+                <input type="date" id="syncDataInicio">
+            </div>
+            <div class="sync-group" id="grupoIntervaloFim" style="display:none;">
+                <label>Data fim</label>
+                <input type="date" id="syncDataFim">
+            </div>
+            <div class="sync-group">
+                <button class="btn btn-ti" id="btnSincronizar" onclick="sincronizar()">🔄 Sincronizar</button>
+            </div>
+            <div class="sync-group" id="grupoSheetsLink" style="display:none;">
+                <a href="https://docs.google.com/spreadsheets/d/1yYmceSQhnEESyfI8DjgnLLeags5THHHONeZMNyrXLuI/edit" target="_blank" class="sheets-link">
+                    📊 Ver Planilha Google Sheets
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Feed -->
+    <div id="liveFeed">
+        <div class="live-header">
+            <div class="live-title"><div class="live-dot"></div> Processando ao vivo</div>
+            <div>
+                <span class="live-counter" id="liveContador">0</span>
+                <span class="live-of" id="liveTotalSpan"> / 0 registros</span>
+            </div>
+        </div>
+        <div id="liveLog"></div>
+    </div>
+
+    <!-- Filtros exibição -->
+    <div class="filtros-panel">
+        <h3>🔍 Filtros de exibição</h3>
+        <div class="filtros-grid">
+            <div class="filtro-group"><label>Data Início</label><input type="date" id="filtroDataInicio"></div>
+            <div class="filtro-group"><label>Data Fim</label><input type="date" id="filtroDataFim"></div>
+            <div class="filtro-group"><label>Consultor</label><select id="filtroConsultor"><option value="">Todos</option></select></div>
+            <div class="filtro-group"><label>Unidade / Loja</label><select id="filtroUnidade"><option value="">Todas</option></select></div>
+            <div class="filtro-group">
+                <label>Situação</label>
+                <select id="filtroSituacao">
+                    <option value="">Todas</option>
+                    <option value="Concluído">Concluído</option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Validação">Validação</option>
+                </select>
+            </div>
+            <div class="filtro-group">
+                <label>Mesmo Local?</label>
+                <select id="filtroMesmoLocal">
+                    <option value="">Todos</option>
+                    <option value="sim">✅ Sim</option>
+                    <option value="nao">⚠️ Não</option>
+                    <option value="sem_gps">❌ Sem GPS</option>
+                </select>
+            </div>
+        </div>
+        <div class="filtros-actions">
+            <button class="btn btn-ti btn-sm" onclick="aplicarFiltros()">Aplicar Filtros</button>
+            <button class="btn btn-ghost btn-sm" onclick="limparFiltros()">✕ Limpar</button>
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+        <div class="kpi-card kpi-total"><div class="kpi-label">Total Avaliações</div><div class="kpi-value" id="kpiTotal">—</div></div>
+        <div class="kpi-card kpi-sim"><div class="kpi-label">✅ Mesmo Local</div><div class="kpi-value" id="kpiSim">—</div></div>
+        <div class="kpi-card kpi-nao"><div class="kpi-label">⚠️ Local Diferente</div><div class="kpi-value" id="kpiNao">—</div></div>
+        <div class="kpi-card kpi-semgps"><div class="kpi-label">❌ Sem GPS</div><div class="kpi-value" id="kpiSemGps">—</div></div>
+        <div class="kpi-card kpi-conform"><div class="kpi-label">% Conformidade</div><div class="kpi-value" id="kpiConform">—</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" data-tab="tabDetalhes">📋 Detalhes</button>
+        <button class="tab" data-tab="tabResumo">📊 Resumo por Consultor</button>
+    </div>
+
+    <div class="tab-content active" id="tabDetalhes">
+        <div class="table-wrap">
+            <div class="table-head">
+                <div>
+                    <div class="table-head-title">📋 Registros de Check-in / Check-out</div>
+                    <div class="table-count" id="paginacaoInfo">0 registros</div>
+                </div>
+                <div class="pagination-btns">
+                    <button class="btn btn-ghost btn-sm" id="btnPagAnterior" onclick="paginaAnterior()" disabled>← Anterior</button>
+                    <span id="paginacaoPagina" style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);">1/1</span>
+                    <button class="btn btn-ghost btn-sm" id="btnPagProximo" onclick="paginaProxima()" disabled>Próximo →</button>
+                </div>
+            </div>
+            <div class="tbl-scroll">
+                <table id="tabelaPrincipal">
+                    <thead>
+                        <tr>
+                            <th data-col="id">ID <span class="sort-icon">↕</span></th>
+                            <th data-col="modelo">Modelo <span class="sort-icon">↕</span></th>
+                            <th data-col="unidade">Unidade / Loja <span class="sort-icon">↕</span></th>
+                            <th data-col="consultor">Consultor <span class="sort-icon">↕</span></th>
+                            <th data-col="situacao">Situação <span class="sort-icon">↕</span></th>
+                            <th data-col="data">Data <span class="sort-icon">↕</span></th>
+                            <th>Hora CI</th>
+                            <th>📍 Endereço Checkin</th>
+                            <th>Comentário CI</th>
+                            <th>Hora CO</th>
+                            <th>📍 Endereço Checkout</th>
+                            <th>Comentário CO</th>
+                            <th data-col="mesmoLocal">Mesmo Local? <span class="sort-icon">↕</span></th>
+                            <th data-col="distancia">Distância (m) <span class="sort-icon">↕</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaBody">
+                        <tr><td colspan="14"><div class="empty-state"><div class="icon">📋</div><p>Clique em <strong>Sincronizar</strong> para buscar dados da API Sults.</p></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="tabResumo">
+        <div class="table-wrap">
+            <div class="tbl-scroll">
+                <table id="tabelaResumo" style="min-width:700px;">
+                    <thead>
+                        <tr>
+                            <th data-col="consultor">Consultor <span class="sort-icon">↕</span></th>
+                            <th data-col="total">Total <span class="sort-icon">↕</span></th>
+                            <th data-col="mesmoLocal">✅ Mesmo Local <span class="sort-icon">↕</span></th>
+                            <th data-col="localDiferente">⚠️ Local Diferente <span class="sort-icon">↕</span></th>
+                            <th data-col="semGps">❌ Sem GPS <span class="sort-icon">↕</span></th>
+                            <th data-col="conformidade">% Conformidade <span class="sort-icon">↕</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaResumoBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- JS externo (lógica original) -->
+<script src="relatorioCheckoutConsultores.js"></script>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  Extensões: Sync por data + Live Feed + Sheets link
+// ════════════════════════════════════════════════════════════
+
+
+let _modoSync  = 'ultimos';
+let _liveKnown = 0;
+let _liveTotal = 0;
+let _livePoll  = null;
+
+// ── Helpers de data ───────────────────────────────────────
+function _toInputDate(d) {
+    const p = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+}
+
+// ── Modo Sync ─────────────────────────────────────────────
+function setModoSync(modo) {
+    _modoSync = modo;
+    document.getElementById('tabModoUltimos').classList.toggle('active', modo === 'ultimos');
+    document.getElementById('tabModoIntervalo').classList.toggle('active', modo === 'intervalo');
+    document.getElementById('grupoUltimos').style.display      = modo === 'ultimos'   ? '' : 'none';
+    document.getElementById('grupoIntervalo').style.display    = modo === 'intervalo' ? '' : 'none';
+    document.getElementById('grupoIntervaloFim').style.display = modo === 'intervalo' ? '' : 'none';
+    if (modo === 'intervalo' && !document.getElementById('syncDataFim').value) {
+        const hoje = new Date(), ini = new Date();
+        ini.setDate(hoje.getDate() - 30);
+        document.getElementById('syncDataFim').value    = _toInputDate(hoje);
+        document.getElementById('syncDataInicio').value = _toInputDate(ini);
+    }
+}
+
+// ── Sdot ─────────────────────────────────────────────────
+function _setSdot(cls) {
+    document.getElementById('sdot').className = 'sdot' + (cls ? ' ' + cls : '');
+}
+
+// ── Live Feed ─────────────────────────────────────────────
+function _iniciarLiveFeed() {
+    _liveKnown = 0;
+    _liveTotal = 0;
+    document.getElementById('liveLog').innerHTML = '';
+    document.getElementById('liveContador').textContent = '0';
+    document.getElementById('liveTotalSpan').textContent = ' / ? registros';
+    document.getElementById('liveFeed').style.display = 'block';
+    _livePoll = setInterval(_pollLive, 2500);
+}
+
+async function _pollLive() {
+    try {
+        // Status geral
+        const rs = await fetch(`${API_BASE}/status`);
+        const s  = await rs.json();
+
+        if (s.progresso) {
+            _liveTotal = s.progresso.total || 0;
+            document.getElementById('liveTotalSpan').textContent = ` / ${_liveTotal} registros`;
+            if (_liveTotal > 0) {
+                const pct = ((s.progresso.atual / _liveTotal) * 100).toFixed(1);
+                document.getElementById('progressBar').classList.add('active');
+                document.getElementById('progressFill').style.width = pct + '%';
+                document.getElementById('statusTexto').textContent = s.progresso.etapa;
+            }
+        }
+
+        // Registros ao vivo
+        const rr   = await fetch(`${API_BASE}/ao-vivo?offset=${_liveKnown}`);
+        const json = await rr.json();
+        if (json.registros && json.registros.length > 0) {
+            const log = document.getElementById('liveLog');
+            for (const reg of json.registros) {
+                const cls   = reg.mesmoLocal === 'sim' ? 'live-ok' : reg.mesmoLocal === 'nao' ? 'live-warn' : 'live-info';
+                const icone = reg.mesmoLocal === 'sim' ? '✅' : reg.mesmoLocal === 'nao' ? '⚠️' : '❓';
+                log.innerHTML += `<div class="live-row ${cls}">${icone} ${reg.consultor||'—'} · ${reg.unidade||'—'} · ${reg.data||'—'}</div>`;
+                _inserirLinhaAoVivo(reg);
+            }
+            _liveKnown += json.registros.length;
+            document.getElementById('liveContador').textContent = _liveKnown;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Terminou
+        if (!s.sincronizando) {
+            clearInterval(_livePoll); _livePoll = null;
+            document.getElementById('progressBar').classList.remove('active');
+            const log = document.getElementById('liveLog');
+            if (s.erro) {
+                log.innerHTML += `<div class="live-row live-err">❌ Erro: ${s.erro}</div>`;
+                _setSdot('error');
+                document.getElementById('statusTexto').textContent = '❌ Erro na sincronização';
+            } else {
+                log.innerHTML += `<div class="live-row live-ok">✅ Concluído! ${_liveKnown} registros processados.</div>`;
+                if (s.ultimaAba) {
+                    log.innerHTML += `<div class="live-row live-ok">📊 Aba criada na planilha: "${s.ultimaAba}"</div>`;
+                    document.getElementById('grupoSheetsLink').style.display = '';
+                }
+                _setSdot('ready');
+                document.getElementById('statusTexto').textContent = `✅ ${_liveKnown} registros sincronizados`;
+                document.getElementById('statusSync').textContent  = 'Sync: ' + new Date().toLocaleString('pt-BR');
+                document.getElementById('btnExportar').disabled    = false;
+                // Recarrega dados completos
+                if (typeof carregarDados === 'function') carregarDados();
+            }
+            log.scrollTop = log.scrollHeight;
+        }
+    } catch(e) { console.error('[LIVE POLL]', e); }
+}
+
+function _esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function _tagMesmo(v) {
+    if (v==='sim') return '<span class="status-tag status-sim">✅ Sim</span>';
+    if (v==='nao') return '<span class="status-tag status-nao">⚠️ Não</span>';
+    if (v==='sem_gps_checkin')  return '<span class="status-tag status-semgps">❌ Sem GPS CI</span>';
+    if (v==='sem_gps_checkout') return '<span class="status-tag status-semgps">❌ Sem GPS CO</span>';
+    return '<span class="status-tag status-semgps">—</span>';
+}
+function _tagSit(s) {
+    if (s==='Concluído')    return '<span class="situacao-tag sit-concluido">Concluído</span>';
+    if (s==='Em Andamento') return '<span class="situacao-tag sit-andamento">Em Andamento</span>';
+    if (s==='Validação')    return '<span class="situacao-tag sit-validacao">Validação</span>';
+    return `<span class="situacao-tag">${_esc(s)}</span>`;
+}
+
+function _inserirLinhaAoVivo(r) {
+    const tbody = document.getElementById('tabelaBody');
+    // Remove empty state
+    if (tbody.querySelector('.empty-state')) tbody.innerHTML = '';
+    const dist = r.distancia != null ? r.distancia.toLocaleString('pt-BR') : '—';
+    const tr = document.createElement('tr');
+    tr.className = 'row-new';
+    tr.innerHTML = `
+        <td class="td-mono td-muted">${r.id}</td>
+        <td>${_esc(r.modelo)}</td>
+        <td>${_esc(r.unidade)}</td>
+        <td style="font-weight:700">${_esc(r.consultor)}</td>
+        <td>${_tagSit(r.situacao)}</td>
+        <td class="td-mono td-muted">${_esc(r.data)}</td>
+        <td class="td-mono">${_esc(r.horaCheckin)}</td>
+        <td class="td-endereco" title="${_esc(r.enderecoCheckin)}">${_esc(r.enderecoCheckin)||'—'}</td>
+        <td class="td-comentario" title="${_esc(r.comentarioCheckin)}">${_esc(r.comentarioCheckin)||''}</td>
+        <td class="td-mono">${_esc(r.horaCheckout)}</td>
+        <td class="td-endereco" title="${_esc(r.enderecoCheckout)}">${_esc(r.enderecoCheckout)||'—'}</td>
+        <td class="td-comentario" title="${_esc(r.comentarioCheckout)}">${_esc(r.comentarioCheckout)||''}</td>
+        <td>${_tagMesmo(r.mesmoLocal)}</td>
+        <td class="td-mono" style="text-align:right">${dist}</td>`;
+    tbody.appendChild(tr);
+
+    // Atualiza KPIs ao vivo
+    const tots = tbody.querySelectorAll('tr').length;
+    const sims = [...tbody.querySelectorAll('.status-sim')].length;
+    const naos = [...tbody.querySelectorAll('.status-nao')].length;
+    const sgps = tots - sims - naos;
+    document.getElementById('kpiTotal').textContent   = tots;
+    document.getElementById('kpiSim').textContent     = sims;
+    document.getElementById('kpiNao').textContent     = naos;
+    document.getElementById('kpiSemGps').textContent  = sgps;
+    const conf = tots > 0 ? ((sims/tots)*100).toFixed(1) : '0.0';
+    document.getElementById('kpiConform').textContent = conf + '%';
+}
+
+// ── Override sincronizar() ────────────────────────────────
+window.sincronizar = async function() {
+    const btn = document.getElementById('btnSincronizar');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Sincronizando...';
+    _setSdot('syncing');
+    document.getElementById('statusTexto').textContent = 'Iniciando sincronização...';
+    document.getElementById('grupoSheetsLink').style.display = 'none';
+
+    let body = {};
+    if (_modoSync === 'ultimos') {
+        body = { dias: parseInt(document.getElementById('syncDias').value) || 30 };
+    } else {
+        const ini = document.getElementById('syncDataInicio').value;
+        const fim = document.getElementById('syncDataFim').value;
+        if (!ini || !fim) {
+            alert('Informe a data início e a data fim.');
+            btn.disabled = false; btn.innerHTML = '🔄 Sincronizar'; return;
+        }
+        body = { dtStart: ini + 'T00:00:00Z', dtEnd: fim + 'T23:59:59Z' };
+    }
+
+    try {
+        const resp = await fetch(`${API_BASE}/sincronizar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+        const json = await resp.json();
+        if (json.ok) {
+            _iniciarLiveFeed();
+        } else {
+            alert('Erro: ' + (json.erro || 'Falha desconhecida'));
+            _setSdot('error');
+            document.getElementById('statusTexto').textContent = '❌ ' + (json.erro || 'Erro');
+        }
+    } catch(e) {
+        alert('Erro de conexão: ' + e.message);
+        _setSdot('error');
+    }
+    btn.disabled = false;
+    btn.innerHTML = '🔄 Sincronizar';
+};
+</script>
+<script>
+function toggleNavDrop(id){
+    var el=document.getElementById(id);
+    el.classList.toggle('open');
+}
+// Fecha dropdown ao clicar fora
+document.addEventListener('click',function(e){
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(d){
+        if(!d.contains(e.target)) d.classList.remove('open');
+    });
+});
+</script>
+
+<script>
+// ══ IA T.I. — RELATÓRIO CHECK-IN/CHECK-OUT ══════════════════════
+var _iaTiAberto = false;
+
+function toggleIATi() {
+    _iaTiAberto = !_iaTiAberto;
+    var jan = document.getElementById('iaTiJanela'),
+        tog = document.getElementById('iaTiToggle');
+    if (_iaTiAberto) {
+        jan.classList.add('aberto');
+        tog.classList.add('aberto');
+        tog.innerHTML = '✕<div class="iati-unread" id="iaTiUnread"></div>';
+    } else {
+        jan.classList.remove('aberto');
+        tog.classList.remove('aberto');
+        tog.innerHTML = '🤖<div class="iati-unread" id="iaTiUnread">1</div>';
+        setTimeout(function() {
+            var u = document.getElementById('iaTiUnread');
+            if (u) u.style.display = 'flex';
+        }, 100);
+    }
+}
+
+function _montarContextoRelatorio() {
+    // Coleta dados da tabela e KPIs visíveis na página
+    var total  = document.getElementById('kpiTotal')?.textContent || '—';
+    var sim    = document.getElementById('kpiSim')?.textContent || '—';
+    var nao    = document.getElementById('kpiNao')?.textContent || '—';
+    var semGps = document.getElementById('kpiSemGps')?.textContent || '—';
+    var conf   = document.getElementById('kpiConform')?.textContent || '—';
+
+    // Tenta extrair dados das linhas da tabela
+    var rows = document.querySelectorAll('#tabelaBody tr');
+    var consultores = {}, unidades = {}, situacoes = {};
+    var registros = [];
+
+    rows.forEach(function(tr) {
+        var cells = tr.querySelectorAll('td');
+        if (cells.length < 14) return;
+        var consultor = (cells[3]?.textContent || '').trim();
+        var unidade   = (cells[2]?.textContent || '').trim();
+        var situacao  = (cells[4]?.textContent || '').trim();
+        var data      = (cells[5]?.textContent || '').trim();
+        var mesmoLocal= (cells[12]?.textContent || '').trim();
+        var distancia = (cells[13]?.textContent || '').trim();
+
+        if (consultor) {
+            if (!consultores[consultor]) consultores[consultor] = { total: 0, sim: 0, nao: 0, semGps: 0 };
+            consultores[consultor].total++;
+            if (mesmoLocal.includes('Sim')) consultores[consultor].sim++;
+            else if (mesmoLocal.includes('Não')) consultores[consultor].nao++;
+            else consultores[consultor].semGps++;
+        }
+        if (unidade) unidades[unidade] = (unidades[unidade] || 0) + 1;
+        if (situacao) situacoes[situacao] = (situacoes[situacao] || 0) + 1;
+
+        registros.push({ consultor: consultor, unidade: unidade, situacao: situacao, data: data, mesmoLocal: mesmoLocal, distancia: distancia });
+    });
+
+    // Monta texto de contexto
+    var ctx = '=== RELATÓRIO CHECK-IN / CHECK-OUT — CONSULTORES ===\n\n';
+    ctx += '--- KPIs GERAIS ---\n';
+    ctx += 'Total avaliações: ' + total + '\n';
+    ctx += 'Mesmo local (✅): ' + sim + '\n';
+    ctx += 'Local diferente (⚠️): ' + nao + '\n';
+    ctx += 'Sem GPS (❌): ' + semGps + '\n';
+    ctx += '% Conformidade: ' + conf + '\n\n';
+
+    ctx += '--- POR CONSULTOR ---\n';
+    var consultList = Object.keys(consultores).sort(function(a,b) { return consultores[b].total - consultores[a].total; });
+    consultList.slice(0, 20).forEach(function(nome) {
+        var c = consultores[nome];
+        var pct = c.total > 0 ? ((c.sim / c.total) * 100).toFixed(1) : '0';
+        ctx += nome + ': ' + c.total + ' visitas (✅' + c.sim + ' ⚠️' + c.nao + ' ❌' + c.semGps + ' · ' + pct + '% conform.)\n';
+    });
+
+    ctx += '\n--- TOP UNIDADES ---\n';
+    var unidList = Object.entries(unidades).sort(function(a,b) { return b[1] - a[1]; });
+    unidList.slice(0, 15).forEach(function(item) {
+        ctx += item[0] + ': ' + item[1] + ' visitas\n';
+    });
+
+    ctx += '\n--- SITUAÇÕES ---\n';
+    Object.entries(situacoes).forEach(function(item) {
+        ctx += item[0] + ': ' + item[1] + '\n';
+    });
+
+    ctx += '\nTotal de registros na tabela: ' + registros.length;
+    return ctx;
+}
+
+async function perguntarIATi(fixa) {
+    var inp = document.getElementById('inputIATi'),
+        q   = fixa || (inp ? inp.value.trim() : '');
+    if (!q) return;
+    if (inp) inp.value = '';
+    if (!_iaTiAberto) toggleIATi();
+
+    var box = document.getElementById('iaTiMsgs');
+
+    var mu = document.createElement('div');
+    mu.className = 'iati-msg user';
+    mu.textContent = q;
+    box.appendChild(mu);
+
+    var ma = document.createElement('div');
+    ma.className = 'iati-msg ai carregando';
+    ma.innerHTML = '<span style="opacity:.6">⏳ Analisando dados do relatório…</span>';
+    box.appendChild(ma);
+    box.scrollTop = box.scrollHeight;
+
+    var btn = document.getElementById('iaTiBtnEnviar');
+    if (btn) btn.disabled = true;
+
+    try {
+        var resp = await fetch('/ti/ia-ti/perguntar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pergunta: q,
+                contexto: _montarContextoRelatorio()
+            })
+        });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        var json = await resp.json();
+        var txt = json.resposta || json.erro || 'Sem resposta.';
+        ma.className = 'iati-msg ai';
+        ma.innerHTML = txt
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/^(▸|•|→|-) /gm, '<span style="color:var(--ti)">■</span> ')
+            .replace(/\n/g, '<br>');
+    } catch (e) {
+        ma.className = 'iati-msg ai';
+        ma.textContent = '❌ Erro: ' + e.message;
+    }
+
+    if (btn) btn.disabled = false;
+    box.scrollTop = box.scrollHeight;
+}
+
+// Enter para enviar
+document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('inputIATi');
+    if (input) input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') perguntarIATi();
+    });
+    // Mostra badge após 3s
+    setTimeout(function() {
+        if (!_iaTiAberto) {
+            var u = document.getElementById('iaTiUnread');
+            if (u) { u.style.display = 'flex'; u.textContent = '1'; }
+        }
+    }, 3000);
+});
+</script>
+
+<!-- ══ IA T.I. — Relatório ══ -->
+<div id="iaTiWidget">
+    <div id="iaTiJanela">
+        <div class="iati-topo">
+            <div class="iati-topo-esq">
+                <span style="font-size:24px;">🤖</span>
+                <div>
+                    <div class="iati-topo-titulo">IA Análise — Relatório</div>
+                    <div class="iati-topo-sub">Check-in / Check-out dos consultores</div>
+                </div>
+            </div>
+            <button class="iati-fechar" onclick="toggleIATi()">✕</button>
+        </div>
+        <div class="iati-sugs">
+            <button class="iati-sug" onclick="perguntarIATi('Qual a taxa de conformidade geral?')">✅ Conformidade</button>
+            <button class="iati-sug" onclick="perguntarIATi('Quais consultores têm mais registros sem GPS?')">❌ Sem GPS</button>
+            <button class="iati-sug" onclick="perguntarIATi('Quais consultores fizeram check-in em local diferente?')">⚠️ Local Diferente</button>
+            <button class="iati-sug" onclick="perguntarIATi('Faça um resumo dos dados de check-in/check-out')">📋 Resumo</button>
+            <button class="iati-sug" onclick="perguntarIATi('Quais unidades têm mais visitas?')">🏪 Top Unidades</button>
+            <button class="iati-sug" onclick="perguntarIATi('Algum consultor com comportamento suspeito?')">🔍 Análise</button>
+        </div>
+        <div class="iati-msgs" id="iaTiMsgs">
+            <div class="iati-msg ai">
+                👋 Olá! Sou a IA do Relatório de Check-in / Check-out.<br><br>
+                <strong>Posso ajudar com:</strong><br>
+                <span style="color:var(--ti);cursor:pointer" onclick="document.getElementById('inputIATi').value=this.innerText;document.getElementById('inputIATi').focus()">→ Qual a taxa de conformidade GPS?</span><br>
+                <span style="color:var(--ti);cursor:pointer" onclick="document.getElementById('inputIATi').value=this.innerText;document.getElementById('inputIATi').focus()">→ Quais consultores têm mais problemas de GPS?</span><br>
+                <span style="color:var(--ti);cursor:pointer" onclick="document.getElementById('inputIATi').value=this.innerText;document.getElementById('inputIATi').focus()">→ Resumo geral das visitas</span><br>
+                <span style="color:var(--ti);cursor:pointer" onclick="document.getElementById('inputIATi').value=this.innerText;document.getElementById('inputIATi').focus()">→ Quais unidades recebem mais visitas?</span><br><br>
+                <span style="font-size:11px;color:var(--muted)">💡 Sincronize os dados primeiro para respostas completas.</span>
+            </div>
+        </div>
+        <div class="iati-rodape">
+            <input type="text" class="iati-input" id="inputIATi" placeholder="Ex: Qual consultor visitou mais lojas?">
+            <button class="iati-enviar" id="iaTiBtnEnviar" onclick="perguntarIATi()">➤</button>
+        </div>
+    </div>
+    <button id="iaTiToggle" onclick="toggleIATi()" title="IA Análise — Relatório">
+        🤖
+        <div class="iati-unread" id="iaTiUnread">1</div>
+    </button>
+</div>
+
+</body>
+</html>
