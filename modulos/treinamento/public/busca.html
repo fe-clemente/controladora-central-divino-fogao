@@ -57,6 +57,10 @@
         .btn-ia:hover{transform:translateY(-1px);}
         .btn-secondary{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
         .btn-secondary:hover{background:var(--bg2);}
+        .btn-save{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(22,163,74,.3);font-size:12px;padding:7px 14px;}
+        .btn-save:hover{background:#15803d;transform:translateY(-1px);}
+        .btn-cancel{background:var(--bg3);color:var(--muted);border:1.5px solid var(--border);font-size:12px;padding:7px 14px;}
+        .btn-cancel:hover{background:var(--bg2);}
         .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
         .timer-txt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-height:16px;margin-top:6px;}
 
@@ -71,6 +75,7 @@
 
         .colab-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .2s,border-color .2s;}
         .colab-card:hover{box-shadow:var(--shadow-lg);border-color:#d5cec4;}
+        .colab-card.editing{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1),var(--shadow-lg);}
         .colab-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none;}
         .colab-avatar{width:40px;height:40px;border-radius:10px;background:var(--red-pale);border:1.5px solid rgba(200,16,46,.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--red);flex-shrink:0;font-family:'JetBrains Mono',monospace;}
         .colab-info{flex:1;min-width:0;}
@@ -89,18 +94,45 @@
         .colab-acc-btn.open{background:var(--red-pale);border-color:rgba(200,16,46,.25);}
 
         .colab-body{overflow:hidden;max-height:0;opacity:0;transition:max-height .32s ease,opacity .25s ease;}
-        .colab-body.open{max-height:1200px;opacity:1;}
+        .colab-body.open{max-height:2000px;opacity:1;}
         .colab-body-inner{padding:0 20px 18px;border-top:1px solid var(--border);}
         .colab-section{margin-top:14px;}
         .colab-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
         .colab-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;}
-        .field{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;}
+
+        /* ── CAMPO EDITÁVEL ── */
+        .field{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;position:relative;transition:border-color .2s,background .2s;}
+        .field:hover .field-edit-hint{opacity:1;}
+        .field.editable:hover{border-color:#c0bab2;background:var(--bg2);}
         .field-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:3px;}
         .field-value{font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .field-value.wrap{white-space:normal;word-break:break-word;}
         .field-value.mono{font-family:'JetBrains Mono',monospace;}
         .field-value.ok{color:var(--green);}
         .field-value.nok{color:var(--red);}
         .field-value.muted{color:var(--muted);}
+
+        /* Lápis hint */
+        .field-edit-hint{position:absolute;top:6px;right:8px;font-size:10px;opacity:0;transition:opacity .15s;color:var(--muted);}
+
+        /* Input inline de edição */
+        .field-input{width:100%;border:none;outline:none;background:transparent;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--text);padding:0;margin:0;}
+        .field.active-edit{background:var(--accent-pale);border-color:var(--accent);border-width:1.5px;}
+        .field.active-edit .field-input{color:var(--accent);}
+
+        /* Barra de ações de edição */
+        .edit-actions{display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+        .edit-status{font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;flex:1;}
+        .edit-status.saving{color:var(--yellow);}
+        .edit-status.saved{color:var(--green);}
+        .edit-status.error{color:var(--red);}
+        .edit-mode-bar{background:var(--accent-pale);border:1px solid rgba(37,99,235,.2);border-radius:8px;padding:8px 12px;margin-top:14px;display:none;align-items:center;gap:8px;font-size:12px;color:var(--accent);font-weight:700;}
+        .edit-mode-bar.visible{display:flex;}
+
+        /* Toast de notificação */
+        #toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:var(--shadow-lg);transform:translateY(80px);opacity:0;transition:all .3s;z-index:999;display:flex;align-items:center;gap:8px;}
+        #toast.show{transform:translateY(0);opacity:1;}
+        #toast.error{background:var(--red);}
 
         .paginacao{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:20px;flex-wrap:wrap;}
         .pag-btn{min-width:36px;height:36px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;padding:0 10px;}
@@ -111,6 +143,7 @@
 
         .loading-msg{text-align:center;padding:40px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
         .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;}
+        .spinner-sm{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
         @keyframes spin{to{transform:rotate(360deg)}}
         .empty{text-align:center;padding:48px 20px;color:var(--muted);}
         .empty .icon{font-size:40px;margin-bottom:10px;}
@@ -128,6 +161,8 @@
     </style>
 </head>
 <body>
+
+<div id="toast">✓ Salvo com sucesso!</div>
 
 <header>
     <div class="logo">
@@ -165,6 +200,7 @@
     <div class="sync-bar">
         <div class="sync-info" id="syncInfo">⏳ Carregando informações do cache...</div>
         <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace" id="syncTimer"></div>
+        <a href="https://docs.google.com/spreadsheets/d/1n4MjTooAL6SdsMbz2vg1gmGkFNxKFMXPxxIKrSAxIPI/edit?gid=272983318#gid=272983318" target="_blank" class="btn btn-secondary" style="padding:5px 12px;font-size:11px;text-decoration:none;flex-shrink:0" title="Abrir planilha no Google Sheets">📊 BD Dados (Planilha)</a>
     </div>
 
     <div class="busca-grid">
@@ -225,6 +261,15 @@ var _termoBusca  = '';
 var _debounceT   = null;
 var _syncInterval = null;
 
+/* ── TOAST ── */
+function showToast(msg, isError) {
+    var t = document.getElementById('toast');
+    t.textContent = (isError ? '❌ ' : '✓ ') + msg;
+    t.className = 'show' + (isError ? ' error' : '');
+    clearTimeout(t._tid);
+    t._tid = setTimeout(function(){ t.className = ''; }, 3200);
+}
+
 /* ── STATUS ── */
 async function atualizarStatus() {
     try {
@@ -237,6 +282,7 @@ async function atualizarStatus() {
             dot.className = 'status-dot ok';
             txt.textContent = '✓ Cache pronto — ' + d.total + ' colaboradores';
             var ua = d.ultimaSync ? new Date(d.ultimaSync).toLocaleString('pt-BR') : '—';
+            _proximaSync = d.proximaSync ? new Date(d.proximaSync).getTime() : null;
             inf.innerHTML = '<strong>' + d.total + '</strong> colaboradores · Última sync: ' + ua;
         } else if (d.sincronizando) {
             dot.className = 'status-dot';
@@ -264,19 +310,21 @@ async function sincronizar() {
     finally { btn.disabled = false; btn.innerHTML = '↻ Sincronizar'; }
 }
 
-/* ── COUNTDOWN — a cada 30s ── */
+/* ── COUNTDOWN — sem fetch, só atualiza o display local a cada 60s ── */
+var _proximaSync = null;
 function iniciarCountdown() {
     clearInterval(_syncInterval);
     var proxEl = document.getElementById('syncTimer');
     _syncInterval = setInterval(function() {
-        fetch(API_BUS + '/status').then(function(r){ return r.json(); }).then(function(d) {
-            if (!d.proximaSync) { proxEl.textContent = ''; return; }
-            var diff = Math.max(0, Math.round((new Date(d.proximaSync) - Date.now()) / 1000));
-            var m = Math.floor(diff / 60);
-            var s = diff % 60;
-            proxEl.textContent = 'Próxima sync em ' + m + ':' + (s < 10 ? '0' : '') + s;
-        }).catch(function(){});
-    }, 30000);
+        if (!_proximaSync) { proxEl.textContent = ''; return; }
+        var diff = Math.max(0, Math.round((_proximaSync - Date.now()) / 1000));
+        if (diff === 0) { proxEl.textContent = ''; return; }
+        var h = Math.floor(diff / 3600);
+        var m = Math.floor((diff % 3600) / 60);
+        proxEl.textContent = h > 0
+            ? 'Próxima sync em ' + h + 'h ' + m + 'min'
+            : 'Próxima sync em ' + m + 'min';
+    }, 60000);
 }
 
 /* ── BUSCA CACHE ── */
@@ -353,6 +401,154 @@ function limparIA() {
     document.getElementById('timerIA').textContent = '';
 }
 
+/* ── EDIÇÃO INLINE ──────────────────────────────────────────────────────────── */
+
+// Mapa de campo → coluna da planilha (índice 0 = col A)
+var CAMPO_COLUNA = {
+    numero:0, loja:1, nome:2, cpf:3, rg:4, funcao:5, turno:6,
+    email:12, telefone:13,
+    inicioTrein:14, fimTrein:15, diasTreinados:16, solicitadoPor:17,
+    local:18, treinador:19, modelo:23,
+    emailAvaliacaoLoja:24, avaliacaoOk:25, pago:26,
+    valorPremio:27, valorRefeicao:28, valorTotal:29,
+    mes:30, ano:31, aprovado:32, nota:33,
+    lembreteEnviado:35, avaliacaoEnviadaLojas:36, whatsappAvaliacaoFunc:37,
+    cepLojaTreinadora:38, lojaTreinadoraAvaliou:39, emailLojaAvaliadora:40,
+    nomeLojaTreinadora:41, enderecoLojaTreinadora:42, notaLojaTreinadora:43,
+    obsLojaTreinadora:44, lembrete2Dias:49, lembreteHoje:50
+};
+
+// Estado de edições pendentes por card: { rowIndex: { campo: novoValor } }
+var _pendentes = {};
+
+function onFieldClick(el, rowIndex, campo, ev) {
+    if (ev) ev.stopPropagation();
+    // Já está em modo de edição?
+    if (el.classList.contains('active-edit')) return;
+
+    var valorAtual = el.dataset.valor || '';
+    el.classList.add('active-edit');
+    el.querySelector('.field-edit-hint').style.display = 'none';
+
+    var valueEl = el.querySelector('.field-value');
+    var originalText = valueEl.textContent;
+
+    // Substitui o span de valor por um input
+    valueEl.style.display = 'none';
+    var input = document.createElement('input');
+    input.className = 'field-input';
+    input.value = valorAtual === '—' ? '' : valorAtual;
+    input.setAttribute('data-campo', campo);
+    input.setAttribute('data-rowindex', rowIndex);
+    input.setAttribute('data-original', valorAtual);
+    el.appendChild(input);
+    input.focus();
+    input.select();
+
+    // Mostrar barra de ações do card
+    var card = el.closest('.colab-card');
+    card.classList.add('editing');
+    var actBar = card.querySelector('.edit-mode-bar');
+    if (actBar) actBar.classList.add('visible');
+
+    // Registrar no mapa de pendentes ao mudar
+    input.addEventListener('input', function() {
+        if (!_pendentes[rowIndex]) _pendentes[rowIndex] = {};
+        _pendentes[rowIndex][campo] = input.value;
+        var statusEl = card.querySelector('.edit-status');
+        if (statusEl) statusEl.textContent = '✏️ Alterações não salvas';
+        // Atualiza o nome no cabeçalho do card em tempo real
+        if (campo === 'nome') {
+            var hdr = document.getElementById('nomehdr-' + rowIndex);
+            if (hdr) {
+                var num = hdr.querySelector('span');
+                hdr.textContent = input.value || '—';
+                if (num) hdr.appendChild(num);
+            }
+        }
+    });
+
+    // Blur = commit do valor visível, mas não salva ainda
+    input.addEventListener('blur', function() {
+        var novoValor = input.value;
+        valueEl.textContent = novoValor || '—';
+        if (!novoValor || novoValor === '') {
+            valueEl.className = valueEl.className.replace(/\bok\b|\bnok\b/g, '') + ' muted';
+        } else {
+            valueEl.className = valueEl.className.replace(' muted', '');
+        }
+        valueEl.style.display = '';
+        input.remove();
+        el.classList.remove('active-edit');
+        el.querySelector('.field-edit-hint').style.display = '';
+        el.dataset.valor = novoValor;
+    });
+
+    // Enter = blur (commit)
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { input.blur(); }
+        if (e.key === 'Escape') {
+            input.value = valorAtual === '—' ? '' : valorAtual;
+            input.blur();
+            // Remover do mapa de pendentes
+            if (_pendentes[rowIndex]) delete _pendentes[rowIndex][campo];
+        }
+    });
+}
+
+async function salvarCard(rowIndex, btnEl) {
+    var pendentes = _pendentes[rowIndex];
+    if (!pendentes || Object.keys(pendentes).length === 0) {
+        showToast('Nenhuma alteração para salvar.', false);
+        return;
+    }
+
+    var card = btnEl.closest('.colab-card');
+    var statusEl = card.querySelector('.edit-status');
+    btnEl.disabled = true;
+    btnEl.innerHTML = '<div class="spinner-sm"></div> Salvando...';
+    if (statusEl) { statusEl.textContent = '⏳ Salvando...'; statusEl.className = 'edit-status saving'; }
+
+    // Monta payload com coluna → valor
+    var alteracoes = {};
+    Object.keys(pendentes).forEach(function(campo) {
+        var col = CAMPO_COLUNA[campo];
+        if (col !== undefined) alteracoes[col] = pendentes[campo];
+    });
+
+    try {
+        var r = await fetch(API_BUS + '/editar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rowIndex: rowIndex, alteracoes: alteracoes })
+        });
+        var d = await r.json();
+        if (d.ok) {
+            delete _pendentes[rowIndex];
+            if (statusEl) { statusEl.textContent = '✓ Salvo'; statusEl.className = 'edit-status saved'; }
+            card.classList.remove('editing');
+            card.querySelector('.edit-mode-bar').classList.remove('visible');
+            showToast('Colaborador atualizado na planilha!');
+        } else {
+            throw new Error(d.erro || 'Erro ao salvar');
+        }
+    } catch(e) {
+        if (statusEl) { statusEl.textContent = '❌ Erro: ' + e.message; statusEl.className = 'edit-status error'; }
+        showToast(e.message, true);
+    } finally {
+        btnEl.disabled = false;
+        btnEl.innerHTML = '💾 Salvar alterações';
+    }
+}
+
+function cancelarEdicao(rowIndex, btnEl) {
+    var card = btnEl.closest('.colab-card');
+    // Remove pendentes
+    delete _pendentes[rowIndex];
+    // Fecha o card e reabre para "resetar" (recarrega os dados)
+    carregarPagina(_paginaAtual, _termoBusca);
+}
+
 /* ── RENDER CARD ── */
 function renderCard(c) {
     var iniciais = (c.nome || '?').split(' ').slice(0,2).map(function(p){ return p[0]; }).join('').toUpperCase();
@@ -362,11 +558,13 @@ function renderCard(c) {
     if (c.nota)                                    badges += '<span class="badge-sm badge-yellow">⭐ ' + c.nota + '</span>';
     if (c.avaliacaoEnviadaLojas)                   badges += '<span class="badge-sm badge-purple">📧 Aval.</span>';
 
-    return '<div class="colab-card">' +
+    var ri = c.rowIndex;
+
+    return '<div class="colab-card" id="card-' + ri + '">' +
         '<div class="colab-header" onclick="toggleCard(this)">' +
             '<div class="colab-avatar">' + iniciais + '</div>' +
             '<div class="colab-info">' +
-                '<div class="colab-nome">' + esc(c.nome) + ' <span style="font-size:11px;color:var(--muted);font-family:JetBrains Mono,monospace">#' + esc(c.numero) + '</span></div>' +
+                '<div class="colab-nome" id="nomehdr-' + ri + '">' + esc(c.nome) + ' <span style="font-size:11px;color:var(--muted);font-family:JetBrains Mono,monospace">#' + esc(c.numero) + '</span></div>' +
                 '<div class="colab-sub">' +
                     (c.loja   ? '<span>🏪 ' + esc(c.loja)    + '</span>' : '') +
                     (c.funcao ? '<span>👔 ' + esc(c.funcao)   + '</span>' : '') +
@@ -377,40 +575,73 @@ function renderCard(c) {
             '<div class="colab-acc-btn"><svg viewBox="0 0 12 12" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="2,3 6,9 10,3"/></svg></div>' +
         '</div>' +
         '<div class="colab-body"><div class="colab-body-inner">' +
-            renderSecao('👤 Dados Pessoais', [
-                ['Nº', c.numero],['CPF', c.cpf, true],['RG', c.rg, true],
-                ['Turno', c.turno],['Telefone', c.telefone, true],['E-mail', c.email],
+
+            '<div class="edit-mode-bar" id="editbar-' + ri + '">' +
+                '✏️ Modo de edição · clique em qualquer campo para editar' +
+                '<div class="edit-status" style="margin-left:auto"></div>' +
+            '</div>' +
+
+            renderSecaoEdit('👤 Dados Pessoais', ri, [
+                ['Nome',     'nome',      c.nome,      false, 'wrap'],
+                ['Nº',       'numero',    c.numero,    true,  false],
+                ['CPF',      'cpf',       c.cpf,       true,  false],
+                ['RG',       'rg',        c.rg,        true,  false],
+                ['Turno',    'turno',     c.turno,     false, false],
+                ['Telefone', 'telefone',  c.telefone,  true,  false],
+                ['E-mail',   'email',     c.email,     false, false],
             ]) +
-            renderSecao('🏫 Treinamento', [
-                ['Início', c.inicioTrein],['Fim', c.fimTrein],['Dias', c.diasTreinados],
-                ['Local', c.local],['Treinador', c.treinador],['Solicitado por', c.solicitadoPor],
-                ['Modelo', c.modelo],['Loja Treinadora', c.nomeLojaTreinadora],
+            renderSecaoEdit('🏫 Treinamento', ri, [
+                ['Início',        'inicioTrein',    c.inicioTrein,    false, false],
+                ['Fim',           'fimTrein',       c.fimTrein,       false, false],
+                ['Dias',          'diasTreinados',  c.diasTreinados,  false, false],
+                ['Local',         'local',          c.local,          false, false],
+                ['Treinador',     'treinador',      c.treinador,      false, false],
+                ['Solicitado por','solicitadoPor',  c.solicitadoPor,  false, false],
+                ['Modelo',        'modelo',         c.modelo,         false, false],
+                ['Loja Treinadora','nomeLojaTreinadora', c.nomeLojaTreinadora, false, false],
             ]) +
-            renderSecao('💰 Financeiro', [
-                ['Pago', c.pago, false, c.pago && c.pago.toUpperCase()==='SIM' ? 'ok' : 'muted'],
-                ['Prêmio', c.valorPremio ? 'R$ ' + c.valorPremio : '—', true],
-                ['Refeição', c.valorRefeicao ? 'R$ ' + c.valorRefeicao : '—', true],
-                ['Total', c.valorTotal ? 'R$ ' + c.valorTotal : '—', true],
-                ['Mês', c.mes],['Ano', c.ano],['Aprovado', c.aprovado],['Nota', c.nota, true],
+            renderSecaoEdit('💰 Financeiro', ri, [
+                ['Pago',     'pago',         c.pago,        false, c.pago && c.pago.toUpperCase()==='SIM' ? 'ok' : 'muted'],
+                ['Prêmio',   'valorPremio',  c.valorPremio ? 'R$ ' + c.valorPremio : '', true,  false],
+                ['Refeição', 'valorRefeicao',c.valorRefeicao ? 'R$ ' + c.valorRefeicao : '', true, false],
+                ['Total',    'valorTotal',   c.valorTotal ? 'R$ ' + c.valorTotal : '', true, false],
+                ['Mês',      'mes',          c.mes,         false, false],
+                ['Ano',      'ano',          c.ano,         false, false],
+                ['Aprovado', 'aprovado',     c.aprovado,    false, false],
+                ['Nota',     'nota',         c.nota,        true,  false],
             ]) +
-            renderSecao('📋 Avaliação', [
-                ['Avaliação OK', c.avaliacaoOk, false, c.avaliacaoOk && c.avaliacaoOk.toUpperCase()==='SIM' ? 'ok' : 'muted'],
-                ['Aval. Enviada', c.avaliacaoEnviadaLojas ? '✓ ' + c.avaliacaoEnviadaLojas : '—'],
-                ['WhatsApp Func.', c.whatsappAvaliacaoFunc ? '✓ ' + c.whatsappAvaliacaoFunc : '—'],
-                ['Loja Avaliou', c.lojaTreinadoraAvaliou, false, c.lojaTreinadoraAvaliou && c.lojaTreinadoraAvaliou.toUpperCase()==='SIM' ? 'ok' : 'muted'],
-                ['Nota Treinadora', c.notaLojaTreinadora, true],
-                ['Obs Treinadora', c.obsLojaTreinadora],
-                ['Lembrete 5d', c.lembreteEnviado],['Lembrete 2d', c.lembrete2Dias],['Lembrete Hoje', c.lembreteHoje],
+            renderSecaoEdit('📋 Avaliação', ri, [
+                ['Avaliação OK',   'avaliacaoOk',          c.avaliacaoOk,         false, c.avaliacaoOk && c.avaliacaoOk.toUpperCase()==='SIM' ? 'ok' : 'muted'],
+                ['Aval. Enviada',  'avaliacaoEnviadaLojas',c.avaliacaoEnviadaLojas,false, false],
+                ['WhatsApp Func.', 'whatsappAvaliacaoFunc',c.whatsappAvaliacaoFunc,false, false],
+                ['Loja Avaliou',   'lojaTreinadoraAvaliou',c.lojaTreinadoraAvaliou,false, c.lojaTreinadoraAvaliou && c.lojaTreinadoraAvaliou.toUpperCase()==='SIM' ? 'ok' : 'muted'],
+                ['Nota Treinadora','notaLojaTreinadora',   c.notaLojaTreinadora,  true,  false],
+                ['Obs Treinadora', 'obsLojaTreinadora',    c.obsLojaTreinadora,   false, false],
+                ['Lembrete 5d',    'lembreteEnviado',      c.lembreteEnviado,     false, false],
+                ['Lembrete 2d',    'lembrete2Dias',        c.lembrete2Dias,       false, false],
+                ['Lembrete Hoje',  'lembreteHoje',         c.lembreteHoje,        false, false],
             ]) +
+
+            '<div class="edit-actions">' +
+                '<button class="btn btn-save" onclick="salvarCard(' + ri + ', this)">💾 Salvar alterações</button>' +
+                '<button class="btn btn-cancel" onclick="cancelarEdicao(' + ri + ', this)">↩ Descartar</button>' +
+                '<span style="font-size:11px;color:var(--muted);font-weight:600">Clique em qualquer campo para editar</span>' +
+            '</div>' +
+
         '</div></div></div>';
 }
 
-function renderSecao(titulo, campos) {
+function renderSecaoEdit(titulo, rowIndex, campos) {
     return '<div class="colab-section"><div class="colab-section-title">' + titulo + '</div><div class="colab-fields">' +
         campos.map(function(f) {
-            var label = f[0], valor = f[1] || '—', mono = f[2], cls = f[3] || '';
-            if (!valor || valor === '—') cls = 'muted';
-            return '<div class="field"><div class="field-label">' + label + '</div><div class="field-value' + (mono ? ' mono' : '') + (cls ? ' ' + cls : '') + '" title="' + esc(String(valor)) + '">' + esc(String(valor)) + '</div></div>';
+            var label = f[0], campo = f[1], valor = f[2] || '', mono = f[3], cls = f[4] || '';
+            var displayVal = valor || '—';
+            if (!valor) cls = 'muted';
+            return '<div class="field editable" data-valor="' + esc(valor) + '" onclick="onFieldClick(this,' + rowIndex + ',\'' + campo + '\',event)">' +
+                '<div class="field-label">' + label + '</div>' +
+                '<div class="field-value' + (mono ? ' mono' : '') + (cls ? ' ' + cls : '') + '" title="' + esc(displayVal) + '">' + esc(displayVal) + '</div>' +
+                '<span class="field-edit-hint">✏️</span>' +
+            '</div>';
         }).join('') + '</div></div>';
 }
 
