@@ -9,7 +9,8 @@ const SHEET_ID = process.env.USUARIOS_SHEET_ID || '1l3U369m_jss0n1rBrQzfubm7k5km
 const ABA      = process.env.USUARIOS_ABA      || 'Gestao_Login';
 const ABA_LOG  = process.env.LOG_ABA            || 'Log_Acesso';
 
-const COL     = { email: 0, nome: 1, modulos: 2, ativo: 3 };
+// Colunas: A=email | B=nome | C=modulos | D=ativo | E=gestor
+const COL     = { email: 0, nome: 1, modulos: 2, ativo: 3, gestor: 4 };
 const COL_LOG = { hora: 0, email: 1, acao: 2, modulo: 3, ip: 4 };
 
 async function getSheets() {
@@ -20,7 +21,7 @@ async function getSheets() {
     return google.sheets({ version: 'v4', auth: await auth.getClient() });
 }
 
-// ─── Cache de usuários ────────────────────────────────────────────────────────
+// ─── Cache de usuários ────────────────────────────────────────
 let _cache = null;
 
 async function lerPlanilha() {
@@ -43,27 +44,20 @@ async function getUsuarios(forcar = false) {
             modulos:  String(row[COL.modulos] || '').toLowerCase()
                         .split(',').map(m => m.trim()).filter(Boolean),
             ativo:    String(row[COL.ativo]   || '').toUpperCase() === 'SIM',
+            isGestor: String(row[COL.gestor]  || '').toUpperCase() === 'SIM', // col E
         }))
         .filter(u => u.email);
     return _cache;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────
 function extrairIP(req) {
-    // Suporte a proxy reverso (nginx, etc.)
     const forwarded = req?.headers?.['x-forwarded-for'];
     if (forwarded) return forwarded.split(',')[0].trim();
     const raw = req?.ip || req?.connection?.remoteAddress || '';
-    // Normaliza ::ffff:1.2.3.4 → 1.2.3.4
     return raw.replace(/^::ffff:/, '');
 }
 
-// ─── CORREÇÃO PRINCIPAL: gravarLog agora é síncrono e direto ─────────────────
-// ANTES: usava fila (_logQueue) com setTimeout de 3s → logs perdidos se o
-//        processo reiniciasse ou a requisição terminasse antes do flush.
-// AGORA: grava direto na planilha, sem fila, aguarda confirmação.
-// Para evitar condição de corrida com múltiplas chamadas simultâneas,
-// usamos um lock simples baseado em Promise.
 let _logLock = Promise.resolve();
 
 async function gravarLog(req, email, acao, modulo = '') {
@@ -71,11 +65,9 @@ async function gravarLog(req, email, acao, modulo = '') {
     const ip    = extrairIP(req);
     const linha = [agora, email, acao, modulo, ip];
 
-    // Serializa as escritas para evitar sobrescrever a mesma linha
     _logLock = _logLock.then(async () => {
         try {
             const sheets = await getSheets();
-            // Descobre a próxima linha vazia de forma atômica
             const r = await sheets.spreadsheets.values.get({
                 spreadsheetId: SHEET_ID,
                 range: `'${ABA_LOG}'!A:A`,
@@ -92,14 +84,12 @@ async function gravarLog(req, email, acao, modulo = '') {
             console.error('[log] Erro ao gravar:', e.message, '| dados:', linha);
         }
     });
-
-    // Aguarda a gravação antes de retornar (garante que o log foi gravado)
     return _logLock;
 }
 
 module.exports.gravarLog = gravarLog;
 
-// ─── Rotas de usuários (inalteradas, apenas usando o gravarLog corrigido) ────
+// ─── Rotas ────────────────────────────────────────────────────
 
 router.get('/usuarios', async (req, res) => {
     try {
@@ -121,9 +111,10 @@ router.post('/usuarios/recarregar', async (req, res) => {
     }
 });
 
+// ─── Inserir — grava cols A B C D E ──────────────────────────
 router.post('/usuarios/inserir', async (req, res) => {
     try {
-        const { email, nome, modulos, ativo } = req.body;
+        const { email, nome, modulos, ativo, isGestor } = req.body;
         if (!email) return res.status(400).json({ ok: false, erro: 'Email obrigatório.' });
 
         const lista = await getUsuarios();
@@ -147,14 +138,42 @@ router.post('/usuarios/inserir', async (req, res) => {
                 nome ? nome.trim() : '',
                 modulosStr,
                 ativo === false ? 'NÃO' : 'SIM',
+                isGestor ? 'SIM' : '',             // col E
             ]] },
         });
 
         _cache = null;
-        await gravarLog(req, email, 'Usuário inserido', 'master');
+        await gravarLog(req, email, `Usuário inserido${isGestor ? ' (gestor)' : ''}`, 'master');
         res.json({ ok: true, linha: proximaLinha });
     } catch (e) {
         console.error('[master] inserir erro:', e.message);
+        res.status(500).json({ ok: false, erro: e.message });
+    }
+});
+
+// ─── Toggle gestor — grava/apaga col E ───────────────────────
+router.patch('/usuarios/gestor', async (req, res) => {
+    try {
+        const { email, isGestor } = req.body;
+        if (!email) return res.status(400).json({ ok: false, erro: 'Email obrigatório.' });
+
+        const lista   = await getUsuarios();
+        const usuario = lista.find(u => u.email === email.toLowerCase().trim());
+        if (!usuario) return res.status(404).json({ ok: false, erro: 'Usuário não encontrado.' });
+
+        const sheets = await getSheets();
+        await sheets.spreadsheets.values.update({
+            spreadsheetId: SHEET_ID,
+            range: `'${ABA}'!E${usuario.rowIndex}`,
+            valueInputOption: 'USER_ENTERED',
+            requestBody: { values: [[isGestor ? 'SIM' : '']] },
+        });
+
+        _cache = null;
+        await gravarLog(req, email, isGestor ? 'Gestor ativado' : 'Gestor removido', 'master');
+        res.json({ ok: true });
+    } catch (e) {
+        console.error('[master] gestor erro:', e.message);
         res.status(500).json({ ok: false, erro: e.message });
     }
 });

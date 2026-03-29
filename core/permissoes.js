@@ -1,20 +1,20 @@
-// services/permissoes.js — Controle de acesso via Google Sheets
+// core/permissoes.js — Controle de acesso via Google Sheets
 // Planilha: https://docs.google.com/spreadsheets/d/1l3U369m_jss0n1rBrQzfubm7k5kme73O--urJxme6aU
 // Aba: Gestao_Login
-// Colunas: Email | Nome | Modulos | Ativo
+// Colunas: A=Email | B=Nome | C=Modulos | D=Ativo | E=Gestor
 'use strict';
 
 const { google } = require('googleapis');
-const path = require('path');
 
-const SHEET_ID  = process.env.USUARIOS_SHEET_ID || '1l3U369m_jss0n1rBrQzfubm7k5kme73O--urJxme6aU';
-const ABA       = process.env.USUARIOS_ABA      || 'Gestao_Login';
-const MASTER    = (process.env.MASTER_EMAIL     || 'fernando.clemente@divinofogao.com.br').toLowerCase();
+const SHEET_ID = process.env.USUARIOS_SHEET_ID || '1l3U369m_jss0n1rBrQzfubm7k5kme73O--urJxme6aU';
+const ABA      = process.env.USUARIOS_ABA      || 'Gestao_Login';
+const MASTER   = (process.env.MASTER_EMAIL     || 'fernando.clemente@divinofogao.com.br').toLowerCase();
 
-// Cache em memória — recarrega a cada 5 minutos
+// 30s em dev, 5min em produção — mudanças na planilha refletem sem reiniciar
+const TTL = process.env.NODE_ENV === 'production' ? 5 * 60 * 1000 : 30 * 1000;
+
 let _cache     = null;
 let _cacheTime = 0;
-const TTL      = 5 * 60 * 1000;
 
 async function getSheets() {
     const auth = new google.auth.GoogleAuth({
@@ -35,18 +35,19 @@ async function carregarUsuarios(forcar = false) {
         });
 
         const rows = r.data.values || [];
-        // Pula cabeçalho (linha 1)
-        _cache = rows.slice(1)
+
+        _cache = rows.slice(1) // pula cabeçalho
             .filter(row => row[0] && row[3] && String(row[3]).toUpperCase() === 'SIM')
             .map(row => ({
-                email:   String(row[0] || '').toLowerCase().trim(),
-                nome:    row[1] || '',
-                modulos: String(row[2] || '').toLowerCase().split(',').map(m => m.trim()).filter(Boolean),
-                ativo:   String(row[3] || '').toUpperCase() === 'SIM',
+                email:    String(row[0] || '').toLowerCase().trim(),
+                nome:     row[1] || '',
+                modulos:  String(row[2] || '').toLowerCase().split(',').map(m => m.trim()).filter(Boolean),
+                ativo:    String(row[3] || '').toUpperCase() === 'SIM',
+                isGestor: String(row[4] || '').toUpperCase() === 'SIM', // col E
             }));
 
         _cacheTime = Date.now();
-        console.log(`[Permissões] ${_cache.length} usuários carregados da planilha`);
+        console.log(`[Permissões] ${_cache.length} usuários carregados (TTL=${TTL/1000}s)`);
     } catch (e) {
         console.error('[Permissões] Erro ao carregar usuários:', e.message);
         if (!_cache) _cache = [];
@@ -58,14 +59,15 @@ async function carregarUsuarios(forcar = false) {
 async function buscarUsuario(email) {
     const emailLower = String(email || '').toLowerCase().trim();
 
-    // Master sempre tem acesso total — não precisa estar na planilha
+    // Master fixo — acesso total, não precisa estar na planilha
     if (emailLower === MASTER) {
         return {
-            email:   emailLower,
-            nome:    'Fernando',
-            modulos: ['master'],
-            ativo:   true,
+            email:    emailLower,
+            nome:     'Fernando',
+            modulos:  ['master'],
+            ativo:    true,
             isMaster: true,
+            isGestor: false,
         };
     }
 
@@ -79,17 +81,28 @@ function temAcesso(usuario, modulo) {
     return usuario.modulos.includes(modulo.toLowerCase());
 }
 
-// Middleware — injeta req.perfil com dados do usuário logado
+// ─── Middlewares ──────────────────────────────────────────────
+
+// Roda em todo request — busca perfil atualizado da planilha (respeita TTL)
+// Mudanças na planilha refletem automaticamente sem reiniciar ou relogar
 async function middlewarePerfil(req, res, next) {
     if (!req.isAuthenticated || !req.isAuthenticated()) return next();
     try {
         const perfil = await buscarUsuario(req.user?.email);
         req.perfil = perfil;
-    } catch { req.perfil = null; }
+        // Mantém req.user sincronizado para que /auth/me reflita mudanças
+        if (perfil && req.user) {
+            req.user.isGestor = perfil.isGestor || false;
+            req.user.isMaster = perfil.isMaster  || false;
+            req.user.modulos  = perfil.modulos   || [];
+        }
+    } catch {
+        req.perfil = null;
+    }
     next();
 }
 
-// Middleware — exige acesso a um módulo específico
+// Exige acesso a um módulo específico
 function exigirModulo(modulo) {
     return async (req, res, next) => {
         if (!req.isAuthenticated || !req.isAuthenticated()) {
@@ -108,19 +121,36 @@ function exigirModulo(modulo) {
     };
 }
 
-// Middleware — exige ser master
+// Exige ser master
 function exigirMaster(req, res, next) {
     if (!req.isAuthenticated || !req.isAuthenticated()) {
         return res.status(401).json({ ok: false, erro: 'Não autenticado' });
     }
-    const email = String(req.user?.email || '').toLowerCase();
-    const isMaster = email === MASTER ||
-        (req.perfil?.modulos || []).includes('master');
-
+    const email    = String(req.user?.email || '').toLowerCase();
+    const isMaster = email === MASTER || (req.perfil?.modulos || []).includes('master');
     if (!isMaster) {
         return res.status(403).json({ ok: false, erro: 'Acesso restrito ao master' });
     }
     next();
+}
+
+// Exige gestor do módulo OU master
+// async — rebusca sempre da planilha (cache TTL), nunca confia só na sessão
+async function exigirGestorOuMaster(req, res, next) {
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+        return res.status(401).json({ ok: false, erro: 'Não autenticado' });
+    }
+
+    // Rebusca direto da planilha (respeitando cache TTL) — garante dado fresco
+    const perfil = await buscarUsuario(req.user?.email);
+
+    const isMaster = perfil?.isMaster || (perfil?.modulos || []).includes('master');
+    if (isMaster || perfil?.isGestor) return next();
+
+    const isApi = req.xhr || req.headers.accept?.includes('application/json');
+    return isApi
+        ? res.status(403).json({ ok: false, erro: 'Acesso restrito a gestores.' })
+        : res.redirect('/sem-acesso');
 }
 
 module.exports = {
@@ -130,4 +160,5 @@ module.exports = {
     middlewarePerfil,
     exigirModulo,
     exigirMaster,
+    exigirGestorOuMaster,
 };

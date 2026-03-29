@@ -41,6 +41,7 @@ passport.use(new GoogleStrategy({
             foto:     profile.photos?.[0]?.value || '',
             modulos:  perfil.modulos,
             isMaster: perfil.isMaster || false,
+            isGestor: perfil.isGestor || false, // ACESSO AO GESTOR VISUALIZAR O SULTS
         };
 
         // ✅ Loga login bem-sucedido

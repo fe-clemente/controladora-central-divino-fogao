@@ -20,7 +20,9 @@ app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 const passport = require('./core/auth');
-const { middlewarePerfil, exigirModulo, exigirMaster } = require('./core/permissoes');
+
+// ✅ require único — inclui exigirGestorOuMaster
+const { middlewarePerfil, exigirModulo, exigirMaster, exigirGestorOuMaster } = require('./core/permissoes');
 
 const avisosService = require('./core/avisosService');
 
@@ -162,23 +164,137 @@ function getRoutes(mod) {
 const tiRoutes          = getRoutes('ti');
 const treinamentoRoutes = getRoutes('treinamento');
 
-// ✅ Pix — só sincroniza via browser (usuário logado), mantém exigirLogin
-app.post('/ti/api/pix/sincronizar',              exigirLogin,        (req, res, next) => { req.url = '/api/pix/sincronizar';              tiRoutes(req, res, next); });
-// ✅ Chamados TI — sincroniza também em produção via master
-app.post('/ti/api/chamados/sincronizar',          exigirLoginOuLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar';          tiRoutes(req, res, next); });
-app.post('/ti/api/chamados/sincronizar/completo', exigirLoginOuLocal, (req, res, next) => { req.url = '/api/chamados/sincronizar/completo'; tiRoutes(req, res, next); });
+// ─── Sincronização (exigirLoginOuLocal / apenasLocal) ────────
+// ✅ Pix — só via browser
+app.post('/ti/api/pix/sincronizar',
+    exigirLogin,
+    (req, res, next) => { req.url = '/api/pix/sincronizar'; tiRoutes(req, res, next); }
+);
+// ✅ Chamados TI — sync background
+app.post('/ti/api/chamados/sincronizar',
+    exigirLoginOuLocal,
+    (req, res, next) => { req.url = '/api/chamados/sincronizar'; tiRoutes(req, res, next); }
+);
+app.post('/ti/api/chamados/sincronizar/completo',
+    exigirLoginOuLocal,
+    (req, res, next) => { req.url = '/api/chamados/sincronizar/completo'; tiRoutes(req, res, next); }
+);
+// ✅ SULTS e Chamados Treinamento — sync background
+app.post('/treinamento/sults/sincronizar',
+    exigirLoginOuLocal,
+    (req, res, next) => { req.url = '/sults/sincronizar'; treinamentoRoutes(req, res, next); }
+);
+app.post('/treinamento/chamados/sincronizar',
+    exigirLoginOuLocal,
+    (req, res, next) => { req.url = '/chamados/sincronizar'; treinamentoRoutes(req, res, next); }
+);
+app.post('/treinamento/turnover/sincronizar',
+    apenasLocal,
+    (req, res, next) => { req.url = '/turnover/sincronizar'; treinamentoRoutes(req, res, next); }
+);
+app.post('/treinamento/universidade/sincronizar',
+    apenasLocal,
+    (req, res, next) => { req.url = '/universidade/sincronizar'; treinamentoRoutes(req, res, next); }
+);
 
-// ✅ SULTS e Chamados Treinamento — sincronizam também em produção via master
-app.post('/treinamento/sults/sincronizar',        exigirLoginOuLocal, (req, res, next) => { req.url = '/sults/sincronizar';        treinamentoRoutes(req, res, next); });
-app.post('/treinamento/chamados/sincronizar',     exigirLoginOuLocal, (req, res, next) => { req.url = '/chamados/sincronizar';     treinamentoRoutes(req, res, next); });
-app.post('/treinamento/turnover/sincronizar',     apenasLocal,        (req, res, next) => { req.url = '/turnover/sincronizar';     treinamentoRoutes(req, res, next); });
-app.post('/treinamento/universidade/sincronizar', apenasLocal,        (req, res, next) => { req.url = '/universidade/sincronizar'; treinamentoRoutes(req, res, next); });
+// ─── Avaliação (pública — funcionários respondem sem login) ──
+app.get('/treinamento/avaliacao',
+    (req, res, next) => { req.url = '/avaliacao'; treinamentoRoutes(req, res, next); }
+);
+app.get('/treinamento/avaliacao/dados',
+    (req, res, next) => { req.url = '/avaliacao/dados'; treinamentoRoutes(req, res, next); }
+);
+app.post('/treinamento/avaliacao/registrar',
+    (req, res, next) => { req.url = '/avaliacao/registrar'; treinamentoRoutes(req, res, next); }
+);
 
-app.get('/treinamento/avaliacao',            (req, res, next) => { req.url = '/avaliacao';            treinamentoRoutes(req, res, next); });
-app.get('/treinamento/avaliacao/dados',      (req, res, next) => { req.url = '/avaliacao/dados';      treinamentoRoutes(req, res, next); });
-app.post('/treinamento/avaliacao/registrar', (req, res, next) => { req.url = '/avaliacao/registrar';  treinamentoRoutes(req, res, next); });
+// ═════════════════════════════════════════════════════════════
+//  ROTAS RESTRITAS A GESTOR OU MASTER
+//  ⚠️  Devem vir ANTES do app.use genérico de cada módulo
+// ═════════════════════════════════════════════════════════════
 
+// ── TREINAMENTO: SULTS ───────────────────────────────────────
+app.get('/treinamento/sults',
+    exigirLogin, exigirModulo('treinamento'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/sults'; treinamentoRoutes(req, res, next); }
+);
+app.get('/treinamento/sults/dados',
+    exigirLogin, exigirModulo('treinamento'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/sults/dados'; treinamentoRoutes(req, res, next); }
+);
+app.get('/treinamento/sults/resumo',
+    exigirLogin, exigirModulo('treinamento'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/sults/resumo'; treinamentoRoutes(req, res, next); }
+);
+app.get('/treinamento/sults/status',
+    exigirLogin, exigirModulo('treinamento'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/sults/status'; treinamentoRoutes(req, res, next); }
+);
+app.get('/treinamento/sults/unidade/:id',
+    exigirLogin, exigirModulo('treinamento'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = `/sults/unidade/${req.params.id}`; treinamentoRoutes(req, res, next); }
+);
 
+// ── TI: Chamados ─────────────────────────────────────────────
+// Página
+app.get('/ti/chamados',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/chamados'; tiRoutes(req, res, next); }
+);
+app.get('/ti/chamados.html',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/chamados.html'; tiRoutes(req, res, next); }
+);
+// APIs de dados dos chamados
+app.get('/ti/api/chamados/dados',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/chamados/dados'; tiRoutes(req, res, next); }
+);
+app.get('/ti/api/chamados/status',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/chamados/status'; tiRoutes(req, res, next); }
+);
+app.put('/ti/api/chamados/:id/concluir',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = `/api/chamados/${req.params.id}/concluir`; tiRoutes(req, res, next); }
+);
+
+// ── TI: Relatório Checkout ───────────────────────────────────
+// Página
+app.get('/ti/relatorio-checkout',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/relatorio-checkout'; tiRoutes(req, res, next); }
+);
+app.get('/ti/relatorioCheckoutConsultores.html',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/relatorioCheckoutConsultores.html'; tiRoutes(req, res, next); }
+);
+// APIs de dados do checkout
+app.get('/ti/api/relatorio-checkout/dados',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-checkout/dados'; tiRoutes(req, res, next); }
+);
+app.get('/ti/api/relatorio-checkout/status',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-checkout/status'; tiRoutes(req, res, next); }
+);
+app.get('/ti/api/relatorio-checkout/ao-vivo',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-checkout/ao-vivo'; tiRoutes(req, res, next); }
+);
+app.post('/ti/api/relatorio-checkout/sincronizar',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-checkout/sincronizar'; tiRoutes(req, res, next); }
+);
+app.post('/ti/api/relatorio-checkout/geocodificar-pendentes',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-checkout/geocodificar-pendentes'; tiRoutes(req, res, next); }
+);
+
+// ═════════════════════════════════════════════════════════════
+//  CATCH-ALL — carrega todos os módulos com login + módulo
+//  ⚠️  Deve ficar por último, após todas as rotas restritas
+// ═════════════════════════════════════════════════════════════
 for (const mod of modulos) {
     try {
         app.use(`/${mod}`, exigirLogin, exigirModulo(mod), getRoutes(mod));
