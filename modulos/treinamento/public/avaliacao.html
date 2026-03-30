@@ -14,7 +14,7 @@
             background: linear-gradient(135deg, #1a0a0e 0%, #3d0a14 50%, #1a0a0e 100%);
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             padding: 20px;
         }
@@ -23,9 +23,10 @@
             background: #fff;
             border-radius: 20px;
             width: 100%;
-            max-width: 560px;
+            max-width: 640px;
             overflow: hidden;
             box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+            margin: 0 auto;
         }
 
         .header {
@@ -38,76 +39,168 @@
 
         .body { padding: 36px 40px; }
 
-        /* INFO DO COLABORADOR */
-        .colaborador-box {
+        .section {
             background: #f9fafb;
             border: 1.5px solid #e5e7eb;
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
-        .colaborador-box h3 {
+        .section-title {
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            color: #9ca3af;
-            font-weight: 700;
-            margin-bottom: 14px;
-        }
-        .collab-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .collab-label { font-size: 11px; color: #9ca3af; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .collab-val   { font-size: 14px; color: #111827; font-weight: 700; margin-top: 2px; }
-
-        /* NOTA */
-        .nota-section { margin-bottom: 28px; }
-        .nota-section label {
-            display: block;
-            font-size: 14px;
-            font-weight: 800;
-            color: #111827;
-            margin-bottom: 16px;
-        }
-        .nota-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
-        .nota-btn {
-            width: 46px; height: 46px;
-            border-radius: 10px;
-            border: 2px solid #e5e7eb;
-            background: #f9fafb;
-            font-size: 16px; font-weight: 800;
-            font-family: 'Nunito', sans-serif;
-            cursor: pointer;
-            transition: all 0.15s;
             color: #6b7280;
+            font-weight: 800;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .nota-btn:hover { border-color: #c8102e; background: #fff5f6; color: #c8102e; transform: scale(1.08); }
-        .nota-btn.selected { border-color: transparent; color: #fff; transform: scale(1.1); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
-        .nota-btn.selected.low  { background: #dc2626; }
-        .nota-btn.selected.mid  { background: #d97706; }
-        .nota-btn.selected.high { background: #16a34a; }
-        .nota-display { margin-top: 14px; font-size: 14px; font-weight: 700; min-height: 22px; color: #374151; }
 
-        /* CAMPOS */
-        .field-group { margin-bottom: 20px; }
-        .field-group label { display: block; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; }
-        .field-group label .req { color: #c8102e; margin-left: 3px; }
-        .field-group input[type="date"],
-        .field-group textarea {
-            width: 100%; padding: 12px 16px;
-            border: 1.5px solid #d1d5db; border-radius: 10px;
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .one-col  { display: grid; grid-template-columns: 1fr; gap: 14px; }
+
+        .field { display: flex; flex-direction: column; }
+        .field label {
+            font-size: 12px; font-weight: 700; color: #374151;
+            margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px;
+        }
+        .field label .req { color: #c8102e; margin-left: 2px; }
+        .field input[type="text"],
+        .field input[type="date"],
+        .field input[type="number"],
+        .field select,
+        .field textarea {
+            padding: 10px 14px;
+            border: 1.5px solid #d1d5db; border-radius: 8px;
             font-family: 'Nunito', sans-serif; font-size: 14px;
             color: #111827; background: #fff; outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
             font-weight: 600;
         }
-        .field-group input:focus,
-        .field-group textarea:focus { border-color: #c8102e; box-shadow: 0 0 0 3px rgba(200,16,46,0.1); }
-        .field-group textarea { resize: vertical; min-height: 90px; }
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: #c8102e;
+            box-shadow: 0 0 0 3px rgba(200,16,46,0.1);
+        }
+        .field textarea { resize: vertical; min-height: 80px; }
+        .field select { cursor: pointer; }
 
-        /* BOTÃO */
+        /* ESCALA 1-5 */
+        .escala-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+        .escala-group label {
+            font-size: 12px; font-weight: 700; color: #374151;
+            text-transform: uppercase; letter-spacing: 0.4px;
+        }
+        .escala-label-sub { font-size: 11px; color: #9ca3af; font-weight: 600; margin-bottom: 4px; }
+        .escala-buttons { display: flex; gap: 6px; }
+        .escala-btn {
+            flex: 1; height: 40px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 15px; font-weight: 800;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: #6b7280;
+        }
+        .escala-btn:hover { border-color: #c8102e; background: #fff5f6; color: #c8102e; }
+        .escala-btn.sel-1 { background: #dc2626; border-color: transparent; color: #fff; }
+        .escala-btn.sel-2 { background: #ea580c; border-color: transparent; color: #fff; }
+        .escala-btn.sel-3 { background: #d97706; border-color: transparent; color: #fff; }
+        .escala-btn.sel-4 { background: #65a30d; border-color: transparent; color: #fff; }
+        .escala-btn.sel-5 { background: #16a34a; border-color: transparent; color: #fff; }
+
+        /* ★ BLOCO COMPETÊNCIA: apenas texto */
+        .competencia-bloco {
+            background: #fff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+        .competencia-bloco:last-child { margin-bottom: 0; }
+        .competencia-titulo {
+            font-size: 12px; font-weight: 800; color: #111827;
+            text-transform: uppercase; letter-spacing: 0.4px;
+            margin-bottom: 4px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .competencia-subtitulo {
+            font-size: 11px; color: #9ca3af; font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .competencia-texto-label {
+            font-size: 11px; font-weight: 700; color: #374151;
+            text-transform: uppercase; letter-spacing: 0.3px;
+            margin-bottom: 5px;
+        }
+        .competencia-textarea {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #d1d5db; border-radius: 8px;
+            font-family: 'Nunito', sans-serif; font-size: 13px;
+            color: #111827; background: #fff; outline: none;
+            resize: vertical; min-height: 70px;
+            font-weight: 600;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .competencia-textarea:focus {
+            border-color: #c8102e;
+            box-shadow: 0 0 0 3px rgba(200,16,46,0.1);
+        }
+        .competencia-textarea::placeholder { color: #9ca3af; font-weight: 400; }
+
+        /* ★ CONTADOR DE LETRAS */
+        .word-counter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .word-counter .wc-count { color: #9ca3af; }
+        .word-counter .wc-count.ok { color: #16a34a; }
+        .word-counter .wc-count.low { color: #dc2626; }
+        .word-counter .wc-min { color: #9ca3af; font-weight: 400; }
+        .competencia-textarea.border-warn {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
+        }
+        .competencia-textarea.border-ok {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22,163,74,0.08);
+        }
+
+        /* NOTA MULTIPLICADOR (0-10) */
+        .nota-section { display: flex; flex-direction: column; gap: 6px; }
+        .nota-section label {
+            font-size: 12px; font-weight: 700; color: #374151;
+            text-transform: uppercase; letter-spacing: 0.4px;
+        }
+        .nota-buttons { display: flex; gap: 5px; flex-wrap: wrap; }
+        .nota-btn {
+            width: 46px; height: 40px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 15px; font-weight: 800;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: #6b7280;
+        }
+        .nota-btn:hover { border-color: #c8102e; background: #fff5f6; color: #c8102e; }
+        .nota-btn.sel-low  { background: #dc2626; border-color: transparent; color: #fff; }
+        .nota-btn.sel-mid  { background: #d97706; border-color: transparent; color: #fff; }
+        .nota-btn.sel-high { background: #16a34a; border-color: transparent; color: #fff; }
+        .nota-display { font-size: 12px; color: #6b7280; font-weight: 600; min-height: 18px; }
+
+        /* BOTÃO ENVIAR */
         .btn-submit {
             width: 100%; padding: 16px;
             background: linear-gradient(135deg, #c8102e, #8b0000);
@@ -115,11 +208,11 @@
             font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800;
             cursor: pointer; transition: all 0.2s;
             box-shadow: 0 6px 20px rgba(200,16,46,0.35); letter-spacing: 0.3px;
+            margin-top: 8px;
         }
         .btn-submit:hover    { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(200,16,46,0.45); }
         .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        /* SPINNER */
         .spinner {
             display: inline-block; width: 18px; height: 18px;
             border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff;
@@ -128,13 +221,11 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* SUCESSO */
         .state-success { text-align: center; padding: 48px 40px; }
         .state-success .check { font-size: 72px; margin-bottom: 16px; }
         .state-success h2 { font-size: 22px; font-weight: 900; color: #111827; margin-bottom: 10px; }
         .state-success p  { color: #6b7280; font-size: 14px; line-height: 1.6; }
 
-        /* ERRO */
         .state-error {
             background: #fff5f6; border: 1.5px solid #fca5a5; border-radius: 10px;
             padding: 14px 18px; margin-bottom: 20px;
@@ -148,10 +239,18 @@
             font-size: 11px; color: #9ca3af;
         }
 
+        .badge-origem    { background: #c8102e; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+        .badge-treinadora { background: #16a34a; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+
+        .collab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .collab-label { font-size: 11px; color: #9ca3af; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .collab-val   { font-size: 14px; color: #111827; font-weight: 700; margin-top: 2px; }
+
         @media (max-width: 480px) {
-            .body { padding: 24px 20px; }
+            .body { padding: 20px 16px; }
+            .two-col { grid-template-columns: 1fr; }
             .collab-grid { grid-template-columns: 1fr; }
-            .nota-btn { width: 38px; height: 38px; font-size: 14px; }
+            .nota-btn { width: 36px; height: 36px; font-size: 13px; }
         }
     </style>
 </head>
@@ -159,46 +258,260 @@
 <div class="card" id="mainCard">
     <div class="header">
         <h1>DIVINO FOGÃO</h1>
-        <p>📋 Formulário de Avaliação de Treinamento</p>
+        <p>📋 Formulário de Avaliação de Treinamento Presencial 2026</p>
     </div>
 
     <div id="formArea">
         <div class="body">
 
-            <!-- DADOS DO COLABORADOR -->
-            <div class="colaborador-box" id="colaboradorBox">
-                <h3 id="colaboradorTitulo">👤 Colaborador</h3>
+            <!-- COLABORADOR -->
+            <div class="section" id="colaboradorBox">
+                <div class="section-title" id="colaboradorTitulo">👤 Colaborador</div>
                 <div class="collab-grid" id="collabGrid">
-                    <div class="collab-field">
-                        <div class="collab-label">Carregando...</div>
-                    </div>
+                    <div><div class="collab-label">Carregando...</div></div>
                 </div>
             </div>
 
             <div class="state-error" id="errorBox"></div>
 
-            <!-- NOTA -->
-            <div class="nota-section">
-                <label>Nota do Colaborador <span style="color:#c8102e;">*</span></label>
-                <div class="nota-buttons" id="notaButtons"></div>
-                <div class="nota-display" id="notaDisplay"></div>
+            <!-- 1. IDENTIFICAÇÃO (A, C, D, E, F, G, H, I) -->
+            <div class="section">
+                <div class="section-title">📝 Identificação do Treinamento</div>
+                <div class="two-col">
+                    <div class="field">
+                        <label>Nome e Função de Quem Treinou <span class="req">*</span></label>
+                        <input type="text" id="treinadorNomeFuncao" placeholder="Ex: João Silva - Gerente" />
+                    </div>
+                    <div class="field">
+                        <label>Unidade onde foi realizado <span class="req">*</span></label>
+                        <input type="text" id="unidadeTreinamento" placeholder="Ex: Aricanduva" />
+                    </div>
+                    <div class="field">
+                        <label>Loja Treinada <span class="req">*</span></label>
+                        <input type="text" id="lojaTreinada" placeholder="Ex: Divino Jundiaí Shopping" />
+                    </div>
+                    <div class="field">
+                        <label>Data de Início <span class="req">*</span></label>
+                        <input type="date" id="dataInicio" />
+                    </div>
+                    <div class="field" id="campoDataFim" style="display:none;">
+                        <label>Data de Término <span class="req">*</span></label>
+                        <input type="date" id="dataFim" />
+                    </div>
+                </div>
             </div>
 
-            <!-- DATA FIM — visível apenas para loja treinadora -->
-            <div class="field-group" id="campoDataFim" style="display:none;">
-                <label>Data de Término do Treinamento <span class="req">*</span></label>
-                <input type="date" id="dataFim" />
+            <!-- 2. CONSUMO (J, K) — J agora grava "X refeições" -->
+            <div class="section">
+                <div class="section-title">🍽️ Consumo no Período</div>
+                <div class="two-col">
+                    <div class="field">
+                        <label>Qtde de Refeições (Almoço + Jantar) <span class="req">*</span></label>
+                        <input type="number" id="qtdeRefeicoes" min="0" placeholder="0" />
+                    </div>
+                    <div class="field">
+                        <label>Consumo de Bebidas <span class="req">*</span></label>
+                        <input type="number" id="consumoBebidas" min="0" placeholder="0" />
+                    </div>
+                </div>
             </div>
 
-            <!-- OBSERVAÇÕES -->
-            <div class="field-group">
-                <label>
-                    Observações <span style="color:#9ca3af;font-weight:400;">(opcional)</span>
-                    <span id="obsContador" style="float:right;font-size:11px;color:#9ca3af;font-weight:400;">0/200</span>
-                </label>
-                <textarea id="observacoes" maxlength="200"
-                    placeholder="Descreva o desempenho do colaborador, pontos positivos, áreas de melhoria..."
-                    oninput="document.getElementById('obsContador').textContent = this.value.length + '/200'"></textarea>
+            <!-- 3. COMPETÊNCIAS POR EXTENSO (colunas L a T) — tudo TEXTO -->
+            <div class="section">
+                <div class="section-title">📝 Avaliação Detalhada por Competência <span style="font-size:10px;color:#9ca3af;font-weight:600;text-transform:none;letter-spacing:0;">(responder por extenso)</span></div>
+
+                <!-- L — Compreensão do Treinamento -->
+                <div class="competencia-bloco">
+                    <div class="competencia-titulo">📖 Compreensão do Treinamento <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">O(a) colaborador(a) entendeu bem os conteúdos e instruções do treinamento? Explique sua resposta.</div>
+                    <div class="competencia-texto-label">Resposta:</div>
+                    <textarea class="competencia-textarea" id="txt_compreensao" maxlength="500"
+                        placeholder="O(a) colaborador(a) entendeu bem os conteúdos e instruções do treinamento? Explique sua resposta." oninput="contarPalavras(this, 'wc_compreensao')"></textarea>
+                    <div class="word-counter"><span class="wc-count" id="wc_compreensao">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                </div>
+
+                <!-- Y — Habilidades Técnicas (Pergunta 1: Foto — Upload para Google Drive) -->
+                <div class="competencia-bloco">
+                    <div class="competencia-titulo">📸 Habilidades Técnicas — Foto do Trabalho <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">Nos envie foto do trabalho do colaborador. Exemplos: Montagem do Bufê (quente ou fria), manipulando o equipamento, finalizando um prato, entre outros...</div>
+
+                    <!-- Área de upload -->
+                    <div id="uploadArea" style="border:2px dashed #d1d5db;border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:#fafafa;" onclick="document.getElementById('inputFoto').click()" ondragover="event.preventDefault();this.style.borderColor='#c8102e';this.style.background='#fff5f6';" ondragleave="this.style.borderColor='#d1d5db';this.style.background='#fafafa';" ondrop="handleDrop(event)">
+                        <div style="font-size:36px;margin-bottom:8px;">📷</div>
+                        <div style="font-size:13px;font-weight:700;color:#374151;">Clique aqui ou arraste a foto</div>
+                        <div style="font-size:11px;color:#9ca3af;margin-top:4px;">Aceita: JPG, PNG, WEBP — máx. 10 MB</div>
+                    </div>
+                    <input type="file" id="inputFoto" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="selecionarFoto(this)" />
+
+                    <!-- Hidden: guarda o link do Drive após upload -->
+                    <input type="hidden" id="fotoTrabalho" />
+
+                    <!-- Preview + progresso -->
+                    <div id="fotoPreviewBox" style="display:none;margin-top:12px;">
+                        <div style="position:relative;border-radius:10px;overflow:hidden;border:1.5px solid #e5e7eb;">
+                            <img id="fotoPreviewImg" style="width:100%;max-height:260px;object-fit:cover;display:block;" />
+                            <button type="button" onclick="removerFoto()" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;line-height:28px;">✕</button>
+                        </div>
+                        <div id="fotoProgress" style="display:none;margin-top:8px;">
+                            <div style="background:#e5e7eb;border-radius:6px;height:8px;overflow:hidden;">
+                                <div id="fotoProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#c8102e,#16a34a);border-radius:6px;transition:width 0.3s;"></div>
+                            </div>
+                            <div id="fotoProgressText" style="font-size:11px;color:#6b7280;font-weight:600;margin-top:4px;text-align:center;">Enviando...</div>
+                        </div>
+                        <div id="fotoSuccessMsg" style="display:none;margin-top:8px;font-size:12px;font-weight:700;color:#16a34a;text-align:center;">✅ Foto enviada para o Google Drive com sucesso!</div>
+                        <div id="fotoErrorMsg" style="display:none;margin-top:8px;font-size:12px;font-weight:700;color:#dc2626;text-align:center;"></div>
+                    </div>
+                </div>
+
+                <!-- M — Habilidades Técnicas (Pergunta 2: Texto) -->
+                <div class="competencia-bloco">
+                    <div class="competencia-titulo">🔧 Habilidades Técnicas <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">O colaborador demonstrou as habilidades técnicas necessárias para a função? (como manipular alimentos, atender clientes e operar equipamentos)?</div>
+                    <div class="competencia-texto-label">Resposta:</div>
+                    <textarea class="competencia-textarea" id="txt_habilidades" maxlength="500"
+                        placeholder="O colaborador demonstrou as habilidades técnicas necessárias para a função? (como manipular alimentos, atender clientes e operar equipamentos)?" oninput="contarPalavras(this, 'wc_habilidades')"></textarea>
+                    <div class="word-counter"><span class="wc-count" id="wc_habilidades">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                </div>
+
+                <!-- N — Atitudes e Comportamento -->
+                <div class="competencia-bloco">
+                    <div class="competencia-titulo">😊 Atitudes e Comportamento <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">Como foi a atitude do(a) colaborador(a) durante o treinamento? Ele(a) estava disposto(a) a aprender e melhorar? Foi pró-ativo(a), questionador(a), ou demonstrou outras qualidades?</div>
+                    <div class="competencia-texto-label">Resposta:</div>
+                    <textarea class="competencia-textarea" id="txt_atitudes" maxlength="500"
+                        placeholder="Como foi a atitude do(a) colaborador(a) durante o treinamento? Ele(a) estava disposto(a) a aprender e melhorar?" oninput="contarPalavras(this, 'wc_atitudes')"></textarea>
+                    <div class="word-counter"><span class="wc-count" id="wc_atitudes">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                </div>
+
+                <!-- O — Resolução de Problemas -->
+                <div class="competencia-bloco">
+                    <div class="competencia-titulo">🧩 Capacidade de Resolução de Problemas <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">O(a) colaborador(a) conseguiu lidar com situações inesperadas ou resolver problemas durante o treinamento? Mostrou iniciativa?</div>
+                    <div class="competencia-texto-label">Resposta:</div>
+                    <textarea class="competencia-textarea" id="txt_resolucao" maxlength="500"
+                        placeholder="O(a) colaborador(a) conseguiu lidar com situações inesperadas ou resolver problemas durante o treinamento? Mostrou iniciativa?" oninput="contarPalavras(this, 'wc_resolucao')"></textarea>
+                    <div class="word-counter"><span class="wc-count" id="wc_resolucao">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                </div>
+
+                <!-- P — Trabalho em Equipe -->
+                <div class="competencia-bloco">
+                    <div class="competencia-titulo">🤝 Trabalho em Equipe <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">Como foi a participação do colaborador(a) com outros membros da equipe durante o treinamento? (Comunicação, ajuda, participação em situações inapropriadas)</div>
+                    <div class="competencia-texto-label">Resposta:</div>
+                    <textarea class="competencia-textarea" id="txt_equipe" maxlength="500"
+                        placeholder="Como foi a participação do colaborador(a) com outros membros da equipe durante o treinamento?" oninput="contarPalavras(this, 'wc_equipe')"></textarea>
+                    <div class="word-counter"><span class="wc-count" id="wc_equipe">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                </div>
+
+                <!-- Q — Adesão aos Padrões -->
+                <div class="competencia-bloco">
+                    <div class="competencia-titulo">📋 Adesão aos Padrões e Procedimentos da Franqueadora <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">Demonstrou entendimento e seguiu as políticas da empresa (Ex.: Compreensão do cardápio, uso do nosso tempero, montagem do bufê, entre outros)?</div>
+                    <div class="competencia-texto-label">Resposta:</div>
+                    <textarea class="competencia-textarea" id="txt_adesao" maxlength="500"
+                        placeholder="Demonstrou entendimento e seguiu as políticas da empresa?" oninput="contarPalavras(this, 'wc_adesao')"></textarea>
+                    <div class="word-counter"><span class="wc-count" id="wc_adesao">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                </div>
+
+                <!-- R — Feedback e Melhoria Contínua -->
+                <div class="competencia-bloco">
+                    <div class="competencia-titulo">💬 Feedback e Melhoria Contínua <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">Descreva como o colaborador reagiu ao feedback recebido durante o treinamento?</div>
+                    <div class="competencia-texto-label">Resposta:</div>
+                    <textarea class="competencia-textarea" id="txt_feedback" maxlength="500"
+                        placeholder="Descreva como o colaborador reagiu ao feedback recebido durante o treinamento?" oninput="contarPalavras(this, 'wc_feedback')"></textarea>
+                    <div class="word-counter"><span class="wc-count" id="wc_feedback">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                </div>
+
+                <!-- S — Confiança e Autonomia -->
+                <div class="competencia-bloco">
+                    <div class="competencia-titulo">💪 Confiança e Autonomia <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">O colaborador se sente confiante para desempenhar suas funções de forma independente após o treinamento?</div>
+                    <div class="competencia-texto-label">Resposta:</div>
+                    <textarea class="competencia-textarea" id="txt_confianca" maxlength="500"
+                        placeholder="O colaborador se sente confiante para desempenhar suas funções de forma independente após o treinamento?" oninput="contarPalavras(this, 'wc_confianca')"></textarea>
+                    <div class="word-counter"><span class="wc-count" id="wc_confianca">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                </div>
+
+                <!-- T — Destaque Importante -->
+                <div class="competencia-bloco" style="border-color: #fde68a; background: #fffbeb;">
+                    <div class="competencia-titulo" style="color:#92400e;">⭐ Destaque Importante <span style="color:#c8102e;font-size:11px;">*</span></div>
+                    <div class="competencia-subtitulo">Durante este período, houve algum ponto excepcional deste(a) colaborador(a) que merece ser mencionado? Por favor, descreva com clareza.</div>
+                    <div class="competencia-texto-label">Resposta:</div>
+                    <textarea class="competencia-textarea" id="txt_destaque" maxlength="600"
+                        placeholder="Durante este período, houve algum ponto excepcional deste(a) colaborador(a) que merece ser mencionado? Por favor, descreva com clareza." oninput="contarPalavras(this, 'wc_destaque')"></textarea>
+                    <div class="word-counter"><span class="wc-count" id="wc_destaque">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                </div>
+
+            </div>
+
+            <!-- 4. ESCALAS NUMÉRICAS (U, V, W) — nota 1-5 -->
+            <div class="section">
+                <div class="section-title">⭐ Avaliação Numérica <span style="font-size:10px;color:#9ca3af;font-weight:600;text-transform:none;letter-spacing:0;">(1 = Ruim → 5 = Excelente)</span></div>
+                <div class="one-col" style="gap:18px;">
+
+                    <!-- U — Avaliação do Comportamento -->
+                    <div class="escala-group">
+                        <label>Avaliação do Comportamento <span style="color:#c8102e;">*</span></label>
+                        <div class="escala-label-sub">Usando uma escala de 01 à 05, avalie o comportamento do colaborador mediante as informações passadas:</div>
+                        <div class="escala-buttons" id="esc_comportamento"></div>
+                        <div class="nota-display" id="disp_comportamento"></div>
+                    </div>
+
+                    <!-- V — Entendimento do Conteúdo -->
+                    <div class="escala-group">
+                        <label>Entendimento do Conteúdo <span style="color:#c8102e;">*</span></label>
+                        <div class="escala-label-sub">Usando uma escala de 01 à 05, como você avalia o entendimento do colaborador quanto ao conteúdo apresentado?</div>
+                        <div class="escala-buttons" id="esc_entendimento"></div>
+                        <div class="nota-display" id="disp_entendimento"></div>
+                    </div>
+
+                    <!-- W — Pronto para a Função -->
+                    <div class="escala-group">
+                        <label>Pronto para a Função <span style="color:#c8102e;">*</span></label>
+                        <div class="escala-label-sub">Na escala de 01 à 05, como avalia que o colaborador está pronto para desempenhar a sua função?</div>
+                        <div class="escala-buttons" id="esc_pronto"></div>
+                        <div class="nota-display" id="disp_pronto"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 5. NOTA MULTIPLICADOR (X — 0-10) -->
+            <div class="section">
+                <div class="section-title">🏆 Nota como Multiplicador</div>
+                <div class="nota-section">
+                    <label>Em uma escala de 0 a 10, o quanto você recomenda que este colaborador(a) será um multiplicador deste treinamento? <span style="color:#c8102e;">*</span></label>
+                    <div class="nota-buttons" id="notaButtons"></div>
+                    <div class="nota-display" id="notaDisplay"></div>
+                </div>
+            </div>
+
+            <!-- 6. APROVAÇÃO (Z — texto) e CHECKPOINT (AA — texto) -->
+            <div class="section">
+                <div class="section-title">✅ Aprovação e Finalização</div>
+                <div class="one-col">
+
+                    <!-- Z — Aprovado (select) -->
+                    <div class="field">
+                        <label>Para finalizar, você considera que o colaborador esteja aprovado? <span class="req">*</span></label>
+                        <select id="selectAprovado">
+                            <option value="">— Selecione —</option>
+                            <option value="SIM">✅ Sim</option>
+                            <option value="NÃO">❌ Não</option>
+                            <option value="PREFIRO NÃO RESPONDER">🤷 Prefiro não responder</option>
+                        </select>
+                    </div>
+
+                    <!-- AA — Checkpoint Loja Treinadora (por extenso) -->
+                    <div class="field" id="campoCheckpoint">
+                        <label>Necessário Check-point Loja Treinadora? <span class="req">*</span></label>
+                        <textarea id="checkpointLoja" rows="3" class="competencia-textarea" style="resize:vertical;min-height:70px;"
+                            placeholder="Ligação para validar as informações. Descreva o necessário." oninput="contarPalavras(this, 'wc_checkpoint')"></textarea>
+                        <div class="word-counter"><span class="wc-count" id="wc_checkpoint">0 letras</span><span class="wc-min">mínimo 20 letras</span></div>
+                    </div>
+
+                </div>
             </div>
 
             <button class="btn-submit" id="btnEnviar" onclick="enviarAvaliacao()">
@@ -212,13 +525,13 @@
         </div>
     </div>
 
-    <!-- ESTADO DE SUCESSO -->
+    <!-- SUCESSO -->
     <div id="successArea" style="display:none;">
         <div class="state-success">
             <div class="check">✅</div>
             <h2>Avaliação Registrada!</h2>
             <p>
-                A nota foi salva na planilha de controle.<br>
+                Os dados foram salvos na planilha de controle.<br>
                 O setor de treinamentos foi notificado automaticamente.
             </p>
         </div>
@@ -228,35 +541,83 @@
 
 <script>
     const API = '/treinamento';
-
     const params = new URLSearchParams(window.location.search);
     const token  = params.get('token');
 
-    let notaSelecionada  = null;
     let dadosFuncionario = null;
 
-    // ─── LABELS DAS NOTAS ────────────────────────────────────────────────────
+    const ESCALA_LABELS = {
+        1: 'Ruim', 2: 'Insuficiente', 3: 'Regular', 4: 'Bom', 5: 'Excelente'
+    };
     const NOTA_LABELS = {
-        0: 'Não compareceu / Reprovado',
-        1: 'Muito fraco',
-        2: 'Fraco',
-        3: 'Insuficiente',
-        4: 'Abaixo do esperado',
-        5: 'Regular',
-        6: 'Suficiente',
-        7: 'Bom',
-        8: 'Muito bom',
-        9: 'Ótimo',
-        10: 'Excelente 🏆'
+        0: 'Não compareceu / Reprovado', 1: 'Muito fraco', 2: 'Fraco',
+        3: 'Insuficiente', 4: 'Abaixo do esperado', 5: 'Regular',
+        6: 'Suficiente', 7: 'Bom', 8: 'Muito bom', 9: 'Ótimo', 10: 'Excelente 🏆'
     };
 
-    function notaClass(n) {
-        if (n <= 4) return 'low';
-        if (n <= 6) return 'mid';
-        return 'high';
+    // ★ Apenas 3 escalas numéricas (U, V, W)
+    const escalasState = {
+        comportamento: null,  // col U
+        entendimento: null,   // col V
+        pronto: null,         // col W
+    };
+    let notaSelecionada = null;
+
+    const MIN_LETRAS = 20;
+
+    // ─── CONTADOR DE LETRAS ─────────────────────────────────────────────────
+    function contarLetrasTexto(texto) {
+        return (texto || '').replace(/\s/g, '').length;
     }
 
-    // ─── BOTÕES DE NOTA ──────────────────────────────────────────────────────
+    function contarPalavras(textarea, displayId) {
+        const count = contarLetrasTexto(textarea.value);
+        const el = document.getElementById(displayId);
+        if (!el) return;
+        el.textContent = count + (count === 1 ? ' letra' : ' letras');
+
+        textarea.classList.remove('border-warn', 'border-ok');
+        el.classList.remove('ok', 'low');
+
+        if (count === 0) {
+            // neutro
+        } else if (count < MIN_LETRAS) {
+            el.classList.add('low');
+            textarea.classList.add('border-warn');
+            el.textContent += ` (faltam ${MIN_LETRAS - count})`;
+        } else {
+            el.classList.add('ok');
+            textarea.classList.add('border-ok');
+            el.textContent += ' ✓';
+        }
+    }
+
+    // ─── GERA BOTÕES ESCALA 1-5 ─────────────────────────────────────────────
+    function gerarEscala(id, chave) {
+        const container = document.getElementById(id);
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = 1; i <= 5; i++) {
+            const btn = document.createElement('button');
+            btn.className   = 'escala-btn';
+            btn.textContent = i;
+            btn.dataset.val = i;
+            btn.onclick = () => selecionarEscala(chave, i);
+            container.appendChild(btn);
+        }
+    }
+
+    function selecionarEscala(chave, val) {
+        escalasState[chave] = val;
+        const container = document.getElementById('esc_' + chave);
+        container.querySelectorAll('.escala-btn').forEach(b => { b.className = 'escala-btn'; });
+        const btn = container.querySelector(`[data-val="${val}"]`);
+        btn.classList.add('sel-' + val);
+        const disp = document.getElementById('disp_' + chave);
+        if (disp) disp.textContent = ESCALA_LABELS[val];
+    }
+
+    // ─── GERA BOTÕES NOTA 0-10 ──────────────────────────────────────────────
     function gerarBotoesNota() {
         const container = document.getElementById('notaButtons');
         container.innerHTML = '';
@@ -270,15 +631,21 @@
         }
     }
 
+    function notaClass(n) {
+        if (n <= 4) return 'sel-low';
+        if (n <= 6) return 'sel-mid';
+        return 'sel-high';
+    }
+
     function selecionarNota(n) {
         notaSelecionada = n;
-        document.querySelectorAll('.nota-btn').forEach(b => b.classList.remove('selected', 'low', 'mid', 'high'));
+        document.querySelectorAll('.nota-btn').forEach(b => b.className = 'nota-btn');
         const btn = document.querySelector(`.nota-btn[data-nota="${n}"]`);
-        btn.classList.add('selected', notaClass(n));
+        btn.classList.add(notaClass(n));
         document.getElementById('notaDisplay').textContent = `Nota ${n} — ${NOTA_LABELS[n]}`;
     }
 
-    // ─── CARREGA DADOS DO FUNCIONÁRIO ────────────────────────────────────────
+    // ─── CARREGA FUNCIONÁRIO ─────────────────────────────────────────────────
     async function carregarFuncionario() {
         if (!token) {
             mostrarErro('Link de avaliação inválido ou expirado. Solicite um novo lembrete.');
@@ -288,93 +655,179 @@
             const r = await fetch(`${API}/avaliacao/dados?token=${token}`);
             if (!r.ok) throw new Error('Token inválido ou expirado');
             dadosFuncionario = await r.json();
-
             renderizarColaborador();
 
-            // Mostra campo data fim APENAS para loja treinadora
-            if (dadosFuncionario.tipoAvaliador === 'treinadora') {
+            const isTreinadora = dadosFuncionario.tipoAvaliador === 'treinadora';
+            if (isTreinadora) {
                 document.getElementById('campoDataFim').style.display = 'block';
-
-                // Pré-preenche data fim se já existir na planilha
                 if (dadosFuncionario.fimTrein) {
-                    const partes = dadosFuncionario.fimTrein.split('/');
-                    if (partes.length === 3) {
-                        document.getElementById('dataFim').value =
-                            `${partes[2]}-${partes[1].padStart(2,'0')}-${partes[0].padStart(2,'0')}`;
-                    }
+                    const p = dadosFuncionario.fimTrein.split('/');
+                    if (p.length === 3)
+                        document.getElementById('dataFim').value = `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
                 }
             }
+
+            if (dadosFuncionario.inicioTrein) {
+                const p = dadosFuncionario.inicioTrein.split('/');
+                if (p.length === 3)
+                    document.getElementById('dataInicio').value = `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
+            }
+            if (dadosFuncionario.loja)
+                document.getElementById('lojaTreinada').value = dadosFuncionario.loja;
 
         } catch (e) {
             mostrarErro('Não foi possível carregar os dados: ' + e.message);
         }
     }
 
-    // ─── RENDERIZA COLABORADOR ───────────────────────────────────────────────
     function renderizarColaborador() {
         const f = dadosFuncionario;
-
-        // Badge de tipo de avaliador
         const tipoLabel = f.tipoAvaliador === 'treinadora'
-            ? '<span style="background:#16a34a;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;">🏭 LOJA TREINADORA</span>'
-            : '<span style="background:#c8102e;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;">🏪 LOJA DE ORIGEM</span>';
+            ? '<span class="badge-treinadora">🏭 LOJA TREINADORA</span>'
+            : '<span class="badge-origem">🏪 LOJA DE ORIGEM</span>';
 
         document.getElementById('colaboradorTitulo').innerHTML = '👤 Colaborador &nbsp;' + tipoLabel;
-
         document.getElementById('collabGrid').innerHTML = `
-            <div class="collab-field">
-                <div class="collab-label">Nome</div>
-                <div class="collab-val">${f.nome}</div>
-            </div>
-            <div class="collab-field">
-                <div class="collab-label">Loja</div>
-                <div class="collab-val">${f.loja}</div>
-            </div>
-            <div class="collab-field">
-                <div class="collab-label">Função</div>
-                <div class="collab-val">${f.funcao}</div>
-            </div>
-            <div class="collab-field">
-                <div class="collab-label">Turno</div>
-                <div class="collab-val">${f.turno || '—'}</div>
-            </div>
-            <div class="collab-field">
-                <div class="collab-label">Início do Treinamento</div>
-                <div class="collab-val">${f.inicioTrein}</div>
-            </div>
-            <div class="collab-field">
-                <div class="collab-label">CPF</div>
-                <div class="collab-val">${f.cpf || '—'}</div>
-            </div>
+            <div><div class="collab-label">Nome</div><div class="collab-val">${f.nome}</div></div>
+            <div><div class="collab-label">Loja</div><div class="collab-val">${f.loja}</div></div>
+            <div><div class="collab-label">Função</div><div class="collab-val">${f.funcao}</div></div>
+            <div><div class="collab-label">Turno</div><div class="collab-val">${f.turno || '—'}</div></div>
+            <div><div class="collab-label">Início do Treinamento</div><div class="collab-val">${f.inicioTrein}</div></div>
+            <div><div class="collab-label">CPF</div><div class="collab-val">${f.cpf || '—'}</div></div>
         `;
     }
 
-    // ─── ENVIO DA AVALIAÇÃO ──────────────────────────────────────────────────
+    // ─── VALIDAÇÃO ───────────────────────────────────────────────────────────
+    function validar() {
+        if (!document.getElementById('treinadorNomeFuncao').value.trim())
+            return 'Informe o nome e função de quem treinou.';
+        if (!document.getElementById('unidadeTreinamento').value.trim())
+            return 'Informe a unidade onde o treinamento foi realizado.';
+        if (!document.getElementById('lojaTreinada').value.trim())
+            return 'Informe a loja treinada.';
+        if (!document.getElementById('dataInicio').value)
+            return 'Informe a data de início do treinamento.';
+        if (dadosFuncionario?.tipoAvaliador === 'treinadora' && !document.getElementById('dataFim').value)
+            return 'Informe a data de término do treinamento.';
+
+        // ★ Consumo obrigatório
+        if (!document.getElementById('qtdeRefeicoes').value || document.getElementById('qtdeRefeicoes').value === '')
+            return 'Informe a quantidade de refeições.';
+        if (!document.getElementById('consumoBebidas').value || document.getElementById('consumoBebidas').value === '')
+            return 'Informe o consumo de bebidas.';
+
+        // ★ Campos texto obrigatórios com mínimo de 20 letras (L a S + T + AA)
+        const textosObrigatorios = [
+            ['txt_compreensao', 'Compreensão do Treinamento', 'wc_compreensao'],
+            ['txt_habilidades', 'Habilidades Técnicas', 'wc_habilidades'],
+            ['txt_atitudes', 'Atitudes e Comportamento', 'wc_atitudes'],
+            ['txt_resolucao', 'Resolução de Problemas', 'wc_resolucao'],
+            ['txt_equipe', 'Trabalho em Equipe', 'wc_equipe'],
+            ['txt_adesao', 'Adesão aos Padrões', 'wc_adesao'],
+            ['txt_feedback', 'Feedback e Melhoria Contínua', 'wc_feedback'],
+            ['txt_confianca', 'Confiança e Autonomia', 'wc_confianca'],
+            ['txt_destaque', 'Destaque Importante', 'wc_destaque'],
+            ['checkpointLoja', 'Check-point Loja Treinadora', 'wc_checkpoint'],
+        ];
+        for (const [id, nome, wcId] of textosObrigatorios) {
+            const el = document.getElementById(id);
+            if (!el) continue;
+            const texto = el.value.trim();
+            if (!texto)
+                return `Por favor, preencha o campo "${nome}".`;
+            const letras = contarLetrasTexto(texto);
+            if (letras < MIN_LETRAS)
+                return `O campo "${nome}" precisa ter no mínimo ${MIN_LETRAS} letras. Você escreveu ${letras}.`;
+        }
+
+        // ★ Foto obrigatória (deve ter sido feito upload)
+        if (!document.getElementById('fotoTrabalho').value.trim())
+            return 'Por favor, envie a foto do trabalho do colaborador.';
+
+        // ★ Aprovado obrigatório (select)
+        if (!document.getElementById('selectAprovado').value)
+            return 'Por favor, selecione se o colaborador está aprovado.';
+
+        // ★ Escalas numéricas (apenas U, V, W)
+        if (escalasState.comportamento === null)
+            return 'Por favor, avalie o "Comportamento" (escala 1-5).';
+        if (escalasState.entendimento === null)
+            return 'Por favor, avalie o "Entendimento do Conteúdo" (escala 1-5).';
+        if (escalasState.pronto === null)
+            return 'Por favor, avalie "Pronto para a Função" (escala 1-5).';
+
+        if (notaSelecionada === null)
+            return 'Por favor, selecione a nota como multiplicador (0 a 10).';
+
+        return null;
+    }
+
+    function dataToBR(val) {
+        if (!val) return null;
+        const [ano, mes, dia] = val.split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    // ─── ENVIO ───────────────────────────────────────────────────────────────
     async function enviarAvaliacao() {
         esconderErro();
+        const erro = validar();
+        if (erro) { mostrarErro(erro); return; }
 
-        if (notaSelecionada === null) {
-            mostrarErro('Por favor, selecione uma nota de 0 a 10.');
-            return;
-        }
+        const tipo = dadosFuncionario?.tipoAvaliador || 'origem';
 
-        const tipoAvaliador = dadosFuncionario?.tipoAvaliador || 'origem';
-        const dataFimVal    = document.getElementById('dataFim').value;
+        // ★ J = "X refeições"
+        const qtdeRef = document.getElementById('qtdeRefeicoes').value || '0';
+        const qtdeRefeicoesFmt = qtdeRef + ' refeições';
 
-        // Data fim obrigatória SOMENTE para loja treinadora
-        if (tipoAvaliador === 'treinadora' && !dataFimVal) {
-            mostrarErro('Por favor, informe a data de término do treinamento.');
-            return;
-        }
+        const payload = {
+            token,
+            tipo,
 
-        // Converte YYYY-MM-DD → DD/MM/YYYY (só se preenchida)
-        let dataFimBR = null;
-        if (dataFimVal) {
-            const [ano, mes, dia] = dataFimVal.split('-');
-            dataFimBR = `${dia}/${mes}/${ano}`;
-        }
+            treinadorNomeFuncao:  document.getElementById('treinadorNomeFuncao').value.trim(),
+            unidadeTreinamento:   document.getElementById('unidadeTreinamento').value.trim(),
+            lojaTreinada:         document.getElementById('lojaTreinada').value.trim(),
+            dataInicio:           dataToBR(document.getElementById('dataInicio').value),
+            dataFim:              dataToBR(document.getElementById('dataFim').value),
 
-        const observacoes = document.getElementById('observacoes').value.trim();
+            // ★ J — formato "X refeições"
+            qtdeRefeicoes:        qtdeRefeicoesFmt,
+            consumoBebidas:       document.getElementById('consumoBebidas').value || '0',
+
+            // ★ L a S — TEXTO POR EXTENSO (antes eram notas 1-5)
+            compreensaoTreinamento: document.getElementById('txt_compreensao').value.trim(),  // col L
+            habilidadesTecnicas:    document.getElementById('txt_habilidades').value.trim(),  // col M
+            atitudesComportamento:  document.getElementById('txt_atitudes').value.trim(),     // col N
+            resolucaoProblemas:     document.getElementById('txt_resolucao').value.trim(),    // col O
+            trabalhoEquipe:         document.getElementById('txt_equipe').value.trim(),       // col P
+            adesaoPadroes:          document.getElementById('txt_adesao').value.trim(),       // col Q
+            feedbackMelhoria:       document.getElementById('txt_feedback').value.trim(),     // col R
+            confiancaAutonomia:     document.getElementById('txt_confianca').value.trim(),    // col S
+
+            // T — Destaque (texto)
+            destaqueImportante:     document.getElementById('txt_destaque').value.trim(),
+
+            // ★ U, V, W — NOTAS 1-5 (únicas escalas numéricas restantes)
+            avaliacaoComportamento: escalasState.comportamento,   // col U
+            entendimentoConteudo:   escalasState.entendimento,    // col V
+            prontoFuncao:           escalasState.pronto,          // col W
+
+            // X — Nota multiplicador (0-10)
+            multiplicadorNota:      notaSelecionada,
+
+            // Y — Foto do trabalho
+            fotoTrabalho:           document.getElementById('fotoTrabalho').value.trim(),
+
+            // ★ Z — Aprovado (select: SIM / NÃO / PREFIRO NÃO RESPONDER)
+            aprovado:               document.getElementById('selectAprovado').value,
+
+            // AA — Checkpoint
+            checkpointLoja:         document.getElementById('checkpointLoja').value.trim(),
+
+            // Legado
+            nota:        notaSelecionada,
+            observacoes: document.getElementById('txt_destaque').value.trim(),
+        };
 
         const btn = document.getElementById('btnEnviar');
         btn.disabled = true;
@@ -384,18 +837,13 @@
             const r = await fetch(`${API}/avaliacao/registrar`, {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify({
-                    token,
-                    nota:       notaSelecionada,
-                    dataFim:    dataFimBR,
-                    observacoes
-                })
+                body:    JSON.stringify(payload)
             });
 
             const d = await r.json();
             if (!r.ok || !d.sucesso) throw new Error(d.erro || 'Erro ao salvar avaliação');
 
-            document.getElementById('formArea').style.display   = 'none';
+            document.getElementById('formArea').style.display    = 'none';
             document.getElementById('successArea').style.display = 'block';
 
         } catch (e) {
@@ -411,12 +859,151 @@
         box.classList.add('visible');
         box.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-
     function esconderErro() {
         document.getElementById('errorBox').classList.remove('visible');
     }
 
+    // ─── UPLOAD DE FOTO PARA GOOGLE DRIVE ────────────────────────────────────
+    let fotoArquivo   = null;
+    let fotoUploadUrl = null;
+
+    function handleDrop(e) {
+        e.preventDefault();
+        const area = document.getElementById('uploadArea');
+        area.style.borderColor = '#d1d5db';
+        area.style.background  = '#fafafa';
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            processarArquivo(e.dataTransfer.files[0]);
+        }
+    }
+
+    function selecionarFoto(input) {
+        if (input.files && input.files.length > 0) {
+            processarArquivo(input.files[0]);
+        }
+    }
+
+    function processarArquivo(file) {
+        // Validar tipo
+        const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!tiposPermitidos.includes(file.type)) {
+            mostrarErroFoto('Formato não aceito. Use JPG, PNG ou WEBP.');
+            return;
+        }
+        // Validar tamanho (10 MB)
+        if (file.size > 10 * 1024 * 1024) {
+            mostrarErroFoto('Arquivo muito grande. Máximo 10 MB.');
+            return;
+        }
+
+        fotoArquivo = file;
+
+        // Preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById('fotoPreviewImg').src = e.target.result;
+            document.getElementById('fotoPreviewBox').style.display = 'block';
+            document.getElementById('uploadArea').style.display     = 'none';
+            document.getElementById('fotoSuccessMsg').style.display = 'none';
+            document.getElementById('fotoErrorMsg').style.display   = 'none';
+        };
+        reader.readAsDataURL(file);
+
+        // Upload automático
+        enviarFotoDrive(file);
+    }
+
+    async function enviarFotoDrive(file) {
+        const progress    = document.getElementById('fotoProgress');
+        const progressBar = document.getElementById('fotoProgressBar');
+        const progressTxt = document.getElementById('fotoProgressText');
+        const successMsg  = document.getElementById('fotoSuccessMsg');
+        const errorMsg    = document.getElementById('fotoErrorMsg');
+
+        progress.style.display   = 'block';
+        successMsg.style.display = 'none';
+        errorMsg.style.display   = 'none';
+        progressBar.style.width  = '10%';
+        progressTxt.textContent  = 'Preparando envio...';
+
+        // Monta nome do arquivo: data_funcionario_avaliacao_de_loja.ext
+        const agora    = new Date();
+        const dataStr  = [
+            String(agora.getDate()).padStart(2, '0'),
+            String(agora.getMonth() + 1).padStart(2, '0'),
+            agora.getFullYear()
+        ].join('-');
+        const nomeFunc = (dadosFuncionario?.nome || 'funcionario').replace(/\s+/g, '-').toUpperCase();
+        const lojaFunc = (dadosFuncionario?.loja || 'loja').replace(/\s+/g, '-').toUpperCase();
+        const ext      = file.name.split('.').pop() || 'jpg';
+        const nomeArquivo = `${dataStr}_${nomeFunc}_avaliacao_de_${lojaFunc}.${ext}`;
+
+        const formData = new FormData();
+        formData.append('foto', file, nomeArquivo);
+        formData.append('token', token);
+        formData.append('nomeArquivo', nomeArquivo);
+
+        progressBar.style.width = '30%';
+        progressTxt.textContent = 'Enviando foto...';
+
+        try {
+            const resp = await fetch(`${API}/avaliacao/upload-foto`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            progressBar.style.width = '80%';
+            progressTxt.textContent = 'Salvando no Drive...';
+
+            const data = await resp.json();
+            if (!resp.ok || !data.sucesso) throw new Error(data.erro || 'Erro no upload');
+
+            progressBar.style.width = '100%';
+            progressTxt.textContent = 'Concluído!';
+
+            fotoUploadUrl = data.link;
+            document.getElementById('fotoTrabalho').value = data.link;
+
+            setTimeout(() => {
+                progress.style.display   = 'none';
+                successMsg.style.display = 'block';
+            }, 600);
+
+        } catch (err) {
+            progress.style.display = 'none';
+            mostrarErroFoto('Falha ao enviar: ' + err.message);
+            // Limpa para permitir reenvio
+            document.getElementById('fotoTrabalho').value = '';
+            fotoUploadUrl = null;
+        }
+    }
+
+    function mostrarErroFoto(msg) {
+        const el = document.getElementById('fotoErrorMsg');
+        el.textContent = '⚠️ ' + msg;
+        el.style.display = 'block';
+    }
+
+    function removerFoto() {
+        fotoArquivo   = null;
+        fotoUploadUrl = null;
+        document.getElementById('fotoTrabalho').value       = '';
+        document.getElementById('inputFoto').value          = '';
+        document.getElementById('fotoPreviewBox').style.display = 'none';
+        document.getElementById('uploadArea').style.display     = 'block';
+        document.getElementById('fotoSuccessMsg').style.display = 'none';
+        document.getElementById('fotoErrorMsg').style.display   = 'none';
+        document.getElementById('fotoProgress').style.display   = 'none';
+    }
+
     // ─── INIT ────────────────────────────────────────────────────────────────
+    // ★ Apenas 3 escalas numéricas
+    const ESCALAS = [
+        ['esc_comportamento','comportamento'],
+        ['esc_entendimento','entendimento'],
+        ['esc_pronto','pronto'],
+    ];
+    ESCALAS.forEach(([id, chave]) => gerarEscala(id, chave));
     gerarBotoesNota();
     carregarFuncionario();
 </script>

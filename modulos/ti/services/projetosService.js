@@ -68,7 +68,7 @@ function encontrarAba(abas, nomeProjeto) {
     if (found) return found;
 
     // 2. Título da aba começa com o nome do projeto
-    //    Cobre: aba "Etiquetas NFC ➡️" vs nome "Etiquetas NFC"
+    //    Cobre: aba "Etiquetas NFC ➡️" vs nome "Etiquetas NFC"d
     found = abas.find(a => norm(a.titulo).startsWith(nomeLimpo));
     if (found) return found;
 

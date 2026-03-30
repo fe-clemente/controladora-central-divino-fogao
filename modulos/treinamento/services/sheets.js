@@ -8,6 +8,9 @@ const ABA_CADASTRAL = 'Cadastral 2026';
 const ABA_VALORES   = 'Valores';
 const ABA_TURNOVER  = 'Controle TurnOver';
 
+// ─── AVALIAÇÃO (planilha separada) ───────────────────────────────────────────
+const AVALIACAO_SHEET_NAME = 'Respostas ao formulário 1';
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MAPEAMENTO — ABA: Cadastral 2026 (dados a partir da linha 9)
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -392,6 +395,73 @@ async function getHistoricoAvaliacaoLembretes() {
             };
         })
         .filter(Boolean);
+}
+
+/**
+ * PATCH para sheets.js
+ * Substitua APENAS a função preencherAvaliacaoCompleta pela versão abaixo.
+ * O array foi expandido de 28 para 35 posições (cols A–AI).
+ */
+
+/**
+ * ★ PATCH para sheets.js — FUNÇÃO CORRIGIDA
+ *
+ * Substitua a função preencherAvaliacaoCompleta existente por esta versão.
+ *
+ * ANTES: 35 posições (cols A–AI) — com colunas descritivas AC-AI separadas
+ * AGORA: 28 posições (cols A–AB) — texto por extenso vai direto em L-S
+ *
+ * Mapeamento atualizado:
+ *   L-S  = TEXTO por extenso (eram notas 1-5)
+ *   U,V,W = notas 1-5
+ *   X    = nota 0-10
+ *   Z    = TEXTO por extenso (era SIM/NÃO)
+ *   AC-AI = ELIMINADAS
+ */
+
+async function preencherAvaliacaoCompleta(dados) {
+    const spreadsheetId = process.env.AVALIACAO_SHEET_ID;
+
+    if (!spreadsheetId) {
+        throw new Error('[sheets] Variável de ambiente AVALIACAO_SHEET_ID não definida.');
+    }
+
+    const auth   = await getAuth();
+    const sheets = google.sheets({ version: 'v4', auth });
+
+    // ── Determina a última linha com dados ──────────────────────────────────
+    const rangeCheck = `${AVALIACAO_SHEET_NAME}!A:A`;
+    const checkResp  = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: rangeCheck,
+    });
+
+    const existingRows = (checkResp.data.values || []).length;
+    const nextRow      = existingRows + 1;
+
+    // ★ Monta array de 28 posições (cols A–AB) — ANTES eram 35 (A–AI)
+    const rowArray = new Array(28).fill('');
+
+    for (const [colIndex, valor] of Object.entries(dados)) {
+        const idx = Number(colIndex) - 1;   // converte 1-based → 0-based
+        if (idx >= 0 && idx < 28) {
+            rowArray[idx] = valor !== null && valor !== undefined ? String(valor) : '';
+        }
+    }
+
+    // ★ Range atualizado: A–AB (antes era A–AI)
+    const range = `${AVALIACAO_SHEET_NAME}!A${nextRow}:AB${nextRow}`;
+
+    await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: {
+            values: [rowArray],
+        },
+    });
+
+    console.log(`📊 Avaliação gravada na aba "${AVALIACAO_SHEET_NAME}" linha ${nextRow} (cols A–AB)`);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1617,4 +1687,6 @@ module.exports = {
     getFuncionariosParaAvaliacaoLembrete,
     getHistoricoAvaliacaoLembretes,
     getAvaliacoesKpi,
+    // ★ AVALIAÇÃO COMPLETA — planilha separada
+    preencherAvaliacaoCompleta,
 };
