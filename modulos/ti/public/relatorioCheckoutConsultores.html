@@ -66,6 +66,23 @@
         .sheets-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;background:var(--green-pale);border:1.5px solid rgba(22,163,74,.2);color:var(--green);font-size:12px;font-weight:700;text-decoration:none;transition:all .18s;}
         .sheets-link:hover{background:var(--green);color:#fff;}
 
+        /* ── Botão Acessar Planilha (destaque) ── */
+        .btn-planilha{
+            display:inline-flex;align-items:center;gap:8px;
+            padding:10px 18px;border-radius:10px;
+            background:linear-gradient(135deg,#1e7e34,#16a34a);
+            color:#fff;font-size:13px;font-weight:800;
+            text-decoration:none;border:none;cursor:pointer;
+            box-shadow:0 3px 12px rgba(22,163,74,.35);
+            transition:all .2s;white-space:nowrap;
+        }
+        .btn-planilha:hover{
+            background:linear-gradient(135deg,#155d27,#15803d);
+            box-shadow:0 5px 18px rgba(22,163,74,.45);
+            transform:translateY(-1px);color:#fff;
+        }
+        .btn-planilha:active{transform:translateY(0);}
+
         /* ── Live Feed ── */
         #liveFeed{display:none;background:var(--bg2);border:1.5px solid var(--ti);border-radius:14px;padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow);}
         #liveFeed.visible{display:block;}
@@ -238,20 +255,20 @@
         <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
         <button class="nav-btn active">📋 Checkout</button>
 
-            <div class="nav-dropdown" id="navRelatorios">
-        <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
-            📊 Relatórios <span class="nav-drop-arrow">▾</span>
-        </button>
-        <div class="nav-drop-menu">
-            <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
-                <span class="ndi-icon">📋</span>
-                <span class="ndi-info">
-                    <span class="ndi-label">Check-in / Check-out</span>
-                    <span class="ndi-desc">Presença e localização de consultores</span>
-                </span>
-            </a>
+        <div class="nav-dropdown" id="navRelatorios">
+            <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
+                📊 Relatórios <span class="nav-drop-arrow">▾</span>
+            </button>
+            <div class="nav-drop-menu">
+                <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
+                    <span class="ndi-icon">📋</span>
+                    <span class="ndi-info">
+                        <span class="ndi-label">Check-in / Check-out</span>
+                        <span class="ndi-desc">Presença e localização de consultores</span>
+                    </span>
+                </a>
+            </div>
         </div>
-    </div>
 
     </nav>
 </header>
@@ -264,13 +281,38 @@
     </div>
     <span style="margin-left:auto;display:flex;gap:8px;align-items:center;">
         <span id="statusSync" style="font-size:11px;color:var(--muted);"></span>
+        <!-- ══ BOTÃO ACESSAR PLANILHA ══ -->
+        <a href="https://docs.google.com/spreadsheets/d/1yYmceSQhnEESyfI8DjgnLLeags5THHHONeZMNyrXLuI/edit?gid=1084453984#gid=1084453984"
+           target="_blank"
+           class="btn-planilha"
+           title="Abrir planilha Google Sheets">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
+            </svg>
+            Acessar Planilha
+        </a>
         <button class="btn btn-ghost btn-sm" id="btnGeocodificar" onclick="geocodificarPendentes()">📍 Corrigir Endereços</button>
         <button class="btn btn-ghost btn-sm" id="btnExportar" onclick="exportarCSV()" disabled>📤 Exportar CSV</button>
     </span>
 </div>
 
 <main>
-    <div class="page-title">📋 Relatório Check-in / Check-out</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:4px;">
+        <div class="page-title">📋 Relatório Check-in / Check-out</div>
+        <!-- ══ BOTÃO ACESSAR PLANILHA (área principal) ══ -->
+        <a href="https://docs.google.com/spreadsheets/d/1yYmceSQhnEESyfI8DjgnLLeags5THHHONeZMNyrXLuI/edit?gid=1084453984#gid=1084453984"
+           target="_blank"
+           class="btn-planilha"
+           title="Abrir planilha Google Sheets com os dados sincronizados">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
+            </svg>
+            Acessar Planilha
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.7">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+        </a>
+    </div>
     <div class="page-sub">Monitoramento de presença e localização dos consultores nas visitas</div>
 
     <!-- Painel Sync -->
@@ -308,7 +350,7 @@
                 <button class="btn btn-ti" id="btnSincronizar" onclick="sincronizar()">🔄 Sincronizar</button>
             </div>
             <div class="sync-group" id="grupoSheetsLink" style="display:none;">
-                <a href="https://docs.google.com/spreadsheets/d/1yYmceSQhnEESyfI8DjgnLLeags5THHHONeZMNyrXLuI/edit" target="_blank" class="sheets-link">
+                <a href="https://docs.google.com/spreadsheets/d/1yYmceSQhnEESyfI8DjgnLLeags5THHHONeZMNyrXLuI/edit?gid=1084453984#gid=1084453984" target="_blank" class="sheets-link">
                     📊 Ver Planilha Google Sheets
                 </a>
             </div>
@@ -382,10 +424,23 @@
                     <div class="table-head-title">📋 Registros de Check-in / Check-out</div>
                     <div class="table-count" id="paginacaoInfo">0 registros</div>
                 </div>
-                <div class="pagination-btns">
-                    <button class="btn btn-ghost btn-sm" id="btnPagAnterior" onclick="paginaAnterior()" disabled>← Anterior</button>
-                    <span id="paginacaoPagina" style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);">1/1</span>
-                    <button class="btn btn-ghost btn-sm" id="btnPagProximo" onclick="paginaProxima()" disabled>Próximo →</button>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <!-- ══ BOTÃO ACESSAR PLANILHA (dentro da tabela) ══ -->
+                    <a href="https://docs.google.com/spreadsheets/d/1yYmceSQhnEESyfI8DjgnLLeags5THHHONeZMNyrXLuI/edit?gid=1084453984#gid=1084453984"
+                       target="_blank"
+                       class="btn-planilha"
+                       style="font-size:12px;padding:7px 14px;"
+                       title="Abrir planilha Google Sheets">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
+                        </svg>
+                        Acessar Planilha
+                    </a>
+                    <div class="pagination-btns">
+                        <button class="btn btn-ghost btn-sm" id="btnPagAnterior" onclick="paginaAnterior()" disabled>← Anterior</button>
+                        <span id="paginacaoPagina" style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);">1/1</span>
+                        <button class="btn btn-ghost btn-sm" id="btnPagProximo" onclick="paginaProxima()" disabled>Próximo →</button>
+                    </div>
                 </div>
             </div>
             <div class="tbl-scroll">
@@ -684,14 +739,12 @@ function toggleIATi() {
 }
 
 function _montarContextoRelatorio() {
-    // Coleta dados da tabela e KPIs visíveis na página
     var total  = document.getElementById('kpiTotal')?.textContent || '—';
     var sim    = document.getElementById('kpiSim')?.textContent || '—';
     var nao    = document.getElementById('kpiNao')?.textContent || '—';
     var semGps = document.getElementById('kpiSemGps')?.textContent || '—';
     var conf   = document.getElementById('kpiConform')?.textContent || '—';
 
-    // Tenta extrair dados das linhas da tabela
     var rows = document.querySelectorAll('#tabelaBody tr');
     var consultores = {}, unidades = {}, situacoes = {};
     var registros = [];
@@ -716,10 +769,9 @@ function _montarContextoRelatorio() {
         if (unidade) unidades[unidade] = (unidades[unidade] || 0) + 1;
         if (situacao) situacoes[situacao] = (situacoes[situacao] || 0) + 1;
 
-        registros.push({ consultor: consultor, unidade: unidade, situacao: situacao, data: data, mesmoLocal: mesmoLocal, distancia: distancia });
+        registros.push({ consultor, unidade, situacao, data, mesmoLocal, distancia });
     });
 
-    // Monta texto de contexto
     var ctx = '=== RELATÓRIO CHECK-IN / CHECK-OUT — CONSULTORES ===\n\n';
     ctx += '--- KPIs GERAIS ---\n';
     ctx += 'Total avaliações: ' + total + '\n';
