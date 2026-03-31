@@ -6,177 +6,7 @@
 <title>Unidades — Jurídico</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
-  --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
-  --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
-  --accent:#2563eb;
-  --green:#16a34a; --green-pale:#f0fdf4;
-  --yellow:#d97706; --yellow-pale:#fffbeb;
-  --shadow:0 2px 12px rgba(0,0,0,0.08);
-  --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
-/* HEADER */
-header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
-.logo{padding:10px 0;flex-shrink:0;}
-.logo img{height:48px;width:auto;display:block;}
-.logo-fallback{font-size:18px;font-weight:900;color:var(--red);}
-.header-divider{width:1px;height:32px;background:var(--border);}
-.header-title{font-size:13px;font-weight:700;color:var(--muted);}
-nav{display:flex;gap:2px;margin-left:auto;}
-.nav-btn{background:none;border:none;padding:18px 14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;text-decoration:none;display:flex;align-items:center;}
-.nav-btn:hover{color:var(--text);background:var(--bg3);}
-.nav-btn.active{color:var(--red);border-bottom-color:var(--red);background:var(--red-pale);}
-
-/* STATUS BAR */
-#statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;}
-.status-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
-.status-dot.ready{background:var(--green);animation:none;}
-.status-dot.error{background:var(--red);animation:none;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* LAYOUT */
-main{max-width:1100px;margin:0 auto;padding:32px 24px;}
-.section-header{margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
-.section-header h2{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px;}
-.section-header p{color:var(--muted);font-size:13px;}
-
-/* VIEW SWITCHER */
-.view-switcher{display:flex;gap:0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg3);}
-.view-btn{padding:9px 20px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted);transition:all .18s;display:flex;align-items:center;gap:7px;white-space:nowrap;}
-.view-btn:not(:last-child){border-right:1px solid var(--border);}
-.view-btn.active{background:var(--red);color:#fff;}
-.view-btn:not(.active):hover{background:var(--bg2);color:var(--text);}
-
-/* BUTTONS */
-.btn{padding:9px 18px;border-radius:10px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:var(--bg3);color:var(--text);transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;}
-.btn:hover{background:var(--bg2);border-color:#ccc;}
-.btn-primary{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 2px 8px rgba(200,16,46,.3);}
-.btn-primary:hover{background:var(--red-light);}
-.btn:disabled{opacity:.5;cursor:not-allowed;}
-
-/* STAT CARDS */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:24px;}
-.stat-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);transition:all .2s;}
-.stat-card:hover{box-shadow:var(--shadow-lg);}
-.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:700;margin-bottom:8px;}
-.stat-value{font-size:34px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:5px;}
-.stat-sub{font-size:12px;color:var(--muted);font-weight:600;}
-
-/* CHART */
-.chart-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--shadow);margin-bottom:20px;}
-.chart-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:18px;}
-.grafico-barras{display:flex;flex-direction:column;gap:9px;max-height:380px;overflow-y:auto;}
-.barra-row{display:flex;align-items:center;gap:10px;cursor:pointer;}
-.barra-row:hover .barra-label{color:var(--red);}
-.barra-label{width:210px;min-width:210px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:600;color:var(--text);transition:color .15s;}
-.barra-track{flex:1;height:18px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
-.barra-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-light));border-radius:4px;transition:width .9s cubic-bezier(.4,0,.2,1);min-width:4px;}
-.barra-num{width:28px;text-align:right;font-weight:700;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-
-/* CONTROLES */
-.controles{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
-.busca-input{flex:1;min-width:200px;max-width:360px;padding:10px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;background:var(--bg2);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
-.busca-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.08);}
-.busca-input::placeholder{color:var(--muted);font-weight:400;}
-.filtro-select{padding:10px 32px 10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;background:var(--bg2);color:var(--text);cursor:pointer;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
-.filtro-select:focus{border-color:var(--red);}
-
-/* TABELA */
-.tabela-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:24px;}
-.tabela-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
-.tabela-header-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
-.total-badge{background:var(--bg3);border:1px solid var(--border);padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-table{width:100%;border-collapse:collapse;}
-thead th{padding:10px 14px;text-align:left;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;background:var(--bg);border-bottom:2px solid var(--border);white-space:nowrap;}
-tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
-tbody tr:last-child{border-bottom:none;}
-tbody tr:hover{background:var(--bg3);}
-tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
-.td-nome{font-weight:700;color:var(--text);}
-.td-uf{display:inline-block;background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:800;color:var(--muted);}
-.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
-.badge-ativa{background:var(--green-pale);color:var(--green);border:1px solid rgba(22,163,74,.2);}
-.badge-impl{background:var(--yellow-pale);color:var(--yellow);border:1px solid rgba(217,119,6,.2);}
-.td-func{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:16px;color:var(--red);}
-.td-email{font-size:12px;color:var(--muted);}
-
-/* FUNC AVATAR na tabela */
-.func-av-mini{width:30px;height:30px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);font-size:11px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);font-weight:800;overflow:hidden;flex-shrink:0;vertical-align:middle;margin-right:8px;}
-.func-av-mini img{width:100%;height:100%;object-fit:cover;}
-
-/* LOADING */
-.loading-msg{text-align:center;padding:50px 24px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
-.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:20px;}
-.modal-overlay.aberto{display:flex;}
-.modal{background:var(--bg2);border-radius:18px;width:100%;max-width:700px;max-height:86vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.18);animation:slideUp .22s ease;border:1.5px solid var(--border);}
-@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;}
-.modal-titulo{font-size:16px;font-weight:800;color:var(--text);margin-bottom:3px;}
-.modal-sub{font-size:12px;color:var(--muted);font-weight:600;}
-.modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);font-family:'Nunito',sans-serif;transition:all .15s;flex-shrink:0;}
-.modal-close:hover{background:var(--red-pale);color:var(--red);border-color:rgba(200,16,46,.3);}
-.modal-busca{padding:14px 24px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.modal-body{overflow-y:auto;flex:1;}
-.func-item{display:flex;align-items:center;gap:14px;padding:13px 24px;border-bottom:1px solid var(--border);transition:background .1s;}
-.func-item:last-child{border-bottom:none;}
-.func-item:hover{background:var(--bg);}
-.func-avatar{width:38px;height:38px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);flex-shrink:0;font-size:13px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:800;overflow:hidden;}
-.func-avatar img{width:100%;height:100%;object-fit:cover;}
-.func-nome{font-weight:700;font-size:13px;color:var(--text);}
-.func-cargo{font-size:11px;color:var(--muted);margin-top:2px;}
-.func-contato{margin-left:auto;text-align:right;font-size:11px;color:var(--muted);line-height:1.7;}
-.modal-vazio{padding:48px;text-align:center;color:var(--muted);font-size:13px;font-weight:600;}
-
-/* IA WIDGET */
-#iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
-#iaJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:390px;max-height:640px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;}
-.ia-topo{background:linear-gradient(135deg,var(--red),#8b0000);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.ia-topo-esq{display:flex;align-items:center;gap:10px;}
-.ia-topo-titulo{font-size:14px;font-weight:800;}
-.ia-topo-sub{font-size:11px;opacity:.8;margin-top:1px;}
-.ia-fechar{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
-.ia-fechar:hover{background:rgba(255,255,255,.28);}
-.ia-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-.ia-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;}
-.ia-sug:hover{border-color:var(--red);color:var(--red);background:var(--red-pale);}
-#iaMsgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:220px;max-height:360px;scroll-behavior:smooth;}
-.msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
-.msg.user{background:var(--red);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
-.msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
-.ia-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-#iaInput{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;transition:border-color .2s;}
-#iaInput:focus{border-color:var(--red);box-shadow:0 0 0 2px rgba(200,16,46,.08);}
-#iaInput::placeholder{color:var(--muted);font-weight:400;}
-#iaBtn{background:var(--red);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
-#iaBtn:hover{background:var(--red-light);}
-#iaBtn:disabled{opacity:.5;cursor:not-allowed;}
-#iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--red),#8b0000);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(200,16,46,.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .25s;color:#fff;}
-#iaToggle:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(200,16,46,.6);}
-@keyframes slideUpIA{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.ia-link{color:var(--red);cursor:pointer;}
-
-/* DEBUG */
-#debug{position:fixed;bottom:100px;left:16px;background:rgba(255,255,255,.96);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);max-width:280px;z-index:998;backdrop-filter:blur(10px);box-shadow:var(--shadow-lg);}
-.dl{padding:1px 0;}.dl.ok{color:var(--green);}.dl.err{color:var(--red);}.dl.warn{color:var(--yellow);}
-
-/* RESPONSIVE */
-@media(max-width:768px){
-  header{padding:0 14px;gap:10px;}.header-title{display:none;}
-  #statusBar{padding:7px 14px;}main{padding:20px 14px;}
-  .stats-row{grid-template-columns:repeat(2,1fr);}
-  .barra-label{width:120px;min-width:120px;}
-  #iaJanela{width:calc(100vw - 32px);}#iaWidget{right:16px;bottom:16px;}
-}
-</style>
+<link rel="stylesheet" href="/global.css">
 </head>
 <body>
 
@@ -186,37 +16,36 @@ tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
              onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
         <span class="logo-fallback" style="display:none">⚖️ JURÍDICO</span>
     </div>
-    <div class="header-divider"></div>
-    <div class="header-title">Jurídico</div>
+    <div class="hd"></div>
+    <div class="h-title">Jurídico</div>
 
     <nav>
-        <button class="nav-btn " onclick="location.href='/juridico/'">📊 Dashboard</button>
-        <button class="nav-btn  " onclick="location.href='/juridico/ativos'">📋 Comodatos Jurídico</button>
-        <button class="nav-btn " onclick="location.href='/juridico/controle-equipamentos'">📋 Ativos Central</button>
-        <button class="nav-btn " onclick="location.href='/juridico/links'">🔗 Links</button>
-        <button class="nav-btn active " onclick="location.href='/juridico/sults'">🏪 Sults (lojas - Funcionários)</button>
+        <button class="nav-btn" onclick="location.href='/juridico/'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/juridico/ativos'">📋 Comodatos Jurídico</button>
+        <button class="nav-btn" onclick="location.href='/juridico/controle-equipamentos'">📋 Ativos Central</button>
+        <button class="nav-btn" onclick="location.href='/juridico/links'">🔗 Links</button>
+        <button class="nav-btn active" onclick="location.href='/juridico/sults'">🏪 Sults (lojas - Funcionários)</button>
         <button class="nav-btn" onclick="location.href='/juridico/uploads'">📁 Uploads</button>
     </nav>
-    
 </header>
 
 <div id="statusBar">
-  <div class="status-dot" id="statusDot"></div>
+  <div class="sdot" id="statusDot"></div>
   <span id="statusText">Carregando dados SULTS...</span>
 </div>
 
 <main>
-  <div class="section-header">
+  <div class="page-header">
     <div>
-      <h2>🏪 Unidades &amp; Funcionários</h2>
-      <p>Dados sincronizados via SULTS — <span id="syncInfo" style="font-family:'JetBrains Mono',monospace;">—</span></p>
+      <div class="page-title">🏪 Unidades &amp; Funcionários</div>
+      <div class="page-sub">Dados sincronizados via SULTS — <span id="syncInfo" style="font-family:'JetBrains Mono',monospace;">—</span></div>
     </div>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
       <div class="view-switcher">
         <button class="view-btn active" id="btnViewUnidades" onclick="setView('unidades')">🏪 Unidades</button>
-        <button class="view-btn"        id="btnViewFunc"     onclick="setView('funcionarios')">👥 Funcionários</button>
+        <button class="view-btn" id="btnViewFunc" onclick="setView('funcionarios')">👥 Funcionários</button>
       </div>
-      <button class="btn" id="btnSync" onclick="sincronizar()">🔄 Sincronizar agora</button>
+      <button class="btn btn-ghost" id="btnSync" onclick="sincronizar()">🔄 Sincronizar agora</button>
     </div>
   </div>
 
@@ -252,29 +81,29 @@ tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
         <span style="font-size:10px;font-weight:400;text-transform:none;margin-left:6px;">(clique para ver funcionários)</span>
       </div>
       <div class="grafico-barras" id="grafico">
-        <div class="loading-msg"><div class="spinner"></div> Carregando gráfico...</div>
+        <div class="loading-msg"><div class="spinner dark"></div> Carregando gráfico...</div>
       </div>
     </div>
 
     <div class="controles">
-      <input type="text" class="busca-input" id="buscaUnidade" placeholder="🔍 Buscar unidade..." oninput="filtrarUnidades()">
-      <select class="filtro-select" id="filtroUF" onchange="filtrarUnidades()">
+      <input type="text" class="busca-input input" id="buscaUnidade" placeholder="🔍 Buscar unidade..." oninput="filtrarUnidades()">
+      <select class="filtro-select fc" id="filtroUF" onchange="filtrarUnidades()">
         <option value="">Todos os estados</option>
       </select>
-      <select class="filtro-select" id="filtroSit" onchange="filtrarUnidades()">
+      <select class="filtro-select fc" id="filtroSit" onchange="filtrarUnidades()">
         <option value="">Todas as situações</option>
         <option value="1">Ativas</option>
         <option value="3">Em implantação</option>
       </select>
     </div>
 
-    <div class="tabela-card">
-      <div class="tabela-header">
-        <div class="tabela-header-title">Lista de Unidades</div>
+    <div class="table-wrap tabela-card">
+      <div class="table-head tabela-header">
+        <div class="tbl-title">Lista de Unidades</div>
         <div class="total-badge" id="totalVisUnidades">0 unidades</div>
       </div>
-      <div id="tabelaUnidades">
-        <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+      <div class="tbl-scroll" id="tabelaUnidades">
+        <div class="loading-msg"><div class="spinner dark"></div> Carregando...</div>
       </div>
     </div>
   </div>
@@ -282,22 +111,22 @@ tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
   <!-- ══ VIEW: FUNCIONÁRIOS ══ -->
   <div id="viewFuncionarios" style="display:none;">
     <div class="controles">
-      <input type="text" class="busca-input" id="buscaFunc" placeholder="🔍 Buscar funcionário, cargo ou unidade..." oninput="filtrarFuncionarios()">
-      <select class="filtro-select" id="filtroFuncUF" onchange="filtrarFuncionarios()">
+      <input type="text" class="busca-input input" id="buscaFunc" placeholder="🔍 Buscar funcionário, cargo ou unidade..." oninput="filtrarFuncionarios()">
+      <select class="filtro-select fc" id="filtroFuncUF" onchange="filtrarFuncionarios()">
         <option value="">Todos os estados</option>
       </select>
-      <select class="filtro-select" id="filtroFuncUnidade" onchange="filtrarFuncionarios()">
+      <select class="filtro-select fc" id="filtroFuncUnidade" onchange="filtrarFuncionarios()">
         <option value="">Todas as unidades</option>
       </select>
     </div>
 
-    <div class="tabela-card">
-      <div class="tabela-header">
-        <div class="tabela-header-title">Todos os Funcionários Ativos</div>
+    <div class="table-wrap tabela-card">
+      <div class="table-head tabela-header">
+        <div class="tbl-title">Todos os Funcionários Ativos</div>
         <div class="total-badge" id="totalVisFunc">0 funcionários</div>
       </div>
-      <div id="tabelaFunc">
-        <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+      <div class="tbl-scroll" id="tabelaFunc">
+        <div class="loading-msg"><div class="spinner dark"></div> Carregando...</div>
       </div>
     </div>
   </div>
@@ -307,15 +136,15 @@ tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
 <!-- MODAL FUNCIONÁRIOS DA UNIDADE -->
 <div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
   <div class="modal">
-    <div class="modal-header">
+    <div class="modal-header modal-head">
       <div>
-        <div class="modal-titulo" id="modalTitulo">Funcionários</div>
-        <div class="modal-sub"    id="modalSub"></div>
+        <div class="modal-title modal-titulo" id="modalTitulo">Funcionários</div>
+        <div class="modal-sub" id="modalSub"></div>
       </div>
       <button class="modal-close" onclick="fecharModal()">✕ Fechar</button>
     </div>
     <div class="modal-busca">
-      <input type="text" class="busca-input" style="max-width:100%;width:100%"
+      <input type="text" class="input fc" style="width:100%"
              placeholder="🔍 Buscar funcionário..." id="buscaFuncModal" oninput="filtrarFuncModal()">
     </div>
     <div class="modal-body" id="modalBody"></div>
@@ -325,15 +154,15 @@ tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
 <!-- IA WIDGET -->
 <div id="iaWidget">
   <div id="iaJanela">
-    <div class="ia-topo">
-      <div class="ia-topo-esq">
+    <div class="ia-head ia-topo">
+      <div style="display:flex;align-items:center;gap:10px;">
         <span style="font-size:24px">🤖</span>
         <div>
-          <div class="ia-topo-titulo">IA Análise — Unidades</div>
-          <div class="ia-topo-sub">Pergunte sobre unidades e funcionários</div>
+          <div class="ia-title ia-topo-titulo">IA Análise — Unidades</div>
+          <div style="font-size:11px;opacity:.8;margin-top:1px;">Pergunte sobre unidades e funcionários</div>
         </div>
       </div>
-      <button class="ia-fechar" onclick="toggleIA()">✕</button>
+      <button class="ia-close ia-fechar" onclick="toggleIA()">✕</button>
     </div>
     <div class="ia-sugs">
       <button class="ia-sug" onclick="perguntar('Qual unidade tem mais funcionários?')">🏆 Top unidades</button>
@@ -341,16 +170,16 @@ tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
       <button class="ia-sug" onclick="perguntar('Quais estados têm mais unidades?')">🗺️ Por estado</button>
       <button class="ia-sug" onclick="perguntar('Quais unidades estão em implantação?')">🔧 Implantação</button>
     </div>
-    <div id="iaMsgs">
-      <div class="msg ai">👋 Olá! Posso analisar os dados das unidades SULTS.<br><br>
+    <div id="iaMsgs" class="ia-msgs">
+      <div class="ia-msg bot">👋 Olá! Posso analisar os dados das unidades SULTS.<br><br>
         <span class="ia-link" onclick="setInput('Qual unidade tem mais funcionários?')">→ Qual unidade tem mais funcionários?</span><br>
         <span class="ia-link" onclick="setInput('Quantos funcionários tem no DF?')">→ Quantos funcionários tem no DF?</span><br>
         <span class="ia-link" onclick="setInput('Liste as unidades em implantação')">→ Liste as unidades em implantação</span>
       </div>
     </div>
-    <div class="ia-rodape">
-      <input type="text" id="iaInput" placeholder="Pergunte sobre as unidades..." onkeydown="if(event.key==='Enter')perguntar()">
-      <button id="iaBtn" onclick="perguntar()">➤</button>
+    <div class="ia-foot ia-rodape">
+      <input type="text" id="inputIA" class="ia-input" placeholder="Pergunte sobre as unidades..." onkeydown="if(event.key==='Enter')perguntar()">
+      <button id="btnEnviarIA" class="ia-enviar" onclick="perguntar()">➤</button>
     </div>
   </div>
   <button id="iaToggle" onclick="toggleIA()" title="IA Análise Unidades">🤖</button>
@@ -359,7 +188,6 @@ tbody td{padding:12px 14px;font-size:13px;vertical-align:middle;}
 <div id="debug"></div>
 
 <script>
-// ─── API aponta para /juridico ────────────────────────────────────────────────
 const API = '/juridico';
 
 let dados             = null;
@@ -378,7 +206,6 @@ function log(m, t) {
   while (debugEl.children.length > 7) debugEl.removeChild(debugEl.firstChild);
 }
 
-// ─── VIEW SWITCHER ────────────────────────────────────────────────────────────
 function setView(v) {
   viewAtual = v;
   document.getElementById('viewUnidades').style.display     = v === 'unidades'     ? '' : 'none';
@@ -388,7 +215,6 @@ function setView(v) {
   if (v === 'funcionarios' && dados) filtrarFuncionarios();
 }
 
-// ─── CARREGAR ─────────────────────────────────────────────────────────────────
 async function carregar() {
   try {
     const r = await fetch(API + '/sults/dados');
@@ -399,7 +225,7 @@ async function carregar() {
   } catch(e) {
     document.getElementById('tabelaUnidades').innerHTML =
       `<div class="loading-msg" style="flex-direction:column;gap:14px">❌ ${e.message}<button class="btn btn-primary" onclick="carregar()">🔄 Tentar novamente</button></div>`;
-    document.getElementById('statusDot').className  = 'status-dot error';
+    document.getElementById('statusDot').className  = 'sdot error';
     document.getElementById('statusText').textContent = '⚠️ Servidor offline';
     log('Erro: ' + e.message, 'err');
   }
@@ -417,24 +243,21 @@ function render() {
   const dt  = new Date(dados.sincronizadoEm);
   const str = dt.toLocaleString('pt-BR');
   document.getElementById('syncInfo').textContent   = str;
-  document.getElementById('statusDot').className    = 'status-dot ready';
+  document.getElementById('statusDot').className    = 'sdot ready';
   document.getElementById('statusText').textContent =
     `✓ ${dados.totalUnidades} unidades · ${dados.totalFuncionarios} funcionários · Última sync: ${str}`;
 
-  // Filtros UF
   const ufs   = [...new Set(dados.unidades.map(u => u.uf).filter(Boolean))].sort();
   const optUF = '<option value="">Todos os estados</option>' +
     ufs.map(u => `<option value="${u}">${u}</option>`).join('');
   document.getElementById('filtroUF').innerHTML     = optUF;
   document.getElementById('filtroFuncUF').innerHTML = optUF;
 
-  // Filtro Unidade (view funcionários)
   const nomes = [...new Set(dados.unidades.filter(u => u.situacaoId === 1).map(u => u.nomeFantasia))].sort();
   document.getElementById('filtroFuncUnidade').innerHTML =
     '<option value="">Todas as unidades</option>' +
     nomes.map(n => `<option value="${n}">${n}</option>`).join('');
 
-  // Monta lista flat de funcionários
   todosFuncionarios = [];
   for (const u of dados.unidades) {
     for (const f of (u.funcionarios || [])) {
@@ -449,7 +272,6 @@ function render() {
   if (viewAtual === 'funcionarios') filtrarFuncionarios();
 }
 
-// ─── GRÁFICO ──────────────────────────────────────────────────────────────────
 function renderGrafico() {
   const top = [...dados.unidades]
     .filter(u => u.situacaoId === 1)
@@ -459,12 +281,11 @@ function renderGrafico() {
   document.getElementById('grafico').innerHTML = top.map(u =>
     `<div class="barra-row" onclick="abrirModal(${u.id})" title="Ver funcionários">
       <div class="barra-label" title="${u.nomeFantasia}">${u.nomeFantasia}</div>
-      <div class="barra-track"><div class="barra-fill" style="width:${(u.totalFuncionarios/max*100).toFixed(1)}%"></div></div>
+      <div class="barra-track"><div class="barra-fill" style="width:${(u.totalFuncionarios/max*100).toFixed(1)}%;background:linear-gradient(90deg,var(--red),var(--red-light))"></div></div>
       <div class="barra-num">${u.totalFuncionarios}</div>
-    </div>`).join('') || '<div style="padding:20px;color:var(--muted);text-align:center">Sem dados</div>';
+    </div>`).join('') || '<div class="sem-dados">Sem dados</div>';
 }
 
-// ─── VIEW UNIDADES ────────────────────────────────────────────────────────────
 function filtrarUnidades() {
   if (!dados) return;
   const q   = document.getElementById('buscaUnidade').value.toLowerCase().trim();
@@ -506,7 +327,6 @@ function renderTabelaUnidades() {
     </tbody></table>`;
 }
 
-// ─── VIEW FUNCIONÁRIOS ────────────────────────────────────────────────────────
 function filtrarFuncionarios() {
   if (!dados) return;
   const q       = document.getElementById('buscaFunc').value.toLowerCase().trim();
@@ -553,7 +373,6 @@ function renderTabelaFunc() {
     </tbody></table>`;
 }
 
-// ─── MODAL ────────────────────────────────────────────────────────────────────
 function abrirModal(id) {
   const u = dados.unidades.find(u => u.id === id);
   if (!u) return;
@@ -563,7 +382,7 @@ function abrirModal(id) {
   funcAtualModal = u.funcionarios || [];
   document.getElementById('buscaFuncModal').value = '';
   renderFuncModal(funcAtualModal);
-  document.getElementById('modalOverlay').classList.add('aberto');
+  document.getElementById('modalOverlay').classList.add('open');
 }
 function abrirModalUnidade(id) { abrirModal(id); }
 
@@ -597,16 +416,15 @@ function renderFuncModal(lista) {
 
 function fecharModal(e) {
   if (!e || e.target === document.getElementById('modalOverlay'))
-    document.getElementById('modalOverlay').classList.remove('aberto');
+    document.getElementById('modalOverlay').classList.remove('open');
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
 
-// ─── SINCRONIZAR ──────────────────────────────────────────────────────────────
 async function sincronizar() {
   const btn = document.getElementById('btnSync');
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner"></div> Sincronizando...';
-  document.getElementById('statusDot').className    = 'status-dot';
+  document.getElementById('statusDot').className    = 'sdot';
   document.getElementById('statusText').textContent = '⏳ Sincronizando com SULTS...';
   try {
     const r = await fetch(API + '/sults/sincronizar', { method: 'POST' });
@@ -621,43 +439,41 @@ async function sincronizar() {
   } catch(e) {
     btn.innerHTML = '❌ Erro: ' + e.message;
     log('Sync falhou: ' + e.message, 'err');
-    document.getElementById('statusDot').className = 'status-dot error';
+    document.getElementById('statusDot').className = 'sdot error';
   }
   setTimeout(() => { btn.disabled = false; btn.innerHTML = '🔄 Sincronizar agora'; }, 3000);
 }
 
-// ─── IA ───────────────────────────────────────────────────────────────────────
 function setInput(t) {
-  document.getElementById('iaInput').value = t;
-  document.getElementById('iaInput').focus();
+  document.getElementById('inputIA').value = t;
+  document.getElementById('inputIA').focus();
 }
 function toggleIA() {
   iaAberto = !iaAberto;
   const j = document.getElementById('iaJanela');
   const t = document.getElementById('iaToggle');
   if (iaAberto) {
-    j.style.display   = 'flex';
-    j.style.animation = 'slideUpIA .25s ease';
-    t.innerHTML       = '✕';
+    j.classList.add('open');
+    t.innerHTML = '✕';
     t.style.background = 'linear-gradient(135deg,#444,#1a1a1a)';
   } else {
-    j.style.display    = 'none';
-    t.innerHTML        = '🤖';
-    t.style.background = 'linear-gradient(135deg,var(--red),#8b0000)';
+    j.classList.remove('open');
+    t.innerHTML = '🤖';
+    t.style.background = '';
   }
 }
 async function perguntar(fixa) {
-  const inp = document.getElementById('iaInput');
+  const inp = document.getElementById('inputIA');
   const q   = fixa || inp.value.trim();
   if (!q) return;
   inp.value = '';
   if (!iaAberto) toggleIA();
   const box = document.getElementById('iaMsgs');
-  const mu  = document.createElement('div'); mu.className = 'msg user'; mu.textContent = q; box.appendChild(mu);
-  const ma  = document.createElement('div'); ma.className = 'msg ai';
+  const mu  = document.createElement('div'); mu.className = 'ia-msg user'; mu.textContent = q; box.appendChild(mu);
+  const ma  = document.createElement('div'); ma.className = 'ia-msg bot';
   ma.innerHTML = '<span style="opacity:.6">⏳ Analisando...</span>'; box.appendChild(ma);
   box.scrollTop = box.scrollHeight;
-  document.getElementById('iaBtn').disabled = true;
+  document.getElementById('btnEnviarIA').disabled = true;
   try {
     let ctx = 'Você é assistente de análise de rede de franquias do Divino Fogão.\nResponda em português, direto. Use só os dados abaixo.\n\n';
     if (dados) {
@@ -682,13 +498,12 @@ async function perguntar(fixa) {
       .replace(/\n/g,'<br>');
     ma.innerHTML = txt;
   } catch(e) { ma.innerHTML = '❌ Erro: ' + e.message; }
-  document.getElementById('iaBtn').disabled = false;
+  document.getElementById('btnEnviarIA').disabled = false;
   box.scrollTop = box.scrollHeight;
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('iaInput').addEventListener('keydown', e => {
+  document.getElementById('inputIA').addEventListener('keydown', e => {
     if (e.key === 'Enter') perguntar();
   });
   carregar();

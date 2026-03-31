@@ -3,124 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divino Fogão — KPI de Avaliações</title>
+    <title>KPI Avaliações — Divino Fogão</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <style>
-        :root{--red:#c8102e;--red-light:#e8192e;--red-pale:#fff0f2;--bg:#f5f3ef;--bg2:#ffffff;--bg3:#faf8f5;--border:#e8e2d9;--text:#1e1a16;--muted:#8a7f74;--green:#16a34a;--green-pale:#f0fdf4;--yellow:#d97706;--yellow-pale:#fffbeb;--purple:#7c3aed;--purple-pale:#f5f3ff;--orange:#ea580c;--orange-pale:#fff7ed;--accent:#2563eb;--shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12);}
+        :root {
+            --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
+            --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
+            --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
+            --green:#16a34a; --green-pale:#f0fdf4;
+            --yellow:#d97706; --yellow-pale:#fffbeb;
+            --orange:#ea580c; --orange-pale:#fff7ed;
+            --purple:#7c3aed; --purple-pale:#f5f3ff;
+            --accent:#2563eb; --accent-pale:#eff6ff;
+            --shadow:0 2px 12px rgba(0,0,0,.08);
+            --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+        }
         *{margin:0;padding:0;box-sizing:border-box;}
         body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
+        /* ── HEADER ── */
         header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
         .logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
         .logo img{height:52px;width:auto;display:block;}
-        .logo-fallback{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1px;display:none;}
-        .header-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
-        .header-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
-        .header-back{margin-left:auto;background:var(--bg3);border:1.5px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
-        .header-back:hover{background:var(--red-pale);color:var(--red);border-color:rgba(200,16,46,.2);}
+        .logo-fallback{font-size:20px;font-weight:900;color:var(--red);display:none;}
+        .hd{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+        .h-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
         nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;}
         nav::-webkit-scrollbar{display:none;}
         .nav-btn{background:none;border:none;color:var(--muted);padding:20px 14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s;border-bottom:3px solid transparent;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;text-decoration:none;}
         .nav-btn:hover{color:var(--text);background:var(--bg3);}
         .nav-btn.active{color:var(--red);border-bottom-color:var(--red);background:var(--red-pale);}
 
-        main{max-width:1200px;margin:0 auto;padding:32px 24px;}
+        /* ── MAIN ── */
+        main{max-width:1240px;margin:0 auto;padding:32px 24px;}
+        .page-title{font-size:22px;font-weight:900;margin-bottom:4px;}
+        .page-sub{font-size:13px;color:var(--muted);margin-bottom:24px;}
 
+        /* ── FILTROS ── */
         .filtro-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:24px;box-shadow:var(--shadow);display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;}
-        .filtro-bar label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);display:block;margin-bottom:5px;}
-        .filtro-bar select{font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:8px 12px;outline:none;cursor:pointer;}
-        .filtro-bar select:focus{border-color:var(--red);}
+        .fg{display:flex;flex-direction:column;gap:5px;}
+        .fg label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
+        .fg select{font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:8px 32px 8px 12px;outline:none;cursor:pointer;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+        .fg select:focus{border-color:var(--red);}
+        .btn-atualizar{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:var(--red);color:#fff;display:inline-flex;align-items:center;gap:6px;transition:all .18s;align-self:flex-end;}
+        .btn-atualizar:hover{background:var(--red-light);}
+        .btn-atualizar:disabled{opacity:.5;cursor:not-allowed;}
 
-        .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px;}
-        .kpi-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
-        .kpi-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px;}
-        .kpi-card.red::before{background:var(--red);}
-        .kpi-card.green::before{background:var(--green);}
-        .kpi-card.purple::before{background:var(--purple);}
-        .kpi-card.yellow::before{background:var(--yellow);}
-        .kpi-card.orange::before{background:var(--orange);}
-        .kpi-card.blue::before{background:var(--accent);}
-        .kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px;}
-        .kpi-value{font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
-        .kpi-sub{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;}
+        /* ── KPI CARDS ── */
+        .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-bottom:28px;}
+        .kc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+        .kc::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px;}
+        .kc.red::before{background:var(--red);}
+        .kc.green::before{background:var(--green);}
+        .kc.yellow::before{background:var(--yellow);}
+        .kc.purple::before{background:var(--purple);}
+        .kc.orange::before{background:var(--orange);}
+        .kc.accent::before{background:var(--accent);}
+        .kc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px;}
+        .kc-val{font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
+        .kc-sub{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;}
 
-        .section{margin-bottom:32px;}
-        .section-title{font-size:18px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
-        .section-desc{font-size:13px;color:var(--muted);margin-bottom:16px;}
+        /* ── SEÇÃO ── */
+        .st{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:28px 0 14px;display:flex;align-items:center;gap:8px;}
+        .st::after{content:'';flex:1;height:1px;background:var(--border);}
 
+        /* ── TABELA COMPARATIVO ── */
+        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:24px;}
+        .tw-head{padding:14px 20px 10px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+        .tw-title{font-size:13px;font-weight:800;}
+        .tw-sub{font-size:11px;color:var(--muted);}
+        .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+        table{width:100%;border-collapse:collapse;font-size:13px;}
+        th{background:var(--bg3);text-align:left;padding:10px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;}
+        td{padding:10px 14px;border-bottom:1px solid var(--border);font-weight:600;white-space:nowrap;}
+        tbody tr:last-child td{border-bottom:none;}
+        tbody tr:hover td{background:var(--bg3);}
+        .td-bold{font-weight:800;font-size:13px;}
+        .td-mono{font-family:'JetBrains Mono',monospace;font-size:12px;}
+        .td-total{background:var(--bg3) !important;font-weight:900;}
+        .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+        .badge-sim{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
+        .badge-nao{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
+        .badge-pnao{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
+        .badge-nota{background:var(--accent-pale);color:var(--accent);border:1.5px solid rgba(37,99,235,.2);}
+
+        /* barra de progresso inline */
+        .bar-inline{display:flex;align-items:center;gap:6px;}
+        .bar-track{flex:1;min-width:60px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+        .bar-fill-g{height:100%;border-radius:3px;background:var(--green);}
+        .bar-fill-r{height:100%;border-radius:3px;background:var(--red);}
+        .bar-fill-y{height:100%;border-radius:3px;background:var(--yellow);}
+
+        /* ── GRÁFICOS ── */
         .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
         .chart-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px;box-shadow:var(--shadow);}
-        .chart-box h3{font-size:14px;font-weight:800;margin-bottom:14px;color:var(--text);}
-        .chart-box canvas{max-height:280px;}
+        .chart-box h3{font-size:13px;font-weight:800;margin-bottom:4px;}
+        .chart-box .ch-sub{font-size:11px;color:var(--muted);margin-bottom:14px;}
+        .chart-box canvas{max-height:260px;}
 
-        .table-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;}
-        .table-box h3{font-size:14px;font-weight:800;padding:16px 20px 12px;color:var(--text);border-bottom:1.5px solid var(--border);}
-        table{width:100%;border-collapse:collapse;font-size:13px;}
-        th{background:var(--bg3);text-align:left;padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1.5px solid var(--border);}
-        td{padding:10px 16px;border-bottom:1px solid var(--border);font-weight:600;}
-        tr:last-child td{border-bottom:none;}
-        tr:hover td{background:var(--bg3);}
-        .bar-cell{display:flex;align-items:center;gap:8px;}
-        .bar-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
-        .bar-fill{height:100%;border-radius:3px;transition:width .4s ease;}
-        .bar-fill.green{background:var(--green);}
-        .bar-fill.red{background:var(--red);}
-        .bar-fill.yellow{background:var(--yellow);}
-        .bar-fill.orange{background:var(--orange);}
-        .bar-pct{font-size:12px;font-weight:800;font-family:'JetBrains Mono',monospace;min-width:40px;text-align:right;}
-        .nota-badge{font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;padding:3px 10px;border-radius:20px;white-space:nowrap;}
-        .nota-badge.alta{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
-        .nota-badge.media{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
-        .nota-badge.baixa{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
-        .tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;}
-        .tag-ok{background:var(--green-pale);color:var(--green);}
-        .tag-no{background:var(--red-pale);color:var(--red);}
+        /* ── RANKING LOJAS ── */
+        .ranking-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+        .rank-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px;box-shadow:var(--shadow);}
+        .rank-box h3{font-size:13px;font-weight:800;margin-bottom:14px;}
+        .rank-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+        .rank-item:last-child{border-bottom:none;}
+        .rank-pos{font-size:11px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--muted);width:20px;flex-shrink:0;text-align:center;}
+        .rank-loja{flex:1;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .rank-total{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);flex-shrink:0;}
 
-        .loading-msg{text-align:center;padding:40px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
-        .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;}
+        /* ── LOADING / EMPTY ── */
+        .loading-msg{text-align:center;padding:48px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
+        .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
         @keyframes spin{to{transform:rotate(360deg)}}
 
-        /* ── FLOATING IA ── */
-        #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
-        #iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--red),#8b0000);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(200,16,46,0.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all 0.25s;position:relative;color:#fff;}
-        #iaToggle:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(200,16,46,0.6);}
-        #iaToggle.aberto{background:linear-gradient(135deg,#444,#1a1a1a);}
-        .ia-unread{position:absolute;top:-3px;right:-3px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid #fff;line-height:1;}
-        #iaJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:390px;max-height:640px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;animation:slideUp 0.25s ease;}
-        #iaJanela.aberto{display:flex;}
-        @keyframes slideUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-        .ia-topo{background:linear-gradient(135deg,var(--red),#8b0000);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-        .ia-topo-esq{display:flex;align-items:center;gap:10px;}
-        .ia-topo-titulo{font-size:14px;font-weight:800;}
-        .ia-topo-sub{font-size:11px;opacity:0.8;margin-top:1px;}
-        .ia-fechar{background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
-        .ia-fechar:hover{background:rgba(255,255,255,0.28);}
-        .ia-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-        .ia-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s;white-space:nowrap;}
-        .ia-sug:hover{border-color:var(--red);color:var(--red);background:var(--red-pale);}
-        .ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:220px;max-height:360px;}
-        .msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
-        .msg.user{background:var(--red);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;box-shadow:0 2px 8px rgba(200,16,46,0.25);}
-        .msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
-        .msg.ai.carregando{color:var(--muted);font-style:italic;}
-        .ia-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-        .ia-input{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;transition:border-color 0.2s;}
-        .ia-input:focus{border-color:var(--red);box-shadow:0 0 0 2px rgba(200,16,46,0.08);}
-        .ia-input::placeholder{color:var(--muted);font-weight:400;}
-        .ia-enviar{background:var(--red);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;}
-        .ia-enviar:hover{background:var(--red-light);}
-        .ia-enviar:disabled{opacity:0.5;cursor:not-allowed;}
+        /* ── TOAST ── */
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
+        .toast.show{display:block;animation:fadeUp .3s ease;}
+        @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
-        @media(max-width:768px){
+        /* ── RESPONSIVE ── */
+        @media(max-width:900px){
+            .charts-row,.ranking-grid{grid-template-columns:1fr;}
+        }
+        @media(max-width:700px){
             header{padding:0 14px;gap:10px;}
-            .header-title{display:none;}
+            .h-title{display:none;}
             main{padding:20px 14px;}
             .kpi-grid{grid-template-columns:repeat(2,1fr);}
-            .charts-row{grid-template-columns:1fr;}
-            #iaJanela{width:calc(100vw - 32px);}
-            #iaWidget{right:16px;bottom:16px;}
         }
     </style>
 </head>
@@ -130,39 +141,42 @@
     <div class="logo">
         <img src="/treinamento/logo.png" alt="Divino Fogão"
              onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
-        <span class="logo-fallback">🍽️ DIVINO FOGÃO</span>
+        <span class="logo-fallback">🍽️</span>
     </div>
-    <div class="header-divider"></div>
-    <div class="header-title">Central de Treinamentos</div>
+    <div class="hd"></div>
+    <div class="h-title">Central de Treinamentos</div>
     <nav>
         <a href="/treinamento/"               class="nav-btn">📊 Dashboard</a>
-        <a href="/treinamento/busca"       class="nav-btn">🔍 Colaboradores</a>
-        <a href="/treinamento/lembretes"      class="nav-btn">🔔 Lembretes</a>
-        <a href="/treinamento/kpi-avaliacoes" class="nav-btn active">📊 KPI Avaliações</a>     
-        <a href="/treinamento/sults"          class="nav-btn">🏪 Sults</a>
-        <a href="/treinamento/chamados"       class="nav-btn">📞 Chamados Sults</a>
-        <a href="/treinamento/universidade"   class="nav-btn">🎓 Universidade</a>
-        <a href="/treinamento/turnover"       class="nav-btn">🔄 Turnover</a>
-        <a href="/treinamento/cadastro"       class="nav-btn">➕ Cadastro</a>
-        <a href="/treinamento/uploads"        class="nav-btn">📁 Uploads</a>
-        <a href="/treinamento/links"          class="nav-btn">🔗 Links</a>
+        <a href="/treinamento/busca"           class="nav-btn">🔍 Colaboradores</a>
+        <a href="/treinamento/lembretes"       class="nav-btn">🔔 Lembretes</a>
+        <a href="/treinamento/kpi-avaliacoes"  class="nav-btn active">📊 KPI Avaliações</a>
+        <a href="/treinamento/sults"           class="nav-btn">🏪 Sults</a>
+        <a href="/treinamento/chamados"        class="nav-btn">📞 Chamados</a>
+        <a href="/treinamento/universidade"    class="nav-btn">🎓 Universidade</a>
+        <a href="/treinamento/turnover"        class="nav-btn">🔄 Turnover</a>
+        <a href="/treinamento/cadastro"        class="nav-btn">➕ Cadastro</a>
+        <a href="/treinamento/uploads"         class="nav-btn">📁 Uploads</a>
+        <a href="/treinamento/links"           class="nav-btn">🔗 Links</a>
     </nav>
 </header>
 
 <main>
+    <div class="page-title">📊 KPI de Avaliações</div>
+    <div class="page-sub">% Aprovações · Nota Média · Aderência por Loja — fonte: Respostas ao formulário 1</div>
+
     <div class="filtro-bar">
-        <div>
+        <div class="fg">
             <label>Ano</label>
-            <select id="filtroAno" onchange="carregar()">
+            <select id="filtroAno">
                 <option value="2025">2025</option>
                 <option value="2026" selected>2026</option>
                 <option value="2027">2027</option>
             </select>
         </div>
-        <div>
+        <div class="fg">
             <label>Mês</label>
-            <select id="filtroMes" onchange="carregar()">
-                <option value="">Todos</option>
+            <select id="filtroMes">
+                <option value="">Todos os meses</option>
                 <option value="1">Janeiro</option><option value="2">Fevereiro</option>
                 <option value="3">Março</option><option value="4">Abril</option>
                 <option value="5">Maio</option><option value="6">Junho</option>
@@ -171,6 +185,7 @@
                 <option value="11">Novembro</option><option value="12">Dezembro</option>
             </select>
         </div>
+        <button class="btn-atualizar" id="btnAtualizar" onclick="carregar()">🔄 Atualizar</button>
     </div>
 
     <div id="conteudo">
@@ -178,344 +193,275 @@
     </div>
 </main>
 
-<!-- ── FLOATING IA ── -->
-<div id="iaWidget">
-    <div id="iaJanela">
-        <div class="ia-topo">
-            <div class="ia-topo-esq">
-                <span style="font-size:24px;">🤖</span>
-                <div>
-                    <div class="ia-topo-titulo">IA Análise — Gemini</div>
-                    <div class="ia-topo-sub">Converse sobre os KPIs de avaliações</div>
-                </div>
-            </div>
-            <button class="ia-fechar" onclick="toggleIA()">✕</button>
-        </div>
-        <div class="ia-sugs">
-            <button class="ia-sug" onclick="perguntarIA('Qual a aderência geral das avaliações?')">📊 Aderência</button>
-            <button class="ia-sug" onclick="perguntarIA('Quais lojas têm menor aderência nas avaliações?')">🏪 Lojas</button>
-            <button class="ia-sug" onclick="perguntarIA('Qual a nota média das avaliações por mês?')">⭐ Notas</button>
-            <button class="ia-sug" onclick="perguntarIA('Quantos lembretes foram enviados no período?')">🔔 Lembretes</button>
-            <button class="ia-sug" onclick="perguntarIA('Faça um resumo executivo dos KPIs de avaliação')">📋 Resumo</button>
-            <button class="ia-sug" onclick="perguntarIA('Quais treinandos ainda não responderam o WhatsApp de avaliação?')">📱 WhatsApp</button>
-        </div>
-        <div class="ia-msgs" id="iaMsgs">
-            <div class="msg ai">
-                👋 Olá! Sou a IA do Divino Fogão.<br><br>
-                Aqui posso te ajudar a analisar os <strong>KPIs de Avaliações</strong>:<br>
-                <span style="color:var(--red);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Qual loja tem melhor nota média?</span><br>
-                <span style="color:var(--red);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Quantas avaliações estão pendentes?</span><br>
-                <span style="color:var(--red);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Como está a aderência das lojas treinadoras?</span><br>
-                <span style="color:var(--red);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Qual mês teve mais avaliações respondidas?</span><br><br>
-                <span style="font-size:11px;color:var(--muted)">💡 Clique em qualquer exemplo para testar.</span>
-            </div>
-        </div>
-        <div class="ia-rodape">
-            <input type="text" class="ia-input" id="inputIA"
-                placeholder="Ex: Qual loja tem melhor nota?"
-                onkeydown="if(event.key==='Enter')perguntarIA()">
-            <button class="ia-enviar" id="iaBtnEnviar" onclick="perguntarIA()">➤</button>
-        </div>
-    </div>
-    <button id="iaToggle" onclick="toggleIA()" title="IA Análise Gemini">
-        🤖
-        <div class="ia-unread" id="iaUnread">1</div>
-    </button>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
 const API = '/treinamento';
 var _charts = {};
-var iaAberto = false;
-var _dadosKpi = null; // guarda os dados para contexto da IA
 
-function destroyChart(id) { if (_charts[id]) { _charts[id].destroy(); delete _charts[id]; } }
-
-function notaBadge(v) {
-    if (!v) return '—';
-    var n = parseFloat(v);
-    var cls = n >= 8 ? 'alta' : n >= 6 ? 'media' : 'baixa';
-    return '<span class="nota-badge ' + cls + '">' + v + '</span>';
+function toast(msg, ms) {
+    ms = ms || 2500;
+    var el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('show');
+    setTimeout(function() { el.classList.remove('show'); }, ms);
 }
 
-function barCell(pct, cor) {
-    cor = cor || 'green';
-    if (pct < 50) cor = 'red';
-    else if (pct < 75) cor = 'yellow';
-    return '<div class="bar-cell"><div class="bar-track"><div class="bar-fill ' + cor + '" style="width:' + pct + '%"></div></div><div class="bar-pct">' + pct + '%</div></div>';
+function destroyChart(id) {
+    if (_charts[id]) { _charts[id].destroy(); delete _charts[id]; }
 }
 
+// ── Helpers de badge ──────────────────────────────────────────
+function badgeSim(n)  { return '<span class="badge badge-sim">'  + n + ' SIM</span>'; }
+function badgeNao(n)  { return '<span class="badge badge-nao">'  + n + ' NÃO</span>'; }
+function badgePnao(n) { return '<span class="badge badge-pnao">' + n + ' P.NÃO</span>'; }
+function badgeNota(v) {
+    if (v == null) return '<span style="color:var(--muted)">—</span>';
+    return '<span class="badge badge-nota">' + v + '</span>';
+}
+function pct(v) { return '<span class="td-mono">' + v + '%</span>'; }
+
+function barSim(p) {
+    return '<div class="bar-inline"><div class="bar-track"><div class="bar-fill-g" style="width:' + p + '%"></div></div>'
+         + '<span class="td-mono" style="min-width:38px;text-align:right">' + p + '%</span></div>';
+}
+
+// ── KPI card ──────────────────────────────────────────────────
+function kc(cor, icon, label, val, sub) {
+    return '<div class="kc ' + cor + '">'
+        + '<div class="kc-label">' + icon + ' ' + label + '</div>'
+        + '<div class="kc-val" style="color:var(--' + cor + ')">' + val + '</div>'
+        + '<div class="kc-sub">' + sub + '</div>'
+        + '</div>';
+}
+
+// ── Carrega da API ────────────────────────────────────────────
 async function carregar() {
-    var ct = document.getElementById('conteudo');
-    ct.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando KPIs...</div>';
+    var btn = document.getElementById('btnAtualizar');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner" style="border-top-color:#fff"></div> Carregando...';
+    document.getElementById('conteudo').innerHTML = '<div class="loading-msg"><div class="spinner"></div> Buscando dados...</div>';
+    Object.keys(_charts).forEach(destroyChart);
 
     var ano = document.getElementById('filtroAno').value;
     var mes = document.getElementById('filtroMes').value;
-    var qs = '?ano=' + ano + (mes ? '&mes=' + mes : '');
+    var qs  = '?ano=' + ano + (mes ? '&mes=' + mes : '');
 
     try {
         var r = await fetch(API + '/kpi-avaliacoes/dados' + qs);
         var d = await r.json();
-        if (d.erro) throw new Error(d.erro);
-        _dadosKpi = d; // salva para contexto da IA
+        if (!d.ok) throw new Error(d.erro || 'Falha ao carregar');
         renderDashboard(d);
     } catch(e) {
-        ct.innerHTML = '<div class="loading-msg">⚠️ Erro: ' + e.message + '</div>';
+        document.getElementById('conteudo').innerHTML =
+            '<div class="loading-msg">⚠️ ' + e.message + '</div>';
+        toast('❌ ' + e.message, 4000);
     }
+
+    btn.disabled = false; btn.innerHTML = '🔄 Atualizar';
 }
 
+// ── Render principal ──────────────────────────────────────────
 function renderDashboard(d) {
-    var s = d.resumo;
-    var l = d.lembretes;
+    var t  = d.totais;
+    var pm = d.porMes || [];
+
     var html = '';
 
+    // ── KPI cards globais ────────────────────────────────────
     html += '<div class="kpi-grid">';
-    html += kpiCard('red',    '📋 Treinamentos',       s.totalTreinamentos,                          'Período selecionado');
-    html += kpiCard('orange', '📧 Avaliações Enviadas', s.avalEnviadas,                               s.avalNaoEnviadas + ' não enviadas');
-    html += kpiCard('green',  '🏪 Origem Avaliou',      s.origemAvaliou,                              s.aderenciaOrigem + '% de aderência');
-    html += kpiCard('purple', '🏭 Treinadora Avaliou',  s.treinAvaliou,                               s.aderenciaTrein + '% de aderência');
-    html += kpiCard('blue',   '📱 WhatsApp Func.',      s.whatsEnviados,                              s.aderenciaWhats + '% de aderência');
-    html += kpiCard('yellow', '⭐ Nota Média Origem',   s.mediaOrigem !== null ? s.mediaOrigem : '—', 'De 0 a 10');
-    html += kpiCard('green',  '⭐ Nota Média Trein.',   s.mediaTrein  !== null ? s.mediaTrein  : '—', 'De 0 a 10');
-    html += kpiCard('purple', '🔔 Lembretes',           l.totalEnviados,                              l.aderencia + '% de ' + l.totalPossiveis + ' possíveis');
+    html += kc('accent',  '📋', 'Total Avaliações',          t.total,                  'período selecionado');
+    html += kc('green',   '✅', 'Aprovados (SIM)',            t.sim,                    t.pctSim + '% do total');
+    html += kc('red',     '❌', 'Não Aprovados (NÃO)',        t.nao,                    t.pctNao + '% do total');
+    html += kc('yellow',  '❓', 'Preferiram Não Responder',   t.pnao,                   t.pctPnao + '% do total');
+    html += kc('purple',  '⭐', 'Nota Média (0-10)',          t.mediaNota != null ? t.mediaNota : '—', 'média geral');
     html += '</div>';
 
-    if (d.porMes.length > 1) {
-        html += '<div class="section"><div class="section-title">📈 Evolução Mensal</div><div class="section-desc">Comparativo mês a mês</div></div>';
+    // ── Tabela comparativo mensal ────────────────────────────
+    html += '<div class="st">📅 % Aprovações — Comparativo Mensal</div>';
+    html += '<div class="table-wrap">';
+    html += '<div class="tw-head"><div><div class="tw-title">% Aprovações Treinamento Presencial</div>'
+          + '<div class="tw-sub">Agrupado por mês de fim do treinamento</div></div></div>';
+    html += '<div class="tbl-scroll"><table>';
+    html += '<thead><tr>'
+          + '<th>Mês</th>'
+          + '<th style="color:var(--green)">SIM</th>'
+          + '<th style="color:var(--red)">NÃO</th>'
+          + '<th style="color:var(--yellow)">P.NÃO RESPONDER</th>'
+          + '<th>Nota Média</th>'
+          + '<th>Total</th>'
+          + '<th>% SIM</th>'
+          + '</tr></thead><tbody>';
+
+    if (!pm.length) {
+        html += '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">Sem dados para o período</td></tr>';
+    } else {
+        pm.forEach(function(m) {
+            html += '<tr>'
+                + '<td class="td-bold">' + m.mes + '</td>'
+                + '<td>' + badgeSim(m.sim) + '</td>'
+                + '<td>' + badgeNao(m.nao) + '</td>'
+                + '<td>' + badgePnao(m.pnao) + '</td>'
+                + '<td>' + badgeNota(m.mediaNota) + '</td>'
+                + '<td class="td-mono">' + m.total + '</td>'
+                + '<td>' + barSim(m.pctSim) + '</td>'
+                + '</tr>';
+        });
+        // linha TOTAL
+        html += '<tr class="td-total">'
+            + '<td class="td-bold">TOTAL</td>'
+            + '<td>' + badgeSim(t.sim) + '</td>'
+            + '<td>' + badgeNao(t.nao) + '</td>'
+            + '<td>' + badgePnao(t.pnao) + '</td>'
+            + '<td>' + badgeNota(t.mediaNota) + '</td>'
+            + '<td class="td-mono td-bold">' + t.total + '</td>'
+            + '<td>' + barSim(t.pctSim) + '</td>'
+            + '</tr>';
+    }
+    html += '</tbody></table></div></div>';
+
+    // ── Gráficos (só se tiver mais de 1 mês) ─────────────────
+    if (pm.length > 1) {
+        html += '<div class="st">📈 Evolução Mensal</div>';
         html += '<div class="charts-row">';
-        html += '<div class="chart-box"><h3>Aderência de Avaliações (%)</h3><canvas id="chartAderencia"></canvas></div>';
-        html += '<div class="chart-box"><h3>Nota Média Mensal</h3><canvas id="chartNotas"></canvas></div>';
+        html += '<div class="chart-box"><h3>% Aprovações por Mês</h3><div class="ch-sub">SIM · NÃO · P.NÃO RESPONDER</div><canvas id="chartAprov"></canvas></div>';
+        html += '<div class="chart-box"><h3>Nota Média por Mês</h3><div class="ch-sub">Escala 0-10 (coluna X)</div><canvas id="chartNota"></canvas></div>';
         html += '</div>';
         html += '<div class="charts-row">';
-        html += '<div class="chart-box"><h3>Volume de Treinamentos e Avaliações</h3><canvas id="chartVolume"></canvas></div>';
-        html += '<div class="chart-box"><h3>Lembretes Enviados por Mês</h3><canvas id="chartLembretes"></canvas></div>';
+        html += '<div class="chart-box"><h3>Volume de Avaliações por Mês</h3><div class="ch-sub">Total de respostas registradas</div><canvas id="chartVol"></canvas></div>';
+        html += '<div class="chart-box"><h3>Distribuição SIM / NÃO / P.NÃO</h3><div class="ch-sub">Período completo</div><canvas id="chartPie"></canvas></div>';
         html += '</div>';
     }
 
-    if (d.lojasOrigem.length > 0) {
-        html += '<div class="section"><div class="section-title">🏪 Lojas de Origem — Aderência</div><div class="section-desc">Quais lojas avaliam e quais não respondem</div></div>';
-        html += '<div class="table-box"><table><thead><tr><th>Loja</th><th>Total</th><th>Avaliou</th><th>Pendente</th><th>Nota Média</th><th>Aderência</th></tr></thead><tbody>';
-        d.lojasOrigem.forEach(function(l) {
-            html += '<tr><td>' + l.loja + '</td><td>' + l.total + '</td><td>' + l.avaliou + '</td><td>' + l.pendente + '</td><td>' + notaBadge(l.media) + '</td><td>' + barCell(l.pctAderencia) + '</td></tr>';
+    // ── Ranking de lojas ─────────────────────────────────────
+    if (d.rankingGeral && d.rankingGeral.length) {
+        html += '<div class="st">🏪 Ranking de Lojas</div>';
+        html += '<div class="table-wrap">';
+        html += '<div class="tw-head"><div class="tw-title">Aderência por Loja</div></div>';
+        html += '<div class="tbl-scroll"><table>';
+        html += '<thead><tr><th>#</th><th>Loja</th><th>Total</th>'
+              + '<th style="color:var(--green)">SIM</th>'
+              + '<th style="color:var(--red)">NÃO</th>'
+              + '<th style="color:var(--yellow)">P.NÃO</th>'
+              + '<th>Nota Média</th>'
+              + '<th>% SIM</th>'
+              + '</tr></thead><tbody>';
+        d.rankingGeral.forEach(function(l, i) {
+            html += '<tr>'
+                + '<td class="td-mono" style="color:var(--muted)">' + (i+1) + '</td>'
+                + '<td class="td-bold">' + l.loja + '</td>'
+                + '<td class="td-mono">' + l.total + '</td>'
+                + '<td class="td-mono" style="color:var(--green)">' + l.sim + '</td>'
+                + '<td class="td-mono" style="color:var(--red)">'   + l.nao + '</td>'
+                + '<td class="td-mono" style="color:var(--yellow)">' + l.pnao + '</td>'
+                + '<td>' + badgeNota(l.mediaNota) + '</td>'
+                + '<td>' + barSim(l.pctSim) + '</td>'
+                + '</tr>';
         });
-        html += '</tbody></table></div>';
-    }
-
-    if (d.lojasTreinadoras.length > 0) {
-        html += '<div class="section"><div class="section-title">🏭 Lojas Treinadoras — Aderência</div><div class="section-desc">Desempenho das lojas treinadoras</div></div>';
-        html += '<div class="table-box"><table><thead><tr><th>Loja Treinadora</th><th>Total</th><th>Avaliou</th><th>Pendente</th><th>Nota Média</th><th>Aderência</th></tr></thead><tbody>';
-        d.lojasTreinadoras.forEach(function(l) {
-            html += '<tr><td>' + l.loja + '</td><td>' + l.total + '</td><td>' + l.avaliou + '</td><td>' + l.pendente + '</td><td>' + notaBadge(l.media) + '</td><td>' + barCell(l.pctAderencia) + '</td></tr>';
-        });
-        html += '</tbody></table></div>';
-    }
-
-    if (d.funcionarios.length > 0) {
-        html += '<div class="section"><div class="section-title">👤 Funcionários — Resposta ao WhatsApp</div><div class="section-desc">Quem recebeu avaliação e respondeu o WhatsApp</div></div>';
-        html += '<div class="table-box"><table><thead><tr><th>Nome</th><th>Loja</th><th>Função</th><th>Nota Origem</th><th>Nota Trein.</th><th>WhatsApp</th></tr></thead><tbody>';
-        d.funcionarios.forEach(function(f) {
-            var wTag = f.respondeu ? '<span class="tag tag-ok">✓ Respondeu</span>' : '<span class="tag tag-no">✗ Pendente</span>';
-            html += '<tr><td>' + f.nome + '</td><td>' + f.loja + '</td><td>' + f.funcao + '</td><td>' + notaBadge(f.notaOrigem !== '—' ? f.notaOrigem : null) + '</td><td>' + notaBadge(f.notaTrein !== '—' ? f.notaTrein : null) + '</td><td>' + wTag + '</td></tr>';
-        });
-        html += '</tbody></table></div>';
-    }
-
-    if (d.porMes.length > 0) {
-        html += '<div class="section"><div class="section-title">📅 Detalhamento Mensal</div></div>';
-        html += '<div class="table-box"><table><thead><tr><th>Mês</th><th>Trein.</th><th>Lembretes</th><th>Aval. Env.</th><th>Origem %</th><th>Trein. %</th><th>Nota Orig.</th><th>Nota Trein.</th><th>WhatsApp</th></tr></thead><tbody>';
-        d.porMes.forEach(function(m) {
-            html += '<tr><td><strong>' + m.mes + '</strong></td><td>' + m.total + '</td><td>' + m.totalLembretes + '</td><td>' + m.avalEnviadas + '</td><td>' + barCell(m.pctOrigem) + '</td><td>' + barCell(m.pctTrein) + '</td><td>' + notaBadge(m.mediaOrigem) + '</td><td>' + notaBadge(m.mediaTrein) + '</td><td>' + m.whatsEnviados + '</td></tr>';
-        });
-        html += '</tbody></table></div>';
+        html += '</tbody></table></div></div>';
     }
 
     document.getElementById('conteudo').innerHTML = html;
 
-    if (d.porMes.length > 1) {
-        var labels = d.porMes.map(function(m) { return m.mes; });
-        renderChartAderencia(labels, d.porMes);
-        renderChartNotas(labels, d.porMes);
-        renderChartVolume(labels, d.porMes);
-        renderChartLembretes(labels, d.porMes);
+    // ── Renderiza gráficos ────────────────────────────────────
+    if (pm.length > 1) {
+        var labels = pm.map(function(m) { return m.mes.slice(0,3); });
+        renderChartAprov(labels, pm);
+        renderChartNota(labels, pm);
+        renderChartVol(labels, pm);
+        renderChartPie(t);
     }
 }
 
-function kpiCard(cor, label, valor, sub) {
-    return '<div class="kpi-card ' + cor + '"><div class="kpi-label">' + label + '</div><div class="kpi-value" style="color:var(--' + cor + ')">' + valor + '</div><div class="kpi-sub">' + sub + '</div></div>';
-}
-
-function chartDefaults() {
-    return {
+// ── Chart defaults ────────────────────────────────────────────
+function chartOpts(extra) {
+    var base = {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { font: { family: 'Nunito', size: 11, weight: '700' }, padding: 16 } } },
+        plugins: {
+            legend: { position: 'bottom', labels: { font: { family: 'Nunito', size: 11, weight: '700' }, padding: 14, boxWidth: 14 } },
+        },
         scales: {
             x: { grid: { display: false }, ticks: { font: { family: 'Nunito', size: 11, weight: '700' } } },
             y: { grid: { color: '#e8e2d9' }, ticks: { font: { family: 'JetBrains Mono', size: 11 } } },
         },
     };
+    return Object.assign(base, extra || {});
 }
 
-function renderChartAderencia(labels, dados) {
-    destroyChart('chartAderencia');
-    var ctx = document.getElementById('chartAderencia'); if (!ctx) return;
-    _charts['chartAderencia'] = new Chart(ctx, {
+function renderChartAprov(labels, pm) {
+    destroyChart('chartAprov');
+    var ctx = document.getElementById('chartAprov'); if (!ctx) return;
+    _charts['chartAprov'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                { label: 'SIM %',        data: pm.map(function(m){return m.pctSim;}),  backgroundColor: 'rgba(22,163,74,.75)',  borderRadius: 5, barPercentage: .6 },
+                { label: 'NÃO %',        data: pm.map(function(m){return m.pctNao;}),  backgroundColor: 'rgba(200,16,46,.7)',   borderRadius: 5, barPercentage: .6 },
+                { label: 'P.NÃO %',      data: pm.map(function(m){return m.pctPnao;}), backgroundColor: 'rgba(217,119,6,.7)',   borderRadius: 5, barPercentage: .6 },
+            ],
+        },
+        options: chartOpts({ scales: { x: { grid: { display: false }, ticks: { font: { family: 'Nunito', size: 11, weight: '700' } } }, y: { min: 0, max: 100, grid: { color: '#e8e2d9' }, ticks: { font: { family: 'JetBrains Mono', size: 11 }, callback: function(v){return v+'%';} } } } }),
+    });
+}
+
+function renderChartNota(labels, pm) {
+    destroyChart('chartNota');
+    var ctx = document.getElementById('chartNota'); if (!ctx) return;
+    _charts['chartNota'] = new Chart(ctx, {
         type: 'line',
-        data: { labels: labels, datasets: [
-            { label: 'Origem %',    data: dados.map(function(m){return m.pctOrigem;}), borderColor: '#c8102e', backgroundColor: 'rgba(200,16,46,.1)', fill: true, tension: .3, borderWidth: 2 },
-            { label: 'Treinadora %', data: dados.map(function(m){return m.pctTrein;}),  borderColor: '#16a34a', backgroundColor: 'rgba(22,163,74,.1)',  fill: true, tension: .3, borderWidth: 2 },
-        ]},
-        options: Object.assign({}, chartDefaults(), { scales: Object.assign({}, chartDefaults().scales, { y: { min: 0, max: 100, grid: { color: '#e8e2d9' }, ticks: { font: { family: 'JetBrains Mono', size: 11 }, callback: function(v){return v+'%';} } } }) }),
+        data: {
+            labels: labels,
+            datasets: [
+                { label: 'Nota Média', data: pm.map(function(m){return m.mediaNota;}), borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.1)', fill: true, tension: .3, borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: '#2563eb' },
+            ],
+        },
+        options: chartOpts({ scales: { x: { grid: { display: false }, ticks: { font: { family: 'Nunito', size: 11, weight: '700' } } }, y: { min: 0, max: 10, grid: { color: '#e8e2d9' }, ticks: { font: { family: 'JetBrains Mono', size: 11 } } } } }),
     });
 }
 
-function renderChartNotas(labels, dados) {
-    destroyChart('chartNotas');
-    var ctx = document.getElementById('chartNotas'); if (!ctx) return;
-    _charts['chartNotas'] = new Chart(ctx, {
+function renderChartVol(labels, pm) {
+    destroyChart('chartVol');
+    var ctx = document.getElementById('chartVol'); if (!ctx) return;
+    _charts['chartVol'] = new Chart(ctx, {
         type: 'bar',
-        data: { labels: labels, datasets: [
-            { label: 'Nota Origem',    data: dados.map(function(m){return m.mediaOrigem;}), backgroundColor: 'rgba(200,16,46,.7)', borderRadius: 6, barPercentage: .6 },
-            { label: 'Nota Treinadora', data: dados.map(function(m){return m.mediaTrein;}),  backgroundColor: 'rgba(22,163,74,.7)', borderRadius: 6, barPercentage: .6 },
-        ]},
-        options: Object.assign({}, chartDefaults(), { scales: Object.assign({}, chartDefaults().scales, { y: { min: 0, max: 10, grid: { color: '#e8e2d9' }, ticks: { font: { family: 'JetBrains Mono', size: 11 } } } }) }),
+        data: {
+            labels: labels,
+            datasets: [
+                { label: 'Total Avaliações', data: pm.map(function(m){return m.total;}), backgroundColor: 'rgba(124,58,237,.7)', borderRadius: 5, barPercentage: .5 },
+            ],
+        },
+        options: chartOpts(),
     });
 }
 
-function renderChartVolume(labels, dados) {
-    destroyChart('chartVolume');
-    var ctx = document.getElementById('chartVolume'); if (!ctx) return;
-    _charts['chartVolume'] = new Chart(ctx, {
-        type: 'bar',
-        data: { labels: labels, datasets: [
-            { label: 'Treinamentos',  data: dados.map(function(m){return m.total;}),         backgroundColor: 'rgba(37,99,235,.6)',  borderRadius: 6, barPercentage: .5 },
-            { label: 'Aval. Enviadas',data: dados.map(function(m){return m.avalEnviadas;}),   backgroundColor: 'rgba(234,88,12,.6)',  borderRadius: 6, barPercentage: .5 },
-            { label: 'Origem OK',     data: dados.map(function(m){return m.origemAvaliou;}),  backgroundColor: 'rgba(200,16,46,.6)',  borderRadius: 6, barPercentage: .5 },
-            { label: 'Treinadora OK', data: dados.map(function(m){return m.treinAvaliou;}),   backgroundColor: 'rgba(22,163,74,.6)',  borderRadius: 6, barPercentage: .5 },
-        ]},
-        options: chartDefaults(),
+function renderChartPie(t) {
+    destroyChart('chartPie');
+    var ctx = document.getElementById('chartPie'); if (!ctx) return;
+    _charts['chartPie'] = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['SIM', 'NÃO', 'P.NÃO RESPONDER'],
+            datasets: [{
+                data: [t.sim, t.nao, t.pnao],
+                backgroundColor: ['rgba(22,163,74,.8)', 'rgba(200,16,46,.8)', 'rgba(217,119,6,.8)'],
+                borderWidth: 2,
+                borderColor: '#ffffff',
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { family: 'Nunito', size: 12, weight: '700' }, padding: 16 } },
+            },
+        },
     });
 }
 
-function renderChartLembretes(labels, dados) {
-    destroyChart('chartLembretes');
-    var ctx = document.getElementById('chartLembretes'); if (!ctx) return;
-    _charts['chartLembretes'] = new Chart(ctx, {
-        type: 'bar',
-        data: { labels: labels, datasets: [
-            { label: '5 dias', data: dados.map(function(m){return m.lem5;}), backgroundColor: 'rgba(124,58,237,.6)', borderRadius: 6, barPercentage: .6 },
-            { label: '2 dias', data: dados.map(function(m){return m.lem2;}), backgroundColor: 'rgba(217,119,6,.6)',  borderRadius: 6, barPercentage: .6 },
-            { label: 'Dia',    data: dados.map(function(m){return m.lemH;}), backgroundColor: 'rgba(200,16,46,.6)', borderRadius: 6, barPercentage: .6 },
-        ]},
-        options: chartDefaults(),
-    });
-}
-
-/* ── FLOATING IA ── */
-function toggleIA() {
-    iaAberto = !iaAberto;
-    var jan = document.getElementById('iaJanela');
-    var tog = document.getElementById('iaToggle');
-    if (iaAberto) {
-        jan.classList.add('aberto');
-        tog.classList.add('aberto');
-        tog.innerHTML = '✕';
-        var u = document.getElementById('iaUnread');
-        if (u) u.style.display = 'none';
-    } else {
-        jan.classList.remove('aberto');
-        tog.classList.remove('aberto');
-        tog.innerHTML = '🤖<div class="ia-unread" id="iaUnread"></div>';
-    }
-}
-
-async function perguntarIA(fixa) {
-    var inp = document.getElementById('inputIA');
-    var q = fixa || inp.value.trim();
-    if (!q) return;
-    inp.value = '';
-    if (!iaAberto) toggleIA();
-
-    var box = document.getElementById('iaMsgs');
-    var mu = document.createElement('div'); mu.className = 'msg user'; mu.textContent = q; box.appendChild(mu);
-    var ma = document.createElement('div'); ma.className = 'msg ai carregando';
-    ma.innerHTML = '<span style="opacity:.6">⏳ Consultando a planilha e analisando com Gemini…</span>';
-    box.appendChild(ma);
-    box.scrollTop = box.scrollHeight;
-
-    var envBtn = document.getElementById('iaBtnEnviar');
-    if (envBtn) envBtn.disabled = true;
-
-    try {
-        var ano = document.getElementById('filtroAno').value;
-        var mes = document.getElementById('filtroMes').value;
-
-        // Monta contexto com os dados atuais da tela
-        var contexto = 'Página: KPI de Avaliações. Ano: ' + ano + (mes ? ' · Mês: ' + mes : ' · Todos os meses') + '.';
-        if (_dadosKpi && _dadosKpi.resumo) {
-            var s = _dadosKpi.resumo;
-            var l = _dadosKpi.lembretes;
-            contexto += '\n\nRESUMO KPI:\n' +
-                '- Treinamentos: ' + s.totalTreinamentos + '\n' +
-                '- Avaliações enviadas: ' + s.avalEnviadas + ' (não enviadas: ' + s.avalNaoEnviadas + ')\n' +
-                '- Origem avaliou: ' + s.origemAvaliou + ' (' + s.aderenciaOrigem + '% aderência)\n' +
-                '- Treinadora avaliou: ' + s.treinAvaliou + ' (' + s.aderenciaTrein + '% aderência)\n' +
-                '- WhatsApp enviados: ' + s.whatsEnviados + ' (' + s.aderenciaWhats + '% aderência)\n' +
-                '- Nota média origem: ' + (s.mediaOrigem || '—') + '\n' +
-                '- Nota média treinadora: ' + (s.mediaTrein || '—') + '\n' +
-                '- Lembretes: ' + l.totalEnviados + ' de ' + l.totalPossiveis + ' possíveis (' + l.aderencia + '%)';
-
-            if (_dadosKpi.lojasOrigem && _dadosKpi.lojasOrigem.length) {
-                contexto += '\n\nLOJAS ORIGEM (top 10):\n';
-                _dadosKpi.lojasOrigem.slice(0, 10).forEach(function(lo) {
-                    contexto += '- ' + lo.loja + ': ' + lo.avaliou + '/' + lo.total + ' avaliações (' + lo.pctAderencia + '%) nota: ' + (lo.media || '—') + '\n';
-                });
-            }
-
-            if (_dadosKpi.porMes && _dadosKpi.porMes.length) {
-                contexto += '\nDADOS POR MÊS:\n';
-                _dadosKpi.porMes.forEach(function(m) {
-                    contexto += '- ' + m.mes + ': ' + m.total + ' trein., origem ' + m.pctOrigem + '%, trein. ' + m.pctTrein + '%, nota orig. ' + (m.mediaOrigem || '—') + ', nota trein. ' + (m.mediaTrein || '—') + '\n';
-                });
-            }
-        }
-
-        var r = await fetch(API + '/ia/analisar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ pergunta: q, contexto: contexto, ano: ano })
-        });
-        var d = await r.json();
-        var txt = d.resposta || d.erro || 'Sem resposta.';
-        ma.className = 'msg ai';
-        ma.innerHTML = txt
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--red)">■</span> ')
-            .replace(/\n/g,'<br>');
-    } catch(e) {
-        ma.className = 'msg ai';
-        ma.textContent = '❌ Erro: ' + e.message;
-    }
-
-    if (envBtn) envBtn.disabled = false;
-    box.scrollTop = box.scrollHeight;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    carregar();
-    document.getElementById('inputIA').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') perguntarIA();
-    });
-    // Badge de novidade após 3s
-    setTimeout(function() {
-        if (!iaAberto) {
-            var u = document.getElementById('iaUnread');
-            if (u) { u.style.display = 'flex'; u.textContent = '1'; }
-        }
-    }, 3000);
-});
+// ── Init ──────────────────────────────────────────────────────
+document.getElementById('filtroAno').addEventListener('change', carregar);
+document.getElementById('filtroMes').addEventListener('change', carregar);
+document.addEventListener('DOMContentLoaded', carregar);
 </script>
-
 </body>
 </html>

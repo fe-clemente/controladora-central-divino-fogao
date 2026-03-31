@@ -5,142 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Links & Recursos — Jurídico</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-    :root {
-        --red:#c8102e; --red-pale:#fff0f2;
-        --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
-        --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
-        --green:#16a34a; --green-pale:#f0fdf4;
-        --yellow:#d97706; --yellow-pale:#fffbeb;
-        --orange:#ea580c; --orange-pale:#fff7ed;
-        --td:#7c3aed; --td-light:#a78bfa; --td-pale:#f5f3ff;
-        --shadow:0 2px 12px rgba(0,0,0,.08);
-        --shadow-lg:0 8px 32px rgba(0,0,0,.14);
-    }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-    header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
-    .logo{padding:10px 0;}.logo img{height:48px;display:block;}
-    .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
-    .hd{width:1px;height:32px;background:var(--border);}
-    .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
-    nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none;}
-    nav::-webkit-scrollbar{display:none;}
-    .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;text-decoration:none;display:flex;align-items:center;}
-    .nav-btn:hover{color:var(--text);background:var(--bg3);}
-    .nav-btn.active{color:var(--td);border-bottom-color:var(--td);background:var(--td-pale);}
-    #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
-    .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
-    .sdot.ready{background:var(--green);animation:none;}
-    .sdot.error{background:var(--red);animation:none;}
-    .sdot.syncing{background:var(--td-light);animation:pulse .8s infinite;}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-    .sheets-badge{display:flex;align-items:center;gap:5px;background:var(--green-pale);border:1px solid rgba(22,163,74,.3);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:800;color:var(--green);}
-    main{max-width:1300px;margin:0 auto;padding:28px 24px;}
-    .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap;}
-    .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
-    .page-sub{font-size:13px;color:var(--muted);}
-    .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
-    .btn-td{background:var(--td);color:#fff;box-shadow:0 2px 8px rgba(124,58,237,.25);}
-    .btn-td:hover{background:#6d28d9;}
-    .btn-green{background:var(--green);color:#fff;}
-    .btn-green:hover{background:#15803d;}
-    .btn-ghost{background:var(--bg2);color:var(--text);border:1.5px solid var(--border);}
-    .btn-ghost:hover{background:var(--bg3);border-color:var(--td);}
-    .btn:disabled{opacity:.5;cursor:not-allowed;}
-    .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-    .spinner.dark{border:2px solid var(--border);border-top-color:var(--td);}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .stats-bar{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:24px;}
-    .stat-pill{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;text-align:center;transition:border-color .15s;}
-    .stat-pill:hover{border-color:var(--td);}
-    .stat-val{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px;}
-    .stat-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
-    .filtros-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-    .search-box{position:relative;flex:1;min-width:200px;}
-    .search-box input{width:100%;padding:9px 14px 9px 36px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;background:var(--bg3);color:var(--text);outline:none;transition:border-color .2s;}
-    .search-box input:focus{border-color:var(--td);background:var(--bg2);}
-    .search-box::before{content:'🔍';position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;}
-    .filtros-group{display:flex;gap:6px;flex-wrap:wrap;}
-    .filtro-tipo{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
-    .filtro-tipo.active{color:#fff;border-color:transparent;background:var(--td);}
-    .filtro-tipo:hover:not(.active){border-color:var(--td);color:var(--td);}
-    .count-badge{background:rgba(255,255,255,.3);padding:1px 6px;border-radius:10px;font-size:10px;margin-left:3px;}
-    .view-toggle{display:flex;gap:0;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
-    .view-btn{padding:7px 12px;background:var(--bg3);border:none;cursor:pointer;font-size:14px;transition:background .15s;color:var(--muted);}
-    .view-btn.active{background:var(--td);color:#fff;}
-    .grupos-container{display:flex;flex-direction:column;gap:18px;}
-    .grupo-header{display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer;user-select:none;}
-    .grupo-header-left{display:flex;align-items:center;gap:10px;}
-    .grupo-arrow{font-size:12px;color:var(--muted);transition:transform .2s;flex-shrink:0;}
-    .grupo-arrow.aberto{transform:rotate(90deg);}
-    .grupo-title{font-size:13px;font-weight:800;color:var(--text);}
-    .grupo-count{background:var(--td-pale);border:1px solid rgba(124,58,237,.2);color:var(--td);font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;}
-    .grupo-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;padding-bottom:4px;}
-    .grupo-body.fechado{display:none;}
-    .link-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;transition:all .18s;position:relative;overflow:hidden;}
-    .link-card:hover{border-color:var(--td);box-shadow:var(--shadow);transform:translateY(-1px);}
-    .link-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0;opacity:0;transition:opacity .2s;}
-    .link-card:hover::before{opacity:1;}
-    .link-card.tipo-sistema::before{background:linear-gradient(90deg,var(--td),var(--td-light));}
-    .link-card.tipo-planilha::before{background:linear-gradient(90deg,var(--green),#4ade80);}
-    .link-card.tipo-manual::before{background:linear-gradient(90deg,#0369a1,#0ea5e9);}
-    .link-card.tipo-drive::before{background:linear-gradient(90deg,var(--yellow),#fbbf24);}
-    .link-card.tipo-apresentacao::before{background:linear-gradient(90deg,var(--orange),#fb923c);}
-    .link-card.tipo-formulario::before{background:linear-gradient(90deg,#0891b2,#22d3ee);}
-    .link-card-top{display:flex;align-items:flex-start;gap:10px;}
-    .link-tipo-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
-    .link-card-info{flex:1;min-width:0;}
-    .link-card-nome{font-size:13px;font-weight:800;line-height:1.3;margin-bottom:3px;color:var(--text);word-break:break-word;}
-    .link-card-desc{font-size:11px;color:var(--muted);font-weight:600;line-height:1.4;word-break:break-word;}
-    .link-card-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
-    .link-action-btn{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg3);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s;text-decoration:none;color:var(--text);}
-    .link-action-btn:hover{background:var(--bg2);border-color:var(--td);}
-    .link-action-btn.del:hover{background:#fee2e2;border-color:#dc2626;}
-    .link-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-    .link-tipo-badge{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:3px 8px;border-radius:6px;flex-shrink:0;}
-    .badge-sistema   {background:var(--td-pale);color:var(--td);}
-    .badge-planilha  {background:var(--green-pale);color:var(--green);}
-    .badge-manual    {background:#f0f9ff;color:#0369a1;}
-    .badge-drive     {background:var(--yellow-pale);color:var(--yellow);}
-    .badge-apresentacao{background:var(--orange-pale);color:var(--orange);}
-    .badge-formulario{background:#ecfeff;color:#0891b2;}
-    .badge-link      {background:var(--bg3);color:var(--muted);}
-    .link-url-mini{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
-    .lista-wrap{display:flex;flex-direction:column;gap:6px;}
-    .lista-row{background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:12px;transition:all .15s;}
-    .lista-row:hover{border-color:var(--td);background:var(--bg3);}
-    .lista-icon{font-size:18px;flex-shrink:0;}
-    .lista-nome{font-size:13px;font-weight:700;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .lista-grupo{font-size:10px;color:var(--muted);font-weight:700;width:160px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .lista-actions{display:flex;gap:5px;flex-shrink:0;}
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
-    .modal-overlay.open{display:flex;}
-    .modal{background:var(--bg2);border-radius:18px;width:100%;max-width:480px;box-shadow:var(--shadow-lg);animation:modalIn .22s ease;}
-    @keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-    .modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between;}
-    .modal-title{font-size:16px;font-weight:800;}
-    .modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
-    .modal-close:hover{background:var(--bg);}
-    .modal-body{padding:20px 24px;}
-    .form-group{margin-bottom:16px;}
-    .form-label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;}
-    .form-input,.form-select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg3);outline:none;transition:border-color .2s;}
-    .form-input:focus,.form-select:focus{border-color:var(--td);background:var(--bg2);}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    .modal-footer{padding:0 24px 20px;display:flex;gap:10px;justify-content:flex-end;}
-    .sheets-info-bar{background:var(--green-pale);border:1.5px solid rgba(22,163,74,.25);border-radius:12px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;color:var(--green);}
-    .sheets-info-bar a{color:var(--green);font-weight:800;}
-    .loading-msg{text-align:center;padding:32px;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;}
-    .empty-state{text-align:center;padding:48px 24px;color:var(--muted);}
-    .empty-state-icon{font-size:48px;margin-bottom:12px;}
-    .empty-state-text{font-size:14px;font-weight:700;}
-    .empty-state-sub{font-size:12px;margin-top:6px;}
-    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;white-space:nowrap;}
-    .toast.show{display:block;animation:fadeUp .3s ease;}
-    @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-    @media(max-width:768px){nav{display:none;}.page-header{flex-direction:column;}.stats-bar{grid-template-columns:repeat(2,1fr);}.form-row{grid-template-columns:1fr;}.lista-grupo{display:none;}}
-    </style>
+    <link rel="stylesheet" href="/global.css">
 </head>
 <body>
 
@@ -152,11 +17,11 @@
     <div class="hd"></div>
     <div class="h-title">Juridico & Dev.</div>
     <nav>
-        <button class="nav-btn " onclick="location.href='/juridico/'">📊 Dashboard</button>
-        <button class="nav-btn  " onclick="location.href='/juridico/ativos'">📋 Comodatos Jurídico</button>
-        <button class="nav-btn " onclick="location.href='/juridico/controle-equipamentos'">📋 Ativos Central</button>
+        <button class="nav-btn" onclick="location.href='/juridico/'">📊 Dashboard</button>
+        <button class="nav-btn" onclick="location.href='/juridico/ativos'">📋 Comodatos Jurídico</button>
+        <button class="nav-btn" onclick="location.href='/juridico/controle-equipamentos'">📋 Ativos Central</button>
         <button class="nav-btn active" onclick="location.href='/juridico/links'">🔗 Links</button>
-        <button class="nav-btn " onclick="location.href='/juridico/sults'">🏪 Sults (lojas - Funcionários)</button>
+        <button class="nav-btn" onclick="location.href='/juridico/sults'">🏪 Sults (lojas - Funcionários)</button>
         <button class="nav-btn" onclick="location.href='/juridico/uploads'">📁 Uploads</button>
     </nav>
 </header>
@@ -220,17 +85,17 @@
             <div class="modal-title" id="modalTitulo">Novo Link</div>
             <button class="modal-close" onclick="fecharModal()">✕</button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="padding:20px 24px">
             <input type="hidden" id="editId">
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom:16px">
                 <label class="form-label">Nome do Link *</label>
                 <input type="text" class="form-input" id="fNome" placeholder="Ex: Manual de Jurídico">
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom:16px">
                 <label class="form-label">URL *</label>
                 <input type="text" class="form-input" id="fUrl" placeholder="https://..." oninput="autoTipo()">
             </div>
-            <div class="form-row">
+            <div class="form-row" style="margin-bottom:16px">
                 <div class="form-group">
                     <label class="form-label">Tipo</label>
                     <select class="form-select" id="fTipoSelect" onchange="onTipoSelectChange()">
@@ -253,12 +118,12 @@
                     <input type="hidden" id="fGrupo">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom:16px">
                 <label class="form-label">Descrição</label>
                 <input type="text" class="form-input" id="fDesc" placeholder="Breve descrição do link">
             </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" style="padding:0 24px 20px">
             <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
             <button class="btn btn-td" id="btnSalvar" onclick="salvarLink()">💾 Salvar</button>
         </div>
@@ -324,14 +189,14 @@ function autoTipo(){
     onTipoSelectChange();
 }
 
-        async function carregar(){
-            setStatus('syncing','Carregando links...');
-            try {
-                var d = await apiFetch(API_BASE, {
-                    headers: { 'Accept': 'application/json' }
-                });
-                if(!d) return;
-                if(!d.ok) throw new Error(d.erro||'Erro ao carregar');
+async function carregar(){
+    setStatus('syncing','Carregando links...');
+    try {
+        var d = await apiFetch(API_BASE, {
+            headers: { 'Accept': 'application/json' }
+        });
+        if(!d) return;
+        if(!d.ok) throw new Error(d.erro||'Erro ao carregar');
         TODOS_LINKS = d.links||[];
         GRUPOS      = d.grupos||{};
         Object.keys(GRUPOS).forEach(function(g){ gruposAbertos[g]=true; });
@@ -351,11 +216,11 @@ function autoTipo(){
 function renderStats(){
     var conts={};
     TODOS_LINKS.forEach(function(l){ var t=l.tipo||'link'; conts[t]=(conts[t]||0)+1; });
-    var html='<div class="stat-pill" style="border-color:rgba(124,58,237,.3)"><div class="stat-val" style="color:var(--td)">'+TODOS_LINKS.length+'</div><div class="stat-lbl">Total</div></div>';
+    var html='<div class="stat-pill" style="border-color:rgba(124,58,237,.3)"><div class="stat-val" style="color:var(--jur)">'+TODOS_LINKS.length+'</div><div class="stat-lbl">Total</div></div>';
     ['sistema','planilha','manual','drive','apresentacao','formulario','link'].forEach(function(t){
         if(!conts[t]) return;
         var cfg=tipoInfo(t);
-        html+='<div class="stat-pill"><div class="stat-val" style="color:var(--td)">'+conts[t]+'</div><div class="stat-lbl">'+cfg.icon+' '+cfg.label+'</div></div>';
+        html+='<div class="stat-pill"><div class="stat-val" style="color:var(--jur)">'+conts[t]+'</div><div class="stat-lbl">'+cfg.icon+' '+cfg.label+'</div></div>';
     });
     html+='<div class="stat-pill" style="border-color:rgba(22,163,74,.3)"><div class="stat-val" style="color:var(--green)">'+Object.keys(GRUPOS).length+'</div><div class="stat-lbl">Grupos</div></div>';
     $('statsBar').innerHTML=html;

@@ -25,6 +25,7 @@ const { gravarSultsNaPlanilha }  = require('./services/gravarSultsPlanilha');
 const { enviarWhatsAppLembrete } = require('./services/whatsapp');
 const { enviarEmailLembrete, enviarEmailLembreteSimples, enviarEmailAvaliacao, enviarWhatsAppAvaliacaoFuncionario } = require('./services/email');
 const linksTreinamentoService = require('./services/linksTreinamentoService');
+const kpiAvaliacoesService = require('./services/kpiAvalicoesService');
 
 // ★ NOVO — busca separada com cache
 const buscaCache   = require('./services/buscaCache');
@@ -68,7 +69,6 @@ const {
   marcarWhatsappAvaliacaoFunc,
   getFuncionariosParaAvaliacaoLembrete,
   getHistoricoAvaliacaoLembretes,
-  getKpiAvaliacoes,
 } = require('./services/sheets');
 
 // ─── Inicializar caches ───────────────────────────────────────────────────────
@@ -99,18 +99,19 @@ router.get('/universidade', (req, res) => res.sendFile(path.join(PUBLIC, 'univer
 router.get('/valores',      (req, res) => res.sendFile(path.join(PUBLIC, 'valores.html')));
 router.get('/uploads',      (req, res) => res.sendFile(path.join(PUBLIC, 'uploads.html')));
 router.get('/cadastro',     (req, res) => res.sendFile(path.join(PUBLIC, 'cadastro.html')));
-router.get('/links', (req, res) => res.sendFile(path.join(PUBLIC, 'links.html'))
+router.get('/links', (req, res) => res.sendFile(path.join(PUBLIC, 'links.html')));
+router.get('/kpi-avaliacoes', (req, res) =>
+  res.sendFile(path.join(__dirname, 'public', 'avaliacoesKPI.html'))
 );
-router.get('/kpi-avaliacoes', (req, res) => res.sendFile(path.join(PUBLIC, 'avaliacoesKPI.html')));
 router.get('/busca', (req, res) => res.sendFile(path.join(PUBLIC, 'busca.html')));
 
 router.use('/busca-api', buscaService);
-
-
 router.use('/links-api', linksTreinamentoService);
+router.use('/kpi-avaliacoes', kpiAvaliacoesService);
 
 // ─── Arquivos estáticos ───────────────────────────────────────────────────────
 router.use(express.static(PUBLIC, { index: false, extensions: false }));
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // STATUS / CACHE
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -159,16 +160,6 @@ router.get('/dashboard/cadastral', async (req, res) => {
 router.get('/dashboard/perfil-desenvolvimento', async (req, res) => {
   try { res.json(await getPerfilDesenvolvimento(req.query.ano || '2026')); }
   catch (e) { res.status(500).json({ erro: e.message }); }
-});
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// ★ KPI DE AVALIAÇÕES
-// ═══════════════════════════════════════════════════════════════════════════════
-router.get('/kpi-avaliacoes/dados', async (req, res) => {
-  try {
-    const { ano, mes } = req.query;
-    res.json(await getKpiAvaliacoes(ano || '2026', mes || null));
-  } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -384,28 +375,20 @@ router.post('/enviar-lembrete', async (req, res) => {
       'hoje':  'lembreteHoje',
     };
 
-    // Grava na planilha
     await atualizarCelula(f.rowIndex, colunaMap[f.tipo], textoLembrete);
     lembretesCache.marcarEnviado(f.rowIndex, f.tipo);
 
-    // Responde imediatamente
     res.json({ sucesso: true, lembrete: textoLembrete, tipo: f.tipo });
 
-    // ── WhatsApp para funcionário (SEM link de avaliação) ──────────────
     if (f.telefone) {
       enviarWhatsAppLembrete({ ...f, diffDias: f.diffDias ?? 0 })
         .catch(e => console.error('[LEMBRETE] WhatsApp:', e.message));
     }
 
-    // ── Email SIMPLES para lojas (SEM link de avaliação) ──────────────
     if (f.email || f.emailLojaAvaliadora) {
       enviarEmailLembreteSimples(f)
         .catch(e => console.error('[LEMBRETE] Email simples:', e.message));
     }
-
-    // ★ NÃO gera mais links de avaliação aqui
-    // ★ NÃO chama mais gerarLinkAvaliacao() aqui
-    // ★ NÃO chama mais marcarEmailAvaliacaoEnviado() aqui
 
   } catch (e) {
     console.error('[LEMBRETE] Erro:', e.message);
@@ -497,17 +480,11 @@ router.post('/enviar-lembrete-avaliacao', async (req, res) => {
 
     const baseUrl = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
 
-    // ★ Gera links de avaliação — AQUI sim, no dia final
     const linkOrigem     = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'origem');
     const linkTreinadora = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'treinadora');
 
-    // Envia email COM link para as lojas
     await enviarEmailAvaliacao(f, linkOrigem, linkTreinadora);
-
-    // Marca na planilha col AK
     await marcarAvaliacaoEnviadaLojas(f.rowIndex);
-
-    // Atualiza cache
     avaliacaoLembretesCache.marcarEnviado(f.rowIndex);
 
     console.log(`✅ Email avaliação enviado: ${f.nome} (row ${f.rowIndex})`);
@@ -534,19 +511,14 @@ router.post('/enviar-whatsapp-avaliacao-funcionario', async (req, res) => {
 
     const baseUrl = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
 
-    // Gera link para funcionário avaliar a loja
     const linkFuncionario = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'funcionario');
 
-    // Envia WhatsApp com link
     await enviarWhatsAppAvaliacaoFuncionario({
       ...f,
       linkAvaliacao: linkFuncionario,
     });
 
-    // Marca na planilha col AL
     await marcarWhatsappAvaliacaoFunc(f.rowIndex);
-
-    // Atualiza cache
     avaliacaoLembretesCache.marcarWhatsappFuncEnviado(f.rowIndex);
 
     console.log(`✅ WhatsApp avaliação funcionário: ${f.nome} (row ${f.rowIndex})`);

@@ -5,229 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ativos T.I. — Divino Fogão</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --red:#c8102e;--red-pale:#fff0f2;
-            --bg:#f5f3ef;--bg2:#ffffff;--bg3:#faf8f5;
-            --border:#e8e2d9;--text:#1e1a16;--muted:#8a7f74;
-            --green:#16a34a;--green-pale:#f0fdf4;
-            --yellow:#d97706;--yellow-pale:#fffbeb;
-            --orange:#ea580c;--orange-pale:#fff7ed;
-            --ti:#0369a1;--ti-light:#0ea5e9;--ti-pale:#f0f9ff;
-            --ti2:#7c3aed;--ti2-pale:#f5f3ff;
-            --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12);
-        }
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
-        .logo{padding:10px 0;}.logo img{height:48px;display:block;}
-        .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
-        .hd{width:1px;height:32px;background:var(--border);}
-        .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
-        nav{display:flex;gap:2px;margin-left:auto;}
-        .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
-        .nav-btn:hover{color:var(--text);background:var(--bg3);}
-        .nav-btn.active{color:var(--ti);border-bottom-color:var(--ti);background:var(--ti-pale);}
-        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
-        .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
-        .sdot.ready{background:var(--green);animation:none;}
-        .sdot.error{background:var(--red);animation:none;}
-        .sdot.syncing{background:var(--ti-light);animation:pulse .8s infinite;}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-        main{max-width:1400px;margin:0 auto;padding:28px 24px;}
-        .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
-        .page-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
-        .aba-switcher{display:flex;gap:6px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:50px;padding:6px 8px;box-shadow:var(--shadow);width:fit-content;margin-bottom:24px;flex-wrap:wrap;}
-        .aba-btn{display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:40px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--muted);background:transparent;white-space:nowrap;}
-        .aba-btn:hover{color:var(--text);background:var(--bg3);}
-        .aba-btn .aba-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;background:var(--bg3);border:1px solid var(--border);padding:2px 7px;border-radius:20px;color:var(--muted);transition:all .2s;}
-        .aba-btn.active-ativos{background:var(--ti);color:#fff;}
-        .aba-btn.active-distratados{background:var(--orange);color:#fff;}
-        .aba-btn.active-desligados{background:#64748b;color:#fff;}
-        .aba-btn.active-ti{background:var(--ti2);color:#fff;}
-        .aba-btn.active-ativos .aba-badge,.aba-btn.active-distratados .aba-badge,
-        .aba-btn.active-desligados .aba-badge,.aba-btn.active-ti .aba-badge
-        {background:rgba(255,255,255,.25);border-color:transparent;color:#fff;}
-        .painel{display:none;}.painel.active{display:block;}
-        .metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:20px;}
-        .mc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:15px 18px;box-shadow:var(--shadow);}
-        .mc-icon{font-size:20px;margin-bottom:6px;}
-        .mc-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;}
-        .mc-val{font-size:24px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
-        .mc-sub{font-size:10px;color:var(--muted);margin-top:4px;font-weight:600;}
-        .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
-        @media(max-width:900px){.g2{grid-template-columns:1fr;}}
-        .cc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);}
-        .cc-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:3px;}
-        .cc-sub{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:12px;}
-        .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-        .bar-label{font-size:12px;font-weight:600;color:var(--text);width:150px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        .bar-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
-        .bar-fill{height:100%;border-radius:4px;transition:width .8s ease;}
-        .bar-count{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);width:28px;text-align:right;flex-shrink:0;}
-        .filters{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow);display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
-        .fg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px;}
-        .fg label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
-        .fc{padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;-webkit-appearance:none;}
-        .fc:focus{border-color:var(--ti);}
-        select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-        .btn{padding:8px 16px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
-        .btn-ti{background:var(--ti);color:#fff;}.btn-ti:hover{background:#075985;}
-        .btn-green{background:var(--green);color:#fff;}.btn-green:hover{background:#15803d;}
-        .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}.btn-ghost:hover{background:var(--bg2);}
-        .btn-sm{padding:6px 12px;font-size:12px;}
-        .btn-xs{padding:4px 8px;font-size:11px;border-radius:6px;}
-        .btn:disabled{opacity:.5;cursor:not-allowed;}
-        .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-        @keyframes spin{to{transform:rotate(360deg)}}
-
-        /* ── TABELA AGRUPADA ── */
-        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
-        .table-head{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-        .tbl-title{font-size:13px;font-weight:800;}
-        .tbl-scroll{overflow-x:auto;}
-        table{width:100%;border-collapse:collapse;min-width:700px;}
-        thead th{padding:9px 13px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
-
-        /* Linhas agrupadas */
-        .tr-comod td{background:#fafaf8;border-bottom:none;padding-top:12px;padding-bottom:4px;vertical-align:top;}
-        .tr-comod:hover td{background:#f0f9ff;}
-        .tr-item td{background:#fff;padding-top:7px;padding-bottom:7px;border-bottom:1px solid var(--border);vertical-align:middle;}
-        .tr-item:hover td{background:#f8fbff;}
-        .tr-sep{height:6px;}
-        .tr-sep td{background:var(--bg);border:none;padding:0;}
-        .comod-nome{font-size:12px;font-weight:800;color:var(--ti);cursor:pointer;line-height:1.3;word-break:break-word;white-space:normal;}
-        .comod-nome:hover{color:#024f7a;text-decoration:underline;}
-        .comod-meta{font-size:10px;color:var(--muted);margin-top:3px;}
-        .add-item-btn{background:#f0fdf4;border:1.5px dashed #86efac;color:#166534;border-radius:7px;padding:4px 9px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;margin-top:6px;display:inline-block;}
-        .add-item-btn:hover{background:#dcfce7;border-style:solid;}
-
-        /* Tabela T.I — linhas clicáveis simples */
-        .tr-ti{transition:background .12s;cursor:pointer;}
-        .tr-ti:hover td{background:var(--bg3);}
-        .tr-ti td{padding:10px 13px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        .tr-ti:last-child td{border-bottom:none;}
-
-        .mono{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
-        .td-nome{font-weight:700;}
-        .td-valor{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--green);}
-        .td-zero{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;}
-        .eb{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
-        .eb-notebook{background:var(--ti-pale);color:var(--ti);border:1.5px solid rgba(3,105,161,.2);}
-        .eb-celular{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
-        .eb-tablet{background:var(--ti2-pale);color:var(--ti2);border:1.5px solid rgba(124,92,252,.2);}
-        .eb-outro{background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0;}
-        .eb-novo{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
-        .eb-bom{background:var(--ti-pale);color:var(--ti);border:1.5px solid rgba(3,105,161,.2);}
-        .eb-regular{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
-        .eb-ruim{background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.2);}
-
-        .pagination{display:flex;align-items:center;justify-content:center;gap:5px;padding:12px;flex-wrap:wrap;border-top:1px solid var(--border);}
-        .pagination button{background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;color:var(--muted);padding:5px 11px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;transition:all .15s;}
-        .pagination button.active,.pagination button:hover{background:var(--ti);color:#fff;border-color:var(--ti);}
-        .pagination button:disabled{opacity:.4;cursor:not-allowed;pointer-events:none;}
-        .pg-info{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-
-        /* ── MODAL ── */
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
-        .modal-overlay.open{display:flex;}
-        .modal-box{background:var(--bg2);border-radius:18px;padding:26px 28px;max-width:700px;width:100%;box-shadow:var(--shadow-lg);max-height:92vh;overflow-y:auto;}
-        .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;}
-        .modal-title{font-size:15px;font-weight:800;}
-        .modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:5px 11px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);}
-        .modal-close:hover{background:var(--red-pale);color:var(--red);}
-        .df-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-        .df{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px 13px;}
-        .df.full{grid-column:1/-1;}
-        .dfl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:3px;}
-        .dfv{font-size:13px;font-weight:600;}
-        .form-section{border-radius:12px;padding:16px;margin-top:14px;}
-        .form-section.edit{background:var(--ti-pale);border:1.5px solid rgba(3,105,161,.2);}
-        .form-section.insert{background:var(--green-pale);border:1.5px solid rgba(22,163,74,.2);}
-        .form-section-title{font-size:12px;font-weight:800;margin-bottom:12px;}
-        .form-section.edit .form-section-title{color:var(--ti);}
-        .form-section.insert .form-section-title{color:var(--green);}
-        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-        .form-group{display:flex;flex-direction:column;gap:4px;}
-        .form-group.full{grid-column:1/-1;}
-        .form-group label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
-        .form-control{padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;transition:border-color .2s;width:100%;}
-        .form-control:focus{border-color:var(--ti);}
-        select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-        textarea.form-control{resize:vertical;min-height:60px;}
-
-        /* ── CARDS DE ITEM NO MODAL ── */
-        .item-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;position:relative;}
-        .item-card-num{position:absolute;top:10px;left:14px;font-size:10px;font-weight:800;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-        .item-card-remove{position:absolute;top:8px;right:10px;background:var(--red-pale);border:none;border-radius:6px;color:var(--red);font-size:11px;font-weight:800;padding:3px 8px;cursor:pointer;font-family:'Nunito',sans-serif;}
-        .item-card-remove:hover{background:var(--red);color:#fff;}
-        .item-card-body{padding-top:4px;}
-        .add-outro-item{background:#f0f9ff;border:1.5px dashed #93c5fd;color:var(--ti);border-radius:9px;padding:10px;font-size:12px;font-weight:800;cursor:pointer;width:100%;font-family:'Nunito',sans-serif;margin-top:4px;transition:all .15s;}
-        .add-outro-item:hover{background:#e0f2fe;border-style:solid;}
-
-        .empty{text-align:center;padding:50px;color:var(--muted);}
-        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
-        .toast.show{display:block;animation:fadeUp .3s ease;}
-        @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-        .valor-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-pale);border:1.5px solid rgba(22,163,74,.2);border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800;color:var(--green);}
-
-        /* ── IA ── */
-        #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
-        #iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--ti),#075985);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(3,105,161,.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .25s;color:#fff;position:relative;}
-        #iaToggle:hover{transform:scale(1.08);}
-        #iaToggle.aberto{background:linear-gradient(135deg,#444,#1a1a1a);}
-        .ia-unread{position:absolute;top:-3px;right:-3px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid #fff;line-height:1;}
-        #iaJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:400px;max-width:calc(100vw - 32px);max-height:660px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;animation:iaSlide .25s ease;}
-        #iaJanela.aberto{display:flex;}
-        @keyframes iaSlide{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-        .ia-topo{background:linear-gradient(135deg,var(--ti),#075985);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-        .ia-topo-esq{display:flex;align-items:center;gap:10px;}
-        .ia-topo-titulo{font-size:14px;font-weight:800;}
-        .ia-topo-sub{font-size:11px;opacity:.8;margin-top:1px;}
-        .ia-fechar{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
-        .ia-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-        .ia-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;}
-        .ia-sug:hover{border-color:var(--ti);color:var(--ti);background:var(--ti-pale);}
-        .ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:220px;max-height:380px;}
-        .ia-msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
-        .ia-msg.user{background:var(--ti);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
-        .ia-msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
-        .ia-msg.ai.carregando{color:var(--muted);font-style:italic;}
-        .ia-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-        .ia-input{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;}
-        .ia-input:focus{border-color:var(--ti);}
-        .ia-enviar{background:var(--ti);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
-        .ia-enviar:disabled{opacity:.5;cursor:not-allowed;}
-        @media(max-width:768px){#iaJanela{width:calc(100vw - 32px);}#iaWidget{right:16px;bottom:16px;}}
-
-        /* Ícone planilha */
-        .icon-sheet{width:13px;height:13px;flex-shrink:0;}
-
-        /* ── Nav Dropdown ── */
-.nav-dropdown{position:relative;}
-.nav-btn-drop{display:inline-flex;align-items:center;gap:4px;}
-.nav-drop-arrow{font-size:10px;transition:transform .2s;}
-.nav-dropdown.open .nav-drop-arrow{transform:rotate(180deg);}
-.nav-drop-menu{
-    display:none;position:absolute;top:100%;right:0;
-    background:var(--bg2);border:1.5px solid var(--border);
-    border-radius:12px;padding:6px;min-width:260px;
-    box-shadow:var(--shadow-lg);z-index:200;margin-top:2px;
-}
-.nav-dropdown.open .nav-drop-menu{display:block;}
-.nav-drop-item{
-    display:flex;align-items:center;gap:10px;
-    padding:10px 12px;border-radius:9px;
-    text-decoration:none;color:var(--text);
-    transition:background .15s;
-}
-.nav-drop-item:hover{background:var(--bg3);}
-.ndi-icon{font-size:18px;flex-shrink:0;}
-.ndi-info{display:flex;flex-direction:column;gap:1px;}
-.ndi-label{font-size:13px;font-weight:700;}
-.ndi-desc{font-size:11px;color:var(--muted);font-weight:600;}
-
-    </style>
+    <link rel="stylesheet" href="/global.css">
 </head>
 <body>
 
@@ -238,34 +16,64 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
+
+    <!-- Nav desktop -->
     <nav>
         <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
         <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
-        <button class="nav-btn active" onclick="location.href='/ti/ativos.html'">🖥️ Comodato - Jurídico</button>
+        <button class="nav-btn active-ti" onclick="location.href='/ti/ativos.html'">🖥️ Comodato - Jurídico</button>
         <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
         <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
         <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
         <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
         <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
         <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
+        <div class="nav-dropdown" id="navRelatorios">
+            <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
+                📊 Relatórios <span class="nav-drop-arrow">▾</span>
+            </button>
+            <div class="nav-drop-menu">
+                <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
+                    <span class="ndi-icon">📋</span>
+                    <span class="ndi-info">
+                        <span class="ndi-label">Check-in / Check-out</span>
+                        <span class="ndi-desc">Presença e localização de consultores</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
 
-            <div class="nav-dropdown" id="navRelatorios">
-        <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
-            📊 Relatórios <span class="nav-drop-arrow">▾</span>
-        </button>
-        <div class="nav-drop-menu">
-            <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
-                <span class="ndi-icon">📋</span>
-                <span class="ndi-info">
-                    <span class="ndi-label">Check-in / Check-out</span>
-                    <span class="ndi-desc">Presença e localização de consultores</span>
-                </span>
-            </a>
+    <!-- Botão hamburger (mobile) -->
+    <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
+</header>
+
+<!-- Drawer overlay -->
+<div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="fecharDrawer()"></div>
+
+<!-- Drawer menu -->
+<div class="nav-drawer" id="navDrawer">
+    <div class="nav-drawer-head">
+        <span class="nav-drawer-title">Central de T.I.</span>
+        <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
+    </div>
+    <div class="nav-drawer-body">
+        <a class="nav-drawer-item" href="/ti/index.html">📊 Dashboard</a>
+        <a class="nav-drawer-item" href="/ti/controle-equipamentos.html">🖥️ Gestão Ativos (Funcionários)</a>
+        <a class="nav-drawer-item active-ti" href="/ti/ativos.html">🖥️ Comodato - Jurídico</a>
+        <a class="nav-drawer-item" href="/ti/migracao.html">🔄 Migração</a>
+        <a class="nav-drawer-item" href="/ti/projetos.html">📋 Projetos</a>
+        <a class="nav-drawer-item" href="/ti/chamados.html">📞 Chamados</a>
+        <a class="nav-drawer-item" href="/ti/pix.html">💳 Pix TEF</a>
+        <a class="nav-drawer-item" href="/ti/linkexterno.html">🔗 Links</a>
+        <a class="nav-drawer-item" href="/ti/uploads.html">📁 Uploads</a>
+        <div class="nav-drawer-sep"></div>
+        <div style="padding:6px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)">Relatórios</div>
+        <div class="nav-drawer-sub">
+            <a class="nav-drawer-item" href="/ti/relatorioCheckoutConsultores.html">📋 Check-in / Check-out</a>
         </div>
     </div>
-
-    </nav>
-</header>
+</div>
 
 <div id="statusBar">
     <div class="sdot" id="sdot"></div>
@@ -278,7 +86,7 @@
 </div>
 
 <main>
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+    <div class="page-header">
         <div>
             <div class="page-title">🖥️ Ativos &amp; Comodatos</div>
             <div class="page-sub" id="pageSub">Carregando...</div>
@@ -418,7 +226,7 @@
                 </div>
                 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                     <a class="btn btn-ghost btn-sm" href="https://docs.google.com/spreadsheets/d/1aqS-In7hzRP3jay6QbLOq5SLH9Q434vi5qZjOKo1tnI/edit?gid=1949369402#gid=1949369402" target="_blank" rel="noopener" style="text-decoration:none">
-                        <svg class="icon-sheet" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg class="icon-sheet" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         Planilha
                     </a>
                     <button class="btn btn-green btn-sm" onclick="abrirInsert('desligados')">➕ Novo Registro</button>
@@ -439,9 +247,9 @@
     <!-- ═══ PAINEL T.I ═══ -->
     <div class="painel" id="painel-ti">
         <div class="metrics">
-            <div class="mc"><div class="mc-icon">🖥️</div><div class="mc-label">Total</div><div class="mc-val" style="color:var(--ti2)" id="ti-total">—</div></div>
+            <div class="mc"><div class="mc-icon">🖥️</div><div class="mc-label">Total</div><div class="mc-val" style="color:var(--ti)" id="ti-total">—</div></div>
             <div class="mc"><div class="mc-icon">✅</div><div class="mc-label">Bom Estado</div><div class="mc-val" style="color:var(--green)" id="ti-bom">—</div></div>
-            <div class="mc"><div class="mc-icon">📍</div><div class="mc-label">Locais</div><div class="mc-val" style="color:var(--ti2)" id="ti-locais">—</div></div>
+            <div class="mc"><div class="mc-icon">📍</div><div class="mc-label">Locais</div><div class="mc-val" style="color:var(--ti)" id="ti-locais">—</div></div>
             <div class="mc"><div class="mc-icon">💰</div><div class="mc-label">Valor Total</div><div class="mc-val" style="color:var(--green);font-size:16px" id="ti-valor">—</div></div>
         </div>
         <div class="g2">
@@ -505,7 +313,7 @@
             <button class="ia-sug" onclick="perguntarIA('Faça um resumo executivo dos ativos.')">📋 Executivo</button>
         </div>
         <div class="ia-msgs" id="iaMsgs">
-            <div class="ia-msg ai">
+            <div class="ia-msg bot">
                 👋 Olá! Posso analisar os ativos, comodatos, distratados, desligados e inventário T.I.<br><br>
                 <span style="font-size:11px;color:var(--muted)">💡 Clique em uma sugestão ou digite sua pergunta.</span>
             </div>
@@ -515,7 +323,7 @@
             <button class="ia-enviar" id="btnIA" onclick="perguntarIA()">➤</button>
         </div>
     </div>
-    <button id="iaToggle" onclick="toggleIA()" title="IA Ativos T.I.">
+    <button id="iaToggle" onclick="toggleIA()" title="IA Ativos T.I." style="position:relative">
         🤖<div class="ia-unread" id="iaUnread">1</div>
     </button>
 </div>
@@ -616,7 +424,6 @@ function renderTudo(raw) {
     $('badge-ti').textContent=D.ti.length;
     $('pageSub').textContent=`${D.ativos.length} ativos · ${D.distratados.length} distratados · ${D.desligados.length} desligados · ${D.ti.length} T.I`;
 
-    // Ativos
     $('a-total').textContent=D.ativos.length;
     $('a-comod').textContent=D.g.ativos.length;
     $('a-nb').textContent=D.ativos.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length;
@@ -627,7 +434,6 @@ function renderTudo(raw) {
     renderBarras('a-chart-comod',(sa.topComodatarios||[]).filter(c=>c.qtd>1),'nome','qtd',['var(--orange)']);
     popularFiltro('a-fapa',D.ativos,'aparelho');
 
-    // Distratados
     $('d-total').textContent=D.distratados.length;
     $('d-comod').textContent=D.g.distratados.length;
     $('d-nb').textContent=D.distratados.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length;
@@ -638,7 +444,6 @@ function renderTudo(raw) {
     renderBarras('d-chart-comod',(sd.topComodatarios||[]).filter(c=>c.qtd>1),'nome','qtd',['var(--ti2)']);
     popularFiltro('d-fapa',D.distratados,'aparelho');
 
-    // Desligados
     $('des-total').textContent=D.desligados.length;
     $('des-comod').textContent=D.g.desligados.length;
     $('des-nb').textContent=D.desligados.filter(i=>(i.aparelho||'').toLowerCase().includes('notebook')).length;
@@ -649,7 +454,6 @@ function renderTudo(raw) {
     renderBarras('des-chart-comod',(sde.topComodatarios||[]).filter(c=>c.qtd>1),'nome','qtd',['var(--red)']);
     popularFiltro('des-fapa',D.desligados,'aparelho');
 
-    // T.I
     $('ti-total').textContent=D.ti.length;
     $('ti-bom').textContent=sti.emBomEstado||0;
     $('ti-locais').textContent=(sti.porLocal||[]).length;
@@ -707,7 +511,7 @@ function limparFiltro(aba) {
     filtrar(aba);
 }
 
-// ══ Renderização agrupada (Ativos / Distratados / Desligados) ══
+// ══ Renderização agrupada ══
 function renderTabela(aba) {
     if (aba === 'ti') { renderTabelaTI(); return; }
     const p = PREFIX[aba];
@@ -753,7 +557,7 @@ function renderTabela(aba) {
                     <td class="mono" style="font-size:11px">${item.assinatura||'—'}</td>
                     <td style="font-size:11px;color:var(--muted)">${item.etiqueta||'—'}</td>
                     <td style="font-size:11px;color:var(--muted)" title="${item.obs||''}">${item.obs||'—'}</td>
-                    <td><button class="btn btn-ghost btn-xs" onclick="abrirDetalhe('${aba}','${enc}')">✏️</button></td>`;
+                    <td><button class="btn btn-ghost btn-sm" style="padding:4px 8px;font-size:11px" onclick="abrirDetalhe('${aba}','${enc}')">✏️</button></td>`;
             } else if (aba === 'distratados') {
                 html += `
                     <td>${aparelhoBadge(item.aparelho)}</td>
@@ -763,7 +567,7 @@ function renderTabela(aba) {
                     <td class="mono" style="font-size:11px">${item.assinatura||'—'}</td>
                     <td class="mono" style="font-size:11px">${item.distrato||'—'}</td>
                     <td style="font-size:11px;color:var(--muted)" title="${item.obs||''}">${item.obs||'—'}</td>
-                    <td><button class="btn btn-ghost btn-xs" onclick="abrirDetalhe('${aba}','${enc}')">✏️</button></td>`;
+                    <td><button class="btn btn-ghost btn-sm" style="padding:4px 8px;font-size:11px" onclick="abrirDetalhe('${aba}','${enc}')">✏️</button></td>`;
             } else {
                 html += `
                     <td>${aparelhoBadge(item.aparelho)}</td>
@@ -772,7 +576,7 @@ function renderTabela(aba) {
                     <td>${valorDisplay(item.valor)}</td>
                     <td class="mono" style="font-size:11px">${item.assinatura||'—'}</td>
                     <td class="mono" style="font-size:11px">${item.distrato||'—'}</td>
-                    <td><button class="btn btn-ghost btn-xs" onclick="abrirDetalhe('${aba}','${enc}')">✏️</button></td>`;
+                    <td><button class="btn btn-ghost btn-sm" style="padding:4px 8px;font-size:11px" onclick="abrirDetalhe('${aba}','${enc}')">✏️</button></td>`;
             }
             html += `</tr>`;
         }
@@ -782,7 +586,7 @@ function renderTabela(aba) {
     renderPag(`${p}-pag`, totalPag, pag, aba);
 }
 
-// ══ Renderização T.I (lista simples clicável) ══
+// ══ Renderização T.I ══
 function renderTabelaTI() {
     const lista = D.f.ti;
     const totalPag = Math.ceil(lista.length / PER);
@@ -806,7 +610,7 @@ function renderTabelaTI() {
             <td class="mono">${fmtData(i.dtCompra)}</td>
             <td>${valorDisplay(i.valor)}</td>
             <td style="color:var(--muted);font-size:11px" title="${i.obs||''}">${i.obs||'—'}</td>
-            <td><button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();abrirDetalhe('ti','${enc}')">✏️</button></td>
+            <td><button class="btn btn-ghost btn-sm" style="padding:4px 8px;font-size:11px" onclick="event.stopPropagation();abrirDetalhe('ti','${enc}')">✏️</button></td>
         </tr>`;
     }).join('');
     renderPag('ti-pag', totalPag, pag, 'ti');
@@ -924,7 +728,7 @@ function abrirDetalhe(aba, enc) {
     $('modalOverlay').classList.add('open');
 }
 
-// ══ Insert — múltiplos itens por comodatário ══
+// ══ Insert ══
 let _insertAba = '', _insertComod = '', _itemCount = 0;
 
 function camposItem(aba, idx) {
@@ -1044,10 +848,8 @@ async function confirmarInsertMulti(aba) {
     if (!comodatario) { toast('⚠️ Informe o comodatário'); return; }
     const cards = document.querySelectorAll('#itensContainer .item-card');
     if (!cards.length) { toast('⚠️ Adicione ao menos um equipamento'); return; }
-
     const btn = $('btnInserir');
     btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Inserindo...';
-
     let inseridos = 0, erros = 0;
     for (const card of cards) {
         const idx = card.id.replace('item-card-','');
@@ -1055,14 +857,12 @@ async function confirmarInsertMulti(aba) {
         const body = { comodatario, aparelho: get('aparelho'), modelo: get('modelo'), numLinha: get('numLinha'), valor: get('valor'), assinatura: get('assinatura'), obs: get('obs') };
         if (aba === 'ativos')  body.etiqueta = get('etiqueta');
         if (aba !== 'ativos')  body.distrato  = get('distrato');
-
         try {
             const r = await fetch(`/ti/api/ativos/inserir?aba=${aba}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
             const d = await r.json();
             if (d.ok) inseridos++; else { erros++; console.error('Erro item:', d.erro); }
         } catch(e) { erros++; console.error(e); }
     }
-
     btn.disabled = false; btn.innerHTML = '✅ Inserir na Planilha';
     if (inseridos > 0) {
         toast(`✅ ${inseridos} item(s) inserido(s)${erros ? ' · ⚠️ '+erros+' com erro' : ''}`, 4000);
@@ -1132,13 +932,32 @@ function exportCSV(){
     toast(`📥 ${lista.length} registros exportados`);
 }
 
+// ══ Drawer nav mobile ══
+function abrirDrawer() {
+    $('navDrawer').classList.add('open');
+    $('navDrawerOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function fecharDrawer() {
+    $('navDrawer').classList.remove('open');
+    $('navDrawerOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
 // ══ IA ══
 var _iaAberto=false;
 function toggleIA(){
     _iaAberto=!_iaAberto;
     const jan=$('iaJanela'),tog=$('iaToggle');
-    if(_iaAberto){jan.classList.add('aberto');tog.classList.add('aberto');tog.innerHTML='✕<div class="ia-unread" id="iaUnread"></div>';}
-    else{jan.classList.remove('aberto');tog.classList.remove('aberto');tog.innerHTML='🤖<div class="ia-unread" id="iaUnread">1</div>';setTimeout(()=>{const u=$('iaUnread');if(u)u.style.display='flex';},100);}
+    if(_iaAberto){
+        jan.classList.add('aberto');
+        tog.style.background='linear-gradient(135deg,#444,#1a1a1a)';
+        tog.innerHTML='✕<div class="ia-unread" id="iaUnread" style="display:none"></div>';
+    } else {
+        jan.classList.remove('aberto');
+        tog.style.background='';
+        tog.innerHTML='🤖<div class="ia-unread" id="iaUnread" style="display:flex">1</div>';
+    }
 }
 function montarContextoIA(){
     const sa=D.raw?.statsAtivos||{},sd=D.raw?.statsDistratados||{},sde=D.raw?.statsDesligados||{},sti=D.raw?.statsTI||{};
@@ -1154,7 +973,7 @@ async function perguntarIA(fixa){
     if(!_iaAberto)toggleIA();
     const box=$('iaMsgs');
     const mu=document.createElement('div');mu.className='ia-msg user';mu.textContent=q;box.appendChild(mu);
-    const ma=document.createElement('div');ma.className='ia-msg ai carregando';ma.innerHTML='<span style="opacity:.6">⏳ Analisando ativos...</span>';
+    const ma=document.createElement('div');ma.className='ia-msg bot carregando';ma.innerHTML='<span style="opacity:.6">⏳ Analisando ativos...</span>';
     box.appendChild(ma);box.scrollTop=box.scrollHeight;
     const btn=$('btnIA');if(btn)btn.disabled=true;
     try{
@@ -1162,34 +981,39 @@ async function perguntarIA(fixa){
         if(!resp.ok)throw new Error('HTTP '+resp.status);
         const json=await resp.json();
         const txt=json.resposta||json.erro||'Sem resposta.';
-        ma.className='ia-msg ai';
+        ma.className='ia-msg bot';
         ma.innerHTML=txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^(▸|•|→|-) /gm,'<span style="color:var(--ti)">■</span> ').replace(/\n/g,'<br>');
-    }catch(e){ma.className='ia-msg ai';ma.textContent='❌ Erro: '+e.message;}
+    }catch(e){ma.className='ia-msg bot';ma.textContent='❌ Erro: '+e.message;}
     if(btn)btn.disabled=false;
     box.scrollTop=box.scrollHeight;
 }
 
-document.addEventListener('DOMContentLoaded',()=>{
-    const inp=$('inputIA');
-    if(inp)inp.addEventListener('keydown',e=>{if(e.key==='Enter')perguntarIA();});
-    document.addEventListener('keydown', e=>{ if(e.key==='Escape') $('modalOverlay').classList.remove('open'); });
-    setTimeout(()=>{if(!_iaAberto){const u=$('iaUnread');if(u){u.style.display='flex';u.textContent='1';}}},3000);
-});
-
-carregar();
-</script>
-<script>
+// ══ Nav dropdown (desktop) ══
 function toggleNavDrop(id){
-    var el=document.getElementById(id);
-    el.classList.toggle('open');
+    document.getElementById(id).classList.toggle('open');
 }
-// Fecha dropdown ao clicar fora
 document.addEventListener('click',function(e){
     document.querySelectorAll('.nav-dropdown.open').forEach(function(d){
         if(!d.contains(e.target)) d.classList.remove('open');
     });
 });
-</script>
 
+document.addEventListener('DOMContentLoaded',()=>{
+    const inp=$('inputIA');
+    if(inp)inp.addEventListener('keydown',e=>{if(e.key==='Enter')perguntarIA();});
+    document.addEventListener('keydown', e=>{
+        if(e.key==='Escape'){
+            $('modalOverlay').classList.remove('open');
+            fecharDrawer();
+        }
+    });
+    setTimeout(()=>{
+        const u=$('iaUnread');
+        if(u&&!_iaAberto){u.style.display='flex';u.textContent='1';}
+    },3000);
+});
+
+carregar();
+</script>
 </body>
 </html>
