@@ -88,14 +88,7 @@ function exigirLogin(req, res, next) {
         : res.redirect('/login');
 }
 
-const apenasLocal = (req, res, next) => {
-    const ip = req.ip || req.connection.remoteAddress || '';
-    const isLocal = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
-    if (isLocal) return next();
-    return res.status(401).json({ ok: false, erro: 'Sessão expirada. Faça login.' });
-};
-
-// ✅ Aceita usuário logado OU chamada local (para sync em produção)
+// ✅ Aceita usuário logado OU chamada local (para sync em produção via cron/script)
 const exigirLoginOuLocal = (req, res, next) => {
     if (req.isAuthenticated?.()) return next();
     const ip = req.ip || req.connection?.remoteAddress || '';
@@ -164,13 +157,13 @@ function getRoutes(mod) {
 const tiRoutes          = getRoutes('ti');
 const treinamentoRoutes = getRoutes('treinamento');
 
-// ─── Sincronização (exigirLoginOuLocal / apenasLocal) ────────
-// ✅ Pix — só via browser
+// ─── Sincronização ───────────────────────────────────────────
+// ✅ Pix — só via browser autenticado
 app.post('/ti/api/pix/sincronizar',
     exigirLogin,
     (req, res, next) => { req.url = '/api/pix/sincronizar'; tiRoutes(req, res, next); }
 );
-// ✅ Chamados TI — sync background
+// ✅ Chamados TI — sync via browser ou cron local
 app.post('/ti/api/chamados/sincronizar',
     exigirLoginOuLocal,
     (req, res, next) => { req.url = '/api/chamados/sincronizar'; tiRoutes(req, res, next); }
@@ -179,7 +172,7 @@ app.post('/ti/api/chamados/sincronizar/completo',
     exigirLoginOuLocal,
     (req, res, next) => { req.url = '/api/chamados/sincronizar/completo'; tiRoutes(req, res, next); }
 );
-// ✅ SULTS e Chamados Treinamento — sync background
+// ✅ SULTS e Chamados Treinamento — sync via browser ou cron local
 app.post('/treinamento/sults/sincronizar',
     exigirLoginOuLocal,
     (req, res, next) => { req.url = '/sults/sincronizar'; treinamentoRoutes(req, res, next); }
@@ -188,12 +181,13 @@ app.post('/treinamento/chamados/sincronizar',
     exigirLoginOuLocal,
     (req, res, next) => { req.url = '/chamados/sincronizar'; treinamentoRoutes(req, res, next); }
 );
+// ✅ Turnover e Universidade — sync via browser ou cron local
 app.post('/treinamento/turnover/sincronizar',
-    apenasLocal,
+    exigirLoginOuLocal,
     (req, res, next) => { req.url = '/turnover/sincronizar'; treinamentoRoutes(req, res, next); }
 );
 app.post('/treinamento/universidade/sincronizar',
-    apenasLocal,
+    exigirLoginOuLocal,
     (req, res, next) => { req.url = '/universidade/sincronizar'; treinamentoRoutes(req, res, next); }
 );
 

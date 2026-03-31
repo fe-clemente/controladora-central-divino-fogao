@@ -40,12 +40,21 @@ const {
 tiUploadsCache.inicializar().catch(e => console.error('[TI-UPLOADS] Cache init falhou:', e.message));
 checkoutCache.inicializar().catch(e => console.error('[CHECKOUT-CACHE] Cache init falhou:', e.message));
 
-// ─── Apenas localhost ────────────────────────────────────────
-const apenasLocal = (req, res, next) => {
+// ─── Autorização: localhost OU usuário autenticado com permissão ──────────────
+const apenasAutorizado = (req, res, next) => {
+    // Em dev local, passa direto
     const ip = req.ip || req.connection.remoteAddress || '';
     const isLocal = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
     if (isLocal) return next();
-    return res.status(401).json({ ok: false, erro: 'Sessão expirada. Faça login.' });
+
+    // Em produção, exige sessão autenticada com permissão
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+        return res.status(401).json({ ok: false, erro: 'Sessão expirada. Faça login.' });
+    }
+    if (!req.user?.isMaster && !req.user?.isGestor) {
+        return res.status(403).json({ ok: false, erro: 'Sem permissão para esta ação.' });
+    }
+    return next();
 };
 
 // ─── DEBUG ───────────────────────────────────────────────────
@@ -114,7 +123,7 @@ router.use('/api/ativos',    ativosRoutes);
 router.use('/api/links',     linksRoutes);
 
 // ─── Pix ─────────────────────────────────────────────────────
-router.post('/api/pix/sincronizar', apenasLocal, async (req, res) => {
+router.post('/api/pix/sincronizar', apenasAutorizado, async (req, res) => {
     req.url = '/sincronizar';
     pixRoutes(req, res, (err) => {
         if (err) res.json({ ok: false, erro: err.message });
@@ -148,14 +157,14 @@ router.get('/api/chamados/status', (req, res) => {
     catch (e) { res.json({ erro: e.message }); }
 });
 
-router.post('/api/chamados/sincronizar/completo', apenasLocal, async (req, res) => {
+router.post('/api/chamados/sincronizar/completo', apenasAutorizado, async (req, res) => {
     try {
         const d = await chamadosCache.sincronizarEAtualizar('completo');
         res.json({ ok: true, totalTI: d.totalTI });
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-router.post('/api/chamados/sincronizar', apenasLocal, async (req, res) => {
+router.post('/api/chamados/sincronizar', apenasAutorizado, async (req, res) => {
     try {
         const d = await chamadosCache.sincronizarEAtualizar('manual');
         res.json({ ok: true, totalTI: d.totalTI });
@@ -190,16 +199,14 @@ router.get('/api/relatorio-checkout/status', (req, res) => {
     catch (e) { res.json({ erro: e.message }); }
 });
 
-router.post('/api/relatorio-checkout/sincronizar', apenasLocal, async (req, res) => {
+router.post('/api/relatorio-checkout/sincronizar', apenasAutorizado, async (req, res) => {
     try {
         const { dias, dtStart, dtEnd } = req.body;
 
         let opcoes;
         if (dtStart && dtEnd) {
-            // Intervalo livre
             opcoes = { dtStart, dtEnd };
         } else {
-            // Últimos N dias (padrão 30)
             opcoes = Number(dias) || 30;
         }
 
@@ -234,12 +241,12 @@ router.post('/api/relatorio-checkout/geocodificar-pendentes', async (req, res) =
     }
 });
 
-router.delete('/api/relatorio-checkout/cache', apenasLocal, (req, res) => {
+router.delete('/api/relatorio-checkout/cache', apenasAutorizado, (req, res) => {
     try { res.json(checkoutCache.limparCache()); }
     catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-router.delete('/api/relatorio-checkout/geo-cache', apenasLocal, (req, res) => {
+router.delete('/api/relatorio-checkout/geo-cache', apenasAutorizado, (req, res) => {
     try { res.json(checkoutCache.limparGeoCache()); }
     catch (e) { res.json({ ok: false, erro: e.message }); }
 });
