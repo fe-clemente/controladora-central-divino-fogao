@@ -191,6 +191,16 @@ app.post('/treinamento/universidade/sincronizar',
     exigirLoginOuLocal,
     (req, res, next) => { req.url = '/universidade/sincronizar'; treinamentoRoutes(req, res, next); }
 );
+// ✅ Relatório SULTS — sync incremental via browser ou cron local
+app.post('/ti/api/relatorio-sults/sincronizar',
+    exigirLoginOuLocal,
+    (req, res, next) => { req.url = '/api/relatorio-sults/sincronizar'; tiRoutes(req, res, next); }
+);
+// ✅ Relatório SULTS — sync completa (apenas gestor/master via browser)
+app.post('/ti/api/relatorio-sults/sincronizar-completo',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-sults/sincronizar-completo'; tiRoutes(req, res, next); }
+);
 
 // ─── Avaliação (pública — funcionários respondem sem login) ──
 app.get('/treinamento/avaliacao',
@@ -284,6 +294,43 @@ app.post('/ti/api/relatorio-checkout/sincronizar',
 app.post('/ti/api/relatorio-checkout/geocodificar-pendentes',
     exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
     (req, res, next) => { req.url = '/api/relatorio-checkout/geocodificar-pendentes'; tiRoutes(req, res, next); }
+);
+
+// ── TI: Relatório Controle SULTS ─────────────────────────────
+// Página
+app.get('/ti/relatorio-sults',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/relatorio-sults'; tiRoutes(req, res, next); }
+);
+app.get('/ti/relatorioControleAcessosSults.html',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/relatorioControleAcessosSults.html'; tiRoutes(req, res, next); }
+);
+app.get('/ti/relatorioControleAcessosSults.js',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/relatorioControleAcessosSults.js'; tiRoutes(req, res, next); }
+);
+// APIs de dados do relatório SULTS
+app.get('/ti/api/relatorio-sults/dados',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-sults/dados'; tiRoutes(req, res, next); }
+);
+app.get('/ti/api/relatorio-sults/status',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-sults/status'; tiRoutes(req, res, next); }
+);
+// ✅ NOVO — progresso granular da sincronização (para barra de progresso no frontend)
+app.get('/ti/api/relatorio-sults/progresso',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-sults/progresso'; tiRoutes(req, res, next); }
+);
+app.get('/ti/api/relatorio-sults/timeline/:chamadoId',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = `/api/relatorio-sults/timeline/${req.params.chamadoId}`; tiRoutes(req, res, next); }
+);
+app.delete('/ti/api/relatorio-sults/cache',
+    exigirLogin, exigirModulo('ti'), exigirGestorOuMaster,
+    (req, res, next) => { req.url = '/api/relatorio-sults/cache'; tiRoutes(req, res, next); }
 );
 
 // ═════════════════════════════════════════════════════════════

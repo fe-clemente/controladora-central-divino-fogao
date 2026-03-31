@@ -2,72 +2,19 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — Divino Fogão</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f5f3ef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 48px 40px;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            max-width: 400px;
-            width: 100%;
-        }
-        .logo { font-size: 48px; margin-bottom: 8px; }
-        h1 { color: #c8102e; font-size: 22px; margin-bottom: 4px; }
-        p  { color: #666; font-size: 14px; margin-bottom: 32px; }
-        .btn-google {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 14px 24px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #333;
-            text-decoration: none;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .btn-google:hover {
-            border-color: #c8102e;
-            box-shadow: 0 4px 12px rgba(200,16,46,0.15);
-        }
-        .aviso {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #999;
-        }
-        .erro {
-            background: #fff3f3;
-            border: 1px solid #ffcdd2;
-            color: #c8102e;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 13px;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/global.css">
 </head>
-<body>
-    <div class="card">
-<img src="/logo.png" alt="Divino Fogão" style="width:120px;margin-bottom:8px;">
+<body class="login-page">
+
+    <div class="login-card">
+        <img src="/logo.png" alt="Divino Fogão" style="width:120px;margin-bottom:8px;">
         <h1>Divino Fogão</h1>
         <p>Central Tecnologia</p>
 
-        <div id="erro" class="erro" style="display:none">
+        <div id="erro" class="login-erro" style="display:none">
             ⚠️ Acesso permitido apenas para e-mails @divinofogao.com.br
         </div>
 
@@ -81,16 +28,14 @@
             Entrar com Google
         </a>
 
-        <p class="aviso">Somente contas @divinofogao.com.br</p>
+        <p class="login-aviso">Somente contas @divinofogao.com.br</p>
     </div>
 
     <script>
-        // Mostra mensagem de erro se veio redirecionado
         if (new URLSearchParams(location.search).get('erro') === 'dominio') {
             document.getElementById('erro').style.display = 'block';
         }
     </script>
+
 </body>
 </html>
-
-

@@ -911,6 +911,20 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="iati-unread" id="iaTiUnread">1</div>
     </button>
 </div>
+<script>
+function toggleNavDrop(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('open');
+}
 
+document.addEventListener('click', function(e) {
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(d) {
+        if (!d.contains(e.target)) {
+            d.classList.remove('open');
+        }
+    });
+});
+</script>
 </body>
 </html>
