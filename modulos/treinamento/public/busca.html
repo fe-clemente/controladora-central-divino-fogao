@@ -6,392 +6,490 @@
     <title>Divino Fogão — Busca de Colaboradores</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root{
-            --red:#c8102e;--red-light:#e8192e;--red-pale:#fff0f2;
-            --bg:#f5f3ef;--bg2:#ffffff;--bg3:#faf8f5;
-            --border:#e8e2d9;--text:#1e1a16;--muted:#8a7f74;
-            --accent:#2563eb;--accent-pale:#eff6ff;
-            --green:#16a34a;--green-pale:#f0fdf4;
-            --yellow:#d97706;--yellow-pale:#fffbeb;
-            --purple:#7c3aed;--purple-pale:#f5f3ff;
-            --shadow:0 2px 12px rgba(0,0,0,.08);
-            --shadow-lg:0 8px 32px rgba(0,0,0,.12);
-        }
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
-        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
-        .logo{display:flex;align-items:center;padding:10px 0;flex-shrink:0;}
-        .logo img{height:52px;width:auto;display:block;}
-        .logo-fallback{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1px;display:none;}
-        .header-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
-        .header-title{font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;}
-        nav{display:flex;gap:2px;margin-left:auto;}
-        .tab-btn{background:none;border:none;color:var(--muted);padding:20px 14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;text-decoration:none;}
-        .tab-btn:hover{color:var(--text);background:var(--bg3);}
-        .tab-btn.active{color:var(--red);border-bottom-color:var(--red);background:var(--red-pale);}
-
-        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:6px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
-        .status-dot{width:7px;height:7px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
-        .status-dot.ok{background:var(--green);animation:none;}
-        .status-dot.err{background:var(--red);animation:none;}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-        main{max-width:1200px;margin:0 auto;padding:28px 24px;}
-
-        .busca-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
-        @media(max-width:900px){.busca-grid{grid-template-columns:1fr;}}
-        .busca-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow);}
-        .busca-box-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-        .busca-box-title .badge{background:var(--accent);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:800;}
-        .busca-box-title .badge.ia{background:linear-gradient(135deg,var(--red),#8b0000);}
-        .search-wrap{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:5px 5px 5px 14px;display:flex;align-items:center;gap:8px;transition:border-color .2s,box-shadow .2s;margin-bottom:10px;}
-        .search-wrap:focus-within{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.08);}
-        .search-input{flex:1;border:none;outline:none;background:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:var(--text);}
-        .search-input::placeholder{color:var(--muted);font-weight:400;}
-        .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
-        .btn-primary{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
-        .btn-primary:hover{background:var(--red-light);transform:translateY(-1px);}
-        .btn-ia{background:linear-gradient(135deg,var(--red),#8b0000);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
-        .btn-ia:hover{transform:translateY(-1px);}
-        .btn-secondary{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
-        .btn-secondary:hover{background:var(--bg2);}
-        .btn-save{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(22,163,74,.3);font-size:12px;padding:7px 14px;}
-        .btn-save:hover{background:#15803d;transform:translateY(-1px);}
-        .btn-cancel{background:var(--bg3);color:var(--muted);border:1.5px solid var(--border);font-size:12px;padding:7px 14px;}
-        .btn-cancel:hover{background:var(--bg2);}
-        .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
-        .timer-txt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-height:16px;margin-top:6px;}
-
-        .ia-resultado{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:14px;font-size:13px;line-height:1.65;color:var(--text);white-space:pre-wrap;display:none;margin-top:8px;max-height:260px;overflow-y:auto;}
-        .ia-resultado.visivel{display:block;}
-
-        .resultados-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
-        .resultados-title{font-size:13px;font-weight:800;color:var(--muted);}
-        .resultados-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
-
-        .cards-lista{display:flex;flex-direction:column;gap:10px;}
-
-        .colab-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .2s,border-color .2s;}
-        .colab-card:hover{box-shadow:var(--shadow-lg);border-color:#d5cec4;}
-        .colab-card.editing{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1),var(--shadow-lg);}
-        .colab-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none;}
-        .colab-avatar{width:40px;height:40px;border-radius:10px;background:var(--red-pale);border:1.5px solid rgba(200,16,46,.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--red);flex-shrink:0;font-family:'JetBrains Mono',monospace;}
-        .colab-info{flex:1;min-width:0;}
-        .colab-nome{font-size:14px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        .colab-sub{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-        .colab-badges{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;flex-shrink:0;}
-        .badge-sm{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;}
-        .badge-green{background:var(--green-pale);color:var(--green);border:1px solid rgba(22,163,74,.2);}
-        .badge-red{background:var(--red-pale);color:var(--red);border:1px solid rgba(200,16,46,.2);}
-        .badge-yellow{background:var(--yellow-pale);color:var(--yellow);border:1px solid rgba(217,119,6,.2);}
-        .badge-accent{background:var(--accent-pale);color:var(--accent);border:1px solid rgba(37,99,235,.2);}
-        .badge-purple{background:var(--purple-pale);color:var(--purple);border:1px solid rgba(124,58,237,.2);}
-        .colab-acc-btn{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
-        .colab-acc-btn svg{transition:transform .25s;width:12px;height:12px;}
-        .colab-acc-btn.open svg{transform:rotate(180deg);}
-        .colab-acc-btn.open{background:var(--red-pale);border-color:rgba(200,16,46,.25);}
-
-        .colab-body{overflow:hidden;max-height:0;opacity:0;transition:max-height .32s ease,opacity .25s ease;}
-        .colab-body.open{max-height:2000px;opacity:1;}
-        .colab-body-inner{padding:0 20px 18px;border-top:1px solid var(--border);}
-        .colab-section{margin-top:14px;}
-        .colab-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-        .colab-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;}
-
-        /* ── CAMPO EDITÁVEL ── */
-        .field{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;position:relative;transition:border-color .2s,background .2s;}
-        .field:hover .field-edit-hint{opacity:1;}
-        .field.editable:hover{border-color:#c0bab2;background:var(--bg2);}
-        .field-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:3px;}
-        .field-value{font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        .field-value.wrap{white-space:normal;word-break:break-word;}
-        .field-value.mono{font-family:'JetBrains Mono',monospace;}
-        .field-value.ok{color:var(--green);}
-        .field-value.nok{color:var(--red);}
-        .field-value.muted{color:var(--muted);}
-
-        /* Lápis hint */
-        .field-edit-hint{position:absolute;top:6px;right:8px;font-size:10px;opacity:0;transition:opacity .15s;color:var(--muted);}
-
-        /* Input inline de edição */
-        .field-input{width:100%;border:none;outline:none;background:transparent;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--text);padding:0;margin:0;}
-        .field.active-edit{background:var(--accent-pale);border-color:var(--accent);border-width:1.5px;}
-        .field.active-edit .field-input{color:var(--accent);}
-
-        /* Barra de ações de edição */
-        .edit-actions{display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
-        .edit-status{font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;flex:1;}
-        .edit-status.saving{color:var(--yellow);}
-        .edit-status.saved{color:var(--green);}
-        .edit-status.error{color:var(--red);}
-        .edit-mode-bar{background:var(--accent-pale);border:1px solid rgba(37,99,235,.2);border-radius:8px;padding:8px 12px;margin-top:14px;display:none;align-items:center;gap:8px;font-size:12px;color:var(--accent);font-weight:700;}
-        .edit-mode-bar.visible{display:flex;}
-
-        /* Toast de notificação */
-        #toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:var(--shadow-lg);transform:translateY(80px);opacity:0;transition:all .3s;z-index:999;display:flex;align-items:center;gap:8px;}
-        #toast.show{transform:translateY(0);opacity:1;}
-        #toast.error{background:var(--red);}
-
-        .paginacao{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:20px;flex-wrap:wrap;}
-        .pag-btn{min-width:36px;height:36px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;padding:0 10px;}
-        .pag-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-pale);}
-        .pag-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
-        .pag-btn:disabled{opacity:.4;cursor:not-allowed;}
-        .pag-info{font-size:12px;color:var(--muted);font-weight:600;font-family:'JetBrains Mono',monospace;}
-
-        .loading-msg{text-align:center;padding:40px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
-        .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;}
-        .spinner-sm{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .empty{text-align:center;padding:48px 20px;color:var(--muted);}
-        .empty .icon{font-size:40px;margin-bottom:10px;}
-        .empty p{font-size:14px;font-weight:600;}
-
-        .sync-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);flex-wrap:wrap;}
-        .sync-info{flex:1;font-size:12px;color:var(--muted);font-weight:600;}
-        .sync-info strong{color:var(--text);}
-
-        @media(max-width:768px){
-            header{padding:0 14px;gap:10px;}
-            .header-title{display:none;}
-            main{padding:18px 14px;}
-        }
-    </style>
+    <link rel="stylesheet" href="/global.css">
 </head>
 <body>
 
-<div id="toast">✓ Salvo com sucesso!</div>
+<!-- ═══════ TOAST ═══════ -->
+<div id="toast"></div>
 
+<!-- ═══════ MODAL CONFIRMAR EXCLUSÃO ═══════ -->
+<div class="modal-overlay" id="modalExcluir">
+    <div class="modal xs">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title" style="color:var(--red)">🗑️ Excluir Colaborador</div>
+                <div class="modal-sub" id="modalExcluirSub"></div>
+            </div>
+            <button class="modal-close" onclick="fecharModalExcluir()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div style="background:var(--red-pale);border:1.5px solid rgba(200,16,46,.2);border-radius:10px;padding:14px 16px;margin-bottom:14px;">
+                <div style="font-size:13px;font-weight:800;color:var(--red);margin-bottom:5px;">⚠️ Atenção — ação irreversível</div>
+                <div style="font-size:12px;color:var(--red);line-height:1.6;">
+                    Todos os dados desta linha serão <strong>apagados permanentemente</strong> da planilha.<br>
+                    A linha ficará <strong>em branco</strong> para ser reutilizada no futuro.
+                </div>
+            </div>
+            <div id="modalExcluirDados" style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13px;"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="fecharModalExcluir()">Cancelar</button>
+            <button class="btn btn-red" id="btnConfirmarExcluir" onclick="confirmarExclusao()">
+                🗑️ Excluir permanentemente
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════ NAV DRAWER MOBILE ═══════ -->
+<div class="nav-drawer-overlay" id="navOverlay" onclick="fecharDrawer()"></div>
+<div class="nav-drawer" id="navDrawer">
+    <div class="nav-drawer-head">
+        <span class="nav-drawer-title">🍽️ Divino Fogão</span>
+        <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
+    </div>
+    <div class="nav-drawer-body">
+        <a href="/treinamento/"               class="nav-drawer-item">📊 Dashboard</a>
+        <a href="/treinamento/lembretes"      class="nav-drawer-item">🔔 Lembretes</a>
+        <a href="/treinamento/busca"          class="nav-drawer-item active">🔍 Colaboradores</a>
+        <a href="/treinamento/kpi-avaliacoes" class="nav-drawer-item">📊 KPI Avaliações</a>
+        <a href="/treinamento/sults"          class="nav-drawer-item">🏪 Sults</a>
+        <a href="/treinamento/chamados"       class="nav-drawer-item">📞 Chamados T&amp;D</a>
+        <a href="/treinamento/universidade"   class="nav-drawer-item">🎓 Universidade</a>
+        <a href="/treinamento/turnover"       class="nav-drawer-item">🔄 Turnover</a>
+        <a href="/treinamento/cadastro"       class="nav-drawer-item">➕ Cadastro</a>
+        <a href="/treinamento/uploads"        class="nav-drawer-item">📁 Uploads</a>
+        <a href="/treinamento/links"          class="nav-drawer-item">🔗 Links</a>
+        <div class="nav-drawer-sep"></div>
+        <a href="javascript:history.back()"  class="nav-drawer-item">← Voltar</a>
+        <a href="/logout"                    class="nav-drawer-item" style="color:var(--red)">🚪 Sair</a>
+    </div>
+</div>
+
+<!-- ═══════ HEADER ═══════ -->
 <header>
     <div class="logo">
         <img src="/treinamento/logo.png" alt="Divino Fogão"
              onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
         <span class="logo-fallback">🍽️ DIVINO FOGÃO</span>
     </div>
-    <div class="header-divider"></div>
-    <div class="header-title">Busca de Colaboradores</div>
+    <div class="hd"></div>
+    <div class="h-title">Busca de Colaboradores</div>
     <nav>
-        <a href="/treinamento/"               class="tab-btn">📊 Dashboard</a>
-        <a href="/treinamento/lembretes"      class="tab-btn">🔔 Lembretes</a>
-        <a href="/treinamento/busca"          class="tab-btn active">🔍 Colaboradores</a>
-        <a href="/treinamento/kpi-avaliacoes" class="tab-btn">📊 KPI Avaliações</a>
-        <a href="/treinamento/sults"          class="tab-btn">🏪 Sults</a>
-        <a href="/treinamento/chamados"       class="tab-btn">📞 Chamados T&amp;D</a>
-        <a href="/treinamento/universidade"   class="tab-btn">🎓 Universidade</a>
-        <a href="/treinamento/turnover"       class="tab-btn">🔄 Turnover</a>
-        <a href="/treinamento/cadastro"       class="tab-btn">➕ Cadastro</a>
-        <a href="/treinamento/uploads"        class="tab-btn">📁 Uploads</a>
-        <a href="/treinamento/links"          class="tab-btn">🔗 Links</a>
+        <div class="nav-scroll">
+            <a href="/treinamento/"               class="nav-btn">📊 Dashboard</a>
+            <a href="/treinamento/lembretes"      class="nav-btn">🔔 Lembretes</a>
+            <a href="/treinamento/busca"          class="nav-btn active-red">🔍 Colaboradores</a>
+            <a href="/treinamento/kpi-avaliacoes" class="nav-btn">📊 KPI</a>
+            <a href="/treinamento/sults"          class="nav-btn">🏪 Sults</a>
+            <a href="/treinamento/chamados"       class="nav-btn">📞 Chamados</a>
+            <a href="/treinamento/universidade"   class="nav-btn">🎓 Universidade</a>
+            <a href="/treinamento/turnover"       class="nav-btn">🔄 Turnover</a>
+            <a href="/treinamento/cadastro"       class="nav-btn">➕ Cadastro</a>
+            <a href="/treinamento/uploads"        class="nav-btn">📁 Uploads</a>
+            <a href="/treinamento/links"          class="nav-btn">🔗 Links</a>
+        </div>
+        <a href="javascript:history.back()" class="nav-btn" title="Voltar">← Voltar</a>
+        <a href="/logout" class="nav-btn" style="color:var(--red);border-left:1px solid var(--border)" title="Sair">🚪 Sair</a>
     </nav>
+    <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
 </header>
 
+<!-- ═══════ STATUS BAR ═══════ -->
 <div id="statusBar">
-    <div class="status-dot" id="statusDot"></div>
+    <div class="sdot" id="statusDot"></div>
     <span id="statusTxt">Verificando cache...</span>
-    <span style="margin-left:auto">
-        <button class="btn btn-secondary" style="padding:4px 12px;font-size:11px" onclick="sincronizar()" id="btnSync">↻ Sincronizar</button>
+    <span id="cacheAge" style="color:var(--muted);font-size:10px;margin-left:4px;"></span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span id="syncTimer" style="font-size:10px;"></span>
+        <button class="btn btn-ghost btn-sm" onclick="sincronizar()" id="btnSync">↻ Sincronizar</button>
     </span>
 </div>
 
+<!-- ═══════ MAIN ═══════ -->
 <main>
 
     <div class="sync-bar">
-        <div class="sync-info" id="syncInfo">⏳ Carregando informações do cache...</div>
-        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace" id="syncTimer"></div>
-        <a href="https://docs.google.com/spreadsheets/d/1n4MjTooAL6SdsMbz2vg1gmGkFNxKFMXPxxIKrSAxIPI/edit?gid=272983318#gid=272983318" target="_blank" class="btn btn-secondary" style="padding:5px 12px;font-size:11px;text-decoration:none;flex-shrink:0" title="Abrir planilha no Google Sheets">📊 BD Dados (Planilha)</a>
+        <div class="sync-info" id="syncInfo">⏳ Carregando...</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace" id="proximaAtualizacao"></div>
+        <a href="https://docs.google.com/spreadsheets/d/1n4MjTooAL6SdsMbz2vg1gmGkFNxKFMXPxxIKrSAxIPI/edit?gid=272983318#gid=272983318"
+           target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;flex-shrink:0">
+           📊 Abrir Planilha
+        </a>
     </div>
 
+    <!-- ── CAIXAS DE BUSCA ── -->
     <div class="busca-grid">
+
+        <!-- Busca cache -->
         <div class="busca-box">
             <div class="busca-box-title">
                 🗄️ Busca no Cache
-                <span class="badge">RÁPIDA</span>
+                <span style="background:var(--accent);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:800;">RÁPIDA</span>
             </div>
             <div class="search-wrap">
                 <span style="font-size:16px">🔍</span>
                 <input type="text" class="search-input" id="inputCache"
                     placeholder="Nome, CPF, loja, função, RG ou telefone..."
                     oninput="buscaCache()">
+                <button class="btn btn-ghost btn-sm" onclick="limparCache()" title="Limpar">✕</button>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                <button class="btn btn-primary" onclick="buscaCache()">Buscar</button>
-                <button class="btn btn-secondary" onclick="limparCache()">✕ Limpar</button>
-                <span class="timer-txt" id="timerCache"></span>
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
+                <button class="filtro-tipo active" onclick="filtrarPeriodo(0,this)">Todos</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(7,this)">7 dias</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(20,this)">20 dias</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(30,this)">30 dias</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(60,this)">60 dias</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(90,this)">90 dias</button>
             </div>
+            <div class="timer-txt" id="timerCache"></div>
         </div>
+
+        <!-- Busca IA -->
         <div class="busca-box">
             <div class="busca-box-title">
                 🤖 Busca com IA
-                <span class="badge ia">GEMINI</span>
+                <span style="background:linear-gradient(135deg,var(--red),#8b0000);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:800;">GEMINI</span>
             </div>
             <div class="search-wrap">
                 <span style="font-size:16px">💬</span>
                 <input type="text" class="search-input" id="inputIA"
-                    placeholder="Ex: Quem treinou em março e ainda não foi avaliado?"
-                    onkeydown="if(event.key==='Enter')buscaIA()">
+                    placeholder="Ex: Quem treinou em março e não foi avaliado?"
+                    onkeydown="if(event.key==='Enter')buscaIAPainel()">
+                <button class="btn btn-ghost btn-sm" onclick="limparIA()" title="Limpar">✕</button>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                <button class="btn btn-ia" onclick="buscaIA()" id="btnIA">🤖 Perguntar</button>
-                <button class="btn btn-secondary" onclick="limparIA()">✕ Limpar</button>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-red btn-sm" onclick="buscaIAPainel()" id="btnIA">🤖 Perguntar</button>
                 <span class="timer-txt" id="timerIA"></span>
             </div>
             <div class="ia-resultado" id="iaResultado"></div>
         </div>
+
     </div>
 
+    <!-- ── RESULTADOS ── -->
     <div id="areaResultados">
         <div class="resultados-header">
             <div class="resultados-title" id="resultadosTitulo">📋 Todos os Colaboradores</div>
             <div class="resultados-count" id="resultadosCount"></div>
         </div>
         <div class="cards-lista" id="listaCards">
-            <div class="loading-msg"><div class="spinner"></div> Carregando...</div>
+            <div class="loading-msg"><div class="spinner dark"></div> Carregando...</div>
         </div>
         <div class="paginacao" id="paginacao"></div>
     </div>
 
 </main>
 
+<!-- ═══════ IA WIDGET FLUTUANTE ═══════ -->
+<div id="iaWidget" class="ia-red">
+    <div id="iaJanela">
+        <div class="ia-topo">
+            <div class="ia-topo-left">
+                <span style="font-size:20px">🤖</span>
+                <div>
+                    <div class="ia-topo-titulo">Assistente T&amp;D</div>
+                    <div class="ia-topo-sub">Gemini · dados dos colaboradores</div>
+                </div>
+            </div>
+            <button class="ia-fechar" onclick="toggleIA()">✕</button>
+        </div>
+        <div class="ia-sugs">
+            <button class="ia-sug" onclick="enviarSugIA(this)">Quem não foi avaliado?</button>
+            <button class="ia-sug" onclick="enviarSugIA(this)">Treinamentos do mês</button>
+            <button class="ia-sug" onclick="enviarSugIA(this)">Pagamentos pendentes</button>
+            <button class="ia-sug" onclick="enviarSugIA(this)">Notas mais baixas</button>
+        </div>
+        <div id="iaMsgs" class="ia-msgs">
+            <div class="ia-msg ai">👋 Olá! Posso responder perguntas sobre os colaboradores cadastrados. Use as sugestões acima ou escreva sua pergunta!</div>
+        </div>
+        <div class="ia-rodape">
+            <input type="text" class="ia-input" id="iaWidgetInput"
+                placeholder="Faça uma pergunta..."
+                onkeydown="if(event.key==='Enter')enviarIAWidget()">
+            <button class="ia-enviar" id="iaWidgetBtn" onclick="enviarIAWidget()">➤</button>
+        </div>
+    </div>
+    <button id="iaToggle" onclick="toggleIA()" title="Assistente IA">🤖</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════════════════════ -->
 <script>
-var API_BUS = '/treinamento/busca-api';
-var _paginaAtual = 1;
-var _termoBusca  = '';
-var _debounceT   = null;
-var _syncInterval = null;
+var API     = '/treinamento/busca-api';
+var LC_DATA = 'buscaColabs_dados';
+var LC_TS   = 'buscaColabs_ts';
+var LC_TTL  = 7 * 24 * 60 * 60 * 1000;
+
+var _dados       = [];
+var _pagina      = 1;
+var _termo       = '';
+var _dias        = 0;
+var _debounce    = null;
+var _syncInt     = null;
+var _proxSync    = null;
+var _rowExcluir  = null;
+var _nomeExcluir = '';
+var _pendentes   = {};
+
+var CAMPO_COL = {
+    numero:0,loja:1,nome:2,cpf:3,rg:4,funcao:5,turno:6,
+    email:12,telefone:13,inicioTrein:14,fimTrein:15,diasTreinados:16,
+    solicitadoPor:17,local:18,treinador:19,modelo:23,
+    emailAvaliacaoLoja:24,avaliacaoOk:25,pago:26,
+    valorPremio:27,valorRefeicao:28,valorTotal:29,
+    mes:30,ano:31,aprovado:32,nota:33,
+    lembreteEnviado:35,avaliacaoEnviadaLojas:36,whatsappAvaliacaoFunc:37,
+    cepLojaTreinadora:38,lojaTreinadoraAvaliou:39,emailLojaAvaliadora:40,
+    nomeLojaTreinadora:41,enderecoLojaTreinadora:42,notaLojaTreinadora:43,
+    obsLojaTreinadora:44,lembrete2Dias:49,lembreteHoje:50
+};
 
 /* ── TOAST ── */
-function showToast(msg, isError) {
+function toast(msg, erro) {
     var t = document.getElementById('toast');
-    t.textContent = (isError ? '❌ ' : '✓ ') + msg;
-    t.className = 'show' + (isError ? ' error' : '');
-    clearTimeout(t._tid);
-    t._tid = setTimeout(function(){ t.className = ''; }, 3200);
+    t.textContent = (erro ? '❌ ' : '✓ ') + msg;
+    t.className = 'show' + (erro ? ' error' : '');
+    clearTimeout(t._t);
+    t._t = setTimeout(function(){ t.className = ''; }, 3500);
+}
+
+/* ── NAV DRAWER ── */
+function abrirDrawer() {
+    document.getElementById('navDrawer').classList.add('open');
+    document.getElementById('navOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function fecharDrawer() {
+    document.getElementById('navDrawer').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+/* ── CACHE LOCAL ── */
+function lcLer() {
+    try {
+        var ts = localStorage.getItem(LC_TS);
+        var d  = localStorage.getItem(LC_DATA);
+        if (!ts || !d) return null;
+        if (Date.now() - parseInt(ts) > LC_TTL) return null;
+        return { dados: JSON.parse(d), ts: parseInt(ts) };
+    } catch(e) { return null; }
+}
+function lcSalvar(dados) {
+    try {
+        localStorage.setItem(LC_DATA, JSON.stringify(dados));
+        localStorage.setItem(LC_TS,   String(Date.now()));
+    } catch(e) {}
+}
+function lcIdade(ts) {
+    if (!ts) return '';
+    var s = Math.floor((Date.now() - ts) / 1000);
+    if (s < 60)    return 'agora mesmo';
+    if (s < 3600)  return Math.floor(s/60) + 'min atrás';
+    if (s < 86400) return Math.floor(s/3600) + 'h atrás';
+    return Math.floor(s/86400) + 'd atrás';
 }
 
 /* ── STATUS ── */
 async function atualizarStatus() {
     try {
-        var r = await fetch(API_BUS + '/status');
+        var r = await fetch(API + '/status');
         var d = await r.json();
         var dot = document.getElementById('statusDot');
         var txt = document.getElementById('statusTxt');
         var inf = document.getElementById('syncInfo');
         if (d.ok) {
-            dot.className = 'status-dot ok';
-            txt.textContent = '✓ Cache pronto — ' + d.total + ' colaboradores';
+            dot.className = 'sdot ready';
+            txt.textContent = '✓ Servidor — ' + d.total + ' registros';
+            _proxSync = d.proximaSync ? new Date(d.proximaSync).getTime() : null;
             var ua = d.ultimaSync ? new Date(d.ultimaSync).toLocaleString('pt-BR') : '—';
-            _proximaSync = d.proximaSync ? new Date(d.proximaSync).getTime() : null;
-            inf.innerHTML = '<strong>' + d.total + '</strong> colaboradores · Última sync: ' + ua;
+            inf.innerHTML = '<strong>' + d.total + '</strong> colaboradores · sync: ' + ua;
         } else if (d.sincronizando) {
-            dot.className = 'status-dot';
+            dot.className = 'sdot syncing';
             txt.textContent = '⏳ Sincronizando...';
-            inf.innerHTML = '⏳ Sincronizando planilha...';
+            inf.innerHTML = '⏳ Sincronizando...';
         } else {
-            dot.className = 'status-dot err';
-            txt.textContent = '⚠️ ' + (d.erro || 'Erro no cache');
-            inf.innerHTML = '⚠️ ' + (d.erro || 'Erro');
+            dot.className = 'sdot error';
+            txt.textContent = '⚠️ ' + (d.erro || 'Erro');
+            inf.innerHTML = '⚠️ ' + (d.erro || 'Erro no cache');
         }
     } catch(e) {
-        document.getElementById('statusDot').className = 'status-dot err';
+        document.getElementById('statusDot').className = 'sdot error';
         document.getElementById('statusTxt').textContent = '⚠️ Servidor offline';
     }
 }
 
+function iniciarCountdown() {
+    clearInterval(_syncInt);
+    _syncInt = setInterval(function() {
+        var el = document.getElementById('syncTimer');
+        if (!_proxSync) { el.textContent = ''; return; }
+        var diff = Math.max(0, Math.round((_proxSync - Date.now()) / 1000));
+        if (!diff) { el.textContent = ''; return; }
+        var h = Math.floor(diff/3600), m = Math.floor((diff%3600)/60);
+        el.textContent = h > 0 ? 'Próx. sync: ' + h + 'h ' + m + 'min' : 'Próx. sync: ' + m + 'min';
+    }, 30000);
+}
+
 async function sincronizar() {
     var btn = document.getElementById('btnSync');
-    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>';
+    btn.disabled = true; btn.innerHTML = '<div class="spinner dark"></div>';
     try {
-        await fetch(API_BUS + '/sincronizar', { method: 'POST' });
+        await fetch(API + '/sincronizar', { method: 'POST' });
         await atualizarStatus();
-        carregarPagina(1, _termoBusca);
-    } catch(e) { alert('Erro: ' + e.message); }
+        await carregarTodos(true);
+        toast('Cache sincronizado!');
+    } catch(e) { toast('Erro: ' + e.message, true); }
     finally { btn.disabled = false; btn.innerHTML = '↻ Sincronizar'; }
 }
 
-/* ── COUNTDOWN — sem fetch, só atualiza o display local a cada 60s ── */
-var _proximaSync = null;
-function iniciarCountdown() {
-    clearInterval(_syncInterval);
-    var proxEl = document.getElementById('syncTimer');
-    _syncInterval = setInterval(function() {
-        if (!_proximaSync) { proxEl.textContent = ''; return; }
-        var diff = Math.max(0, Math.round((_proximaSync - Date.now()) / 1000));
-        if (diff === 0) { proxEl.textContent = ''; return; }
-        var h = Math.floor(diff / 3600);
-        var m = Math.floor((diff % 3600) / 60);
-        proxEl.textContent = h > 0
-            ? 'Próxima sync em ' + h + 'h ' + m + 'min'
-            : 'Próxima sync em ' + m + 'min';
-    }, 60000);
+/* ── CARREGAR TODOS ── */
+async function carregarTodos(forcar) {
+    if (!forcar) {
+        var lc = lcLer();
+        if (lc) { _dados = lc.dados; atualizarInfoCache(lc.ts); return; }
+    }
+    try {
+        var r = await fetch(API + '/cache?pagina=1&porPagina=9999');
+        var d = await r.json();
+        if (d.itens && d.itens.length) {
+            _dados = d.itens;
+            lcSalvar(_dados);
+            atualizarInfoCache(Date.now());
+        }
+    } catch(e) {
+        var lc2 = (() => {
+            try {
+                var ts = localStorage.getItem(LC_TS);
+                var dd = localStorage.getItem(LC_DATA);
+                if (ts && dd) return { dados: JSON.parse(dd), ts: parseInt(ts) };
+            } catch(x){}
+            return null;
+        })();
+        if (lc2) { _dados = lc2.dados; atualizarInfoCache(lc2.ts); }
+    }
 }
 
-/* ── BUSCA CACHE ── */
+function atualizarInfoCache(ts) {
+    document.getElementById('cacheAge').textContent = '· local: ' + lcIdade(ts);
+    var proxData = new Date(ts + LC_TTL);
+    document.getElementById('proximaAtualizacao').textContent =
+        'Cache até: ' + proxData.toLocaleDateString('pt-BR');
+}
+
+/* ── FILTROS ── */
+function filtrarPeriodo(dias, btn) {
+    _dias = dias; _pagina = 1;
+    document.querySelectorAll('.filtro-tipo').forEach(function(b){ b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    renderPagina(1);
+}
+
+function aplicarFiltros(dados) {
+    var res = dados;
+    if (_termo) {
+        var t = _termo.toLowerCase();
+        var n = t.replace(/\D/g,'');
+        res = res.filter(function(c) {
+            if (c.nome   && c.nome.toLowerCase().includes(t))   return true;
+            if (c.loja   && c.loja.toLowerCase().includes(t))   return true;
+            if (c.funcao && c.funcao.toLowerCase().includes(t)) return true;
+            if (c.rg     && c.rg.includes(t))                   return true;
+            if (n.length >= 3) {
+                if (c.cpf      && c.cpf.replace(/\D/g,'').includes(n))      return true;
+                if (c.telefone && c.telefone.replace(/\D/g,'').includes(n)) return true;
+                if (c.numero   && String(c.numero).includes(n))             return true;
+            }
+            return false;
+        });
+    }
+    if (_dias > 0) {
+        var lim = new Date();
+        lim.setDate(lim.getDate() - _dias);
+        res = res.filter(function(c) {
+            if (!c.fimTrein) return false;
+            var p = c.fimTrein.split('/');
+            if (p.length < 3) return false;
+            return new Date(p[2], p[1]-1, p[0]) >= lim;
+        });
+    }
+    return res;
+}
+
+/* ── RENDER PAGINADO ── */
+function renderPagina(pagina) {
+    _pagina = pagina;
+    var t0       = Date.now();
+    var filtrado = aplicarFiltros(_dados);
+    var PP       = 20;
+    var total    = filtrado.length;
+    var inicio   = (pagina-1) * PP;
+    var itens    = filtrado.slice(inicio, inicio + PP);
+    var totPag   = Math.ceil(total/PP) || 1;
+
+    document.getElementById('timerCache').textContent =
+        ((Date.now()-t0)/1000).toFixed(2) + 's · ' + total + ' resultado(s)';
+    document.getElementById('resultadosCount').textContent =
+        'Pág. ' + pagina + '/' + totPag + ' · ' + total + ' total';
+
+    var lista = document.getElementById('listaCards');
+    if (!itens.length) {
+        lista.innerHTML = '<div class="empty"><div class="empty-state-icon">😕</div>' +
+            '<p class="empty-state-text">Nenhum resultado' + (_termo ? ' para "'+_termo+'"' : '') + '</p></div>';
+        document.getElementById('paginacao').innerHTML = '';
+        return;
+    }
+    lista.innerHTML = itens.map(renderCard).join('');
+    renderPaginacao(pagina, totPag, total);
+}
+
+/* ── BUSCA INPUT ── */
 function buscaCache() {
-    clearTimeout(_debounceT);
-    _debounceT = setTimeout(function() {
-        var q = document.getElementById('inputCache').value.trim();
-        _termoBusca = q;
-        _paginaAtual = 1;
-        document.getElementById('resultadosTitulo').textContent = q ? '🔍 Resultado: "' + q + '"' : '📋 Todos os Colaboradores';
-        carregarPagina(1, q);
-    }, 350);
+    clearTimeout(_debounce);
+    _debounce = setTimeout(function() {
+        _termo  = document.getElementById('inputCache').value.trim();
+        _pagina = 1;
+        document.getElementById('resultadosTitulo').textContent =
+            _termo ? '🔍 Resultado: "' + _termo + '"' : '📋 Todos os Colaboradores';
+        renderPagina(1);
+    }, 280);
 }
 
 function limparCache() {
     document.getElementById('inputCache').value = '';
-    _termoBusca = '';
-    _paginaAtual = 1;
+    _termo = ''; _dias = 0; _pagina = 1;
     document.getElementById('resultadosTitulo').textContent = '📋 Todos os Colaboradores';
     document.getElementById('timerCache').textContent = '';
-    carregarPagina(1, '');
+    document.querySelectorAll('.filtro-tipo').forEach(function(b,i){ b.classList.toggle('active',i===0); });
+    renderPagina(1);
 }
 
-async function carregarPagina(pagina, termo) {
-    _paginaAtual = pagina;
-    var lista = document.getElementById('listaCards');
-    var contEl = document.getElementById('resultadosCount');
-    lista.innerHTML = '<div class="loading-msg"><div class="spinner"></div> Carregando...</div>';
-    var t0 = Date.now();
-    try {
-        var url = API_BUS + '/cache?pagina=' + pagina + '&porPagina=20';
-        if (termo) url += '&q=' + encodeURIComponent(termo);
-        var r = await fetch(url);
-        var d = await r.json();
-        var dt = ((Date.now() - t0) / 1000).toFixed(2);
-        document.getElementById('timerCache').textContent = dt + 's · ' + d.total + ' resultado(s)';
-        contEl.textContent = 'Pág. ' + d.pagina + '/' + d.totalPaginas + ' · ' + d.total + ' total';
-        if (!d.itens || !d.itens.length) {
-            lista.innerHTML = '<div class="empty"><div class="icon">😕</div><p>Nenhum resultado' + (termo ? ' para "' + termo + '"' : '') + '</p></div>';
-            document.getElementById('paginacao').innerHTML = '';
-            return;
-        }
-        lista.innerHTML = d.itens.map(function(c) { return renderCard(c); }).join('');
-        renderPaginacao(d);
-    } catch(e) {
-        lista.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Erro: ' + e.message + '</p></div>';
-    }
-}
-
-/* ── BUSCA IA ── */
-async function buscaIA() {
-    var q = document.getElementById('inputIA').value.trim();
+/* ── BUSCA IA PAINEL ── */
+async function buscaIAPainel() {
+    var q   = document.getElementById('inputIA').value.trim();
     var res = document.getElementById('iaResultado');
     var btn = document.getElementById('btnIA');
     if (!q) return;
-    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Consultando...';
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner-sm"></div> Consultando...';
     res.className = 'ia-resultado visivel';
     res.textContent = '⏳ Consultando Gemini...';
     var t0 = Date.now();
     try {
-        var r = await fetch(API_BUS + '/ia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pergunta: q }) });
+        var r = await fetch(API + '/ia', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pergunta: q })
+        });
         var d = await r.json();
-        document.getElementById('timerIA').textContent = ((Date.now() - t0) / 1000).toFixed(2) + 's';
-        if (d.ok) {
-            res.innerHTML = d.resposta.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
-        } else { res.textContent = '❌ ' + d.erro; }
-    } catch(e) { res.textContent = '❌ Erro: ' + e.message; }
+        document.getElementById('timerIA').textContent = ((Date.now()-t0)/1000).toFixed(2) + 's';
+        res.innerHTML = d.ok
+            ? d.resposta.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')
+            : '❌ ' + esc(d.erro);
+    } catch(e) { res.textContent = '❌ ' + e.message; }
     finally { btn.disabled = false; btn.innerHTML = '🤖 Perguntar'; }
 }
 
@@ -401,281 +499,310 @@ function limparIA() {
     document.getElementById('timerIA').textContent = '';
 }
 
-/* ── EDIÇÃO INLINE ──────────────────────────────────────────────────────────── */
-
-// Mapa de campo → coluna da planilha (índice 0 = col A)
-var CAMPO_COLUNA = {
-    numero:0, loja:1, nome:2, cpf:3, rg:4, funcao:5, turno:6,
-    email:12, telefone:13,
-    inicioTrein:14, fimTrein:15, diasTreinados:16, solicitadoPor:17,
-    local:18, treinador:19, modelo:23,
-    emailAvaliacaoLoja:24, avaliacaoOk:25, pago:26,
-    valorPremio:27, valorRefeicao:28, valorTotal:29,
-    mes:30, ano:31, aprovado:32, nota:33,
-    lembreteEnviado:35, avaliacaoEnviadaLojas:36, whatsappAvaliacaoFunc:37,
-    cepLojaTreinadora:38, lojaTreinadoraAvaliou:39, emailLojaAvaliadora:40,
-    nomeLojaTreinadora:41, enderecoLojaTreinadora:42, notaLojaTreinadora:43,
-    obsLojaTreinadora:44, lembrete2Dias:49, lembreteHoje:50
-};
-
-// Estado de edições pendentes por card: { rowIndex: { campo: novoValor } }
-var _pendentes = {};
-
-function onFieldClick(el, rowIndex, campo, ev) {
-    if (ev) ev.stopPropagation();
-    // Já está em modo de edição?
-    if (el.classList.contains('active-edit')) return;
-
-    var valorAtual = el.dataset.valor || '';
-    el.classList.add('active-edit');
-    el.querySelector('.field-edit-hint').style.display = 'none';
-
-    var valueEl = el.querySelector('.field-value');
-    var originalText = valueEl.textContent;
-
-    // Substitui o span de valor por um input
-    valueEl.style.display = 'none';
-    var input = document.createElement('input');
-    input.className = 'field-input';
-    input.value = valorAtual === '—' ? '' : valorAtual;
-    input.setAttribute('data-campo', campo);
-    input.setAttribute('data-rowindex', rowIndex);
-    input.setAttribute('data-original', valorAtual);
-    el.appendChild(input);
-    input.focus();
-    input.select();
-
-    // Mostrar barra de ações do card
-    var card = el.closest('.colab-card');
-    card.classList.add('editing');
-    var actBar = card.querySelector('.edit-mode-bar');
-    if (actBar) actBar.classList.add('visible');
-
-    // Registrar no mapa de pendentes ao mudar
-    input.addEventListener('input', function() {
-        if (!_pendentes[rowIndex]) _pendentes[rowIndex] = {};
-        _pendentes[rowIndex][campo] = input.value;
-        var statusEl = card.querySelector('.edit-status');
-        if (statusEl) statusEl.textContent = '✏️ Alterações não salvas';
-        // Atualiza o nome no cabeçalho do card em tempo real
-        if (campo === 'nome') {
-            var hdr = document.getElementById('nomehdr-' + rowIndex);
-            if (hdr) {
-                var num = hdr.querySelector('span');
-                hdr.textContent = input.value || '—';
-                if (num) hdr.appendChild(num);
-            }
-        }
-    });
-
-    // Blur = commit do valor visível, mas não salva ainda
-    input.addEventListener('blur', function() {
-        var novoValor = input.value;
-        valueEl.textContent = novoValor || '—';
-        if (!novoValor || novoValor === '') {
-            valueEl.className = valueEl.className.replace(/\bok\b|\bnok\b/g, '') + ' muted';
-        } else {
-            valueEl.className = valueEl.className.replace(' muted', '');
-        }
-        valueEl.style.display = '';
-        input.remove();
-        el.classList.remove('active-edit');
-        el.querySelector('.field-edit-hint').style.display = '';
-        el.dataset.valor = novoValor;
-    });
-
-    // Enter = blur (commit)
-    input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') { input.blur(); }
-        if (e.key === 'Escape') {
-            input.value = valorAtual === '—' ? '' : valorAtual;
-            input.blur();
-            // Remover do mapa de pendentes
-            if (_pendentes[rowIndex]) delete _pendentes[rowIndex][campo];
-        }
-    });
+/* ── IA WIDGET ── */
+function toggleIA() {
+    var j = document.getElementById('iaJanela');
+    j.classList.toggle('open');
+    if (j.classList.contains('open')) document.getElementById('iaWidgetInput').focus();
 }
+function enviarSugIA(btn) {
+    document.getElementById('iaWidgetInput').value = btn.textContent.trim();
+    enviarIAWidget();
+}
+async function enviarIAWidget() {
+    var input = document.getElementById('iaWidgetInput');
+    var q = input.value.trim(); if (!q) return;
+    input.value = '';
+    var msgs = document.getElementById('iaMsgs');
+    var btn  = document.getElementById('iaWidgetBtn');
 
-async function salvarCard(rowIndex, btnEl) {
-    var pendentes = _pendentes[rowIndex];
-    if (!pendentes || Object.keys(pendentes).length === 0) {
-        showToast('Nenhuma alteração para salvar.', false);
-        return;
-    }
-
-    var card = btnEl.closest('.colab-card');
-    var statusEl = card.querySelector('.edit-status');
-    btnEl.disabled = true;
-    btnEl.innerHTML = '<div class="spinner-sm"></div> Salvando...';
-    if (statusEl) { statusEl.textContent = '⏳ Salvando...'; statusEl.className = 'edit-status saving'; }
-
-    // Monta payload com coluna → valor
-    var alteracoes = {};
-    Object.keys(pendentes).forEach(function(campo) {
-        var col = CAMPO_COLUNA[campo];
-        if (col !== undefined) alteracoes[col] = pendentes[campo];
-    });
-
+    var um = document.createElement('div'); um.className = 'ia-msg user'; um.textContent = q; msgs.appendChild(um);
+    var am = document.createElement('div'); am.className = 'ia-msg ai'; am.textContent = '⏳ Consultando...'; msgs.appendChild(am);
+    msgs.scrollTop = msgs.scrollHeight; btn.disabled = true;
     try {
-        var r = await fetch(API_BUS + '/editar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ rowIndex: rowIndex, alteracoes: alteracoes })
+        var r = await fetch(API + '/ia', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pergunta: q })
         });
         var d = await r.json();
-        if (d.ok) {
-            delete _pendentes[rowIndex];
-            if (statusEl) { statusEl.textContent = '✓ Salvo'; statusEl.className = 'edit-status saved'; }
-            card.classList.remove('editing');
-            card.querySelector('.edit-mode-bar').classList.remove('visible');
-            showToast('Colaborador atualizado na planilha!');
-        } else {
-            throw new Error(d.erro || 'Erro ao salvar');
-        }
+        am.innerHTML = d.ok
+            ? d.resposta.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')
+            : '❌ ' + esc(d.erro);
+    } catch(e) { am.textContent = '❌ ' + e.message; }
+    finally { btn.disabled = false; msgs.scrollTop = msgs.scrollHeight; }
+}
+
+/* ── EXCLUSÃO ── */
+function abrirModalExcluir(rowIndex, nome, ev) {
+    if (ev) ev.stopPropagation();
+    _rowExcluir  = rowIndex;
+    _nomeExcluir = nome;
+    document.getElementById('modalExcluirSub').textContent =
+        'Linha ' + (rowIndex + 9) + ' da aba "Cadastral 2026"';
+    document.getElementById('modalExcluirDados').innerHTML =
+        '👤 <strong>' + esc(nome) + '</strong>' +
+        ' <span style="font-size:11px;color:var(--muted);font-family:JetBrains Mono,monospace">· rowIndex ' + rowIndex + '</span>';
+    document.getElementById('modalExcluir').classList.add('open');
+    var card = document.getElementById('card-' + rowIndex);
+    if (card) card.classList.add('deleting');
+}
+function fecharModalExcluir() {
+    document.getElementById('modalExcluir').classList.remove('open');
+    if (_rowExcluir !== null) {
+        var card = document.getElementById('card-' + _rowExcluir);
+        if (card) card.classList.remove('deleting');
+    }
+    _rowExcluir = null; _nomeExcluir = '';
+}
+async function confirmarExclusao() {
+    if (_rowExcluir === null) return;
+    var btn = document.getElementById('btnConfirmarExcluir');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner-sm"></div> Excluindo...';
+    try {
+        var r = await fetch(API + '/excluir', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rowIndex: _rowExcluir })
+        });
+        var d = await r.json();
+        if (!d.ok) throw new Error(d.erro || 'Erro ao excluir');
+        _dados = _dados.filter(function(c){ return c.rowIndex !== _rowExcluir; });
+        lcSalvar(_dados);
+        var nome = _nomeExcluir;
+        fecharModalExcluir();
+        toast(nome + ' removido com sucesso!');
+        renderPagina(_pagina);
     } catch(e) {
-        if (statusEl) { statusEl.textContent = '❌ Erro: ' + e.message; statusEl.className = 'edit-status error'; }
-        showToast(e.message, true);
-    } finally {
-        btnEl.disabled = false;
-        btnEl.innerHTML = '💾 Salvar alterações';
+        toast(e.message, true);
+        btn.disabled = false; btn.innerHTML = '🗑️ Excluir permanentemente';
     }
 }
 
-function cancelarEdicao(rowIndex, btnEl) {
+/* ── EDIÇÃO INLINE ── */
+function onFieldClick(el, ri, campo, ev) {
+    if (ev) ev.stopPropagation();
+    if (el.classList.contains('active-edit')) return;
+    var valAtual = el.dataset.valor || '';
+    el.classList.add('active-edit');
+    el.querySelector('.field-edit-hint').style.display = 'none';
+    var valEl = el.querySelector('.field-value');
+    valEl.style.display = 'none';
+    var inp = document.createElement('input');
+    inp.className = 'field-input';
+    inp.value = valAtual === '—' ? '' : valAtual;
+    el.appendChild(inp); inp.focus(); inp.select();
+    var card = el.closest('.colab-card');
+    card.classList.add('editing');
+    var bar = card.querySelector('.edit-mode-bar');
+    if (bar) bar.classList.add('visible');
+    inp.addEventListener('input', function() {
+        if (!_pendentes[ri]) _pendentes[ri] = {};
+        _pendentes[ri][campo] = inp.value;
+        var st = card.querySelector('.edit-status');
+        if (st) { st.textContent = '✏️ Não salvo'; st.className = 'edit-status'; }
+        if (campo === 'nome') {
+            var h = document.getElementById('nomehdr-' + ri);
+            if (h) { var s = h.querySelector('span'); h.textContent = inp.value || '—'; if (s) h.appendChild(s); }
+        }
+    });
+    inp.addEventListener('blur', function() {
+        valEl.textContent = inp.value || '—';
+        valEl.className = valEl.className.replace(/\bok\b|\bnok\b/g,'');
+        if (!inp.value) valEl.classList.add('muted'); else valEl.classList.remove('muted');
+        valEl.style.display = ''; inp.remove();
+        el.classList.remove('active-edit');
+        el.querySelector('.field-edit-hint').style.display = '';
+        el.dataset.valor = inp.value;
+    });
+    inp.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') inp.blur();
+        if (e.key === 'Escape') {
+            inp.value = valAtual === '—' ? '' : valAtual;
+            inp.blur();
+            if (_pendentes[ri]) delete _pendentes[ri][campo];
+        }
+    });
+}
+
+async function salvarCard(ri, btnEl) {
+    var pend = _pendentes[ri];
+    if (!pend || !Object.keys(pend).length) { toast('Nenhuma alteração para salvar.'); return; }
     var card = btnEl.closest('.colab-card');
-    // Remove pendentes
-    delete _pendentes[rowIndex];
-    // Fecha o card e reabre para "resetar" (recarrega os dados)
-    carregarPagina(_paginaAtual, _termoBusca);
+    var st   = card.querySelector('.edit-status');
+    btnEl.disabled = true; btnEl.innerHTML = '<div class="spinner-sm"></div> Salvando...';
+    if (st) { st.textContent = '⏳ Salvando...'; st.className = 'edit-status saving'; }
+    var alts = {};
+    Object.keys(pend).forEach(function(c){
+        var col = CAMPO_COL[c];
+        if (col !== undefined) alts[col] = pend[c];
+    });
+    try {
+        var r = await fetch(API + '/editar', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rowIndex: ri, alteracoes: alts })
+        });
+        var d = await r.json();
+        if (!d.ok) throw new Error(d.erro || 'Erro ao salvar');
+        delete _pendentes[ri];
+        var colab = _dados.find(function(c){ return c.rowIndex === ri; });
+        if (colab) Object.assign(colab, pend);
+        lcSalvar(_dados);
+        if (st) { st.textContent = '✓ Salvo'; st.className = 'edit-status saved'; }
+        card.classList.remove('editing');
+        card.querySelector('.edit-mode-bar').classList.remove('visible');
+        toast('Colaborador atualizado na planilha!');
+    } catch(e) {
+        if (st) { st.textContent = '❌ ' + e.message; st.className = 'edit-status error'; }
+        toast(e.message, true);
+    } finally { btnEl.disabled = false; btnEl.innerHTML = '💾 Salvar'; }
+}
+
+function cancelarEdicao(ri) {
+    delete _pendentes[ri];
+    renderPagina(_pagina);
 }
 
 /* ── RENDER CARD ── */
 function renderCard(c) {
-    var iniciais = (c.nome || '?').split(' ').slice(0,2).map(function(p){ return p[0]; }).join('').toUpperCase();
-    var badges = '';
-    if (c.pago && c.pago.toUpperCase() === 'SIM') badges += '<span class="badge-sm badge-green">✓ Pago</span>';
-    if (c.aprovado && c.aprovado.trim())           badges += '<span class="badge-sm badge-accent">✓ Aprovado</span>';
-    if (c.nota)                                    badges += '<span class="badge-sm badge-yellow">⭐ ' + c.nota + '</span>';
-    if (c.avaliacaoEnviadaLojas)                   badges += '<span class="badge-sm badge-purple">📧 Aval.</span>';
-
+    var ini = (c.nome||'?').split(' ').slice(0,2).map(function(p){ return p[0]||''; }).join('').toUpperCase();
+    var bg  = '';
+    if (c.pago     && c.pago.toUpperCase()==='SIM') bg += '<span class="badge-sm badge-green">✓ Pago</span>';
+    if (c.aprovado && c.aprovado.trim())             bg += '<span class="badge-sm badge-accent">✓ Aprov.</span>';
+    if (c.nota)                                      bg += '<span class="badge-sm badge-yellow">⭐ ' + c.nota + '</span>';
+    if (c.avaliacaoEnviadaLojas)                     bg += '<span class="badge-sm badge-purple">📧 Aval.</span>';
     var ri = c.rowIndex;
+    var nomeEsc = esc(c.nome);
+    var nomeJS  = (c.nome||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"');
 
-    return '<div class="colab-card" id="card-' + ri + '">' +
-        '<div class="colab-header" onclick="toggleCard(this)">' +
-            '<div class="colab-avatar">' + iniciais + '</div>' +
-            '<div class="colab-info">' +
-                '<div class="colab-nome" id="nomehdr-' + ri + '">' + esc(c.nome) + ' <span style="font-size:11px;color:var(--muted);font-family:JetBrains Mono,monospace">#' + esc(c.numero) + '</span></div>' +
-                '<div class="colab-sub">' +
-                    (c.loja   ? '<span>🏪 ' + esc(c.loja)    + '</span>' : '') +
-                    (c.funcao ? '<span>👔 ' + esc(c.funcao)   + '</span>' : '') +
-                    (c.fimTrein ? '<span>📅 ' + esc(c.fimTrein) + '</span>' : '') +
-                '</div>' +
-            '</div>' +
-            (badges ? '<div class="colab-badges">' + badges + '</div>' : '') +
-            '<div class="colab-acc-btn"><svg viewBox="0 0 12 12" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="2,3 6,9 10,3"/></svg></div>' +
+    return '<div class="colab-card" id="card-'+ri+'">' +
+
+      '<div class="colab-header" onclick="toggleCard(this)">' +
+        '<div class="colab-avatar">'+ini+'</div>' +
+        '<div class="colab-info">' +
+          '<div class="colab-nome" id="nomehdr-'+ri+'">'+nomeEsc+
+            ' <span style="font-size:11px;color:var(--muted);font-family:JetBrains Mono,monospace">#'+esc(c.numero)+'</span>' +
+          '</div>' +
+          '<div class="colab-sub">' +
+            (c.loja    ? '<span>🏪 '+esc(c.loja)+'</span>'     : '') +
+            (c.funcao  ? '<span>👔 '+esc(c.funcao)+'</span>'   : '') +
+            (c.fimTrein? '<span>📅 '+esc(c.fimTrein)+'</span>' : '') +
+          '</div>' +
         '</div>' +
-        '<div class="colab-body"><div class="colab-body-inner">' +
+        (bg ? '<div class="colab-badges">'+bg+'</div>' : '') +
+        '<div class="colab-acc-btn">' +
+          '<svg viewBox="0 0 12 12" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round">' +
+            '<polyline points="2,3 6,9 10,3"/></svg>' +
+        '</div>' +
+      '</div>' +
 
-            '<div class="edit-mode-bar" id="editbar-' + ri + '">' +
-                '✏️ Modo de edição · clique em qualquer campo para editar' +
-                '<div class="edit-status" style="margin-left:auto"></div>' +
-            '</div>' +
+      '<div class="colab-body"><div class="colab-body-inner">' +
 
-            renderSecaoEdit('👤 Dados Pessoais', ri, [
-                ['Nome',     'nome',      c.nome,      false, 'wrap'],
-                ['Nº',       'numero',    c.numero,    true,  false],
-                ['CPF',      'cpf',       c.cpf,       true,  false],
-                ['RG',       'rg',        c.rg,        true,  false],
-                ['Turno',    'turno',     c.turno,     false, false],
-                ['Telefone', 'telefone',  c.telefone,  true,  false],
-                ['E-mail',   'email',     c.email,     false, false],
-            ]) +
-            renderSecaoEdit('🏫 Treinamento', ri, [
-                ['Início',        'inicioTrein',    c.inicioTrein,    false, false],
-                ['Fim',           'fimTrein',       c.fimTrein,       false, false],
-                ['Dias',          'diasTreinados',  c.diasTreinados,  false, false],
-                ['Local',         'local',          c.local,          false, false],
-                ['Treinador',     'treinador',      c.treinador,      false, false],
-                ['Solicitado por','solicitadoPor',  c.solicitadoPor,  false, false],
-                ['Modelo',        'modelo',         c.modelo,         false, false],
-                ['Loja Treinadora','nomeLojaTreinadora', c.nomeLojaTreinadora, false, false],
-            ]) +
-            renderSecaoEdit('💰 Financeiro', ri, [
-                ['Pago',     'pago',         c.pago,        false, c.pago && c.pago.toUpperCase()==='SIM' ? 'ok' : 'muted'],
-                ['Prêmio',   'valorPremio',  c.valorPremio ? 'R$ ' + c.valorPremio : '', true,  false],
-                ['Refeição', 'valorRefeicao',c.valorRefeicao ? 'R$ ' + c.valorRefeicao : '', true, false],
-                ['Total',    'valorTotal',   c.valorTotal ? 'R$ ' + c.valorTotal : '', true, false],
-                ['Mês',      'mes',          c.mes,         false, false],
-                ['Ano',      'ano',          c.ano,         false, false],
-                ['Aprovado', 'aprovado',     c.aprovado,    false, false],
-                ['Nota',     'nota',         c.nota,        true,  false],
-            ]) +
-            renderSecaoEdit('📋 Avaliação', ri, [
-                ['Avaliação OK',   'avaliacaoOk',          c.avaliacaoOk,         false, c.avaliacaoOk && c.avaliacaoOk.toUpperCase()==='SIM' ? 'ok' : 'muted'],
-                ['Aval. Enviada',  'avaliacaoEnviadaLojas',c.avaliacaoEnviadaLojas,false, false],
-                ['WhatsApp Func.', 'whatsappAvaliacaoFunc',c.whatsappAvaliacaoFunc,false, false],
-                ['Loja Avaliou',   'lojaTreinadoraAvaliou',c.lojaTreinadoraAvaliou,false, c.lojaTreinadoraAvaliou && c.lojaTreinadoraAvaliou.toUpperCase()==='SIM' ? 'ok' : 'muted'],
-                ['Nota Treinadora','notaLojaTreinadora',   c.notaLojaTreinadora,  true,  false],
-                ['Obs Treinadora', 'obsLojaTreinadora',    c.obsLojaTreinadora,   false, false],
-                ['Lembrete 5d',    'lembreteEnviado',      c.lembreteEnviado,     false, false],
-                ['Lembrete 2d',    'lembrete2Dias',        c.lembrete2Dias,       false, false],
-                ['Lembrete Hoje',  'lembreteHoje',         c.lembreteHoje,        false, false],
-            ]) +
+        '<div class="edit-mode-bar">' +
+          '✏️ Edição ativa · clique em qualquer campo' +
+          '<span class="edit-status"></span>' +
+        '</div>' +
 
-            '<div class="edit-actions">' +
-                '<button class="btn btn-save" onclick="salvarCard(' + ri + ', this)">💾 Salvar alterações</button>' +
-                '<button class="btn btn-cancel" onclick="cancelarEdicao(' + ri + ', this)">↩ Descartar</button>' +
-                '<span style="font-size:11px;color:var(--muted);font-weight:600">Clique em qualquer campo para editar</span>' +
-            '</div>' +
+        sec('👤 Dados Pessoais', ri, [
+            ['Nome','nome',c.nome,0,'wrap'],
+            ['Nº','numero',c.numero,1,''],
+            ['CPF','cpf',c.cpf,1,''],
+            ['RG','rg',c.rg,1,''],
+            ['Turno','turno',c.turno,0,''],
+            ['Telefone','telefone',c.telefone,1,''],
+            ['E-mail','email',c.email,0,''],
+        ]) +
+        sec('🏫 Treinamento', ri, [
+            ['Início','inicioTrein',c.inicioTrein,0,''],
+            ['Fim','fimTrein',c.fimTrein,0,''],
+            ['Dias','diasTreinados',c.diasTreinados,0,''],
+            ['Local','local',c.local,0,''],
+            ['Treinador','treinador',c.treinador,0,''],
+            ['Solicitado por','solicitadoPor',c.solicitadoPor,0,''],
+            ['Modelo','modelo',c.modelo,0,''],
+            ['Loja Treinadora','nomeLojaTreinadora',c.nomeLojaTreinadora,0,''],
+        ]) +
+        sec('💰 Financeiro', ri, [
+            ['Pago','pago',c.pago,0, c.pago&&c.pago.toUpperCase()==='SIM'?'ok':'muted'],
+            ['Prêmio','valorPremio', c.valorPremio?'R$ '+c.valorPremio:'',1,''],
+            ['Refeição','valorRefeicao',c.valorRefeicao?'R$ '+c.valorRefeicao:'',1,''],
+            ['Total','valorTotal',c.valorTotal?'R$ '+c.valorTotal:'',1,''],
+            ['Mês','mes',c.mes,0,''],['Ano','ano',c.ano,0,''],
+            ['Aprovado','aprovado',c.aprovado,0,''],['Nota','nota',c.nota,1,''],
+        ]) +
+        sec('📋 Avaliação', ri, [
+            ['Aval. OK','avaliacaoOk',c.avaliacaoOk,0, c.avaliacaoOk&&c.avaliacaoOk.toUpperCase()==='SIM'?'ok':'muted'],
+            ['Aval. Enviada','avaliacaoEnviadaLojas',c.avaliacaoEnviadaLojas,0,''],
+            ['WhatsApp','whatsappAvaliacaoFunc',c.whatsappAvaliacaoFunc,0,''],
+            ['Loja Avaliou','lojaTreinadoraAvaliou',c.lojaTreinadoraAvaliou,0, c.lojaTreinadoraAvaliou&&c.lojaTreinadoraAvaliou.toUpperCase()==='SIM'?'ok':'muted'],
+            ['Nota Trein.','notaLojaTreinadora',c.notaLojaTreinadora,1,''],
+            ['Obs Trein.','obsLojaTreinadora',c.obsLojaTreinadora,0,''],
+            ['Lembrete 5d','lembreteEnviado',c.lembreteEnviado,0,''],
+            ['Lembrete 2d','lembrete2Dias',c.lembrete2Dias,0,''],
+            ['Hoje','lembreteHoje',c.lembreteHoje,0,''],
+        ]) +
 
-        '</div></div></div>';
+        '<div class="edit-actions">' +
+          '<button class="btn btn-sm" style="background:var(--green);color:#fff;" onclick="salvarCard('+ri+',this)">💾 Salvar</button>' +
+          '<button class="btn btn-ghost btn-sm" onclick="cancelarEdicao('+ri+')">↩ Descartar</button>' +
+          '<button class="btn btn-sm" ' +
+            'style="margin-left:auto;background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.25);" ' +
+            'onclick="abrirModalExcluir('+ri+',\''+nomeJS+'\',event)">🗑️ Excluir</button>' +
+        '</div>' +
+
+      '</div></div></div>';
 }
 
-function renderSecaoEdit(titulo, rowIndex, campos) {
-    return '<div class="colab-section"><div class="colab-section-title">' + titulo + '</div><div class="colab-fields">' +
-        campos.map(function(f) {
-            var label = f[0], campo = f[1], valor = f[2] || '', mono = f[3], cls = f[4] || '';
-            var displayVal = valor || '—';
-            if (!valor) cls = 'muted';
-            return '<div class="field editable" data-valor="' + esc(valor) + '" onclick="onFieldClick(this,' + rowIndex + ',\'' + campo + '\',event)">' +
-                '<div class="field-label">' + label + '</div>' +
-                '<div class="field-value' + (mono ? ' mono' : '') + (cls ? ' ' + cls : '') + '" title="' + esc(displayVal) + '">' + esc(displayVal) + '</div>' +
-                '<span class="field-edit-hint">✏️</span>' +
-            '</div>';
-        }).join('') + '</div></div>';
+function sec(titulo, ri, campos) {
+    return '<div class="colab-section">' +
+        '<div class="colab-section-title">'+titulo+'</div>' +
+        '<div class="colab-fields">' +
+            campos.map(function(f) {
+                var label=f[0], campo=f[1], valor=f[2]||'', mono=f[3], cls=f[4]||'';
+                var dv = valor||'—'; if (!valor) cls = 'muted';
+                return '<div class="field" data-valor="'+esc(valor)+'" onclick="onFieldClick(this,'+ri+',\''+campo+'\',event)">' +
+                    '<div class="field-label">'+label+'</div>' +
+                    '<div class="field-value'+(mono?' mono':'')+(cls?' '+cls:'')+'" title="'+esc(dv)+'">'+esc(dv)+'</div>' +
+                    '<span class="field-edit-hint">✏️</span>' +
+                '</div>';
+            }).join('') +
+        '</div></div>';
 }
 
-function toggleCard(header) {
-    var body = header.nextElementSibling;
-    var btn = header.querySelector('.colab-acc-btn');
+function toggleCard(hdr) {
+    var body = hdr.nextElementSibling;
+    var btn  = hdr.querySelector('.colab-acc-btn');
     body.classList.toggle('open');
     btn.classList.toggle('open');
     btn.querySelector('svg').setAttribute('stroke', body.classList.contains('open') ? '#c8102e' : 'var(--muted)');
 }
 
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 /* ── PAGINAÇÃO ── */
-function renderPaginacao(d) {
+function renderPaginacao(pg, tot, total) {
     var el = document.getElementById('paginacao');
-    if (d.totalPaginas <= 1) { el.innerHTML = ''; return; }
-    var html = '<button class="pag-btn" onclick="carregarPagina(' + (d.pagina-1) + ',_termoBusca)" ' + (d.pagina<=1?'disabled':'') + '>‹</button>';
-    var ini = Math.max(1, d.pagina-2), fim = Math.min(d.totalPaginas, d.pagina+2);
-    if (ini > 1) { html += '<button class="pag-btn" onclick="carregarPagina(1,_termoBusca)">1</button>'; if (ini>2) html += '<span class="pag-info">…</span>'; }
-    for (var i = ini; i <= fim; i++) html += '<button class="pag-btn' + (i===d.pagina?' active':'') + '" onclick="carregarPagina(' + i + ',_termoBusca)">' + i + '</button>';
-    if (fim < d.totalPaginas) { if (fim<d.totalPaginas-1) html += '<span class="pag-info">…</span>'; html += '<button class="pag-btn" onclick="carregarPagina(' + d.totalPaginas + ',_termoBusca)">' + d.totalPaginas + '</button>'; }
-    html += '<button class="pag-btn" onclick="carregarPagina(' + (d.pagina+1) + ',_termoBusca)" ' + (d.pagina>=d.totalPaginas?'disabled':'') + '>›</button>';
-    html += '<span class="pag-info" style="margin-left:8px">' + d.total + ' resultados</span>';
-    el.innerHTML = html;
+    if (tot <= 1) { el.innerHTML = ''; return; }
+    var h = '<button class="pag-btn" onclick="renderPagina('+(pg-1)+')" '+(pg<=1?'disabled':'')+'>‹</button>';
+    var ini = Math.max(1,pg-2), fim = Math.min(tot,pg+2);
+    if (ini>1) { h+='<button class="pag-btn" onclick="renderPagina(1)">1</button>'; if(ini>2)h+='<span class="pag-info">…</span>'; }
+    for (var i=ini; i<=fim; i++) h+='<button class="pag-btn'+(i===pg?' active':'')+'" onclick="renderPagina('+i+')">'+i+'</button>';
+    if (fim<tot){ if(fim<tot-1)h+='<span class="pag-info">…</span>'; h+='<button class="pag-btn" onclick="renderPagina('+tot+')">'+tot+'</button>'; }
+    h += '<button class="pag-btn" onclick="renderPagina('+(pg+1)+')" '+(pg>=tot?'disabled':'')+'>›</button>';
+    h += '<span class="pag-info" style="margin-left:8px">'+total+' resultados</span>';
+    el.innerHTML = h;
 }
 
 /* ── INIT ── */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     atualizarStatus();
-    carregarPagina(1, '');
     iniciarCountdown();
+    document.getElementById('listaCards').innerHTML =
+        '<div class="loading-msg"><div class="spinner dark"></div> Carregando colaboradores...</div>';
+    await carregarTodos(false);
+    renderPagina(1);
 });
 </script>
-
 </body>
 </html>

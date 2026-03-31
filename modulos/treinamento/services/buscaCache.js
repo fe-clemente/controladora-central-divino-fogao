@@ -162,10 +162,22 @@ function getStatus()      {
     };
 }
 
+// ─── Remover colaborador do cache em memória ──────────────────────────────────
+function removerDoCache(rowIndex) {
+    const idx = _dados.findIndex(d => d.rowIndex === parseInt(rowIndex, 10));
+    if (idx !== -1) {
+        _dados.splice(idx, 1);
+        console.log(`[BUSCA-CACHE] 🗑️ rowIndex=${rowIndex} removido do cache (${_dados.length} restantes)`);
+        return true;
+    }
+    return false;
+}
+
 module.exports = {
     inicializar,
     sincronizar,
     buscarNoCache,
     getDados,
     getStatus,
+    removerDoCache,
 };

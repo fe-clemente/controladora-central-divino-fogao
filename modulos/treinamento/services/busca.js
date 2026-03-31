@@ -93,6 +93,42 @@ router.get('/todos', (req, res) => {
     }
 });
 
+// ─── POST /busca-api/excluir ──────────────────────────────────────────────────
+router.post('/excluir', async (req, res) => {
+    try {
+        const { rowIndex } = req.body;
+
+        if (rowIndex === undefined || rowIndex === null) {
+            return res.status(400).json({ ok: false, erro: 'rowIndex obrigatório' });
+        }
+
+        const linhaReal    = parseInt(rowIndex, 10) + HEADER_OFFSET;
+        const totalColunas = 51;
+        const colunaInicio = colIndexToLetter(0);
+        const colunaFim    = colIndexToLetter(totalColunas - 1);
+        const range        = `'${ABA_CADASTRAL}'!${colunaInicio}${linhaReal}:${colunaFim}${linhaReal}`;
+
+        const auth   = await getAuth();
+        const sheets = google.sheets({ version: 'v4', auth });
+
+        await sheets.spreadsheets.values.clear({
+            spreadsheetId: SPREADSHEET_ID,
+            range,
+        });
+
+        buscaCache.removerDoCache(rowIndex);
+
+        console.log(`[BUSCA] 🗑️ rowIndex=${rowIndex} → linha ${linhaReal} apagada (${range})`);
+        res.json({ ok: true, linhaReal, range });
+
+    } catch (e) {
+        console.error('[BUSCA] ❌ Erro ao excluir:', e.message);
+        res.status(500).json({ ok: false, erro: e.message });
+    }
+});
+
+module.exports = router;
+
 // ─── POST /busca-api/ia ───────────────────────────────────────────────────────
 router.post('/ia', async (req, res) => {
     try {

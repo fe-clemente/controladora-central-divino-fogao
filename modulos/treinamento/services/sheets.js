@@ -42,8 +42,8 @@ const AVALIACAO_SHEET_NAME = 'Respostas ao formulário 1';
 // AH=33 nota avaliação (loja origem)
 // AI=34 (legado — lembrete único antigo)
 // AJ=35 ★ lembrete 5 dias
-// AK=36 ★ Avaliação enviada para as lojas?          ← NOVO
-// AL=37 ★ WhatsApp avaliação enviado p/ funcionário? ← NOVO
+// AK=36 ★ Avaliação enviada para as lojas?
+// AL=37 ★ WhatsApp avaliação enviado p/ funcionário?
 // AM=38 (livre)
 // AN=39 loja treinadora avaliou?
 // AO=40 email loja treinadora
@@ -57,10 +57,10 @@ const AVALIACAO_SHEET_NAME = 'Respostas ao formulário 1';
 
 // ─── MAPA COLUNA-NOME → LETRA SHEETS ─────────────────────────────────────────
 const COLUNA_MAP = {
-    lembrete5Dias:          'AJ',   // índice 35 — 5 dias antes
-    lembrete2Dias:          'AX',   // índice 49 — 2 dias antes
-    lembreteHoje:           'AY',   // índice 50 — mesmo dia
-    lembreteEnviado:        'AJ',   // alias legado
+    lembrete5Dias:          'AJ',
+    lembrete2Dias:          'AX',
+    lembreteHoje:           'AY',
+    lembreteEnviado:        'AJ',
     emailAvaliacao:         'Y',
     avaliacaoOk:            'Z',
     notaAvaliacao:          'AH',
@@ -69,9 +69,8 @@ const COLUNA_MAP = {
     avaliacaoTreinadora:    'AN',
     notaTreinadora:         'AR',
     obsTreinadora:          'AS',
-    // ★ NOVAS COLUNAS — Fluxo de Avaliação Separado
-    avaliacaoEnviadaLojas:  'AK',   // índice 36 — email avaliação enviado p/ lojas
-    whatsappAvaliacaoFunc:  'AL',   // índice 37 — WhatsApp avaliação enviado p/ func
+    avaliacaoEnviadaLojas:  'AK',
+    whatsappAvaliacaoFunc:  'AL',
 };
 
 async function getAuth() {
@@ -130,18 +129,15 @@ async function getRows() {
         enderecoLojaTreinadora: row[42] || '',
         notaTreinadora:      row[43] || '',
         obsTreinadora:       row[44] || '',
-        // ★ LEMBRETES (3 estágios)
-        lembrete5Dias: row[35] || '',   // AJ — 5 dias antes
-        lembrete2Dias: row[49] || '',   // AX — 2 dias antes
-        lembreteHoje:  row[50] || '',   // AY — mesmo dia
-        // ★ NOVAS COLUNAS — Avaliação
-        avaliacaoEnviadaLojas: row[36] || '',   // AK — email avaliação enviado p/ lojas
-        whatsappAvaliacaoFunc: row[37] || '',   // AL — WhatsApp avaliação enviado p/ func
+        lembrete5Dias: row[35] || '',
+        lembrete2Dias: row[49] || '',
+        lembreteHoje:  row[50] || '',
+        avaliacaoEnviadaLojas: row[36] || '',
+        whatsappAvaliacaoFunc: row[37] || '',
     }));
 }
 
 // ─── atualizarCelula() ────────────────────────────────────────────────────────
-// rowIndex: 0-based → linhaReal = rowIndex + 9
 async function atualizarCelula(rowIndex, campo, valor) {
     const colLetra = COLUNA_MAP[campo];
     if (!colLetra) {
@@ -174,12 +170,6 @@ async function getValoresSheetData() {
 }
 
 // ─── LEITURA — ABA CONTROLE TURNOVER ─────────────────────────────────────────
-// Colunas relevantes:
-//   AL=37 → data desligamento
-//   AH=33 → motivo
-//   B=1   → loja
-//   C=2   → nome
-// Dados a partir da linha 2 (linha 1 = cabeçalho)
 const TURNOVER_ROW_OFFSET = 2;
 
 async function getTurnoverSheetData() {
@@ -223,10 +213,6 @@ async function marcarEmailAvaliacaoEnviado(rowIndex) {
 // ★ NOVAS FUNÇÕES — FLUXO DE AVALIAÇÃO SEPARADO
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/**
- * ★ Marca na coluna AK que o email de avaliação foi enviado para as lojas.
- * Grava data/hora do envio.
- */
 async function marcarAvaliacaoEnviadaLojas(rowIndex) {
     const linhaReal = rowIndex + 9;
     const auth      = await getAuth();
@@ -244,10 +230,6 @@ async function marcarAvaliacaoEnviadaLojas(rowIndex) {
     console.log(`[sheets] ✅ AK${linhaReal} = Avaliação enviada para lojas`);
 }
 
-/**
- * ★ Marca na coluna AL que o WhatsApp de avaliação foi enviado para o funcionário.
- * Grava data/hora do envio.
- */
 async function marcarWhatsappAvaliacaoFunc(rowIndex) {
     const linhaReal = rowIndex + 9;
     const auth      = await getAuth();
@@ -265,11 +247,6 @@ async function marcarWhatsappAvaliacaoFunc(rowIndex) {
     console.log(`[sheets] ✅ AL${linhaReal} = WhatsApp avaliação funcionário enviado`);
 }
 
-/**
- * ★ Lista funcionários cujo fimTrein (col P) = HOJE
- *   e que ainda NÃO receberam email de avaliação (col AK vazia).
- *   Usado pela aba "Lembretes Avaliação".
- */
 async function getFuncionariosParaAvaliacaoLembrete() {
     const rows = await getSheetsData();
 
@@ -302,15 +279,14 @@ async function getFuncionariosParaAvaliacaoLembrete() {
         const diffMs   = dataFim - hoje;
         const diffDias = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
-        // ★ Mostra quem tem fimTrein = hoje (0) ou ontem (-1, caso não tenha enviado)
         if (diffDias > 0 || diffDias < -1) return;
 
-        const avaliacaoEnviadaLojas = (row[36] || '').trim();  // AK
-        const whatsappAvaliacaoFunc = (row[37] || '').trim();  // AL
-        const notaOrigem            = (row[33] || '').trim();  // AH
-        const avaliacaoOkOrigem     = (row[25] || '').trim();  // Z
-        const avaliacaoTreinadora   = (row[39] || '').trim();  // AN
-        const notaTreinadora        = (row[43] || '').trim();  // AR
+        const avaliacaoEnviadaLojas = (row[36] || '').trim();
+        const whatsappAvaliacaoFunc = (row[37] || '').trim();
+        const notaOrigem            = (row[33] || '').trim();
+        const avaliacaoOkOrigem     = (row[25] || '').trim();
+        const avaliacaoTreinadora   = (row[39] || '').trim();
+        const notaTreinadora        = (row[43] || '').trim();
 
         resultado.push({
             rowIndex:      index,
@@ -326,29 +302,22 @@ async function getFuncionariosParaAvaliacaoLembrete() {
             telefone:      row[13] || '',
             inicioTrein:   row[14] || '',
             fimTrein:      row[15] || '',
-            emailLojaAvaliadora: row[40] || '',   // AO
-
-            // ★ Estado do envio de avaliação
+            emailLojaAvaliadora: row[40] || '',
             avaliacaoEnviadaLojas,
             emailAvaliacaoEnviado: !!avaliacaoEnviadaLojas,
-
-            // ★ Estado das notas (lojas já avaliaram?)
             notaOrigem,
             avaliacaoOkOrigem,
             avaliadoPorOrigem:     avaliacaoOkOrigem.toUpperCase() === 'SIM',
             avaliacaoTreinadora,
             notaTreinadora,
             avaliadoPorTreinadora: avaliacaoTreinadora.toUpperCase() === 'SIM',
-            obsTreinadora:         (row[44] || '').trim(),   // AS
-            observacoes:           (row[48] || '').trim(),   // AW
-
-            // ★ Estado do WhatsApp para funcionário avaliar a loja
+            obsTreinadora:         (row[44] || '').trim(),
+            observacoes:           (row[48] || '').trim(),
             whatsappAvaliacaoFunc,
             whatsappFuncEnviado: !!whatsappAvaliacaoFunc,
         });
     });
 
-    // Pendentes primeiro (quem não recebeu email de avaliação)
     resultado.sort((a, b) => {
         if (a.emailAvaliacaoEnviado !== b.emailAvaliacaoEnviado)
             return a.emailAvaliacaoEnviado ? 1 : -1;
@@ -358,15 +327,11 @@ async function getFuncionariosParaAvaliacaoLembrete() {
     return resultado;
 }
 
-/**
- * ★ Histórico de avaliações enviadas (col AK preenchida).
- *   Usado pela aba "Histórico Avaliação".
- */
 async function getHistoricoAvaliacaoLembretes() {
     const rows = await getSheetsData();
     return rows
         .map((row, index) => {
-            const avaliacaoEnviadaLojas = (row[36] || '').trim();  // AK
+            const avaliacaoEnviadaLojas = (row[36] || '').trim();
             if (!avaliacaoEnviadaLojas) return null;
 
             return {
@@ -384,40 +349,17 @@ async function getHistoricoAvaliacaoLembretes() {
                 avaliacaoOkOrigem:      row[25] || '',
                 avaliacaoTreinadora:    row[39] || '',
                 notaTreinadora:         row[43] || '',
-                obsTreinadora:          row[44] || '',   // AS — obs loja treinadora
-                observacoes:            row[48] || '',   // AW — obs loja origem
+                obsTreinadora:          row[44] || '',
+                observacoes:            row[48] || '',
                 whatsappAvaliacaoFunc:  row[37] || '',
                 emailLojaAvaliadora:    row[40] || '',
-                // ★ Histórico de alertas
-                lembrete5:              row[35] || '',   // AJ
-                lembrete2:              row[49] || '',   // AX
-                lembreteHoje:           row[50] || '',   // AY
+                lembrete5:              row[35] || '',
+                lembrete2:              row[49] || '',
+                lembreteHoje:           row[50] || '',
             };
         })
         .filter(Boolean);
 }
-
-/**
- * PATCH para sheets.js
- * Substitua APENAS a função preencherAvaliacaoCompleta pela versão abaixo.
- * O array foi expandido de 28 para 35 posições (cols A–AI).
- */
-
-/**
- * ★ PATCH para sheets.js — FUNÇÃO CORRIGIDA
- *
- * Substitua a função preencherAvaliacaoCompleta existente por esta versão.
- *
- * ANTES: 35 posições (cols A–AI) — com colunas descritivas AC-AI separadas
- * AGORA: 28 posições (cols A–AB) — texto por extenso vai direto em L-S
- *
- * Mapeamento atualizado:
- *   L-S  = TEXTO por extenso (eram notas 1-5)
- *   U,V,W = notas 1-5
- *   X    = nota 0-10
- *   Z    = TEXTO por extenso (era SIM/NÃO)
- *   AC-AI = ELIMINADAS
- */
 
 async function preencherAvaliacaoCompleta(dados) {
     const spreadsheetId = process.env.AVALIACAO_SHEET_ID;
@@ -429,7 +371,6 @@ async function preencherAvaliacaoCompleta(dados) {
     const auth   = await getAuth();
     const sheets = google.sheets({ version: 'v4', auth });
 
-    // ── Determina a última linha com dados ──────────────────────────────────
     const rangeCheck = `${AVALIACAO_SHEET_NAME}!A:A`;
     const checkResp  = await sheets.spreadsheets.values.get({
         spreadsheetId,
@@ -439,17 +380,15 @@ async function preencherAvaliacaoCompleta(dados) {
     const existingRows = (checkResp.data.values || []).length;
     const nextRow      = existingRows + 1;
 
-    // ★ Monta array de 28 posições (cols A–AB) — ANTES eram 35 (A–AI)
     const rowArray = new Array(28).fill('');
 
     for (const [colIndex, valor] of Object.entries(dados)) {
-        const idx = Number(colIndex) - 1;   // converte 1-based → 0-based
+        const idx = Number(colIndex) - 1;
         if (idx >= 0 && idx < 28) {
             rowArray[idx] = valor !== null && valor !== undefined ? String(valor) : '';
         }
     }
 
-    // ★ Range atualizado: A–AB (antes era A–AI)
     const range = `${AVALIACAO_SHEET_NAME}!A${nextRow}:AB${nextRow}`;
 
     await sheets.spreadsheets.values.update({
@@ -463,10 +402,6 @@ async function preencherAvaliacaoCompleta(dados) {
 
     console.log(`📊 Avaliação gravada na aba "${AVALIACAO_SHEET_NAME}" linha ${nextRow} (cols A–AB)`);
 }
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// FIM DAS NOVAS FUNÇÕES
-// ═══════════════════════════════════════════════════════════════════════════════
 
 // ─── PREENCHER AVALIAÇÃO ──────────────────────────────────────────────────────
 async function preencherAvaliacao(rowIndex, nota, dataFim, observacoes) {
@@ -628,18 +563,18 @@ function montarColaborador(row, index) {
         ano:                    row[31] || '',
         aprovado:               row[32] || '',
         notaAvaliacao:          row[33] || '',
-        lembreteEnviado:        row[34] || '',   // AI legado
-        lembrete5Dias:          row[35] || '',   // AJ
-        avaliacaoEnviadaLojas:  row[36] || '',   // AK ★ NOVO
-        whatsappAvaliacaoFunc:  row[37] || '',   // AL ★ NOVO
+        lembreteEnviado:        row[34] || '',
+        lembrete5Dias:          row[35] || '',
+        avaliacaoEnviadaLojas:  row[36] || '',
+        whatsappAvaliacaoFunc:  row[37] || '',
         avaliacaoTreinadora:    row[39] || '',
-        emailLojaAvaliadora:    row[40] || '',   // AO
-        lojaTreinadora:         row[41] || '',   // AP
-        enderecoLojaTreinadora: row[42] || '',   // AQ
-        notaTreinadora:         row[43] || '',   // AR
-        obsTreinadora:          row[44] || '',   // AS
-        lembrete2Dias:          row[49] || '',   // AX
-        lembreteHoje:           row[50] || '',   // AY
+        emailLojaAvaliadora:    row[40] || '',
+        lojaTreinadora:         row[41] || '',
+        enderecoLojaTreinadora: row[42] || '',
+        notaTreinadora:         row[43] || '',
+        obsTreinadora:          row[44] || '',
+        lembrete2Dias:          row[49] || '',
+        lembreteHoje:           row[50] || '',
     };
 }
 
@@ -708,9 +643,8 @@ async function getFuncionariosParaLembrete() {
             fimTrein:              row[15] || '',
             notaAvaliacao:         row[33] || '',
             emailLojaAvaliadora:   row[40] || '',
-            // ★ NOVOS CAMPOS
-            avaliacaoEnviadaLojas: row[36] || '',   // AK
-            whatsappAvaliacaoFunc: row[37] || '',   // AL
+            avaliacaoEnviadaLojas: row[36] || '',
+            whatsappAvaliacaoFunc: row[37] || '',
         });
     });
 
@@ -821,26 +755,94 @@ function parseDDMMYYYY(str) {
     return null;
 }
 
-// ─── CADASTRAR FUNCIONÁRIO ────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// ★ CADASTRAR FUNCIONÁRIO — CORRIGIDO
+//
+// PROBLEMA ANTERIOR: usava sheets.spreadsheets.values.append(), que respeita
+// filtros ativos e insere APÓS a última linha VISÍVEL, podendo pular linhas
+// ou inserir fora de ordem quando há filtro aplicado na planilha.
+//
+// SOLUÇÃO: lê a coluna A inteira via valores brutos (ignora filtros),
+// encontra o maior número sequencial existente e a última linha com dado,
+// calcula a próxima linha vazia REAL e usa update() para escrever exatamente
+// naquela posição — sem inserção de linhas, sem depender de filtros.
+// ═══════════════════════════════════════════════════════════════════════════════
 async function cadastrarFuncionario(dados) {
     const auth   = await getAuth();
     const sheets = google.sheets({ version: 'v4', auth });
 
-    const linhasAtuais = await getSheetsData();
-    let proximoNumero  = 1;
-    linhasAtuais.forEach(row => {
-        const n = parseInt(String(row[0] || '').replace(/\D/g, ''), 10);
-        if (!isNaN(n) && n >= proximoNumero) proximoNumero = n + 1;
+    // ── 1. Lê a coluna A inteira (ignora filtros) ─────────────────────────────
+    const colAResp = await sheets.spreadsheets.values.get({
+        spreadsheetId:     SPREADSHEET_ID,
+        range:             `'${ABA_CADASTRAL}'!A:A`,
+        valueRenderOption: 'UNFORMATTED_VALUE',
     });
 
+    const colA       = colAResp.data.values || [];
+    const HEADER_ROWS = 8;
+
+    // ── 2. Maior número sequencial + última linha com conteúdo ────────────────
+    let proximoNumero      = 1;
+    let ultimaLinhaComDado = HEADER_ROWS;
+
+    for (let i = HEADER_ROWS; i < colA.length; i++) {
+        const val = colA[i] ? String(colA[i][0] || '').trim() : '';
+        if (val !== '') {
+            ultimaLinhaComDado = i;
+            const n = parseInt(val.replace(/\D/g, ''), 10);
+            if (!isNaN(n) && n >= proximoNumero) proximoNumero = n + 1;
+        }
+    }
+
+    // ── 3. Próxima linha real (1-indexed) ─────────────────────────────────────
+    const proximaLinhaReal = ultimaLinhaComDado + 2;
+
+    // ── 4. Expande o grid se necessário (evita "exceeds grid limits") ─────────
+    const metaResp = await sheets.spreadsheets.get({
+        spreadsheetId: SPREADSHEET_ID,
+        fields: 'sheets(properties(sheetId,title,gridProperties))',
+    });
+
+    const abaMeta = metaResp.data.sheets.find(
+        s => s.properties.title === ABA_CADASTRAL
+    );
+
+    if (!abaMeta) {
+        throw new Error(`[sheets] Aba "${ABA_CADASTRAL}" não encontrada na planilha.`);
+    }
+
+    const sheetId     = abaMeta.properties.sheetId;
+    const maxRows     = abaMeta.properties.gridProperties.rowCount;
+    const BUFFER_ROWS = 200; // adiciona 200 linhas de folga a cada expansão
+
+    if (proximaLinhaReal >= maxRows) {
+        const novoTotal = proximaLinhaReal + BUFFER_ROWS;
+        await sheets.spreadsheets.batchUpdate({
+            spreadsheetId: SPREADSHEET_ID,
+            requestBody: {
+                requests: [{
+                    appendDimension: {
+                        sheetId,
+                        dimension: 'ROWS',
+                        length: novoTotal - maxRows,
+                    },
+                }],
+            },
+        });
+        console.log(`[sheets/cadastrar] ⚡ Grid expandido: ${maxRows} → ${novoTotal} linhas`);
+    }
+
+    // ── 5. Calcula dias treinados ─────────────────────────────────────────────
     let diasTreinados = '';
     const dInicio = parseDDMMYYYY(dados.inicioTrein);
     const dFim    = parseDDMMYYYY(dados.fimTrein);
     if (dInicio && dFim && dFim >= dInicio) {
-        const diffMs = dFim.getTime() - dInicio.getTime();
-        diasTreinados = String(Math.round(diffMs / (1000 * 60 * 60 * 24)) + 1);
+        diasTreinados = String(
+            Math.round((dFim.getTime() - dInicio.getTime()) / (1000 * 60 * 60 * 24)) + 1
+        );
     }
 
+    // ── 6. Monta o array de colunas (A até AQ = índices 0..42) ───────────────
     const row = new Array(43).fill('');
 
     row[0]  = String(proximoNumero);
@@ -859,29 +861,27 @@ async function cadastrarFuncionario(dados) {
     row[18] = dados.local       || '';
     row[23] = dados.modelo      || '';
     row[26] = dados.pago        || '';
-    row[27] = dados.premio      !== undefined && dados.premio      !== '' ? String(dados.premio)      : '';
-    row[28] = dados.refeicao    !== undefined && dados.refeicao    !== '' ? String(dados.refeicao)    : '';
-    row[29] = dados.valorTotal  !== undefined && dados.valorTotal  !== '' ? String(dados.valorTotal)  : '';
+    row[27] = dados.premio     !== undefined && dados.premio     !== '' ? String(dados.premio)     : '';
+    row[28] = dados.refeicao   !== undefined && dados.refeicao   !== '' ? String(dados.refeicao)   : '';
+    row[29] = dados.valorTotal !== undefined && dados.valorTotal !== '' ? String(dados.valorTotal) : '';
     row[30] = dados.mes         || '';
     row[31] = dados.ano         || '2026';
     row[40] = dados.emailLojaTreinadora    || '';
     row[41] = dados.lojaTreinadora         || '';
     row[42] = dados.enderecoLojaTreinadora || '';
 
-    const response = await sheets.spreadsheets.values.append({
+    // ── 7. Grava na linha exata (independente de filtros) ─────────────────────
+    const range = `'${ABA_CADASTRAL}'!A${proximaLinhaReal}:AQ${proximaLinhaReal}`;
+
+    await sheets.spreadsheets.values.update({
         spreadsheetId:    SPREADSHEET_ID,
-        range:            `'${ABA_CADASTRAL}'!A9:AQ`,
+        range,
         valueInputOption: 'USER_ENTERED',
-        insertDataOption: 'INSERT_ROWS',
         requestBody:      { values: [row] },
     });
 
-    const updatedRange = response.data.updates?.updatedRange || '';
-    const m            = updatedRange.match(/(\d+)$/);
-    const linhaReal    = m ? parseInt(m[1]) : null;
-
-    console.log(`✅ Novo cadastro: ${dados.nome} — nº ${proximoNumero} — ${updatedRange}`);
-    return { sucesso: true, linhaReal, range: updatedRange, numero: proximoNumero };
+    console.log(`✅ Cadastro: ${dados.nome} — nº ${proximoNumero} — linha ${proximaLinhaReal}`);
+    return { sucesso: true, linhaReal: proximaLinhaReal, range, numero: proximoNumero };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1318,7 +1318,6 @@ function parseDateSimple(v) {
 }
 
 async function getTurnoverCadastral(anoFiltro) {
-    // ★ Lê da aba "Controle TurnOver" — AL(37)=data desligamento, AH(33)=motivo
     const rows = await getTurnoverSheetData();
     const ano  = anoFiltro ? String(anoFiltro) : null;
 
@@ -1326,12 +1325,12 @@ async function getTurnoverCadastral(anoFiltro) {
                    'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
     const todos      = rows.filter(r => r && r[2]);
-    const ativos     = todos.filter(r => !String(r[37]||'').trim());   // AL vazio = ativo
-    const desligados = todos.filter(r =>  String(r[37]||'').trim());   // AL preenchido = desligado
+    const ativos     = todos.filter(r => !String(r[37]||'').trim());
+    const desligados = todos.filter(r =>  String(r[37]||'').trim());
 
     const desligAno = ano
         ? desligados.filter(r => {
-            const d = parseDateSimple(r[37]);  // AL = data desligamento
+            const d = parseDateSimple(r[37]);
             return d && String(d.getFullYear()) === ano;
           })
         : desligados;
@@ -1350,7 +1349,7 @@ async function getTurnoverCadastral(anoFiltro) {
 
     const motivosMap = {};
     desligAno.forEach(r => {
-        const mot = String(r[33]||'').trim() || 'Não informado';  // AH = motivo
+        const mot = String(r[33]||'').trim() || 'Não informado';
         motivosMap[mot] = (motivosMap[mot]||0) + 1;
     });
     const motivos = Object.entries(motivosMap)
@@ -1378,7 +1377,7 @@ async function getTurnoverCadastral(anoFiltro) {
 
     const mesMap = {};
     desligAno.forEach(r => {
-        const d = parseDateSimple(r[37]);  // AL = data desligamento
+        const d = parseDateSimple(r[37]);
         if (!d) return;
         const mes = d.getMonth()+1;
         if (!mesMap[mes]) mesMap[mes] = { mes: MESES[mes], ordem: mes, desligados: 0 };
@@ -1406,17 +1405,12 @@ async function getTurnoverCadastral(anoFiltro) {
     };
 }
 
-// ─── GRAVAR DESLIGAMENTO — ABA CONTROLE TURNOVER ─────────────────────────────
-// AL (índice 37) = data desligamento
-// AH (índice 33) = motivo
-// rowIndex: 0-based do array da aba Controle TurnOver → linhaReal = rowIndex + 2
 async function gravarDesligamento(rowIndex, dataDeslig, motivo) {
     const linhaReal = rowIndex + TURNOVER_ROW_OFFSET;
     const auth      = await getAuth();
     const sheets    = google.sheets({ version: 'v4', auth });
     const updates   = [];
 
-    // AL = data desligamento
     if (dataDeslig) {
         updates.push(
             sheets.spreadsheets.values.update({
@@ -1428,7 +1422,6 @@ async function gravarDesligamento(rowIndex, dataDeslig, motivo) {
         );
     }
 
-    // AH = motivo
     if (motivo) {
         updates.push(
             sheets.spreadsheets.values.update({
@@ -1453,7 +1446,6 @@ async function getAvaliacoesKpi(ano, mes) {
 
     const MESES_NOMES = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-    // Filtra rows com nome e ano correspondente
     const todos = [];
     rows.forEach((row, idx) => {
         if (!row[2]) return;
@@ -1471,42 +1463,37 @@ async function getAvaliacoesKpi(ano, mes) {
             mesNome: MESES_NOMES[mesRow] || '?',
             inicioTrein: row[14] || '',
             fimTrein: row[15] || '',
-            // Lembretes
             lembrete5: (row[35] || '').trim(),
             lembrete2: (row[49] || '').trim(),
             lembreteHoje: (row[50] || '').trim(),
-            // Avaliação
-            avaliacaoEnviadaLojas: (row[36] || '').trim(),   // AK
-            avaliacaoOkOrigem: (row[25] || '').trim(),       // Z
-            notaOrigem: (row[33] || '').trim(),              // AH
-            observacoes: (row[48] || '').trim(),              // AW
-            avaliacaoTreinadora: (row[39] || '').trim(),      // AN
-            notaTreinadora: (row[43] || '').trim(),           // AR
-            obsTreinadora: (row[44] || '').trim(),            // AS
-            whatsappAvaliacaoFunc: (row[37] || '').trim(),    // AL
-            emailLojaAvaliadora: (row[40] || '').trim(),      // AO
-            lojaTreinadora: (row[41] || '').trim(),           // AP
+            avaliacaoEnviadaLojas: (row[36] || '').trim(),
+            avaliacaoOkOrigem: (row[25] || '').trim(),
+            notaOrigem: (row[33] || '').trim(),
+            observacoes: (row[48] || '').trim(),
+            avaliacaoTreinadora: (row[39] || '').trim(),
+            notaTreinadora: (row[43] || '').trim(),
+            obsTreinadora: (row[44] || '').trim(),
+            whatsappAvaliacaoFunc: (row[37] || '').trim(),
+            emailLojaAvaliadora: (row[40] || '').trim(),
+            lojaTreinadora: (row[41] || '').trim(),
         });
     });
 
     const total = todos.length;
     const comFimTrein = todos.filter(r => r.fimTrein);
 
-    // ── LEMBRETES ─────────────────────────────────────────────
     const lem5 = todos.filter(r => r.lembrete5).length;
     const lem2 = todos.filter(r => r.lembrete2).length;
     const lemH = todos.filter(r => r.lembreteHoje).length;
-    const totalLembretesEnviados = lem5 + lem2 + lemH;
+    const totalLembretesEnviados  = lem5 + lem2 + lemH;
     const totalLembretesPossiveis = total * 3;
     const aderenciaLembretes = totalLembretesPossiveis > 0
         ? +((totalLembretesEnviados / totalLembretesPossiveis) * 100).toFixed(1) : 0;
 
-    // ── AVALIAÇÃO ENVIADA (col AK) ────────────────────────────
-    const avalEnviadas = todos.filter(r => r.avaliacaoEnviadaLojas).length;
+    const avalEnviadas    = todos.filter(r => r.avaliacaoEnviadaLojas).length;
     const avalNaoEnviadas = comFimTrein.length - avalEnviadas;
 
-    // ── LOJA ORIGEM (col Z) ───────────────────────────────────
-    const origemAvaliou = todos.filter(r => r.avaliacaoOkOrigem.toUpperCase() === 'SIM').length;
+    const origemAvaliou  = todos.filter(r => r.avaliacaoOkOrigem.toUpperCase() === 'SIM').length;
     const origemPendente = avalEnviadas - origemAvaliou;
     const aderenciaOrigem = avalEnviadas > 0
         ? +((origemAvaliou / avalEnviadas) * 100).toFixed(1) : 0;
@@ -1515,8 +1502,7 @@ async function getAvaliacoesKpi(ano, mes) {
     const mediaOrigem = notasOrigem.length > 0
         ? +(notasOrigem.reduce((s, r) => s + parseFloat(r.notaOrigem), 0) / notasOrigem.length).toFixed(1) : null;
 
-    // ── LOJA TREINADORA (col AN) ──────────────────────────────
-    const treinAvaliou = todos.filter(r => r.avaliacaoTreinadora.toUpperCase() === 'SIM').length;
+    const treinAvaliou  = todos.filter(r => r.avaliacaoTreinadora.toUpperCase() === 'SIM').length;
     const treinPendente = avalEnviadas - treinAvaliou;
     const aderenciaTrein = avalEnviadas > 0
         ? +((treinAvaliou / avalEnviadas) * 100).toFixed(1) : 0;
@@ -1525,12 +1511,10 @@ async function getAvaliacoesKpi(ano, mes) {
     const mediaTrein = notasTrein.length > 0
         ? +(notasTrein.reduce((s, r) => s + parseFloat(r.notaTreinadora), 0) / notasTrein.length).toFixed(1) : null;
 
-    // ── WHATSAPP FUNCIONÁRIO (col AL) ─────────────────────────
-    const whatsEnviados = todos.filter(r => r.whatsappAvaliacaoFunc).length;
+    const whatsEnviados  = todos.filter(r => r.whatsappAvaliacaoFunc).length;
     const aderenciaWhats = avalEnviadas > 0
         ? +((whatsEnviados / avalEnviadas) * 100).toFixed(1) : 0;
 
-    // ── POR LOJA ORIGEM — quem avalia e quem não avalia ───────
     const porLojaOrigem = {};
     todos.forEach(r => {
         if (!r.loja) return;
@@ -1552,7 +1536,6 @@ async function getAvaliacoesKpi(ano, mes) {
         pctAderencia: l.total > 0 ? +((l.avaliou / l.total) * 100).toFixed(0) : 0,
     })).sort((a, b) => b.total - a.total);
 
-    // ── POR LOJA TREINADORA ───────────────────────────────────
     const porLojaTrein = {};
     todos.forEach(r => {
         const lt = r.lojaTreinadora || r.emailLojaAvaliadora || '';
@@ -1575,7 +1558,6 @@ async function getAvaliacoesKpi(ano, mes) {
         pctAderencia: l.total > 0 ? +((l.avaliou / l.total) * 100).toFixed(0) : 0,
     })).sort((a, b) => b.total - a.total);
 
-    // ── POR MÊS ───────────────────────────────────────────────
     const porMesMap = {};
     for (let i = 1; i <= 12; i++) porMesMap[i] = {
         ordem: i, mes: MESES_NOMES[i], total: 0,
@@ -1585,32 +1567,31 @@ async function getAvaliacoesKpi(ano, mes) {
     };
     todos.forEach(r => {
         if (!r.mes || r.mes < 1 || r.mes > 12) return;
-        const m = porMesMap[r.mes];
-        m.total++;
-        if (r.lembrete5) m.lem5++;
-        if (r.lembrete2) m.lem2++;
-        if (r.lembreteHoje) m.lemH++;
-        if (r.avaliacaoEnviadaLojas) m.avalEnviadas++;
+        const mm = porMesMap[r.mes];
+        mm.total++;
+        if (r.lembrete5) mm.lem5++;
+        if (r.lembrete2) mm.lem2++;
+        if (r.lembreteHoje) mm.lemH++;
+        if (r.avaliacaoEnviadaLojas) mm.avalEnviadas++;
         if (r.avaliacaoOkOrigem.toUpperCase() === 'SIM') {
-            m.origemAvaliou++;
-            if (r.notaOrigem && !isNaN(parseFloat(r.notaOrigem))) { m.somaOrigem += parseFloat(r.notaOrigem); m.qtOrigem++; }
+            mm.origemAvaliou++;
+            if (r.notaOrigem && !isNaN(parseFloat(r.notaOrigem))) { mm.somaOrigem += parseFloat(r.notaOrigem); mm.qtOrigem++; }
         }
         if (r.avaliacaoTreinadora.toUpperCase() === 'SIM') {
-            m.treinAvaliou++;
-            if (r.notaTreinadora && !isNaN(parseFloat(r.notaTreinadora))) { m.somaTrein += parseFloat(r.notaTreinadora); m.qtTrein++; }
+            mm.treinAvaliou++;
+            if (r.notaTreinadora && !isNaN(parseFloat(r.notaTreinadora))) { mm.somaTrein += parseFloat(r.notaTreinadora); mm.qtTrein++; }
         }
-        if (r.whatsappAvaliacaoFunc) m.whatsEnviados++;
+        if (r.whatsappAvaliacaoFunc) mm.whatsEnviados++;
     });
-    const porMes = Object.values(porMesMap).filter(m => m.total > 0).map(m => ({
-        ...m,
-        mediaOrigem: m.qtOrigem > 0 ? +(m.somaOrigem / m.qtOrigem).toFixed(1) : null,
-        mediaTrein: m.qtTrein > 0 ? +(m.somaTrein / m.qtTrein).toFixed(1) : null,
-        pctOrigem: m.avalEnviadas > 0 ? +((m.origemAvaliou / m.avalEnviadas) * 100).toFixed(0) : 0,
-        pctTrein: m.avalEnviadas > 0 ? +((m.treinAvaliou / m.avalEnviadas) * 100).toFixed(0) : 0,
-        totalLembretes: m.lem5 + m.lem2 + m.lemH,
+    const porMes = Object.values(porMesMap).filter(mm => mm.total > 0).map(mm => ({
+        ...mm,
+        mediaOrigem: mm.qtOrigem > 0 ? +(mm.somaOrigem / mm.qtOrigem).toFixed(1) : null,
+        mediaTrein:  mm.qtTrein  > 0 ? +(mm.somaTrein  / mm.qtTrein ).toFixed(1) : null,
+        pctOrigem: mm.avalEnviadas > 0 ? +((mm.origemAvaliou / mm.avalEnviadas) * 100).toFixed(0) : 0,
+        pctTrein:  mm.avalEnviadas > 0 ? +((mm.treinAvaliou  / mm.avalEnviadas) * 100).toFixed(0) : 0,
+        totalLembretes: mm.lem5 + mm.lem2 + mm.lemH,
     }));
 
-    // ── RANKING FUNCIONÁRIOS WHATSAPP ─────────────────────────
     const funcWhats = todos
         .filter(r => r.avaliacaoEnviadaLojas)
         .map(r => ({
@@ -1681,12 +1662,10 @@ module.exports = {
     getTurnoverCadastral,
     getTurnoverSheetData,
     gravarDesligamento,
-    // ★ NOVAS FUNÇÕES — Fluxo de Avaliação Separado
     marcarAvaliacaoEnviadaLojas,
     marcarWhatsappAvaliacaoFunc,
     getFuncionariosParaAvaliacaoLembrete,
     getHistoricoAvaliacaoLembretes,
     getAvaliacoesKpi,
-    // ★ AVALIAÇÃO COMPLETA — planilha separada
     preencherAvaliacaoCompleta,
 };

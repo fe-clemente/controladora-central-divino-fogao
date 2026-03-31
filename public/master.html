@@ -4,168 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Master — Divino Fogão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root {
-    --red:#c8102e;--red-pale:#fff0f2;
-    --bg:#f5f3ef;--bg2:#ffffff;--bg3:#faf8f5;
-    --border:#e8e2d9;--text:#1e1a16;--muted:#8a7f74;
-    --green:#16a34a;--green-pale:#f0fdf4;
-    --yellow:#d97706;--yellow-pale:#fffbeb;
-    --orange:#ea580c;
-    --ti:#0369a1;--ti-pale:#f0f9ff;
-    --ti2:#7c3aed;--ti2-pale:#f5f3ff;
-    --shadow:0 2px 12px rgba(0,0,0,.08);
-    --shadow-lg:0 8px 32px rgba(0,0,0,.12);
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
-.logo{padding:10px 0;}.logo img{height:48px;display:block;}
-.logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
-.hd{width:1px;height:32px;background:var(--border);}
-.h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
-.badge-master{background:linear-gradient(135deg,var(--yellow),#f97316);color:#fff;font-size:10px;font-weight:800;padding:3px 12px;border-radius:20px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;}
-.h-user{margin-left:auto;display:flex;align-items:center;gap:10px;}
-.h-foto{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);object-fit:cover;display:none;}
-.h-nome{font-size:12px;font-weight:700;color:var(--muted);}
-.btn-logout{background:none;border:1.5px solid var(--border);padding:6px 14px;border-radius:9px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;text-decoration:none;transition:all .2s;}
-.btn-logout:hover{border-color:var(--red);color:var(--red);}
-nav{display:flex;gap:2px;}
-.nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;text-decoration:none;display:flex;align-items:center;}
-.nav-btn:hover{color:var(--text);background:var(--bg3);}
-#statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
-.sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
-.sdot.ready{background:var(--green);animation:none;}
-.sdot.error{background:var(--red);animation:none;}
-.sdot.syncing{background:var(--ti);animation:pulse .8s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-main{max-width:1300px;margin:0 auto;padding:28px 24px;}
-.page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
-.page-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
-.sec-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
-.sec-label::after{content:'';flex:1;height:1.5px;background:var(--border);}
-.modulos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:28px;}
-.mod-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:15px 17px;display:flex;align-items:center;gap:13px;box-shadow:var(--shadow);transition:all .2s;text-decoration:none;color:inherit;position:relative;overflow:hidden;}
-.mod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ti2);border-radius:14px 14px 0 0;}
-.mod-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--ti2);}
-.mod-icon{font-size:20px;flex-shrink:0;}
-.mod-info{flex:1;min-width:0;}
-.mod-nome{font-size:12px;font-weight:800;margin-bottom:2px;}
-.mod-id{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
-.mod-badge{font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;background:var(--green-pale);color:var(--green);border:1px solid rgba(22,163,74,.2);margin-top:3px;display:inline-block;}
-.health-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px;margin-bottom:28px;}
-.health-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:14px 17px;box-shadow:var(--shadow);transition:border-color .2s;}
-.health-card:hover{border-color:var(--ti);}
-.hc-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:8px;}
-.hc-status{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.dot.online{background:var(--green);}
-.dot.offline{background:var(--red);animation:blink 1s infinite;}
-.dot.loading{background:var(--yellow);animation:blink .7s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.hc-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;}
-.sync-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:17px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px;box-shadow:var(--shadow);flex-wrap:wrap;}
-.sync-info{font-size:13px;color:var(--muted);}
-.sync-info strong{color:var(--text);font-weight:800;}
-.sync-btns{display:flex;gap:8px;flex-wrap:wrap;}
-.btn{padding:8px 16px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
-.btn-red{background:var(--red);color:#fff;}.btn-red:hover{background:#a50d25;}
-.btn-ti{background:var(--ti);color:#fff;}.btn-ti:hover{background:#075985;}
-.btn-green{background:var(--green);color:#fff;}.btn-green:hover{background:#15803d;}
-.btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}.btn-ghost:hover{background:var(--bg2);}
-.btn-sm{padding:6px 12px;font-size:11px;}
-.btn:disabled{opacity:.5;cursor:not-allowed;}
-.spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;margin:2px;white-space:nowrap;}
-.tag-master{background:var(--yellow-pale);color:var(--yellow);border:1px solid rgba(217,119,6,.25);}
-.tag-ti{background:var(--ti-pale);color:var(--ti);border:1px solid rgba(3,105,161,.2);}
-.tag-td{background:var(--green-pale);color:var(--green);border:1px solid rgba(22,163,74,.2);}
-.tag-other{background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
-.tag-gestor{background:#fef9c3;color:#854d0e;border:1px solid rgba(133,77,14,.25);}
-.empty-msg{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
-.avisos-filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-.btn-setor{background:var(--bg3);border:1.5px solid var(--border);border-radius:20px;padding:5px 14px;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);font-family:'Nunito',sans-serif;transition:.15s;}
-.btn-setor:hover{border-color:var(--ti2);color:var(--ti2);}
-.btn-setor.ativo{background:var(--ti2);border-color:var(--ti2);color:#fff;}
-.aviso-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;transition:border-color .15s;}
-.aviso-card:hover{border-color:var(--ti2);}
-.aviso-card.inativo{opacity:.5;}
-.aviso-badge{font-size:10px;font-weight:800;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;}
-.aviso-badge.urgente{background:var(--red-pale);color:var(--red);}
-.aviso-badge.atualiz{background:#f0f9ff;color:#0ea5e9;}
-.aviso-badge.aviso{background:var(--yellow-pale);color:var(--yellow);}
-.aviso-badge.info{background:var(--green-pale);color:var(--green);}
-.accordion{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;box-shadow:var(--shadow);}
-.acc-header{display:flex;align-items:center;padding:14px 18px;cursor:pointer;gap:12px;transition:background .15s;user-select:none;}
-.acc-header:hover{background:var(--bg3);}
-.acc-header.open{background:var(--bg3);border-bottom:1.5px solid var(--border);}
-.acc-title{font-size:13px;font-weight:800;flex:1;}
-.acc-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);background:var(--bg);border:1px solid var(--border);padding:2px 9px;border-radius:20px;white-space:nowrap;}
-.acc-actions{display:flex;gap:7px;align-items:center;}
-.acc-arrow{font-size:12px;color:var(--muted);transition:transform .25s cubic-bezier(.4,0,.2,1);flex-shrink:0;line-height:1;}
-.acc-header.open .acc-arrow{transform:rotate(180deg);}
-.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;}
-.acc-body.open{grid-template-rows:1fr;}
-.acc-body > div{overflow:hidden;}
-.tbl-scroll{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;min-width:600px;}
-thead th{padding:9px 16px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
-tbody tr{transition:background .12s;}
-tbody tr:hover td{background:var(--bg3);}
-tbody td{padding:11px 16px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
-tbody tr:last-child td{border-bottom:none;}
-.log-list{max-height:360px;overflow-y:auto;padding:4px 0;}
-.log-item{display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--border);transition:background .12s;}
-.log-item:last-child{border-bottom:none;}
-.log-item:hover{background:var(--bg3);}
-.log-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);width:130px;flex-shrink:0;}
-.log-user{font-size:12px;font-weight:700;width:200px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.log-action{font-size:12px;color:var(--muted);flex:1;}
-.log-modulo{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ti);width:80px;flex-shrink:0;}
-.log-ip{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);width:110px;flex-shrink:0;text-align:right;}
-.acc-avisos-inner{padding:16px 18px;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
-.modal-overlay.open{display:flex;}
-.modal-box{background:var(--bg2);border-radius:18px;padding:26px 28px;max-width:580px;width:100%;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;}
-.modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;}
-.modal-title{font-size:15px;font-weight:800;}
-.modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:5px 11px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);}
-.modal-close:hover{background:var(--red-pale);color:var(--red);}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.form-group{display:flex;flex-direction:column;gap:4px;}
-.form-group.full{grid-column:1/-1;}
-.form-group label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
-.form-control{padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;transition:border-color .2s;width:100%;}
-.form-control:focus{border-color:var(--ti);}
-textarea.form-control{resize:vertical;min-height:90px;}
-.modulos-check{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
-.mod-check-item{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;transition:all .2s;user-select:none;}
-.mod-check-item:hover{border-color:var(--ti2);}
-.mod-check-item.checked{background:var(--ti2-pale);border-color:var(--ti2);color:var(--ti2);font-weight:700;}
-.mod-check-item input{display:none;}
-.mod-check-item span{font-size:12px;font-weight:600;}
-/* toggle gestor */
-.gestor-toggle{display:flex;align-items:center;gap:10px;background:var(--yellow-pale);border:1.5px solid rgba(217,119,6,.3);border-radius:10px;padding:10px 14px;cursor:pointer;user-select:none;margin-bottom:14px;}
-.gestor-toggle input{display:none;}
-.gestor-toggle-knob{width:36px;height:20px;border-radius:20px;background:var(--border);position:relative;transition:background .2s;flex-shrink:0;}
-.gestor-toggle-knob::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
-.gestor-toggle.on .gestor-toggle-knob{background:var(--yellow);}
-.gestor-toggle.on .gestor-toggle-knob::after{transform:translateX(16px);}
-.gestor-toggle-label{font-size:12px;font-weight:700;color:var(--text);}
-.gestor-toggle-sub{font-size:11px;color:var(--muted);margin-top:1px;}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
-.toast.show{display:block;animation:fadeUp .3s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-@media(max-width:640px){main{padding:20px 16px;}.page-title{font-size:18px;}.form-grid{grid-template-columns:1fr;}}
-</style>
+<link rel="stylesheet" href="/global.css">
 </head>
 <body>
 
 <header>
     <div class="logo">
-        <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <img src="logo.png" alt="Divino Fogão"
+             onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
         <span class="logo-fb">🍽️</span>
     </div>
     <div class="hd"></div>
@@ -174,10 +22,12 @@ textarea.form-control{resize:vertical;min-height:90px;}
     <nav style="margin-left:12px">
         <a href="/" class="nav-btn">🏠 Dashboard</a>
     </nav>
-    <div class="h-user">
-        <img class="h-foto" id="userFoto" src="" alt="" onerror="this.style.display='none'">
-        <span class="h-nome" id="userName">—</span>
-        <button class="btn-logout" onclick="location.href='/logout'">Sair</button>
+    <div class="h-user" style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+        <img class="h-foto" id="userFoto" src="" alt=""
+             style="width:32px;height:32px;border-radius:50%;border:2px solid var(--border);object-fit:cover;display:none;"
+             onerror="this.style.display='none'">
+        <span class="h-nome" id="userName" style="font-size:12px;font-weight:700;color:var(--muted);">—</span>
+        <button class="btn btn-ghost btn-sm" onclick="location.href='/logout'">🚪 Sair</button>
     </div>
 </header>
 
@@ -194,13 +44,19 @@ textarea.form-control{resize:vertical;min-height:90px;}
     <!-- Módulos -->
     <div class="sec-label">📦 Módulos ativos</div>
     <div class="modulos-grid" id="modulosGrid">
-        <div class="mod-card"><div class="mod-icon">⏳</div><div class="mod-info"><div class="mod-nome">Carregando...</div></div></div>
+        <div class="mod-card">
+            <div class="mod-icon">⏳</div>
+            <div class="mod-info"><div class="mod-nome">Carregando...</div></div>
+        </div>
     </div>
 
     <!-- Health -->
     <div class="sec-label">🟢 Status dos serviços</div>
     <div class="health-grid" id="healthGrid">
-        <div class="health-card"><div class="hc-label">Servidor</div><div class="hc-status"><div class="dot loading"></div>Verificando...</div></div>
+        <div class="health-card">
+            <div class="hc-label">Servidor</div>
+            <div class="hc-status"><div class="dot loading"></div>Verificando...</div>
+        </div>
     </div>
 
     <!-- Sync -->
@@ -208,18 +64,20 @@ textarea.form-control{resize:vertical;min-height:90px;}
     <div class="sync-bar">
         <div class="sync-info"><strong>Sincronização global</strong> — atualiza todos os módulos de uma vez</div>
         <div class="sync-btns" id="syncBtns">
-            <div class="spinner dark" style="border:2px solid var(--border);border-top-color:var(--ti);width:14px;height:14px;"></div>
+            <div class="spinner dark"></div>
         </div>
     </div>
 
     <!-- ACCORDION: Usuários -->
     <div class="accordion">
         <div class="acc-header" id="acch-usuarios" onclick="toggleAcc('usuarios')">
-            <span class="acc-title">👥 Usuários & Permissões</span>
+            <span class="acc-title">👥 Usuários &amp; Permissões</span>
             <span class="acc-meta" id="acc-meta-usuarios">—</span>
             <div class="acc-actions" onclick="event.stopPropagation()">
                 <button class="btn btn-ghost btn-sm" onclick="recarregarUsuarios()">↻ Recarregar</button>
-                <a class="btn btn-ghost btn-sm" href="https://docs.google.com/spreadsheets/d/1l3U369m_jss0n1rBrQzfubm7k5kme73O--urJxme6aU/edit" target="_blank">📊 Planilha ↗</a>
+                <a class="btn btn-ghost btn-sm"
+                   href="https://docs.google.com/spreadsheets/d/1l3U369m_jss0n1rBrQzfubm7k5kme73O--urJxme6aU/edit"
+                   target="_blank">📊 Planilha ↗</a>
                 <button class="btn btn-green btn-sm" onclick="abrirModalUsuario()">➕ Novo</button>
             </div>
             <span class="acc-arrow">▼</span>
@@ -261,7 +119,7 @@ textarea.form-control{resize:vertical;min-height:90px;}
             <div>
                 <div class="acc-avisos-inner">
                     <div class="avisos-filtros" id="avisosFiltros">
-                        <button class="btn-setor ativo" onclick="filtrarSetor(this,'todos')">Todos</button>
+                        <button class="btn-setor ativo"   onclick="filtrarSetor(this,'todos')">Todos</button>
                         <button class="btn-setor" onclick="filtrarSetor(this,'treinamento')">🎓 Treinamento</button>
                         <button class="btn-setor" onclick="filtrarSetor(this,'ti')">🖥️ TI</button>
                         <button class="btn-setor" onclick="filtrarSetor(this,'juridico')">⚖️ Jurídico</button>
@@ -357,8 +215,16 @@ textarea.form-control{resize:vertical;min-height:90px;}
 <div class="toast" id="toast"></div>
 
 <script>
-const toast = (msg, ms=2800) => { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), ms); };
-const setStatus = (cls, msg) => { document.getElementById('sdot').className='sdot '+cls; document.getElementById('statusTxt').textContent=msg; };
+const toast = (msg, ms=2800) => {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), ms);
+};
+const setStatus = (cls, msg) => {
+    document.getElementById('sdot').className = 'sdot ' + cls;
+    document.getElementById('statusTxt').textContent = msg;
+};
 const $ = id => document.getElementById(id);
 
 /* ── Accordion ── */
@@ -374,12 +240,12 @@ function toggleAcc(id) {
 async function carregarPerfil() {
     try {
         const r = await fetch('/auth/me'); const d = await r.json();
-        if (!d.logado) { location.href='/login'; return; }
-        if (!d.usuario.isMaster && !d.usuario.modulos?.includes('master')) { location.href='/'; return; }
+        if (!d.logado) { location.href = '/login'; return; }
+        if (!d.usuario.isMaster && !d.usuario.modulos?.includes('master')) { location.href = '/'; return; }
         $('userName').textContent = d.usuario.nome || d.usuario.email;
-        if (d.usuario.foto) { const f=$('userFoto'); f.src=d.usuario.foto; f.style.display='block'; }
+        if (d.usuario.foto) { const f = $('userFoto'); f.src = d.usuario.foto; f.style.display = 'block'; }
         $('lastUpdate').textContent = new Date().toLocaleString('pt-BR');
-    } catch { location.href='/login'; }
+    } catch { location.href = '/login'; }
 }
 
 /* ── Módulos ── */
@@ -389,8 +255,11 @@ async function carregarModulos() {
         const r = await fetch('/api/modulos'); const d = await r.json();
         _modulos = d.modulos || [];
         const grid = $('modulosGrid');
-        if (!_modulos.length) { grid.innerHTML='<div class="mod-card"><div class="mod-icon">📭</div><div class="mod-info"><div class="mod-nome">Nenhum módulo</div></div></div>'; return; }
-        grid.innerHTML = _modulos.map(m=>`
+        if (!_modulos.length) {
+            grid.innerHTML = '<div class="mod-card"><div class="mod-icon">📭</div><div class="mod-info"><div class="mod-nome">Nenhum módulo</div></div></div>';
+            return;
+        }
+        grid.innerHTML = _modulos.map(m => `
             <a href="/${m.id}" style="text-decoration:none;color:inherit">
             <div class="mod-card">
                 <div class="mod-icon">${m.icon}</div>
@@ -401,7 +270,7 @@ async function carregarModulos() {
                 </div>
             </div></a>`).join('');
         const syncBtns = $('syncBtns');
-        syncBtns.innerHTML = _modulos.map(m=>
+        syncBtns.innerHTML = _modulos.map(m =>
             `<button class="btn btn-ghost btn-sm" onclick="sincronizarModulo('${m.id}')">${m.icon} ${m.nome.split(' ')[0]}</button>`
         ).join('') + `<button class="btn btn-red" id="btnSyncAll" onclick="sincronizarTudo()">🔄 Sync Tudo</button>`;
     } catch(e) {
@@ -419,22 +288,23 @@ async function verificarHealth() {
         {label:'T&D — Chamados', url:'/treinamento/chamados/'},
         {label:'T&D — Turnover', url:'/treinamento/turnover/'}
     );
-    grid.innerHTML = servicos.map((s,i)=>`
+    grid.innerHTML = servicos.map((s,i) => `
         <div class="health-card" id="hc${i}">
             <div class="hc-label">${s.label}</div>
             <div class="hc-status"><div class="dot loading"></div>Verificando...</div>
             <div class="hc-meta">—</div>
         </div>`).join('');
-    await Promise.all(servicos.map(async(s,i) => {
+    await Promise.all(servicos.map(async (s,i) => {
         const card = $(`hc${i}`); const t0 = Date.now();
         try {
             const r = await fetch(s.url, {signal: AbortSignal.timeout(5000)});
             const ms = Date.now() - t0;
-            const data = await r.json().catch(()=>({}));
+            const data = await r.json().catch(() => ({}));
             const ok = r.ok && data.ok !== false && !data.erro;
             card.innerHTML = `
                 <div class="hc-label">${s.label}</div>
-                <div class="hc-status"><div class="dot ${ok?'online':'offline'}"></div><span style="color:${ok?'var(--green)':'var(--red)'}">${ok?'Online':'Offline'}</span></div>
+                <div class="hc-status"><div class="dot ${ok?'online':'offline'}"></div>
+                <span style="color:${ok?'var(--green)':'var(--red)'}">${ok?'Online':'Offline'}</span></div>
                 <div class="hc-meta">${ms}ms · ${new Date().toLocaleTimeString('pt-BR')}</div>`;
         } catch {
             card.innerHTML = `
@@ -456,7 +326,7 @@ const SYNC_ROTAS = {
 async function sincronizarModulo(id) {
     const rotas = SYNC_ROTAS[id] || [`/${id}/api/sincronizar`];
     toast(`🔄 Sincronizando ${id}...`);
-    await Promise.allSettled(rotas.map(r => fetch(r,{method:'POST'}).catch(()=>{})));
+    await Promise.allSettled(rotas.map(r => fetch(r, {method:'POST'}).catch(() => {})));
     toast(`✅ ${id} sincronizado!`);
     verificarHealth();
 }
@@ -466,7 +336,7 @@ async function sincronizarTudo() {
     toast('🔄 Sincronizando todos os módulos...');
     const todas = Object.values(SYNC_ROTAS).flat();
     _modulos.forEach(m => { if (!SYNC_ROTAS[m.id]) todas.push(`/${m.id}/api/sincronizar`); });
-    await Promise.allSettled(todas.map(r => fetch(r,{method:'POST'}).catch(()=>{})));
+    await Promise.allSettled(todas.map(r => fetch(r, {method:'POST'}).catch(() => {})));
     btn.disabled = false; btn.innerHTML = '🔄 Sync Tudo';
     toast('✅ Todos os módulos sincronizados!');
     verificarHealth();
@@ -474,8 +344,8 @@ async function sincronizarTudo() {
 
 /* ── Usuários ── */
 const tagCor = m => {
-    if (m==='master') return 'tag-master';
-    if (m==='ti')     return 'tag-ti';
+    if (m === 'master') return 'tag-master';
+    if (m === 'ti')     return 'tag-ti';
     if (['treinamento','vertex','td'].includes(m)) return 'tag-td';
     return 'tag-other';
 };
@@ -485,9 +355,9 @@ async function carregarUsuarios() {
         const r = await fetch('/master/usuarios'); const d = await r.json();
         if (!d.ok) { $('tblUsuarios').innerHTML=`<tr><td colspan="6"><div class="empty-msg">❌ ${d.erro}</div></td></tr>`; return; }
         $('acc-meta-usuarios').textContent = `${d.usuarios.length} usuário(s)`;
-        $('tblUsuarios').innerHTML = d.usuarios.map(u=>`
+        $('tblUsuarios').innerHTML = d.usuarios.map(u => `
             <tr>
-                <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${u.email}</td>
+                <td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">${u.email}</td>
                 <td style="font-weight:700">${u.nome||'—'}</td>
                 <td>${u.modulos.map(m=>`<span class="tag ${tagCor(m)}">${m}</span>`).join('')||'<span style="color:var(--muted);font-size:11px">—</span>'}</td>
                 <td>
@@ -495,7 +365,8 @@ async function carregarUsuarios() {
                         ? `<span class="tag tag-gestor">⭐ Gestor</span>`
                         : `<span style="color:var(--muted);font-size:11px">—</span>`
                     }
-                    <button class="btn btn-ghost btn-sm" style="font-size:10px;padding:3px 8px;margin-left:4px" onclick="toggleGestor('${u.email}', ${u.isGestor})">
+                    <button class="btn btn-ghost btn-sm" style="font-size:10px;padding:3px 8px;margin-left:4px"
+                            onclick="toggleGestor('${u.email}', ${u.isGestor})">
                         ${u.isGestor ? '✕ Remover' : '⭐ Definir'}
                     </button>
                 </td>
@@ -507,12 +378,16 @@ async function carregarUsuarios() {
                 </td>
                 <td>
                     ${u.ativo
-                        ? `<button class="btn btn-ghost btn-sm" style="font-size:10px;padding:4px 10px;color:var(--red);border-color:rgba(200,16,46,.3)" onclick="desativarUsuario('${u.email}')">🚫 Desativar</button>`
-                        : `<button class="btn btn-ghost btn-sm" style="font-size:10px;padding:4px 10px;color:var(--green);border-color:rgba(22,163,74,.3)" onclick="reativarUsuario('${u.email}')">✅ Reativar</button>`
+                        ? `<button class="btn btn-ghost btn-sm" style="font-size:10px;padding:4px 10px;color:var(--red);border-color:rgba(200,16,46,.3)"
+                                   onclick="desativarUsuario('${u.email}')">🚫 Desativar</button>`
+                        : `<button class="btn btn-ghost btn-sm" style="font-size:10px;padding:4px 10px;color:var(--green);border-color:rgba(22,163,74,.3)"
+                                   onclick="reativarUsuario('${u.email}')">✅ Reativar</button>`
                     }
                 </td>
             </tr>`).join('');
-    } catch(e) { $('tblUsuarios').innerHTML=`<tr><td colspan="6"><div class="empty-msg">❌ ${e.message}</div></td></tr>`; }
+    } catch(e) {
+        $('tblUsuarios').innerHTML = `<tr><td colspan="6"><div class="empty-msg">❌ ${e.message}</div></td></tr>`;
+    }
 }
 
 async function toggleGestor(email, isGestorAtual) {
@@ -523,10 +398,8 @@ async function toggleGestor(email, isGestorAtual) {
         body: JSON.stringify({ email, isGestor: novoValor }),
     });
     const d = await r.json();
-    if (d.ok) {
-        toast(novoValor ? '⭐ Gestor ativado!' : '✕ Gestor removido!');
-        carregarUsuarios();
-    } else toast('❌ '+(d.erro||'Erro'), 4000);
+    if (d.ok) { toast(novoValor ? '⭐ Gestor ativado!' : '✕ Gestor removido!'); carregarUsuarios(); }
+    else toast('❌ ' + (d.erro||'Erro'), 4000);
 }
 
 async function recarregarUsuarios() {
@@ -540,20 +413,20 @@ async function desativarUsuario(email) {
     const r = await fetch('/master/usuarios/desativar', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email})});
     const d = await r.json();
     if (d.ok) { toast('✅ Usuário desativado!'); carregarUsuarios(); }
-    else toast('❌ '+(d.erro||'Erro'), 4000);
+    else toast('❌ ' + (d.erro||'Erro'), 4000);
 }
 async function reativarUsuario(email) {
     if (!confirm(`Reativar ${email}?`)) return;
     const r = await fetch('/master/usuarios/reativar', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email})});
     const d = await r.json();
     if (d.ok) { toast('✅ Usuário reativado!'); carregarUsuarios(); }
-    else toast('❌ '+(d.erro||'Erro'), 4000);
+    else toast('❌ ' + (d.erro||'Erro'), 4000);
 }
 
 /* ── Modal Usuário ── */
 function abrirModalUsuario() {
     $('modalTitulo').textContent = '➕ Novo Usuário';
-    const modsList = _modulos.map(m=>
+    const modsList = _modulos.map(m =>
         `<label class="mod-check-item" onclick="toggleModCheck(this)">
             <input type="checkbox" name="modulos" value="${m.id}">
             <span>${m.icon} ${m.nome}</span>
@@ -612,15 +485,15 @@ async function confirmarInsertUsuario() {
     const email = $('n-email').value.trim();
     if (!email) { toast('⚠️ Email obrigatório'); return; }
     const nome     = $('n-nome').value.trim();
-    const modulos  = [...$('modulosCheck').querySelectorAll('input:checked')].map(i=>i.value);
+    const modulos  = [...$('modulosCheck').querySelectorAll('input:checked')].map(i => i.value);
     const ativo    = $('n-ativo').value === 'true';
     const isGestor = $('n-gestor').checked;
     const btn      = $('btnInserir');
     btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Inserindo...';
     try {
         const r = await fetch('/master/usuarios/inserir', {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
             body: JSON.stringify({ email, nome, modulos, ativo, isGestor }),
         });
         const d = await r.json();
@@ -629,15 +502,21 @@ async function confirmarInsertUsuario() {
             toast(`✅ Usuário inserido na linha ${d.linha}!`);
             $('modalOverlay').classList.remove('open');
             carregarUsuarios();
-        } else toast('❌ '+(d.erro||'Erro ao inserir'), 4000);
-    } catch(e) { btn.disabled=false; btn.innerHTML='✅ Inserir na Planilha'; toast('❌ '+e.message, 4000); }
+        } else toast('❌ ' + (d.erro||'Erro ao inserir'), 4000);
+    } catch(e) {
+        btn.disabled = false; btn.innerHTML = '✅ Inserir na Planilha';
+        toast('❌ ' + e.message, 4000);
+    }
 }
 
-function fecharModalClick(e) { if (e.target.id==='modalOverlay') $('modalOverlay').classList.remove('open'); }
+function fecharModalClick(e) {
+    if (e.target.id === 'modalOverlay') $('modalOverlay').classList.remove('open');
+}
 
 /* ── Avisos ── */
 let _todosAvisos = [];
 let _filtroAtivo = 'todos';
+
 async function carregarAvisos() {
     try {
         const r = await fetch('/avisos/todos'); const d = await r.json();
@@ -648,12 +527,14 @@ async function carregarAvisos() {
         $('listaAvisos').innerHTML = `<div class="empty-msg">❌ Erro ao carregar avisos: ${e.message}</div>`;
     }
 }
+
 function filtrarSetor(btn, setor) {
     _filtroAtivo = setor;
     document.querySelectorAll('.btn-setor').forEach(b => b.classList.remove('ativo'));
     btn.classList.add('ativo');
     renderizarAvisos();
 }
+
 function renderizarAvisos() {
     const lista = $('listaAvisos');
     const filtrado = _filtroAtivo === 'todos'
@@ -670,64 +551,96 @@ function renderizarAvisos() {
                     <span class="aviso-badge ${a.tipo}">${a.tipo}</span>
                     <span style="font-size:11px;color:var(--muted);background:var(--bg3);padding:2px 10px;border-radius:999px;border:1px solid var(--border)">${a.setor}</span>
                     ${!a.ativo ? '<span style="font-size:11px;color:var(--muted)">(inativo)</span>' : ''}
-                    ${a.data ? `<span style="font-size:11px;color:var(--muted)">${a.data}</span>` : ''}
+                    ${a.data  ? `<span style="font-size:11px;color:var(--muted)">${a.data}</span>` : ''}
                 </div>
                 <div style="font-size:13px;font-weight:800;margin-bottom:4px">${a.titulo}</div>
                 <div style="font-size:12px;color:var(--muted);line-height:1.5">${a.texto||''}</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
                 <button onclick="editarAviso(${a.rowIndex})" class="btn btn-ghost btn-sm" style="font-size:11px">✏️ Editar</button>
-                <button onclick="toggleAtivoAviso(${a.rowIndex},${a.ativo})" class="btn btn-ghost btn-sm" style="font-size:11px;color:${a.ativo?'var(--red)':'var(--green)'}">
+                <button onclick="toggleAtivoAviso(${a.rowIndex},${a.ativo})" class="btn btn-ghost btn-sm"
+                        style="font-size:11px;color:${a.ativo?'var(--red)':'var(--green)'}">
                     ${a.ativo ? '🚫 Desativar' : '✅ Ativar'}
                 </button>
             </div>
         </div>`).join('');
 }
+
 function abrirModalAviso() {
-    $('avisoRowIndex').value=''; $('avisoSetor').value='todos'; $('avisoTipo').value='info';
-    $('avisoTituloInput').value=''; $('avisoTexto').value=''; $('avisoAtivo').checked=true;
-    $('modalAvisoTitulo').textContent='📢 Novo Aviso';
+    $('avisoRowIndex').value = ''; $('avisoSetor').value = 'todos'; $('avisoTipo').value = 'info';
+    $('avisoTituloInput').value = ''; $('avisoTexto').value = ''; $('avisoAtivo').checked = true;
+    $('modalAvisoTitulo').textContent = '📢 Novo Aviso';
     $('modalAvisoOverlay').classList.add('open');
 }
+
 function editarAviso(rowIndex) {
     const a = _todosAvisos.find(x => x.rowIndex === rowIndex); if (!a) return;
-    $('avisoRowIndex').value=a.rowIndex; $('avisoSetor').value=a.setor; $('avisoTipo').value=a.tipo;
-    $('avisoTituloInput').value=a.titulo; $('avisoTexto').value=a.texto||''; $('avisoAtivo').checked=a.ativo;
-    $('modalAvisoTitulo').textContent='✏️ Editar Aviso';
+    $('avisoRowIndex').value = a.rowIndex; $('avisoSetor').value = a.setor; $('avisoTipo').value = a.tipo;
+    $('avisoTituloInput').value = a.titulo; $('avisoTexto').value = a.texto||''; $('avisoAtivo').checked = a.ativo;
+    $('modalAvisoTitulo').textContent = '✏️ Editar Aviso';
     $('modalAvisoOverlay').classList.add('open');
 }
-function fecharModalAvisoClick(e) { if (e.target.id==='modalAvisoOverlay') $('modalAvisoOverlay').classList.remove('open'); }
+
+function fecharModalAvisoClick(e) {
+    if (e.target.id === 'modalAvisoOverlay') $('modalAvisoOverlay').classList.remove('open');
+}
+
 async function salvarAviso() {
     const rowIndex = $('avisoRowIndex').value;
-    const dados = { setor:$('avisoSetor').value, tipo:$('avisoTipo').value, titulo:$('avisoTituloInput').value.trim(), texto:$('avisoTexto').value.trim(), ativo:$('avisoAtivo').checked };
+    const dados = {
+        setor:   $('avisoSetor').value,
+        tipo:    $('avisoTipo').value,
+        titulo:  $('avisoTituloInput').value.trim(),
+        texto:   $('avisoTexto').value.trim(),
+        ativo:   $('avisoAtivo').checked,
+    };
     if (!dados.titulo) { toast('⚠️ Preencha o título.'); return; }
     if (rowIndex) dados.rowIndex = Number(rowIndex);
-    const url=rowIndex?'/avisos/editar':'/avisos/inserir', method=rowIndex?'PATCH':'POST';
-    const btn=$('btnSalvarAviso'); btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Salvando...';
+    const url = rowIndex ? '/avisos/editar' : '/avisos/inserir';
+    const method = rowIndex ? 'PATCH' : 'POST';
+    const btn = $('btnSalvarAviso');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Salvando...';
     try {
-        const r=await fetch(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)});
-        const d=await r.json(); btn.disabled=false; btn.innerHTML='✅ Salvar Aviso';
-        if (d.ok) { toast(rowIndex?'✅ Aviso atualizado!':'✅ Aviso criado!'); $('modalAvisoOverlay').classList.remove('open'); await fetch('/avisos/recarregar',{method:'POST'}); await carregarAvisos(); }
-        else toast('❌ '+(d.erro||'Erro'), 4000);
-    } catch(e) { btn.disabled=false; btn.innerHTML='✅ Salvar Aviso'; toast('❌ '+e.message, 4000); }
+        const r = await fetch(url, {method, headers:{'Content-Type':'application/json'}, body:JSON.stringify(dados)});
+        const d = await r.json();
+        btn.disabled = false; btn.innerHTML = '✅ Salvar Aviso';
+        if (d.ok) {
+            toast(rowIndex ? '✅ Aviso atualizado!' : '✅ Aviso criado!');
+            $('modalAvisoOverlay').classList.remove('open');
+            await fetch('/avisos/recarregar', {method:'POST'});
+            await carregarAvisos();
+        } else toast('❌ ' + (d.erro||'Erro'), 4000);
+    } catch(e) {
+        btn.disabled = false; btn.innerHTML = '✅ Salvar Aviso';
+        toast('❌ ' + e.message, 4000);
+    }
 }
+
 async function toggleAtivoAviso(rowIndex, ativoAtual) {
     const a = _todosAvisos.find(x => x.rowIndex === rowIndex); if (!a) return;
-    const r=await fetch('/avisos/editar',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({...a,rowIndex,ativo:!ativoAtual})});
-    const d=await r.json();
-    if (d.ok) { toast(!ativoAtual?'✅ Aviso ativado!':'🚫 Aviso desativado!'); await fetch('/avisos/recarregar',{method:'POST'}); await carregarAvisos(); }
-    else toast('❌ '+(d.erro||'Erro'), 4000);
+    const r = await fetch('/avisos/editar', {
+        method: 'PATCH',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({...a, rowIndex, ativo: !ativoAtual}),
+    });
+    const d = await r.json();
+    if (d.ok) {
+        toast(!ativoAtual ? '✅ Aviso ativado!' : '🚫 Aviso desativado!');
+        await fetch('/avisos/recarregar', {method:'POST'});
+        await carregarAvisos();
+    } else toast('❌ ' + (d.erro||'Erro'), 4000);
 }
 
 /* ── Logs ── */
 async function carregarLogs() {
-    const list = $('logList'); list.innerHTML='<div class="empty-msg">Carregando...</div>';
+    const list = $('logList');
+    list.innerHTML = '<div class="empty-msg">Carregando...</div>';
     try {
-        const r=await fetch('/master/logs'); const d=await r.json();
-        const logs=d.logs||[];
-        $('acc-meta-logs').textContent=logs.length?`${logs.length} registro(s)`:'0 registros';
-        if (!logs.length) { list.innerHTML='<div class="empty-msg">Nenhum log registrado ainda.</div>'; return; }
-        list.innerHTML=logs.map(l=>`
+        const r = await fetch('/master/logs'); const d = await r.json();
+        const logs = d.logs || [];
+        $('acc-meta-logs').textContent = logs.length ? `${logs.length} registro(s)` : '0 registros';
+        if (!logs.length) { list.innerHTML = '<div class="empty-msg">Nenhum log registrado ainda.</div>'; return; }
+        list.innerHTML = logs.map(l => `
             <div class="log-item">
                 <div class="log-time">${l.hora||'—'}</div>
                 <div class="log-user">${l.email||'—'}</div>
@@ -735,7 +648,9 @@ async function carregarLogs() {
                 <div class="log-modulo">${l.modulo||''}</div>
                 <div class="log-ip">${l.ip||''}</div>
             </div>`).join('');
-    } catch(e) { list.innerHTML=`<div class="empty-msg">❌ Erro ao carregar logs: ${e.message}</div>`; }
+    } catch(e) {
+        list.innerHTML = `<div class="empty-msg">❌ Erro ao carregar logs: ${e.message}</div>`;
+    }
 }
 
 /* ── Init ── */

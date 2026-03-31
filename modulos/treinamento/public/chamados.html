@@ -4,203 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chamados T&D — Divino Fogão</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
-            --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
-            --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
-            --accent:#2563eb; --accent-pale:#eff6ff;
-            --green:#16a34a; --green-pale:#f0fdf4;
-            --yellow:#d97706; --yellow-pale:#fffbeb;
-            --purple:#7c3aed; --purple-pale:#f5f3ff;
-            --orange:#ea580c; --orange-pale:#fff7ed;
-            --shadow:0 2px 12px rgba(0,0,0,0.08);
-            --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
-        }
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
-        .logo{padding:10px 0;}
-        .logo img{height:48px;width:auto;display:block;}
-        .logo-fallback{font-size:18px;font-weight:900;color:var(--red);display:none;}
-        .hd{width:1px;height:32px;background:var(--border);}
-        .header-title{font-size:13px;font-weight:700;color:var(--muted);}
-        nav{display:flex;gap:2px;margin-left:auto;}
-        .nav-btn{background:none;border:none;padding:18px 14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;text-decoration:none;display:flex;align-items:center;}
-        .nav-btn:hover{color:var(--text);background:var(--bg3);}
-        .nav-btn.active{color:var(--purple);border-bottom-color:var(--purple);background:var(--purple-pale);}
-        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
-        .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
-        .sdot.ready{background:var(--green);animation:none;}
-        .sdot.syncing{background:var(--accent);animation:pulse .8s infinite;}
-        .sdot.error{background:var(--red);animation:none;}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-        main{max-width:1260px;margin:0 auto;padding:28px 24px;}
-
-        .year-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:14px 20px;margin-bottom:20px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
-        .year-bar-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);white-space:nowrap;}
-        .year-tabs{display:flex;gap:6px;flex-wrap:wrap;}
-        .year-tab{padding:7px 18px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg3);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .18s;}
-        .year-tab:hover{border-color:var(--purple);color:var(--purple);}
-        .year-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);box-shadow:0 2px 8px rgba(124,58,237,.3);}
-        .year-tab[data-year="todos"].active{background:var(--text);border-color:var(--text);box-shadow:none;}
-        #yearInfo{font-size:11px;color:var(--muted);margin-left:auto;font-family:'JetBrains Mono',monospace;}
-
-        .metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;margin-bottom:24px;}
-        .mc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);}
-        .mc-icon{font-size:22px;margin-bottom:8px;}
-        .mc-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;}
-        .mc-val{font-size:30px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
-        .mc-sub{font-size:11px;color:var(--muted);margin-top:4px;font-weight:600;}
-
-        .section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:28px 0 12px;display:flex;align-items:center;gap:8px;}
-        .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
-        .charts-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-        .charts-1{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:14px;}
-        @media(max-width:780px){.charts-2{grid-template-columns:1fr;}}
-        .chart-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px;box-shadow:var(--shadow);}
-        .chart-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:4px;}
-        .chart-sub{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:14px;}
-        .legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;}
-        .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--muted);}
-        .legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
-
-        .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
-        .bar-row-label{font-size:12px;font-weight:600;color:var(--text);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .bar-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
-        .bar-fill{height:100%;border-radius:4px;transition:width .8s ease;}
-        .bar-fill.purple{background:linear-gradient(90deg,var(--purple),#a78bfa);}
-        .bar-fill.blue{background:linear-gradient(90deg,var(--accent),#60a5fa);}
-        .bar-count{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);width:28px;text-align:right;flex-shrink:0;}
-
-        .vchart-wrap{overflow-x:auto;}
-        .vchart{display:flex;align-items:flex-end;gap:4px;padding:0 2px;border-bottom:2px solid var(--border);}
-        .vcol{display:flex;flex-direction:column;align-items:center;flex:1;min-width:36px;max-width:58px;gap:2px;cursor:default;}
-        .vcol-num{font-size:9px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--muted);text-align:center;min-height:14px;}
-        .vcol-bars{width:100%;display:flex;flex-direction:column-reverse;border-radius:5px 5px 0 0;overflow:hidden;}
-        .vchart-labels{display:flex;gap:4px;padding:5px 2px 0;}
-        .vchart-label{flex:1;min-width:36px;max-width:58px;font-size:9px;font-weight:700;color:var(--muted);text-align:center;}
-
-        .ccomp-wrap{overflow-x:auto;}
-        .ccomp{display:flex;align-items:flex-end;gap:5px;border-bottom:2px solid var(--border);padding:0 2px;}
-        .ccomp-grp{display:flex;align-items:flex-end;gap:2px;flex:1;min-width:48px;justify-content:center;}
-        .ccomp-bar{border-radius:4px 4px 0 0;min-height:3px;cursor:default;}
-        .ccomp-bar:hover{filter:brightness(1.12);}
-        .ccomp-labels{display:flex;gap:5px;padding:5px 2px 0;}
-        .ccomp-label{flex:1;min-width:48px;font-size:9px;font-weight:700;color:var(--muted);text-align:center;}
-
-        .ano-chart{display:flex;align-items:flex-end;gap:20px;border-bottom:2px solid var(--border);padding:0 10px;height:130px;}
-        .ano-grp{display:flex;align-items:flex-end;gap:4px;flex:1;justify-content:center;}
-        .ano-bar{border-radius:7px 7px 0 0;min-height:4px;transition:height .7s ease;}
-        .ano-labels{display:flex;gap:20px;padding:6px 10px 0;}
-        .ano-label{flex:1;font-size:11px;font-weight:800;color:var(--muted);text-align:center;}
-
-        .filters{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
-        .filter-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px;}
-        .filter-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
-        .filter-control{padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none;}
-        .filter-control:focus{border-color:var(--purple);}
-        select.filter-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-
-        .btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
-        .btn-purple{background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(124,58,237,.3);}
-        .btn-purple:hover{background:#6d28d9;transform:translateY(-1px);}
-        .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
-        .btn-ghost:hover{background:var(--bg2);}
-        .btn-green{background:var(--green);color:#fff;}
-        .btn-green:hover{background:#15803d;}
-        .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
-        .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-        .spinner.dark{border:2px solid var(--border);border-top-color:var(--purple);}
-        @keyframes spin{to{transform:rotate(360deg)}}
-
-        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
-        .table-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-        .table-head-title{font-size:13px;font-weight:800;}
-        .table-count{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-        .tbl-scroll{overflow-x:auto;}
-        table{width:100%;border-collapse:collapse;min-width:900px;}
-        thead th{padding:10px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
-        tbody tr{transition:background .15s;cursor:pointer;}
-        tbody tr:hover td{background:var(--bg3);}
-        tbody td{padding:11px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
-        tbody tr:last-child td{border-bottom:none;}
-        .id-cell{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
-        .titulo-cell{font-weight:700;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        .status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
-        .status-badge.novo{background:var(--yellow-pale);color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
-        .status-badge.fechado{background:var(--green-pale);color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
-        .status-badge.andamento{background:var(--accent-pale);color:var(--accent);border:1.5px solid rgba(37,99,235,.2);}
-        .status-badge.aguardando{background:var(--orange-pale);color:var(--orange);border:1.5px solid rgba(234,88,12,.2);}
-        .data-cell{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap;}
-
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
-        .modal-overlay.open{display:flex;}
-        .modal-box{background:var(--bg2);border-radius:18px;padding:28px 30px;max-width:620px;width:100%;box-shadow:var(--shadow-lg);max-height:88vh;overflow-y:auto;}
-        .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;}
-        .modal-title{font-size:16px;font-weight:800;line-height:1.4;}
-        .modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);flex-shrink:0;}
-        .modal-close:hover{background:var(--red-pale);color:var(--red);}
-        .detail-row{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap;}
-        .detail-field{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px 13px;flex:1;min-width:140px;}
-        .detail-field-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:3px;}
-        .detail-field-value{font-size:13px;font-weight:600;}
-        .conclude-section{background:var(--purple-pale);border:1.5px solid rgba(124,58,237,.2);border-radius:12px;padding:16px;margin-top:16px;}
-        .conclude-title{font-size:12px;font-weight:800;color:var(--purple);margin-bottom:12px;}
-        .conclude-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-        .form-field{display:flex;flex-direction:column;gap:5px;}
-        .form-field label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
-        .form-control{padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;}
-        .form-control:focus{border-color:var(--purple);}
-        textarea.form-control{resize:vertical;min-height:70px;grid-column:1/-1;}
-        .nota-stars{display:flex;gap:6px;margin-top:4px;}
-        .star-btn{background:none;border:none;font-size:24px;cursor:pointer;filter:grayscale(1);transition:filter .15s,transform .15s;padding:0;}
-        .star-btn.on{filter:none;}
-        .star-btn:hover{transform:scale(1.2);}
-        .empty{text-align:center;padding:60px 20px;color:var(--muted);}
-        .empty .icon{font-size:48px;margin-bottom:12px;}
-        .empty p{font-size:14px;font-weight:600;}
-        .loading-msg{text-align:center;padding:50px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
-        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
-        .toast.show{display:block;animation:fadeInUp .3s ease;}
-        @keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-
-        /* ── FLOATING IA ────────────────────────────────────────── */
-        #iaWidget{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
-        #iaToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#4c1d95);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.45);font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .25s;position:relative;color:#fff;}
-        #iaToggle:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(124,58,237,.6);}
-        #iaToggle.aberto{background:linear-gradient(135deg,#444,#1a1a1a);}
-        .ia-unread{position:absolute;top:-3px;right:-3px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid #fff;line-height:1;}
-        #iaJanela{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;width:390px;max-height:640px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;animation:slideUp .25s ease;}
-        #iaJanela.aberto{display:flex;}
-        @keyframes slideUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-        .ia-topo{background:linear-gradient(135deg,var(--purple),#4c1d95);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-        .ia-topo-esq{display:flex;align-items:center;gap:10px;}
-        .ia-topo-titulo{font-size:14px;font-weight:800;}
-        .ia-topo-sub{font-size:11px;opacity:.8;margin-top:1px;}
-        .ia-fechar{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-        .ia-fechar:hover{background:rgba(255,255,255,.28);}
-        .ia-sugs{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-        .ia-sug{background:var(--bg2);border:1.5px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;}
-        .ia-sug:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-pale);}
-        .ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:220px;max-height:360px;}
-        .msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:600;word-break:break-word;}
-        .msg.user{background:var(--purple);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;box-shadow:0 2px 8px rgba(124,58,237,.25);}
-        .msg.ai{background:var(--bg3);border:1.5px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap;}
-        .msg.ai.carregando{color:var(--muted);font-style:italic;}
-        .ia-rodape{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
-        .ia-input{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);outline:none;transition:border-color .2s;}
-        .ia-input:focus{border-color:var(--purple);box-shadow:0 0 0 2px rgba(124,58,237,.08);}
-        .ia-input::placeholder{color:var(--muted);font-weight:400;}
-        .ia-enviar{background:var(--purple);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
-        .ia-enviar:hover{background:#6d28d9;}
-        .ia-enviar:disabled{opacity:.5;cursor:not-allowed;}
-        @media(max-width:768px){#iaJanela{width:calc(100vw - 32px);}#iaWidget{right:16px;bottom:16px;}}
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/global.css">
 </head>
 <body>
 
+<!-- ═══════ NAV DRAWER MOBILE ═══════ -->
+<div class="nav-drawer-overlay" id="navOverlay" onclick="fecharDrawer()"></div>
+<div class="nav-drawer" id="navDrawer">
+    <div class="nav-drawer-head">
+        <span class="nav-drawer-title">🍽️ Divino Fogão</span>
+        <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
+    </div>
+    <div class="nav-drawer-body">
+        <a href="/treinamento/"               class="nav-drawer-item">📊 Dashboard</a>
+        <a href="/treinamento/lembretes"      class="nav-drawer-item">🔔 Lembretes</a>
+        <a href="/treinamento/busca"          class="nav-drawer-item">🔍 Colaboradores</a>
+        <a href="/treinamento/kpi-avaliacoes" class="nav-drawer-item">📊 KPI Avaliações</a>
+        <a href="/treinamento/sults"          class="nav-drawer-item">🏪 Sults</a>
+        <a href="/treinamento/chamados"       class="nav-drawer-item active">📞 Chamados T&D</a>
+        <a href="/treinamento/universidade"   class="nav-drawer-item">🎓 Universidade</a>
+        <a href="/treinamento/turnover"       class="nav-drawer-item">🔄 Turnover</a>
+        <a href="/treinamento/cadastro"       class="nav-drawer-item">➕ Cadastro</a>
+        <a href="/treinamento/uploads"        class="nav-drawer-item">📁 Uploads</a>
+        <a href="/treinamento/links"          class="nav-drawer-item">🔗 Links</a>
+        <div class="nav-drawer-sep"></div>
+        <a href="javascript:history.back()"  class="nav-drawer-item">← Voltar</a>
+        <a href="/logout"                    class="nav-drawer-item" style="color:var(--red)">🚪 Sair</a>
+    </div>
+</div>
+
+<!-- ═══════ HEADER ═══════ -->
 <header>
     <div class="logo">
         <img src="logo.png" alt="Divino Fogão"
@@ -208,35 +43,41 @@
         <span class="logo-fallback">🍽️</span>
     </div>
     <div class="hd"></div>
-    <div class="header-title">Central de Treinamentos</div>
+    <div class="h-title">Central de Treinamentos</div>
     <nav>
-        <a href="/treinamento/"             class="nav-btn">📊 Dashboard</a>
-        <a href="/treinamento/busca"       class="nav-btn">🔍Colaboradores</a>
-        <a href="/treinamento/"             class="nav-btn">🔔 Lembretes</a>
-        <a href="/treinamento/kpi-avaliacoes" class="nav-btn">📊 KPI Avaliações</a>
-         <a href="/treinamento/sults"        class="nav-btn">🏪 Sults</a>
-        <a href="/treinamento/chamados"     class="nav-btn active">📞 Chamados T&D</a>
-        <a href="/treinamento/universidade" class="nav-btn">🎓 Universidade</a>
-        <a href="/treinamento/turnover"     class="nav-btn">🔄 Turnover</a>
-        <a href="/treinamento/cadastro"      class="nav-btn">➕ Cadastro</a>
-        <a href="/treinamento/links"        class="nav-btn ">🔗 Links</a>
-        <a href="/treinamento/uploads"      class="nav-btn">📁 Uploads</a>
+        <div class="nav-scroll">
+            <a href="/treinamento/"               class="nav-btn">📊 Dashboard</a>
+            <a href="/treinamento/busca"          class="nav-btn">🔍 Colaboradores</a>
+            <a href="/treinamento/lembretes"      class="nav-btn">🔔 Lembretes</a>
+            <a href="/treinamento/kpi-avaliacoes" class="nav-btn">📊 KPI Avaliações</a>
+            <a href="/treinamento/sults"          class="nav-btn">🏪 Sults</a>
+            <a href="/treinamento/chamados"       class="nav-btn active">📞 Chamados T&D</a>
+            <a href="/treinamento/universidade"   class="nav-btn">🎓 Universidade</a>
+            <a href="/treinamento/turnover"       class="nav-btn">🔄 Turnover</a>
+            <a href="/treinamento/cadastro"       class="nav-btn">➕ Cadastro</a>
+            <a href="/treinamento/links"          class="nav-btn">🔗 Links</a>
+            <a href="/treinamento/uploads"        class="nav-btn">📁 Uploads</a>
+        </div>
+        <a href="javascript:history.back()" class="nav-btn" title="Voltar">← Voltar</a>
+        <a href="/logout" class="nav-btn" style="color:var(--red);border-left:1px solid var(--border)" title="Sair">🚪 Sair</a>
     </nav>
+    <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
 </header>
 
-
-
+<!-- ═══════ STATUS BAR ═══════ -->
 <div id="statusBar">
     <div class="sdot" id="sdot"></div>
     <span id="statusText">Carregando...</span>
     <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
         <span id="lastSync" style="font-size:11px;color:var(--muted)"></span>
-        <button class="btn btn-purple" id="btnSync" onclick="sincronizar()">🔄 Sincronizar</button>
+        <button class="btn btn-jur btn-sm" id="btnSync" onclick="sincronizar()">🔄 Sincronizar</button>
     </span>
 </div>
 
+<!-- ═══════ MAIN ═══════ -->
 <main>
 
+    <!-- Year Bar -->
     <div class="year-bar">
         <span class="year-bar-label">📅 Período</span>
         <div class="year-tabs" id="yearTabs">
@@ -245,39 +86,57 @@
         <span id="yearInfo"></span>
     </div>
 
+    <!-- Métricas -->
     <div class="metrics">
-        <div class="mc"><div class="mc-icon">📞</div><div class="mc-label">Chamados T&D</div>
-            <div class="mc-val" style="color:var(--purple)" id="m-total">—</div>
-            <div class="mc-sub" id="m-total-sub">total geral</div></div>
-        <div class="mc"><div class="mc-icon">🔴</div><div class="mc-label">Abertos</div>
+        <div class="mc">
+            <div class="mc-icon">📞</div>
+            <div class="mc-label">Chamados T&D</div>
+            <div class="mc-val" style="color:var(--jur)" id="m-total">—</div>
+            <div class="mc-sub" id="m-total-sub">total geral</div>
+        </div>
+        <div class="mc">
+            <div class="mc-icon">🔴</div>
+            <div class="mc-label">Abertos</div>
             <div class="mc-val" style="color:var(--red)" id="m-abertos">—</div>
-            <div class="mc-sub">aguardando / andamento</div></div>
-        <div class="mc"><div class="mc-icon">✅</div><div class="mc-label">Concluídos</div>
+            <div class="mc-sub">aguardando / andamento</div>
+        </div>
+        <div class="mc">
+            <div class="mc-icon">✅</div>
+            <div class="mc-label">Concluídos</div>
             <div class="mc-val" style="color:var(--green)" id="m-fechados">—</div>
-            <div class="mc-sub" id="m-pct">—</div></div>
-        <div class="mc"><div class="mc-icon">📈</div><div class="mc-label">Média/Mês</div>
+            <div class="mc-sub" id="m-pct">—</div>
+        </div>
+        <div class="mc">
+            <div class="mc-icon">📈</div>
+            <div class="mc-label">Média/Mês</div>
             <div class="mc-val" style="color:var(--accent)" id="m-media">—</div>
-            <div class="mc-sub" id="m-media-sub">—</div></div>
-        <div class="mc"><div class="mc-icon">⏱️</div><div class="mc-label">Taxa Resolução</div>
+            <div class="mc-sub" id="m-media-sub">—</div>
+        </div>
+        <div class="mc">
+            <div class="mc-icon">⏱️</div>
+            <div class="mc-label">Taxa Resolução</div>
             <div class="mc-val" style="color:var(--orange)" id="m-taxa">—</div>
-            <div class="mc-sub">% concluídos</div></div>
+            <div class="mc-sub">% concluídos</div>
+        </div>
     </div>
 
-    <div class="section-title">📅 Evolução por Mês</div>
-    <div class="charts-1">
+    <!-- Gráfico Mês -->
+    <div class="sec-label">📅 Evolução por Mês</div>
+    <div class="charts-1" style="display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:14px;">
         <div class="chart-card">
             <div class="chart-title" id="mesTitulo">Chamados por Mês</div>
             <div class="chart-sub" id="mesSub"></div>
             <div class="legend">
-                <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Abertos / Andamento</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--jur)"></div>Abertos / Andamento</div>
                 <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Concluídos / Resolvidos</div>
             </div>
             <div id="chartMes"><div class="loading-msg"><div class="spinner dark"></div> Aguardando dados...</div></div>
         </div>
     </div>
 
-    <div class="section-title" id="secCompTitle" style="display:none">📊 Comparativo Mês a Mês (entre anos)</div>
-    <div class="charts-1" id="secComp" style="display:none">
+    <!-- Comparativo mês a mês -->
+    <div class="sec-label" id="secCompTitle" style="display:none">📊 Comparativo Mês a Mês (entre anos)</div>
+    <div id="secComp" style="display:none;margin-bottom:14px;">
         <div class="chart-card">
             <div class="chart-title">Mesmo mês — cada ano lado a lado</div>
             <div class="chart-sub">Compara o volume de cada mês entre os anos disponíveis</div>
@@ -286,13 +145,14 @@
         </div>
     </div>
 
-    <div class="section-title">🗓️ Comparativo Ano a Ano</div>
-    <div class="charts-2">
+    <!-- Comparativo Ano a Ano -->
+    <div class="sec-label">🗓️ Comparativo Ano a Ano</div>
+    <div class="g2" style="margin-bottom:14px;">
         <div class="chart-card">
             <div class="chart-title">Total por Ano</div>
             <div class="chart-sub">Volume consolidado por ano</div>
             <div class="legend">
-                <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Abertos</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--jur)"></div>Abertos</div>
                 <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Concluídos</div>
             </div>
             <div id="chartAnoAno"></div>
@@ -304,8 +164,9 @@
         </div>
     </div>
 
-    <div class="section-title">👤 Por Responsável</div>
-    <div class="charts-1">
+    <!-- Por Responsável -->
+    <div class="sec-label">👤 Por Responsável</div>
+    <div style="margin-bottom:14px;">
         <div class="chart-card">
             <div class="chart-title">Distribuição por Responsável</div>
             <div class="chart-sub" id="respSub"></div>
@@ -313,10 +174,12 @@
         </div>
     </div>
 
+    <!-- Filtros -->
     <div class="filters">
         <div class="filter-group">
             <span class="filter-label">🔍 Buscar</span>
-            <input type="text" class="filter-control" id="fBusca" placeholder="Título, responsável, tipo…" oninput="aplicarFiltros()">
+            <input type="text" class="filter-control" id="fBusca"
+                   placeholder="Título, responsável, tipo…" oninput="aplicarFiltros()">
         </div>
         <div class="filter-group" style="max-width:170px">
             <span class="filter-label">Status</span>
@@ -339,17 +202,18 @@
             </select>
         </div>
         <div style="display:flex;gap:8px;align-items:flex-end">
-            <button class="btn btn-ghost" onclick="limparFiltros()">✕ Limpar</button>
+            <button class="btn btn-ghost btn-sm" onclick="limparFiltros()">✕ Limpar</button>
         </div>
     </div>
 
+    <!-- Tabela -->
     <div class="table-wrap">
         <div class="table-head">
             <div>
-                <div class="table-head-title">📞 Chamados — Treinamento & Desenvolvimento</div>
-                <div class="table-count" id="tableCount"></div>
+                <div class="tbl-title">📞 Chamados — Treinamento &amp; Desenvolvimento</div>
+                <div class="tbl-count" id="tableCount"></div>
             </div>
-            <button class="btn btn-ghost" style="font-size:12px" onclick="exportCSV()">⬇ Exportar CSV</button>
+            <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ Exportar CSV</button>
         </div>
         <div class="tbl-scroll">
             <table>
@@ -368,7 +232,7 @@
 
 </main>
 
-<!-- MODAL -->
+<!-- ═══════ MODAL ═══════ -->
 <div class="modal-overlay" id="modal" onclick="fecharModal(event)">
     <div class="modal-box">
         <div class="modal-header">
@@ -379,10 +243,10 @@
     </div>
 </div>
 
-<!-- ── FLOATING IA ──────────────────────────────────────────── -->
+<!-- ═══════ IA WIDGET ═══════ -->
 <div id="iaWidget">
     <div id="iaJanela">
-        <div class="ia-topo">
+        <div class="ia-topo" style="background:linear-gradient(135deg,var(--jur),#4c1d95);">
             <div class="ia-topo-esq">
                 <span style="font-size:24px">📞</span>
                 <div>
@@ -400,13 +264,13 @@
             <button class="ia-sug" onclick="perguntarIA('Faça um resumo executivo dos chamados T&D')">📋 Resumo</button>
         </div>
         <div class="ia-msgs" id="iaMsgs">
-            <div class="msg ai">
+            <div class="ia-msg ai">
                 📞 Olá! Sou a IA de Chamados T&D do Divino Fogão — analiso os dados em tempo real.<br><br>
                 <strong>Exemplos do que posso responder:</strong><br>
-                <span style="color:var(--purple);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Quais responsáveis têm mais chamados abertos?</span><br>
-                <span style="color:var(--purple);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Qual mês teve mais chamados abertos?</span><br>
-                <span style="color:var(--purple);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Qual a tendência de chamados nos últimos meses?</span><br>
-                <span style="color:var(--purple);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Compare o volume de chamados entre os anos</span><br><br>
+                <span style="color:var(--jur);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Quais responsáveis têm mais chamados abertos?</span><br>
+                <span style="color:var(--jur);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Qual mês teve mais chamados abertos?</span><br>
+                <span style="color:var(--jur);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Qual a tendência de chamados nos últimos meses?</span><br>
+                <span style="color:var(--jur);cursor:pointer" onclick="document.getElementById('inputIA').value=this.innerText;document.getElementById('inputIA').focus()">→ Compare o volume de chamados entre os anos</span><br><br>
                 <span style="font-size:11px;color:var(--muted)">💡 Clique em qualquer exemplo para testar.</span>
             </div>
         </div>
@@ -426,7 +290,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const API = '/treinamento';
+const API        = '/treinamento';
 const ANO_CORES  = ['#7c3aed','#2563eb','#16a34a','#d97706','#dc2626','#0891b2'];
 const MES_LABELS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
@@ -435,7 +299,19 @@ let todosOsChamados   = [];
 let chamadosFiltrados = [];
 let anoSelecionado    = 'todos';
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+/* ── Nav Drawer ── */
+function abrirDrawer() {
+    document.getElementById('navDrawer').classList.add('open');
+    document.getElementById('navOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function fecharDrawer() {
+    document.getElementById('navDrawer').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+/* ── Helpers ── */
 const toast = (msg, ms=2500) => {
     const el = document.getElementById('toast');
     el.textContent = msg; el.classList.add('show');
@@ -444,8 +320,10 @@ const toast = (msg, ms=2500) => {
 
 const fmtData = dt => {
     if (!dt) return '—';
-    try { const d = new Date(dt); return isNaN(d)?'—':d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
-    catch { return '—'; }
+    try {
+        const d = new Date(dt);
+        return isNaN(d) ? '—' : d.toLocaleDateString('pt-BR', {day:'2-digit',month:'2-digit',year:'2-digit'});
+    } catch { return '—'; }
 };
 
 const statusClass = c => {
@@ -473,27 +351,24 @@ const filtrarPorAno = lista => {
     });
 };
 
-// ─── Carregar ─────────────────────────────────────────────────────────────────
+/* ── Carregar ── */
 async function carregar() {
     setStatus('syncing','Carregando...');
     try {
         const r = await fetch(API + '/chamados/dados');
         const d = await r.json();
-
         if (d.erro && !d.chamados?.length) {
             setStatus('error','⚠️ ' + d.erro);
             document.getElementById('tblBody').innerHTML =
-                `<tr><td colspan="9"><div class="empty"><div class="icon">📦</div><p>${d.erro}</p>
-                <button class="btn btn-purple" style="margin-top:16px" onclick="sincronizar()">🔄 Sincronizar agora</button></div></td></tr>`;
+                `<tr><td colspan="9"><div class="empty"><div class="empty-state-icon">📦</div>
+                <p class="empty-state-text">${d.erro}</p>
+                <button class="btn btn-jur" style="margin-top:16px" onclick="sincronizar()">🔄 Sincronizar agora</button></div></td></tr>`;
             return;
         }
-
         dadosBrutos     = d;
         todosOsChamados = d.chamados || [];
-
         buildYearTabs(d.anosDisponiveis || []);
         renderTudo();
-
         setStatus('ready', `✓ ${d.totalTD||0} chamados T&D carregados`);
         if (d.sincronizadoEm) {
             document.getElementById('lastSync').textContent =
@@ -502,7 +377,8 @@ async function carregar() {
     } catch(e) {
         setStatus('error','❌ ' + e.message);
         document.getElementById('tblBody').innerHTML =
-            `<tr><td colspan="9"><div class="empty"><div class="icon">⚠️</div><p>${e.message}</p></div></td></tr>`;
+            `<tr><td colspan="9"><div class="empty"><div class="empty-state-icon">⚠️</div>
+            <p class="empty-state-text">${e.message}</p></div></td></tr>`;
     }
 }
 
@@ -535,7 +411,6 @@ function renderTudo() {
     const lista = filtrarPorAno(todosOsChamados);
     document.getElementById('yearInfo').textContent =
         anoSelecionado==='todos' ? `${lista.length} chamados (todos os anos)` : `${lista.length} chamados em ${anoSelecionado}`;
-
     const st = calcStats(lista);
     renderMetricas(st, lista);
     renderGraficoMes(st.porMes);
@@ -559,8 +434,8 @@ function calcStats(lista) {
         if (c.dataCriacao) {
             const d = new Date(c.dataCriacao);
             if (!isNaN(d)) {
-                const mes = d.getMonth()+1, ano = d.getFullYear();
-                const chave = `${String(mes).padStart(2,'0')}/${ano}`;
+                const mes=d.getMonth()+1, ano=d.getFullYear();
+                const chave=`${String(mes).padStart(2,'0')}/${ano}`;
                 if (!mesMap[chave]) mesMap[chave]={chave,mes,ano,abertos:0,fechados:0,total:0};
                 mesMap[chave].total++;
                 c.fechado ? mesMap[chave].fechados++ : mesMap[chave].abertos++;
@@ -590,7 +465,8 @@ function renderMetricas(s, lista) {
         anoSelecionado==='todos' ? 'total desde 01/2024' : `total em ${anoSelecionado}`;
     const meses = new Set(lista.map(c=>{
         if(!c.dataCriacao) return null;
-        const d=new Date(c.dataCriacao); return isNaN(d)?null:`${d.getMonth()}/${d.getFullYear()}`;
+        const d=new Date(c.dataCriacao);
+        return isNaN(d)?null:`${d.getMonth()}/${d.getFullYear()}`;
     }).filter(Boolean));
     const media = meses.size ? Math.round(s.total/meses.size) : s.total;
     document.getElementById('m-media').textContent     = media;
@@ -610,13 +486,13 @@ function renderGraficoMes(porMes) {
     const maxM = Math.max(...porMes.map(m=>m.total), 1);
     const H = 120;
     const cols = porMes.map(m => {
-        const ha = Math.max(m.abertos ?3:0, Math.round(m.abertos /maxM*H));
-        const hf = Math.max(m.fechados?3:0, Math.round(m.fechados/maxM*H));
+        const ha = Math.max(m.abertos  ? 3 : 0, Math.round(m.abertos /maxM*H));
+        const hf = Math.max(m.fechados ? 3 : 0, Math.round(m.fechados/maxM*H));
         return `<div class="vcol" title="${m.chave}: ${m.total} (${m.abertos} ab / ${m.fechados} conc)">
             <div class="vcol-num">${m.total}</div>
             <div class="vcol-bars" style="height:${ha+hf}px">
                 <div style="height:${hf}px;background:var(--green)"></div>
-                <div style="height:${ha}px;background:var(--purple)"></div>
+                <div style="height:${ha}px;background:var(--jur)"></div>
             </div>
         </div>`;
     }).join('');
@@ -664,15 +540,15 @@ function renderAnoAno() {
     const maxA = Math.max(...porAno.map(a=>a.total), 1);
     const H = 120;
     const grupos = porAno.map(a => {
-        const ha = Math.max(a.abertos ?3:0, Math.round(a.abertos /maxA*H));
-        const hf = Math.max(a.fechados?3:0, Math.round(a.fechados/maxA*H));
+        const ha = Math.max(a.abertos  ? 3 : 0, Math.round(a.abertos /maxA*H));
+        const hf = Math.max(a.fechados ? 3 : 0, Math.round(a.fechados/maxA*H));
         return `<div class="ano-grp" title="${a.ano}: ${a.total} (${a.abertos} ab / ${a.fechados} conc)">
-            <div class="ano-bar" style="height:${ha}px;background:var(--purple);width:34px"></div>
+            <div class="ano-bar" style="height:${ha}px;background:var(--jur);width:34px"></div>
             <div class="ano-bar" style="height:${hf}px;background:var(--green);width:34px"></div>
         </div>`;
     }).join('');
     const labels = porAno.map(a =>
-        `<div class="ano-label">${a.ano}<br><span style="font-size:10px;color:var(--purple)">${a.total}</span></div>`
+        `<div class="ano-label">${a.ano}<br><span style="font-size:10px;color:var(--jur)">${a.total}</span></div>`
     ).join('');
     document.getElementById('chartAnoAno').innerHTML =
         `<div class="ano-chart">${grupos}</div><div class="ano-labels">${labels}</div>`;
@@ -682,12 +558,18 @@ function renderTipo(tipos) {
     document.getElementById('tipoSub').textContent =
         anoSelecionado==='todos' ? 'Todos os anos' : `Ano ${anoSelecionado}`;
     const top = tipos.slice(0,8);
-    if (!top.length) { document.getElementById('chartTipo').innerHTML='<div style="color:var(--muted);text-align:center;padding:20px;font-size:12px">Sem dados</div>'; return; }
+    if (!top.length) {
+        document.getElementById('chartTipo').innerHTML =
+            '<div style="color:var(--muted);text-align:center;padding:20px;font-size:12px">Sem dados</div>';
+        return;
+    }
     const maxT = top[0].total||1;
     document.getElementById('chartTipo').innerHTML = top.map(t =>
-        `<div class="bar-row"><div class="bar-row-label" title="${t.tipo}">${t.tipo}</div>
-        <div class="bar-track"><div class="bar-fill purple" style="width:${Math.round(t.total/maxT*100)}%"></div></div>
-        <div class="bar-count">${t.total}</div></div>`
+        `<div class="bar-row">
+            <div class="bar-label" title="${t.tipo}">${t.tipo}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${Math.round(t.total/maxT*100)}%;background:linear-gradient(90deg,var(--jur),#a78bfa)"></div></div>
+            <div class="bar-count">${t.total}</div>
+        </div>`
     ).join('');
 }
 
@@ -699,9 +581,11 @@ function renderResp(resps) {
     const maxR = top[0].total||1;
     const half = Math.ceil(top.length/2);
     const mkCol = arr => arr.map(r =>
-        `<div class="bar-row"><div class="bar-row-label" title="${r.nome}">${r.nome}</div>
-        <div class="bar-track"><div class="bar-fill blue" style="width:${Math.round(r.total/maxR*100)}%"></div></div>
-        <div class="bar-count">${r.total}</div></div>`
+        `<div class="bar-row">
+            <div class="bar-label" title="${r.nome}">${r.nome}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${Math.round(r.total/maxR*100)}%;background:linear-gradient(90deg,var(--accent),#60a5fa)"></div></div>
+            <div class="bar-count">${r.total}</div>
+        </div>`
     ).join('');
     document.getElementById('chartResp').innerHTML =
         `<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
@@ -727,8 +611,8 @@ function aplicarFiltros() {
     chamadosFiltrados = base.filter(c => {
         if (status==='aberto'  &&  c.fechado) return false;
         if (status==='fechado' && !c.fechado) return false;
-        if (tipo && c.tipo!==tipo) return false;
-        if (resp && c.responsavel!==resp) return false;
+        if (tipo && c.tipo !== tipo) return false;
+        if (resp && c.responsavel !== resp) return false;
         if (busca) {
             const hay = `${c.titulo} ${c.responsavel} ${c.tipo} ${c.id} ${c.unidade}`.toLowerCase();
             if (!hay.includes(busca)) return false;
@@ -749,7 +633,7 @@ function renderTabela(lista) {
         `${lista.length} chamado(s)${lista.length!==base.length?` (filtrado de ${base.length})`:''}`;
     if (!lista.length) {
         document.getElementById('tblBody').innerHTML =
-            '<tr><td colspan="9"><div class="empty"><div class="icon">🔍</div><p>Nenhum chamado encontrado</p></div></td></tr>';
+            '<tr><td colspan="9"><div class="empty"><div class="empty-state-icon">🔍</div><p class="empty-state-text">Nenhum chamado encontrado</p></div></td></tr>';
         return;
     }
     document.getElementById('tblBody').innerHTML = lista.map(c => {
@@ -757,8 +641,7 @@ function renderTabela(lista) {
         const sl  = statusLabel(c);
         const enc = encodeURIComponent(JSON.stringify(c));
         const acao = c.fechado ? '' :
-            `<button class="btn btn-ghost" style="padding:5px 10px;font-size:11px"
-                onclick="event.stopPropagation();abrirModal('${enc}',true)">✅ Concluir</button>`;
+            `<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();abrirModal('${enc}',true)">✅ Concluir</button>`;
         return `<tr onclick="abrirModal('${enc}',false)">
             <td class="id-cell">#${c.id||'—'}</td>
             <td class="titulo-cell" title="${c.titulo}">${c.titulo}</td>
@@ -813,18 +696,18 @@ function renderConcluirForm(c) {
     return `<div class="conclude-section">
         <div class="conclude-title">🎯 Concluir este chamado</div>
         <div class="conclude-grid">
-            <div class="form-field">
+            <div class="form-group">
                 <label>ID da Pessoa <span style="color:var(--red)">*</span></label>
                 <input type="number" class="form-control" id="cPessoaId" placeholder="Ex: 1234" min="1">
             </div>
-            <div class="form-field">
+            <div class="form-group">
                 <label>Nota de Satisfação (1–5)</label>
                 <div class="nota-stars">
                     ${[1,2,3,4,5].map(n=>`<button class="star-btn" onclick="setNota(${n})" data-nota="${n}">⭐</button>`).join('')}
                 </div>
                 <input type="hidden" id="cNota" value="">
             </div>
-            <div class="form-field" style="grid-column:1/-1">
+            <div class="form-group full">
                 <label>Observação (opcional)</label>
                 <textarea class="form-control" id="cObs" placeholder="Observação..."></textarea>
             </div>
@@ -835,7 +718,9 @@ function renderConcluirForm(c) {
 
 function setNota(n) {
     document.getElementById('cNota').value = n;
-    document.querySelectorAll('.star-btn').forEach(b => b.classList.toggle('on', parseInt(b.dataset.nota)<=n));
+    document.querySelectorAll('.star-btn').forEach(b =>
+        b.classList.toggle('on', parseInt(b.dataset.nota) <= n)
+    );
 }
 
 async function confirmarConcluir(id) {
@@ -847,7 +732,7 @@ async function confirmarConcluir(id) {
     btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Concluindo...';
     try {
         const r = await fetch(`${API}/chamados/${id}/concluir`, {
-            method:'PUT', headers:{'Content-Type':'application/json'},
+            method: 'PUT', headers: {'Content-Type':'application/json'},
             body: JSON.stringify({pessoaId:parseInt(pessoaId), nota:nota||null, observacao:obs||null}),
         });
         const d = await r.json();
@@ -855,14 +740,18 @@ async function confirmarConcluir(id) {
             toast('✅ Chamado #'+id+' concluído!');
             document.getElementById('modal').classList.remove('open');
             const idx = todosOsChamados.findIndex(c=>String(c.id)===String(id));
-            if (idx>=0) { todosOsChamados[idx].fechado=true; todosOsChamados[idx].status='Concluído'; todosOsChamados[idx].dataConclusao=new Date().toISOString(); }
+            if (idx>=0) {
+                todosOsChamados[idx].fechado=true;
+                todosOsChamados[idx].status='Concluído';
+                todosOsChamados[idx].dataConclusao=new Date().toISOString();
+            }
             renderTudo();
         } else {
-            toast('❌ '+(d.erro||'Falha'),4000);
+            toast('❌ '+(d.erro||'Falha'), 4000);
             btn.disabled=false; btn.innerHTML='✅ Confirmar Conclusão';
         }
     } catch(e) {
-        toast('❌ '+e.message,4000);
+        toast('❌ '+e.message, 4000);
         btn.disabled=false; btn.innerHTML='✅ Confirmar Conclusão';
     }
 }
@@ -876,11 +765,11 @@ async function sincronizar() {
     btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
     setStatus('syncing','🔄 Buscando chamados na API SULTS...');
     try {
-        const r = await fetch(API+'/chamados/sincronizar',{method:'POST'});
+        const r = await fetch(API+'/chamados/sincronizar', {method:'POST'});
         const d = await r.json();
         if (d.ok) { toast('✅ Sincronizado! '+d.totalTD+' chamados T&D'); await carregar(); }
-        else { toast('❌ '+(d.erro||'Falha'),4000); setStatus('error','❌ '+(d.erro||'Falha')); }
-    } catch(e) { toast('❌ '+e.message,4000); setStatus('error','❌ '+e.message); }
+        else { toast('❌ '+(d.erro||'Falha'), 4000); setStatus('error','❌ '+(d.erro||'Falha')); }
+    } catch(e) { toast('❌ '+e.message, 4000); setStatus('error','❌ '+e.message); }
     btn.disabled=false; btn.innerHTML='🔄 Sincronizar';
 }
 
@@ -900,7 +789,7 @@ function exportCSV() {
     toast(`📥 CSV exportado — ${chamadosFiltrados.length} registros`);
 }
 
-// ─── IA Widget ────────────────────────────────────────────────────────────────
+/* ── IA Widget ── */
 var iaAberto = false;
 
 function toggleIA() {
@@ -926,22 +815,12 @@ async function perguntarIA(fixa) {
     if (!q) return;
     inp.value = '';
     if (!iaAberto) toggleIA();
-
     const box = document.getElementById('iaMsgs');
-    const mu  = document.createElement('div');
-    mu.className = 'msg user';
-    mu.textContent = q;
-    box.appendChild(mu);
-
-    const ma = document.createElement('div');
-    ma.className = 'msg ai carregando';
-    ma.innerHTML = '<span style="opacity:.6">⏳ Analisando os chamados T&D...</span>';
-    box.appendChild(ma);
+    const mu  = document.createElement('div'); mu.className='ia-msg user'; mu.textContent=q; box.appendChild(mu);
+    const ma  = document.createElement('div'); ma.className='ia-msg ai'; ma.innerHTML='<span style="opacity:.6">⏳ Analisando os chamados T&D...</span>'; box.appendChild(ma);
     box.scrollTop = box.scrollHeight;
-
     const envBtn = document.getElementById('iaBtnEnviar');
     if (envBtn) envBtn.disabled = true;
-
     try {
         const ctx = montarContextoIA();
         const r = await fetch(API + '/ia/analisar', {
@@ -951,50 +830,35 @@ async function perguntarIA(fixa) {
         });
         const d = await r.json();
         const txt = d.resposta || d.erro || 'Sem resposta.';
-        ma.className = 'msg ai';
+        ma.className = 'ia-msg ai';
         ma.innerHTML = txt
             .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
             .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--purple)">■</span> ')
+            .replace(/^(▸|•|→|-) /gm,'<span style="color:var(--jur)">■</span> ')
             .replace(/\n/g,'<br>');
     } catch(e) {
-        ma.className = 'msg ai';
+        ma.className = 'ia-msg ai';
         ma.textContent = '❌ Erro: ' + e.message;
     }
-
     if (envBtn) envBtn.disabled = false;
     box.scrollTop = box.scrollHeight;
 }
 
 function montarContextoIA() {
     if (!todosOsChamados.length) return 'Dados ainda não carregados.';
-
     const lista = filtrarPorAno(todosOsChamados);
     const st    = calcStats(lista);
     const pct   = st.total ? Math.round(st.fechados/st.total*100) : 0;
-
-    // Por responsável — top 10
     const topResp = st.porResponsavel.slice(0,10)
-        .map(r => `  • ${r.nome} | Total:${r.total} Abertos:${r.abertos} Conc:${r.fechados}`)
-        .join('\n');
-
-    // Por tipo — top 8
+        .map(r=>`  • ${r.nome} | Total:${r.total} Abertos:${r.abertos} Conc:${r.fechados}`).join('\n');
     const topTipo = st.porTipo.slice(0,8)
-        .map(t => `  • ${t.tipo} | Total:${t.total}`)
-        .join('\n');
-
-    // Por mês — últimos 6
+        .map(t=>`  • ${t.tipo} | Total:${t.total}`).join('\n');
     const ultMeses = st.porMes.slice(-6)
-        .map(m => `  • ${MES_LABELS[m.mes-1]}/${m.ano}: ${m.total} (${m.abertos} ab / ${m.fechados} conc)`)
-        .join('\n');
-
-    // Por ano
-    const porAno = (dadosBrutos?.porAno || [])
-        .map(a => `  • ${a.ano}: ${a.total} total (${a.abertos} ab / ${a.fechados} conc)`)
-        .join('\n');
-
+        .map(m=>`  • ${MES_LABELS[m.mes-1]}/${m.ano}: ${m.total} (${m.abertos} ab / ${m.fechados} conc)`).join('\n');
+    const porAno = (dadosBrutos?.porAno||[])
+        .map(a=>`  • ${a.ano}: ${a.total} total (${a.abertos} ab / ${a.fechados} conc)`).join('\n');
     return `=== CHAMADOS T&D — DIVINO FOGÃO ===
-Período: ${anoSelecionado === 'todos' ? 'Todos os anos' : anoSelecionado}
+Período: ${anoSelecionado==='todos'?'Todos os anos':anoSelecionado}
 Total: ${st.total} | Abertos: ${st.abertos} | Concluídos: ${st.fechados}
 Taxa de resolução: ${pct}%
 
@@ -1011,15 +875,14 @@ ${ultMeses}
 ${porAno}`;
 }
 
-// Badge após 3s
 setTimeout(function() {
     if (!iaAberto) {
         const u = document.getElementById('iaUnread');
-        if (u) { u.style.display = 'flex'; u.textContent = '1'; }
+        if (u) { u.style.display='flex'; u.textContent='1'; }
     }
 }, 3000);
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
+/* ── Init ── */
 carregar();
 </script>
 </body>

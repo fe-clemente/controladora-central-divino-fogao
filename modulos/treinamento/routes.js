@@ -108,7 +108,7 @@ router.get('/busca', (req, res) => res.sendFile(path.join(PUBLIC, 'busca.html'))
 router.use('/busca-api', buscaService);
 router.use('/links-api', linksTreinamentoService);
 router.use('/kpi-avaliacoes', kpiAvaliacoesService);
-
+router.use('/busca-api', buscaService);
 // ─── Arquivos estáticos ───────────────────────────────────────────────────────
 router.use(express.static(PUBLIC, { index: false, extensions: false }));
 
