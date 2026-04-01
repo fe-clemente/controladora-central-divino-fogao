@@ -12,24 +12,29 @@
 
 <header>
     <div class="logo">
-        <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <img src="/logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
         <span class="logo-fb">🍽️</span>
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
 
-    <nav id="navDesktop">
+    <!-- Nav desktop -->
+    <nav id="navDesktop">      
+        <!-- ↓ Wrapper de scroll — NÃO envolve o dropdown ↓ -->
         <div class="nav-scroll">
             <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-            <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos</button>
-            <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Comodato</button>
+            <button class="nav-btn " onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestao de Ativos</button>
+            <button class="nav-btn" onclick="location.href='/ti/ativos.html'">📦 Comodato Jurídico</button>
             <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-            <button class="nav-btn active">📋 Projetos</button>
+            <button class="nav-btn ctive-ti active" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
             <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
             <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
             <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
             <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
         </div>
+        <!-- ↑ fim do nav-scroll ↑ -->
+
+        <!-- ↓ Dropdown FORA do nav-scroll — posição absoluta funciona ↓ -->
         <div class="nav-dropdown" id="navRelatorios">
             <button class="nav-btn nav-btn-drop" type="button"
                 onclick="event.stopPropagation(); toggleNavDrop('navRelatorios')">
@@ -43,15 +48,25 @@
                         <span class="ndi-desc">Presença e localização de consultores</span>
                     </span>
                 </a>
+                <a class="nav-drop-item" href="/ti/relatorioControleAcessosSults.html">
+                    <span class="ndi-icon">🎛️</span>
+                    <span class="ndi-info">
+                        <span class="ndi-label">Controle SULTS</span>
+                        <span class="ndi-desc">Chamados abertos e atividade por setor</span>
+                    </span>
+                </a>
             </div>
         </div>
+        <!-- ↑ fim do dropdown ↑ -->
+
         <button class="nav-btn" onclick="sair()" style="color:var(--red)">🚪 Sair</button>
     </nav>
 
+    <!-- Hamburger mobile -->
     <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
 </header>
 
-<!-- NAV DRAWER MOBILE -->
+<!-- ══ NAV DRAWER MOBILE ══ -->
 <div class="nav-drawer-overlay" id="navOverlay" onclick="fecharDrawer()"></div>
 <div class="nav-drawer" id="navDrawer">
     <div class="nav-drawer-head">
@@ -59,11 +74,11 @@
         <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
     </div>
     <div class="nav-drawer-body">
-        <a class="nav-drawer-item" href="/ti/index.html">📊 Dashboard</a>
-        <a class="nav-drawer-item" href="/ti/controle-equipamentos.html">📦 Gestão Ativos</a>
-        <a class="nav-drawer-item" href="/ti/ativos.html">🖥️ Comodato</a>
+        <a class="nav-drawer-item " href="/ti/index.html">📊 Dashboard</a>
+        <a class="nav-drawer-item " href="/ti/controle-equipamentos.html">  🖥️ Gestão Ativos </a>
+        <a class="nav-drawer-item " href="/ti/ativos.html"> 📦 Comodato- Jurídico </a>
         <a class="nav-drawer-item" href="/ti/migracao.html">🔄 Migração</a>
-        <a class="nav-drawer-item active" href="/ti/projetos.html">📋 Projetos</a>
+        <a class="nav-drawer-item active-ti" href="/ti/projetos.html">📋 Projetos</a>
         <a class="nav-drawer-item" href="/ti/chamados.html">📞 Chamados</a>
         <a class="nav-drawer-item" href="/ti/pix.html">💳 Pix TEF</a>
         <a class="nav-drawer-item" href="/ti/linkexterno.html">🔗 Links</a>
@@ -71,6 +86,7 @@
         <div class="nav-drawer-sep"></div>
         <span class="nav-drawer-title" style="padding:8px 14px;font-size:10px">📊 Relatórios</span>
         <a class="nav-drawer-item nav-drawer-sub" href="/ti/relatorioCheckoutConsultores.html">📋 Check-in / Check-out</a>
+        <a class="nav-drawer-item nav-drawer-sub" href="/ti/relatorioControleAcessosSults.html">🎛️ Controle SULTS</a>
         <div class="nav-drawer-sep"></div>
         <a class="nav-drawer-item" href="/">🏠 Voltar ao início</a>
         <button class="nav-drawer-item" onclick="sair()" style="color:var(--red);border:none;background:none;width:100%;text-align:left;cursor:pointer;font-family:var(--font-body)">🚪 Sair</button>
@@ -112,7 +128,6 @@
         <!-- OVERVIEW GERAL -->
         <div id="viewOverview">
             <main>
-                <!-- Botão toggle sidebar — visível só no mobile -->
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
                     <button class="sb-toggle" id="sbToggleBtn" onclick="abrirSidebar()">☰ Projetos</button>
                     <div class="page-title" style="margin-bottom:0">📋 Projetos T.I.</div>
@@ -228,24 +243,46 @@
     </div>
 </div>
 
-<!-- MODAL NOVA TAREFA -->
+<!-- MODAL NOVA / EDITAR TAREFA -->
 <div class="modal-overlay" id="modalTask" onclick="fecharModalClick(event,'modalTask')">
     <div class="modal-box">
         <div class="modal-header">
-            <div class="modal-title">Nova Tarefa</div>
+            <div class="modal-title" id="modalTaskTitle">Nova Tarefa</div>
             <button class="modal-close" onclick="fecharModal('modalTask')">✕</button>
         </div>
         <div class="form-row">
-            <div class="form-group"><label>Categoria *</label><select class="form-control" id="mtCategoria"><option value="">Selecionar...</option></select></div>
-            <div class="form-group"><label>Responsável</label><select class="form-control" id="mtResp"><option value="">Selecionar...</option></select></div>
-            <div class="form-group full"><label>Item / Tarefa *</label><input type="text" class="form-control" id="mtNome" placeholder="Descreva a tarefa"></div>
-            <div class="form-group"><label>Status</label>
-                <select class="form-control" id="mtStatus">
+            <!-- CATEGORIA -->
+            <div class="form-group">
+                <label>Categoria *</label>
+                <select class="form-control" id="mtCategoria" onchange="onSelectOutros(this,'mtCategoriaOutros')">
+                    <option value="">Selecionar...</option>
+                </select>
+                <input type="text" class="form-control" id="mtCategoriaOutros" placeholder="Digite a categoria..." style="display:none;margin-top:6px">
+            </div>
+            <!-- RESPONSÁVEL -->
+            <div class="form-group">
+                <label>Responsável</label>
+                <select class="form-control" id="mtResp" onchange="onSelectOutros(this,'mtRespOutros')">
+                    <option value="">Selecionar...</option>
+                </select>
+                <input type="text" class="form-control" id="mtRespOutros" placeholder="Digite o responsável..." style="display:none;margin-top:6px">
+            </div>
+            <!-- ITEM / TAREFA -->
+            <div class="form-group full">
+                <label>Item / Tarefa *</label>
+                <input type="text" class="form-control" id="mtNome" placeholder="Descreva a tarefa">
+            </div>
+            <!-- STATUS -->
+            <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" id="mtStatus" onchange="onSelectOutros(this,'mtStatusOutros')">
                     <option value="Pendente">⏳ Pendente</option>
                     <option value="Em Andamento">🔄 Em Andamento</option>
                     <option value="Em Validação">🔍 Em Validação</option>
                     <option value="Concluído">✅ Concluído</option>
+                    <option value="Outros">✏️ Outros...</option>
                 </select>
+                <input type="text" class="form-control" id="mtStatusOutros" placeholder="Digite o status..." style="display:none;margin-top:6px">
             </div>
             <div class="form-group"><label>Data de Conclusão</label><input type="date" class="form-control" id="mtDataConc"></div>
             <div class="form-group full"><label>Observações</label><input type="text" class="form-control" id="mtObs" placeholder="Opcional"></div>
@@ -257,7 +294,98 @@
     </div>
 </div>
 
+<!-- MODAL EDITAR TAREFA INLINE -->
+<div class="modal-overlay" id="modalEditTask" onclick="fecharModalClick(event,'modalEditTask')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="modal-title">✏️ Editar Tarefa</div>
+            <button class="modal-close" onclick="fecharModal('modalEditTask')">✕</button>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Categoria *</label>
+                <select class="form-control" id="etCategoria" onchange="onSelectOutros(this,'etCategoriaOutros')">
+                    <option value="">Selecionar...</option>
+                </select>
+                <input type="text" class="form-control" id="etCategoriaOutros" placeholder="Digite a categoria..." style="display:none;margin-top:6px">
+            </div>
+            <div class="form-group">
+                <label>Responsável</label>
+                <select class="form-control" id="etResp" onchange="onSelectOutros(this,'etRespOutros')">
+                    <option value="">Selecionar...</option>
+                </select>
+                <input type="text" class="form-control" id="etRespOutros" placeholder="Digite o responsável..." style="display:none;margin-top:6px">
+            </div>
+            <div class="form-group full">
+                <label>Item / Tarefa *</label>
+                <input type="text" class="form-control" id="etNome" placeholder="Descreva a tarefa">
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" id="etStatus" onchange="onSelectOutros(this,'etStatusOutros')">
+                    <option value="Pendente">⏳ Pendente</option>
+                    <option value="Em Andamento">🔄 Em Andamento</option>
+                    <option value="Em Validação">🔍 Em Validação</option>
+                    <option value="Concluído">✅ Concluído</option>
+                    <option value="Projeto Congelado">🔒 Projeto Congelado</option>
+                    <option value="Outros">✏️ Outros...</option>
+                </select>
+                <input type="text" class="form-control" id="etStatusOutros" placeholder="Digite o status..." style="display:none;margin-top:6px">
+            </div>
+            <div class="form-group"><label>Data de Conclusão</label><input type="date" class="form-control" id="etDataConc"></div>
+            <div class="form-group full"><label>Observações</label><input type="text" class="form-control" id="etObs" placeholder="Opcional"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="fecharModal('modalEditTask')">Cancelar</button>
+            <button class="btn btn-danger btn-sm" id="btnDeletarTask" onclick="deletarTaskAtual()" style="margin-right:auto">🗑️ Excluir</button>
+            <button class="btn btn-jur" id="btnSalvarEditTask" onclick="salvarEdicaoTask()">💾 Salvar Alterações</button>
+        </div>
+    </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
+<style>
+/* ── Estilos para edição inline de tarefas ── */
+.task-edit-btn {
+    opacity: 0;
+    transition: opacity 0.15s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 3px 7px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--muted);
+}
+.task-edit-btn:hover { background: var(--surface2); color: var(--jur); }
+tr:hover .task-edit-btn { opacity: 1; }
+.status-select {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    width: 100%;
+    min-width: 140px;
+}
+.status-select:focus { outline: none; border-color: var(--jur); }
+.saving-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 2px 8px;
+    background: var(--surface2);
+    border-radius: 20px;
+}
+</style>
 
 <script>
 /* ══ ESTADO ══ */
@@ -266,6 +394,7 @@ let tasksData = [], chartBar = null, chartPie = null;
 let sistemaData = { responsaveis:[], empresas:[], categorias:[] };
 let wzAtual = 1;
 let ovCharts = {};
+let taskEditandoIdx = null; // índice da tarefa sendo editada
 
 const API_DADOS   = '/ti/api/projetos/dados';
 const API_SYNC    = '/ti/api/projetos/sincronizar';
@@ -282,6 +411,73 @@ const corPct   = (pct,st) => { if(st==='pausado') return 'var(--muted)'; if(st==
 const avatarCor= nome => { const c=['#7c3aed','#0369a1','#16a34a','#d97706','#ea580c','#db2777']; let h=0; for(const x of nome) h=(h*31+x.charCodeAt(0))%c.length; return c[Math.abs(h)]; };
 
 const CAT_COLORS = ['#7c3aed','#0369a1','#16a34a','#d97706','#ea580c','#db2777','#0891b2','#65a30d','#9333ea','#c2410c'];
+
+/* ══ HELPERS "OUTROS" ══ */
+// Mostra/oculta campo de texto quando seleciona "Outros"
+function onSelectOutros(selectEl, inputId) {
+    const inp = $(inputId);
+    if (!inp) return;
+    if (selectEl.value === 'Outros') {
+        inp.style.display = 'block';
+        inp.focus();
+    } else {
+        inp.style.display = 'none';
+        inp.value = '';
+    }
+}
+
+// Retorna o valor efetivo de um select+outros
+function getValorSelect(selectId, outrosId) {
+    const sel = $(selectId);
+    if (!sel) return '';
+    if (sel.value === 'Outros') {
+        return ($(outrosId)?.value || '').trim();
+    }
+    return sel.value;
+}
+
+// Preenche um select com lista + opção "Outros", e pré-seleciona valor
+function preencherSelect(selectId, opcoes, valorAtual) {
+    const sel = $(selectId);
+    if (!sel) return;
+    // mantém primeira option
+    const first = sel.options[0];
+    sel.innerHTML = '';
+    sel.appendChild(first);
+    opcoes.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o; opt.textContent = o;
+        sel.appendChild(opt);
+    });
+    // Opção Outros
+    const optOutros = document.createElement('option');
+    optOutros.value = 'Outros'; optOutros.textContent = '✏️ Outros...';
+    sel.appendChild(optOutros);
+
+    if (valorAtual) {
+        // tenta encontrar exato
+        const existe = opcoes.includes(valorAtual);
+        if (existe) { sel.value = valorAtual; }
+        else {
+            sel.value = 'Outros';
+            const outrosId = selectId.replace('mt','mt').replace('et','et') + 'Outros';
+            // map selectId → outrosId
+            const outrosMap = {
+                mtCategoria: 'mtCategoriaOutros',
+                mtResp: 'mtRespOutros',
+                mtStatus: 'mtStatusOutros',
+                etCategoria: 'etCategoriaOutros',
+                etResp: 'etRespOutros',
+                etStatus: 'etStatusOutros',
+            };
+            const oid = outrosMap[selectId];
+            if (oid && $(oid)) {
+                $(oid).style.display = 'block';
+                $(oid).value = valorAtual;
+            }
+        }
+    }
+}
 
 /* ══ NAV DRAWER MOBILE ══ */
 window.abrirDrawer = function() {
@@ -321,23 +517,50 @@ document.addEventListener('click', e => {
     document.querySelectorAll('.nav-dropdown.open').forEach(d => { if (!d.contains(e.target)) d.classList.remove('open'); });
 });
 
-/* ══ SAIR ══ */
 window.sair = function() { if (confirm('Deseja sair?')) location.href = '/logout'; };
 
-/* ══ CARREGAR ══ */
+/* ══ CARREGAR CACHE (rápido) + AUTO-SYNC na entrada ══ */
 async function carregar() {
     setStatus('syncing','Carregando...');
     try {
         const r = await fetch(API_DADOS);
         const d = await r.json();
-        if (!d.ok) { setStatus('error','❌ '+(d.erro||'Erro')); return; }
-        projetos = d.projetos||[];
-        if (d.planilhaUrl) { $('linkPlanilha').href=$('sbLinkPlanilha').href=d.planilhaUrl; $('linkPlanilha').style.display=''; }
-        renderTudo();
-        setStatus('ready',`✓ ${projetos.length} projetos`);
-        if (d.sincronizadoEm) $('lastSync').textContent='Sync: '+new Date(d.sincronizadoEm).toLocaleString('pt-BR');
+        if (!d.ok) { setStatus('error','❌ '+(d.erro||'Erro')); }
+        else {
+            projetos = d.projetos||[];
+            if (d.planilhaUrl) { $('linkPlanilha').href=$('sbLinkPlanilha').href=d.planilhaUrl; $('linkPlanilha').style.display=''; }
+            renderTudo();
+            setStatus('ready',`✓ ${projetos.length} projetos (cache)`);
+            if (d.sincronizadoEm) $('lastSync').textContent='Cache: '+new Date(d.sincronizadoEm).toLocaleString('pt-BR');
+        }
     } catch(e) { setStatus('error','❌ '+e.message); }
+    // ➡️ [MELHORIA 2] Auto-sincroniza ao entrar
     carregarSistema();
+    sincronizarSilencioso();
+}
+
+// Sincronização silenciosa (auto ao entrar / após alterações)
+async function sincronizarSilencioso() {
+    try {
+        const r = await fetch(API_SYNC, { method:'POST' });
+        const d = await r.json();
+        if (d.ok) {
+            // recarrega cache
+            const r2 = await fetch(API_DADOS);
+            const d2 = await r2.json();
+            if (d2.ok) {
+                projetos = d2.projetos||[];
+                renderTudo();
+                setStatus('ready',`✓ ${projetos.length} projetos`);
+                if (d2.sincronizadoEm) $('lastSync').textContent='Sync: '+new Date(d2.sincronizadoEm).toLocaleString('pt-BR');
+                // Se estiver visualizando um projeto, atualiza o projeto atual
+                if (projetoAtual) {
+                    const atualizado = projetos.find(p => p.nome === projetoAtual.nome);
+                    if (atualizado) { projetoAtual = atualizado; }
+                }
+            }
+        }
+    } catch(e) { console.warn('[Auto-sync]', e.message); }
 }
 
 async function carregarSistema() {
@@ -348,6 +571,14 @@ async function carregarSistema() {
     } catch(e) { console.warn('[Sistema]',e.message); }
 }
 
+// ➡️ [MELHORIA 3] Sincroniza após alterações e atualiza view atual
+async function sincronizarEAtualizar(msgSucesso = '') {
+    try {
+        await sincronizarSilencioso();
+        if (msgSucesso) toast(msgSucesso);
+    } catch(e) { console.warn('[Sync pós-alteração]', e.message); }
+}
+
 async function sincronizar() {
     const btn=$('btnSync');
     btn.disabled=true;btn.innerHTML='<div class="spinner light"></div>';
@@ -355,8 +586,11 @@ async function sincronizar() {
     try {
         const r=await fetch(API_SYNC,{method:'POST'});
         const d=await r.json();
-        if(d.ok){toast(`✅ ${d.total||''} projetos sincronizados`);await carregar();}
-        else toast('❌ '+(d.erro||'Falha'),4000);
+        if(d.ok){
+            toast(`✅ ${d.total||''} projetos sincronizados`);
+            const r2=await fetch(API_DADOS);const d2=await r2.json();
+            if(d2.ok){projetos=d2.projetos||[];renderTudo();setStatus('ready',`✓ ${projetos.length} projetos`);if(d2.sincronizadoEm)$('lastSync').textContent='Sync: '+new Date(d2.sincronizadoEm).toLocaleString('pt-BR');}
+        } else toast('❌ '+(d.erro||'Falha'),4000);
     } catch(e){toast('❌ '+e.message,4000);}
     btn.disabled=false;btn.innerHTML='🔄 Sincronizar';
 }
@@ -721,23 +955,155 @@ function renderTasksTable(tasks) {
     if(!tasks.length){wrap.innerHTML='<div class="empty">Nenhuma tarefa encontrada</div>';return;}
     const rows=tasks.map((t,i)=>{
         const opts=STATUS_OPTS.map(s=>`<option value="${s}" ${s===t.status?'selected':''}>${STATUS_ICON[s]||''} ${s}</option>`).join('');
+        // Busca idx original no tasksData
+        const idxOriginal = tasksData.indexOf(t);
         return`<tr>
             <td class="mono">${i+1}</td>
             <td style="font-weight:700;color:var(--muted)">${esc(t.categoria||'—')}</td>
             <td style="font-weight:700;max-width:260px">${esc(t.item||'—')}</td>
-            <td><select class="status-select" data-idx="${i}" onchange="mudarStatusTask(${i},this.value,this)">${opts}</select></td>
+            <td><select class="status-select" data-idx="${idxOriginal}" onchange="mudarStatusTask(${idxOriginal},this.value,this)">${opts}</select></td>
             <td style="color:var(--muted)">${esc(t.responsavel||'—')}</td>
             <td class="mono">${t.dtConclusao||'—'}</td>
             <td style="color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(t.observacoes||'')}">${esc(t.observacoes||'')}</td>
+            <td><button class="task-edit-btn" title="Editar tarefa" onclick="abrirModalEditarTask(${idxOriginal})">✏️</button></td>
         </tr>`;
     }).join('');
     wrap.innerHTML=`<div class="table-wrap"><div class="tbl-scroll"><table>
-        <thead><tr><th>#</th><th>Categoria</th><th>Tarefa</th><th>Status</th><th>Responsável</th><th>Conclusão</th><th>Observações</th></tr></thead>
+        <thead><tr><th>#</th><th>Categoria</th><th>Tarefa</th><th>Status</th><th>Responsável</th><th>Conclusão</th><th>Observações</th><th></th></tr></thead>
         <tbody>${rows}</tbody>
     </table></div></div>`;
 }
 
-async function mudarStatusTask(idx,novoStatus,el) {
+/* ══ [MELHORIA 1] EDIÇÃO DE TAREFA ══ */
+function abrirModalEditarTask(idx) {
+    const task = tasksData[idx];
+    if (!task) return;
+    taskEditandoIdx = idx;
+
+    $('modalTaskTitle') && ($('modalTaskTitle').textContent = 'Nova Tarefa');
+
+    // Preenche selects do modal editar
+    const cats = [...new Set(tasksData.map(t=>t.categoria).filter(Boolean))];
+    const resps = [...sistemaData.responsaveis];
+    // Adiciona o responsável atual se não estiver na lista
+    if (task.responsavel && !resps.includes(task.responsavel)) resps.push(task.responsavel);
+    if (task.categoria && !cats.includes(task.categoria)) cats.unshift(task.categoria);
+
+    preencherSelect('etCategoria', cats, task.categoria);
+    preencherSelect('etResp', resps, task.responsavel);
+    preencherSelect('etStatus', STATUS_OPTS, task.status);
+
+    $('etNome').value = task.item || '';
+    $('etDataConc').value = task.dtConclusao || '';
+    $('etObs').value = task.observacoes || '';
+
+    abrirModal('modalEditTask');
+}
+
+async function salvarEdicaoTask() {
+    const idx = taskEditandoIdx;
+    if (idx === null || idx === undefined) return;
+    const task = tasksData[idx];
+    if (!task) return;
+
+    const categoria = getValorSelect('etCategoria','etCategoriaOutros');
+    const responsavel = getValorSelect('etResp','etRespOutros');
+    const status = getValorSelect('etStatus','etStatusOutros');
+    const item = $('etNome').value.trim();
+    const dtConclusao = $('etDataConc').value;
+    const observacoes = $('etObs').value.trim();
+
+    if (!item) { toast('⚠️ Informe o nome da tarefa'); return; }
+
+    const btn = $('btnSalvarEditTask');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner light"></div>';
+
+    // ➡️ Chama API de edição completa da tarefa
+    try {
+        const r = await fetch('/ti/api/projetos/tarefa/editar', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                projeto: projetoAtual.nome,
+                rowIndex: task.rowIndex,
+                categoria,
+                item,
+                responsavel,
+                status,
+                dtConclusao,
+                observacoes,
+                statusAnterior: task.status,
+            }),
+        });
+        const d = await r.json();
+        if (d.ok) {
+            // Atualiza local
+            tasksData[idx] = { ...task, categoria, item, responsavel, status, dtConclusao, observacoes };
+            fecharModal('modalEditTask');
+            renderTasksTable(tasksData);
+            toast('✅ Tarefa atualizada!');
+            // ➡️ [MELHORIA 3] Sincroniza após alteração
+            sincronizarEAtualizar();
+
+            // Cadastra novos valores no sistema se forem "outros"
+            if ($('etCategoria').value === 'Outros' && categoria) registrarNovoSistema('categoria', categoria);
+            if ($('etResp').value === 'Outros' && responsavel) registrarNovoSistema('responsavel', responsavel);
+        } else {
+            toast('❌ ' + (d.erro || 'Erro ao salvar'), 4000);
+        }
+    } catch(e) {
+        // fallback local
+        tasksData[idx] = { ...task, categoria, item, responsavel, status, dtConclusao, observacoes };
+        fecharModal('modalEditTask');
+        renderTasksTable(tasksData);
+        toast('⚠️ Salvo localmente (sem conexão)');
+    }
+
+    btn.disabled = false;
+    btn.textContent = '💾 Salvar Alterações';
+    taskEditandoIdx = null;
+}
+
+async function deletarTaskAtual() {
+    const idx = taskEditandoIdx;
+    if (idx === null || idx === undefined) return;
+    const task = tasksData[idx];
+    if (!task) return;
+    if (!confirm(`Excluir tarefa "${task.item}"? Esta ação não pode ser desfeita.`)) return;
+
+    const btn = $('btnDeletarTask');
+    btn.disabled = true;
+
+    try {
+        const r = await fetch('/ti/api/projetos/tarefa/deletar', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ projeto: projetoAtual.nome, rowIndex: task.rowIndex }),
+        });
+        const d = await r.json();
+        if (d.ok) {
+            tasksData.splice(idx, 1);
+            fecharModal('modalEditTask');
+            renderTasksTable(tasksData);
+            toast('🗑️ Tarefa excluída');
+            // ➡️ [MELHORIA 3] Sincroniza após deleção
+            sincronizarEAtualizar();
+        } else {
+            toast('❌ ' + (d.erro || 'Erro ao excluir'), 4000);
+        }
+    } catch(e) {
+        tasksData.splice(idx, 1);
+        fecharModal('modalEditTask');
+        renderTasksTable(tasksData);
+        toast('⚠️ Excluído localmente');
+    }
+    btn.disabled = false;
+    taskEditandoIdx = null;
+}
+
+/* ══ MUDAR STATUS (inline) ══ */
+async function mudarStatusTask(idx, novoStatus, el) {
     const task=tasksData[idx];if(!task)return;
     const statusAnterior=task.status;
     if(statusAnterior===novoStatus)return;
@@ -745,8 +1111,14 @@ async function mudarStatusTask(idx,novoStatus,el) {
         const r=await fetch(`/ti/api/projetos/tarefa`,{method:'PATCH',headers:{'Content-Type':'application/json'},
             body:JSON.stringify({projeto:projetoAtual.nome,rowIndex:task.rowIndex,status:novoStatus,statusAnterior,tarefa:task.item,responsavel:task.responsavel})});
         const d=await r.json();
-        if(d.ok){tasksData[idx].status=novoStatus;toast('✅ Status atualizado');}
-        else{toast('❌ '+d.erro,4000);if(el)el.value=statusAnterior;}
+        if(d.ok){
+            tasksData[idx].status=novoStatus;
+            toast('✅ Status atualizado');
+            // ➡️ [MELHORIA 3] Sincroniza após mudança de status
+            sincronizarEAtualizar();
+        } else {
+            toast('❌ '+d.erro,4000);if(el)el.value=statusAnterior;
+        }
     } catch(e){tasksData[idx].status=novoStatus;toast('⚠️ Salvo localmente');}
 }
 
@@ -780,8 +1152,10 @@ async function togglePausar() {
     try {
         const r=await fetch(`${API_PROJ}/${p.rowIndex}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({pausado:novo})});
         const d=await r.json();
-        if(d.ok){p.pausado=novo;toast(novo?'⏸️ Projeto pausado':'▶️ Projeto reativado');renderDetalhe();renderSidebar();}
-        else toast('❌ '+d.erro,4000);
+        if(d.ok){p.pausado=novo;toast(novo?'⏸️ Projeto pausado':'▶️ Projeto reativado');renderDetalhe();renderSidebar();
+            // ➡️ [MELHORIA 3] Sincroniza após alteração
+            sincronizarEAtualizar();
+        } else toast('❌ '+d.erro,4000);
     } catch(e){p.pausado=novo;renderDetalhe();renderSidebar();toast(novo?'⏸️ Pausado (local)':'▶️ Reativado (local)');}
     btnP.disabled=false;
 }
@@ -815,6 +1189,17 @@ async function adicionarNovo(coluna,inputId,listId,isRadio=false){
     if(input)input.value='';toast(`✅ ${valor} adicionado`);
 }
 
+// Registra novo valor no sistema (silencioso) — usado pelo "Outros"
+async function registrarNovoSistema(coluna, valor) {
+    if (!valor) return;
+    const key={responsavel:'responsaveis',empresa:'empresas',categoria:'categorias'}[coluna];
+    if (key && sistemaData[key].includes(valor)) return; // já existe
+    try {
+        await fetch(API_SISTEMA, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ coluna, valor }) });
+        if (key && !sistemaData[key].includes(valor)) sistemaData[key].push(valor);
+    } catch(e) { console.warn('[registrarNovoSistema]', e.message); }
+}
+
 function abrirModalNovoProjeto(){
     $('modalProjetoTitle').textContent='✨ Novo Projeto';
     ['mpNome','mpDescricao'].forEach(id=>$(id).value='');
@@ -825,6 +1210,7 @@ function abrirModalNovoProjeto(){
     renderCheckList('listCategorias',sistemaData.categorias,'categoria');
     abrirModal('modalProjeto');
 }
+
 function abrirModalEditarProjeto(){
     if(!projetoAtual)return;
     const p=projetoAtual;
@@ -834,17 +1220,41 @@ function abrirModalEditarProjeto(){
             .then(r=>r.json()).then(d=>{if(d.ok){toast('✅ Nome atualizado');p.nome=nomeNovo.trim();renderDetalhe();renderSidebar();}else toast('❌ '+d.erro);});
     }
 }
+
+/* ══ [MELHORIA 4] MODAL NOVA TAREFA COM "OUTROS" ══ */
 function abrirModalNovaTask(){
     if(!projetoAtual)return;
-    const selCat=$('mtCategoria');const selResp=$('mtResp');
-    if(selCat)selCat.innerHTML='<option value="">Selecionar...</option>'+sistemaData.categorias.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
-    if(selResp)selResp.innerHTML='<option value="">Selecionar...</option>'+sistemaData.responsaveis.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join('');
+    $('modalTaskTitle').textContent='Nova Tarefa';
+
+    // Preenche categoria com opção Outros
+    preencherSelect('mtCategoria', sistemaData.categorias, '');
+    // Preenche responsável com opção Outros
+    preencherSelect('mtResp', sistemaData.responsaveis, '');
+
+    // Status já tem "Outros" no HTML, reseta
+    $('mtStatus').value='Pendente';
+    $('mtStatusOutros').style.display='none';
+    $('mtStatusOutros').value='';
+    $('mtCategoriaOutros').style.display='none';
+    $('mtCategoriaOutros').value='';
+    $('mtRespOutros').style.display='none';
+    $('mtRespOutros').value='';
+
     ['mtNome','mtObs'].forEach(id=>$(id).value='');
-    $('mtStatus').value='Pendente';$('mtDataConc').value='';
+    $('mtDataConc').value='';
     abrirModal('modalTask');
 }
+
 function abrirModal(id){$(id).classList.add('open');}
-function fecharModal(id){$(id).classList.remove('open');}
+function fecharModal(id){
+    $(id).classList.remove('open');
+    // Limpa campos "Outros" ao fechar
+    const outrosMap = {
+        modalTask: ['mtCategoriaOutros','mtRespOutros','mtStatusOutros'],
+        modalEditTask: ['etCategoriaOutros','etRespOutros','etStatusOutros'],
+    };
+    (outrosMap[id]||[]).forEach(oid => { const el=$(oid); if(el){el.style.display='none';el.value='';} });
+}
 function fecharModalClick(e,id){if(e.target.id===id)fecharModal(id);}
 
 async function salvarProjeto(){
@@ -853,22 +1263,48 @@ async function salvarProjeto(){
     try {
         const r=await fetch(`${API_PROJ}/novo`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,descricao:$('mpDescricao').value.trim(),dataInicio:$('mpInicio').value,dataFim:$('mpFim').value,responsaveis:getChecked('listResponsaveis'),empresa:getRadio('listEmpresas'),categorias:getChecked('listCategorias')})});
         const d=await r.json();
-        if(d.ok){toast('✅ Projeto criado!');fecharModal('modalProjeto');await carregar();}
-        else toast('❌ '+d.erro,4000);
+        if(d.ok){
+            toast('✅ Projeto criado!');
+            fecharModal('modalProjeto');
+            // ➡️ [MELHORIA 3] Sincroniza após criar projeto
+            await sincronizarSilencioso();
+            renderTudo();
+        } else toast('❌ '+d.erro,4000);
     }catch(e){toast('❌ '+e.message,4000);}
     btn.disabled=false;btn.textContent='💾 Criar Projeto';
 }
 
 async function salvarTask(){
-    const nome=$('mtNome').value.trim();if(!nome){toast('⚠️ Informe a tarefa');return;}
+    const item=$('mtNome').value.trim();if(!item){toast('⚠️ Informe a tarefa');return;}
+
+    // ➡️ [MELHORIA 4] Pega valor efetivo (pode ser "Outros")
+    const categoria = getValorSelect('mtCategoria','mtCategoriaOutros');
+    const responsavel = getValorSelect('mtResp','mtRespOutros');
+    const status = getValorSelect('mtStatus','mtStatusOutros') || 'Pendente';
+
+    if ($('mtCategoria').value === 'Outros' && !categoria) { toast('⚠️ Informe a categoria'); return; }
+    if ($('mtStatus').value === 'Outros' && !status) { toast('⚠️ Informe o status'); return; }
+
     const btn=$('btnSalvarTask');btn.disabled=true;btn.innerHTML='<div class="spinner light"></div>';
-    const payload={projeto:projetoAtual.nome,categoria:$('mtCategoria').value.trim(),item:nome,responsavel:$('mtResp').value.trim(),status:$('mtStatus').value,dtConclusao:$('mtDataConc').value,observacoes:$('mtObs').value.trim()};
+    const payload={projeto:projetoAtual.nome, categoria, item, responsavel, status, dtConclusao:$('mtDataConc').value, observacoes:$('mtObs').value.trim()};
     try {
         const r=await fetch(`${API_PROJ}/tarefa`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
         const d=await r.json();
-        if(d.ok){toast('✅ Tarefa adicionada!');fecharModal('modalTask');if(tabAtual==='tasks'){tasksData.push({...payload,rowIndex:d.rowIndex});renderTasksTable(tasksData);}}
-        else toast('❌ '+d.erro,4000);
-    }catch(e){toast('⚠️ Tarefa adicionada localmente');fecharModal('modalTask');if(tabAtual==='tasks'){tasksData.push(payload);renderTasksTable(tasksData);}}
+        if(d.ok){
+            toast('✅ Tarefa adicionada!');
+            fecharModal('modalTask');
+            if(tabAtual==='tasks'){tasksData.push({...payload,rowIndex:d.rowIndex});renderTasksTable(tasksData);}
+            // ➡️ Registra no sistema se "Outros"
+            if ($('mtCategoria').value === 'Outros' && categoria) registrarNovoSistema('categoria', categoria);
+            if ($('mtResp').value === 'Outros' && responsavel) registrarNovoSistema('responsavel', responsavel);
+            // ➡️ [MELHORIA 3] Sincroniza após adicionar tarefa
+            sincronizarEAtualizar();
+        } else toast('❌ '+d.erro,4000);
+    }catch(e){
+        toast('⚠️ Tarefa adicionada localmente');
+        fecharModal('modalTask');
+        if(tabAtual==='tasks'){tasksData.push(payload);renderTasksTable(tasksData);}
+    }
     btn.disabled=false;btn.textContent='💾 Salvar Tarefa';
 }
 

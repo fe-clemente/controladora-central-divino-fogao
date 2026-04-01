@@ -20,11 +20,10 @@
 
     <!-- Nav desktop -->
     <nav id="navDesktop">      
-        <!-- ↓ Wrapper de scroll — NÃO envolve o dropdown ↓ -->
         <div class="nav-scroll">
             <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-              <button class="nav-btn " onclick="location.href='/ti/controle-equipamentos.html'"> 🖥️ Gestão Ativos</button>
-            <button class="nav-btn " onclick="location.href='/ti/ativos.html'">📦 Comodato- Jurídico</button>
+            <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos</button>
+            <button class="nav-btn" onclick="location.href='/ti/ativos.html'">📦 Comodato- Jurídico</button>
             <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
             <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
             <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
@@ -32,9 +31,7 @@
             <button class="nav-btn active-ti active" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
             <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
         </div>
-        <!-- ↑ fim do nav-scroll ↑ -->
 
-        <!-- ↓ Dropdown FORA do nav-scroll — posição absoluta funciona ↓ -->
         <div class="nav-dropdown" id="navRelatorios">
             <button class="nav-btn nav-btn-drop" type="button"
                 onclick="event.stopPropagation(); toggleNavDrop('navRelatorios')">
@@ -57,7 +54,6 @@
                 </a>
             </div>
         </div>
-        <!-- ↑ fim do dropdown ↑ -->
 
         <button class="nav-btn" onclick="sair()" style="color:var(--red)">🚪 Sair</button>
     </nav>
@@ -74,14 +70,14 @@
         <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
     </div>
     <div class="nav-drawer-body">
-        <a class="nav-drawer-item " href="/ti/index.html">📊 Dashboard</a>
+        <a class="nav-drawer-item" href="/ti/index.html">📊 Dashboard</a>
         <a class="nav-drawer-item" href="/ti/controle-equipamentos.html">📦 Comodato</a>
         <a class="nav-drawer-item" href="/ti/ativos.html">🖥️ Gestão Ativos</a>
         <a class="nav-drawer-item" href="/ti/migracao.html">🔄 Migração</a>
         <a class="nav-drawer-item" href="/ti/projetos.html">📋 Projetos</a>
         <a class="nav-drawer-item" href="/ti/chamados.html">📞 Chamados</a>
         <a class="nav-drawer-item" href="/ti/pix.html">💳 Pix TEF</a>
-        <a class="nav-drawer-item  active-ti" href="/ti/linkexterno.html">🔗 Links</a>
+        <a class="nav-drawer-item active-ti" href="/ti/linkexterno.html">🔗 Links</a>
         <a class="nav-drawer-item" href="/ti/uploads.html">📁 Uploads</a>
         <div class="nav-drawer-sep"></div>
         <span class="nav-drawer-title" style="padding:8px 14px;font-size:10px">📊 Relatórios</span>
@@ -108,7 +104,6 @@
 <!-- ═══ MAIN ══════════════════════════════════════════════════════════════ -->
 <main>
 
-    <!-- Cabeçalho da página -->
     <div class="page-header">
         <div>
             <div class="page-title">🔗 Links &amp; Recursos — Treinamento</div>
@@ -120,7 +115,6 @@
         </div>
     </div>
 
-    <!-- Barra de info do Sheets -->
     <div class="sheets-info-bar" id="sheetsInfoBar" style="display:none">
         <span>📊</span>
         <span>Links sincronizados com o Google Sheets — aba LINKS_TREINAMENTO —
@@ -130,14 +124,12 @@
         <span id="sheetsTotal" style="margin-left:auto;font-family:var(--font-mono);font-size:11px"></span>
     </div>
 
-    <!-- Stats -->
     <div class="stats-bar" id="statsBar">
         <div class="loading-msg" style="grid-column:1/-1">
             <div class="spinner dark"></div>
         </div>
     </div>
 
-    <!-- Filtros -->
     <div class="filtros-wrap">
         <div class="search-box">
             <input type="text" id="searchInput"
@@ -153,7 +145,6 @@
         </div>
     </div>
 
-    <!-- Conteúdo principal -->
     <div id="conteudo">
         <div class="loading-msg"><div class="spinner dark"></div> Carregando links...</div>
     </div>
@@ -253,16 +244,38 @@
 
 <!-- ═══ SCRIPTS ═══════════════════════════════════════════════════════════ -->
 <script>
+
 /* ─── Drawer mobile ────────────────────────────────────────────────────── */
 function abrirDrawer() {
     document.getElementById('navDrawer').classList.add('open');
-    document.getElementById('drawerOverlay').classList.add('open');
+    document.getElementById('navOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
 function fecharDrawer() {
     document.getElementById('navDrawer').classList.remove('open');
-    document.getElementById('drawerOverlay').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
     document.body.style.overflow = '';
+}
+
+/* ─── Dropdown nav ─────────────────────────────────────────────────────── */
+function toggleNavDrop(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(d) {
+        if (d.id !== id) d.classList.remove('open');
+    });
+    el.classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(d) {
+        if (!d.contains(e.target)) d.classList.remove('open');
+    });
+});
+
+
+/* ─── Sair ─────────────────────────────────────────────────────────────── */
+function sair() {
+    if (confirm('Deseja sair?')) location.href = '/login';
 }
 
 /* ─── IA Widget ────────────────────────────────────────────────────────── */
@@ -550,8 +563,17 @@ function popularGrupoSelect(valorAtual) {
     html += '<option value="__novo__"' + (isCustom ? ' selected' : '') + '>✏️ Novo grupo (digitar)...</option>';
     sel.innerHTML = html;
     var custom = document.getElementById('fGrupoCustom');
-    if (isCustom) { custom.style.display = 'block'; custom.value = valorAtual; document.getElementById('fGrupo').value = valorAtual; }
-    else { custom.style.display = 'none'; custom.value = ''; document.getElementById('fGrupo').value = valorAtual || (grupos[0] || ''); if (!isCustom && grupos.length > 0 && !valorAtual) { sel.value = grupos[0]; document.getElementById('fGrupo').value = grupos[0]; } }
+    if (isCustom) {
+        custom.style.display = 'block'; custom.value = valorAtual;
+        document.getElementById('fGrupo').value = valorAtual;
+    } else {
+        custom.style.display = 'none'; custom.value = '';
+        document.getElementById('fGrupo').value = valorAtual || (grupos[0] || '');
+        if (!isCustom && grupos.length > 0 && !valorAtual) {
+            sel.value = grupos[0];
+            document.getElementById('fGrupo').value = grupos[0];
+        }
+    }
 }
 
 function popularGruposSugestoes() {

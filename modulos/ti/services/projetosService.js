@@ -12,7 +12,6 @@ const ABA_HISTORICO  = process.env.TI_ABA_HISTORICO   || 'Historico do sistema';
 
 const aba = nome => `'${nome}'`;
 
-// ─── URL base da planilha (para links) ───────────────────────────────────────
 const sheetUrl = (sheetId) =>
     `https://docs.google.com/spreadsheets/d/${SHEET_PROJETOS}/edit#gid=${sheetId}`;
 const sheetUrlBase = () =>
@@ -28,7 +27,6 @@ async function getSheets() {
     return google.sheets({ version: 'v4', auth: client });
 }
 
-// ─── Normaliza nome de aba (sem remover emojis — apenas espaços e case) ──────
 function normalizeSheetName(name) {
     return String(name || '')
         .trim()
@@ -37,58 +35,36 @@ function normalizeSheetName(name) {
         .trim();
 }
 
-// ─── Remove emojis de uma string (para comparação tolerante) ─────────────────
-// FIX: agora remove Variation Selectors (U+FE00–FE0F) e Zero-Width Joiner (U+200D)
-// que ficavam "invisíveis" após remoção do emoji base (ex: ➡️ = U+27A1 + U+FE0F)
 function stripEmoji(s) {
     return String(s || '')
         .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{1F9B0}-\u{1F9B3}]/gu, '')
         .replace(/[\u2600-\u27BF]/g, '')
-        .replace(/[\uFE00-\uFE0F]/g, '')   // Variation Selectors (fix ➡️ residual)
-        .replace(/\u200D/g, '')              // Zero-Width Joiner
+        .replace(/[\uFE00-\uFE0F]/g, '')
+        .replace(/\u200D/g, '')
         .replace(/\s+/g, ' ')
         .trim()
         .toLowerCase();
 }
 
-// ─── Encontra aba com tolerância a emojis e variações de nome ────────────────
-// FIX: agora normaliza espaços múltiplos e faz buscas REVERSAS.
-// Antes: "TICWAY  ➡️" (nome no cache) nunca encontrava aba "TICWAY" (título real),
-// porque todos os checks testavam se a aba contém/começa com o nome longo,
-// mas nunca o inverso (nome longo contém título curto da aba).
 function encontrarAba(abas, nomeProjeto) {
     if (!nomeProjeto) return null;
-
-    // Normaliza espaços múltiplos → espaço simples (fix "TICWAY  ➡️" → "TICWAY ➡️")
     const nomeLimpo = String(nomeProjeto).trim().toLowerCase().replace(/\s+/g, ' ');
     const norm = t => t.trim().toLowerCase().replace(/\s+/g, ' ');
 
-    // 1. Match exato (case-insensitive, espaços normalizados)
     let found = abas.find(a => norm(a.titulo) === nomeLimpo);
     if (found) return found;
-
-    // 2. Título da aba começa com o nome do projeto
-    //    Cobre: aba "Etiquetas NFC ➡️" vs nome "Etiquetas NFC"d
     found = abas.find(a => norm(a.titulo).startsWith(nomeLimpo));
     if (found) return found;
-
-    // 3. Nome do projeto começa com título da aba (BUSCA REVERSA — FIX PRINCIPAL)
-    //    Cobre: nome "TICWAY ➡️" vs aba "TICWAY"
     found = abas.find(a => nomeLimpo.startsWith(norm(a.titulo)));
     if (found) return found;
-
-    // 4. Nome do projeto está contido no título da aba OU vice-versa
     found = abas.find(a =>
         norm(a.titulo).includes(nomeLimpo) || nomeLimpo.includes(norm(a.titulo))
     );
     if (found) return found;
 
-    // 5. Comparação sem emojis — exato
     const nomeStrip = stripEmoji(nomeProjeto);
     found = abas.find(a => stripEmoji(a.titulo) === nomeStrip);
     if (found) return found;
-
-    // 6. Comparação sem emojis — startsWith (ambas direções)
     found = abas.find(a =>
         stripEmoji(a.titulo).startsWith(nomeStrip) || nomeStrip.startsWith(stripEmoji(a.titulo))
     );
@@ -97,7 +73,6 @@ function encontrarAba(abas, nomeProjeto) {
     return null;
 }
 
-// ─── Buscar abas existentes no Sheets ────────────────────────────────────────
 async function listarAbas(sheets) {
     const meta = await sheets.spreadsheets.get({ spreadsheetId: SHEET_PROJETOS });
     return meta.data.sheets.map(s => ({
@@ -106,21 +81,13 @@ async function listarAbas(sheets) {
     }));
 }
 
-// ─── Ler aba Sistema (Responsaveis, Empresas, Categorias) ────────────────────
-/*
- * Aba "Sistema":
- *   Coluna A = Responsavel
- *   Coluna B = Empresa
- *   Coluna C = Categoria
- * Linha 1 = cabeçalho, Linha 2+ = dados
- */
+// ─── Ler aba Sistema ──────────────────────────────────────────────────────────
 async function lerSistema(sheets) {
     const r = await sheets.spreadsheets.values.get({
         spreadsheetId: SHEET_PROJETOS,
         range: aba(ABA_SISTEMA),
     });
     const rows = r.data.values || [];
-    // pula cabeçalho
     const data = rows.slice(1);
     const responsaveis = [...new Set(data.map(row => (row[0]||'').trim()).filter(Boolean))].sort();
     const empresas     = [...new Set(data.map(row => (row[1]||'').trim()).filter(Boolean))].sort();
@@ -128,7 +95,6 @@ async function lerSistema(sheets) {
     return { responsaveis, empresas, categorias };
 }
 
-// ─── Gravar novo item na aba Sistema ─────────────────────────────────────────
 async function adicionarItemSistema(sheets, coluna, valor) {
     const colMap = { responsavel: 0, empresa: 1, categoria: 2 };
     const colIdx = colMap[coluna];
@@ -151,7 +117,7 @@ async function adicionarItemSistema(sheets, coluna, valor) {
     return proxLinha;
 }
 
-// ─── Aba Histórico ────────────────────────────────────────────────────────────
+// ─── Histórico ────────────────────────────────────────────────────────────────
 async function gravarHistorico(sheets, { projeto, tarefa, statusAnterior, novoStatus, responsavel, obs }) {
     const cache = lerCache('projetos');
     const proj = cache?.projetos?.find(p => p.nome.toLowerCase() === projeto.toLowerCase());
@@ -180,8 +146,7 @@ async function gravarHistorico(sheets, { projeto, tarefa, statusAnterior, novoSt
     let headerRow = -1;
     for (let i = 0; i < rows.length; i++) {
         if ((rows[i][0]||'').trim().toUpperCase() === headerLabel.toUpperCase()) {
-            headerRow = i;
-            break;
+            headerRow = i; break;
         }
     }
 
@@ -203,8 +168,7 @@ async function gravarHistorico(sheets, { projeto, tarefa, statusAnterior, novoSt
         for (let i = headerRow + 1; i < rows.length; i++) {
             const celA = (rows[i][0]||'').trim();
             if (celA.toUpperCase().startsWith('PROJETO:') && i !== headerRow) {
-                fimBloco = i;
-                break;
+                fimBloco = i; break;
             }
         }
         const linhaAlvo = fimBloco + 1;
@@ -218,8 +182,6 @@ async function gravarHistorico(sheets, { projeto, tarefa, statusAnterior, novoSt
 }
 
 // ─── parseProjetos ────────────────────────────────────────────────────────────
-// Agora recebe o array completo de abas (não um map por string),
-// e usa encontrarAba() para tolerar emojis nos títulos.
 function parseProjetos(rows = [], abas = []) {
     if (!rows.length) return [];
     let dataStart = 2;
@@ -232,8 +194,6 @@ function parseProjetos(rows = [], abas = []) {
         if (!nome) return null;
         const hRaw   = cel(7);
         const pausado = /^(1|sim)$/i.test(hRaw);
-
-        // Usa encontrarAba para tolerar emojis e variações de nome
         const abaDoProj = encontrarAba(abas, nome);
 
         return {
@@ -269,8 +229,7 @@ function parseTarefas(rows = [], nomeProjeto = '') {
 
         if (a === 'categoria' || a.includes('categor') ||
             b.includes('item') || b.includes('tarefa') || b.includes('descri')) {
-            tabelaStart = i + 1;
-            break;
+            tabelaStart = i + 1; break;
         }
 
         const linha = rows[i].map(c => String(c||'').trim());
@@ -295,8 +254,7 @@ function parseTarefas(rows = [], nomeProjeto = '') {
             const colB = String(rows[i][1]||'').trim();
             const colD = String(rows[i][3]||'').trim().toLowerCase();
             if (colB && STATUS_KNOWN.some(s => colD.includes(s))) {
-                tabelaStart = i;
-                break;
+                tabelaStart = i; break;
             }
         }
     }
@@ -326,12 +284,10 @@ function parseTarefas(rows = [], nomeProjeto = '') {
     return { tarefas, meta };
 }
 
-// ─── Sincronizar STATUS DOS PROJETOS ─────────────────────────────────────────
+// ─── Sincronizar ──────────────────────────────────────────────────────────────
 async function sincronizar() {
     const sheets = await getSheets();
     console.log('[Projetos] Sincronizando ->', SHEET_PROJETOS, '/', ABA_STATUS);
-
-    // Busca abas para passar ao parseProjetos (que usa encontrarAba internamente)
     const abas = await listarAbas(sheets);
     console.log('[Projetos] Abas disponíveis:', abas.map(a => a.titulo));
 
@@ -342,14 +298,13 @@ async function sincronizar() {
     const rawRows = r.data.values || [];
     rawRows.slice(0,4).forEach((row,i) => console.log(`  row[${i}]:`, JSON.stringify(row)));
 
-    // Passa o array de abas (não um map), pois parseProjetos agora usa encontrarAba()
     const projetos = parseProjetos(rawRows, abas);
     const agora = new Date().toISOString();
     salvarCache('projetos', { projetos, sincronizadoEm: agora, planilhaUrl: sheetUrlBase() });
     return projetos;
 }
 
-// ─── Template de nova aba de projeto ─────────────────────────────────────────
+// ─── Template ─────────────────────────────────────────────────────────────────
 function gerarTemplateNovoProjeto({ nome, descricao='', responsaveis=[], empresa='', categorias=[], dataInicio='', dataFim='' }) {
     const hoje = dataInicio || new Date().toLocaleDateString('pt-BR');
     const fim  = dataFim || '';
@@ -377,7 +332,6 @@ function gerarTemplateNovoProjeto({ nome, descricao='', responsaveis=[], empresa
     ];
 }
 
-// ─── Formatar data ────────────────────────────────────────────────────────────
 function dataAtual() {
     return new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'})
          + ' ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
@@ -415,7 +369,7 @@ router.post('/sincronizar', async (req, res) => {
     } catch(e) { res.json({ ok:false, erro:e.message }); }
 });
 
-// GET /sistema — retorna listas de responsáveis, empresas e categorias
+// GET /sistema
 router.get('/sistema', async (req, res) => {
     try {
         const sheets = await getSheets();
@@ -427,7 +381,7 @@ router.get('/sistema', async (req, res) => {
     }
 });
 
-// POST /sistema — adiciona novo item (responsavel | empresa | categoria)
+// POST /sistema
 router.post('/sistema', async (req, res) => {
     try {
         const { coluna, valor } = req.body;
@@ -449,8 +403,6 @@ router.get('/tarefas', async (req, res) => {
 
         const sheets = await getSheets();
         const abas   = await listarAbas(sheets);
-
-        // Usa encontrarAba para tolerar emojis e variações de nome
         const abaExiste = encontrarAba(abas, nomeProjeto);
         if (!abaExiste) {
             console.warn(`[Projetos/tarefas] Aba "${nomeProjeto}" não encontrada.`);
@@ -475,7 +427,136 @@ router.get('/tarefas', async (req, res) => {
     }
 });
 
-// POST /novo — cria nova aba de projeto com dados do modal enriquecido
+// ─── [NOVO] PUT /tarefa/editar — edita todos os campos de uma tarefa ──────────
+router.put('/tarefa/editar', async (req, res) => {
+    try {
+        const { projeto, rowIndex, categoria, item, responsavel, status, dtConclusao, observacoes, statusAnterior } = req.body;
+        if (!projeto)  return res.json({ ok:false, erro:'Campo "projeto" obrigatório' });
+        if (!rowIndex) return res.json({ ok:false, erro:'Campo "rowIndex" obrigatório' });
+        if (!item)     return res.json({ ok:false, erro:'Campo "item" obrigatório' });
+
+        const sheets  = await getSheets();
+        const abas    = await listarAbas(sheets);
+        const abaAlvo = encontrarAba(abas, projeto);
+        if (!abaAlvo) return res.json({ ok:false, erro:`Aba "${projeto}" não encontrada` });
+
+        // Monta data de conclusão: se status virou Concluído e não tem data, usa hoje
+        let dtConc = dtConclusao || '';
+        if (status === 'Concluído' && !dtConc) {
+            dtConc = new Date().toLocaleDateString('pt-BR');
+        }
+
+        // Atualiza colunas A(categoria), B(item), C(responsavel), D(status), E(dtConclusao), F(observacoes)
+        const data = [
+            { range: `${aba(abaAlvo.titulo)}!A${rowIndex}`, values: [[categoria  || '']] },
+            { range: `${aba(abaAlvo.titulo)}!B${rowIndex}`, values: [[item        || '']] },
+            { range: `${aba(abaAlvo.titulo)}!C${rowIndex}`, values: [[responsavel || '']] },
+            { range: `${aba(abaAlvo.titulo)}!D${rowIndex}`, values: [[status      || '']] },
+            { range: `${aba(abaAlvo.titulo)}!E${rowIndex}`, values: [[dtConc             ]] },
+            { range: `${aba(abaAlvo.titulo)}!F${rowIndex}`, values: [[observacoes || '']] },
+        ];
+
+        await sheets.spreadsheets.values.batchUpdate({
+            spreadsheetId: SHEET_PROJETOS,
+            requestBody: { valueInputOption: 'USER_ENTERED', data },
+        });
+
+        // Histórico (se mudou status)
+        if (status && statusAnterior && statusAnterior !== status) {
+            try {
+                await gravarHistorico(sheets, {
+                    projeto, tarefa: item,
+                    statusAnterior, novoStatus: status,
+                    responsavel: responsavel || '', obs: observacoes || '',
+                });
+            } catch(he) { console.warn('[Histórico] Erro:', he.message); }
+        }
+
+        // Atualiza última mov. na aba STATUS
+        const c = lerCache('projetos');
+        if (c?.projetos) {
+            const idx = c.projetos.findIndex(p => p.nome.toLowerCase() === projeto.toLowerCase());
+            if (idx >= 0) {
+                c.projetos[idx].ultimaMoviment = dataAtual();
+                salvarCache('projetos', c);
+                await sheets.spreadsheets.values.update({
+                    spreadsheetId: SHEET_PROJETOS,
+                    range: `${aba(ABA_STATUS)}!I${c.projetos[idx].rowIndex}`,
+                    valueInputOption: 'USER_ENTERED',
+                    requestBody: { values: [[dataAtual()]] },
+                }).catch(() => {});
+            }
+        }
+
+        res.json({ ok: true });
+    } catch(e) {
+        console.error('[Projetos/tarefa PUT] Erro:', e.message);
+        res.json({ ok: false, erro: e.message });
+    }
+});
+
+// ─── [NOVO] DELETE /tarefa/deletar — remove uma linha de tarefa ───────────────
+router.delete('/tarefa/deletar', async (req, res) => {
+    try {
+        const { projeto, rowIndex } = req.body;
+        if (!projeto)  return res.json({ ok:false, erro:'Campo "projeto" obrigatório' });
+        if (!rowIndex) return res.json({ ok:false, erro:'Campo "rowIndex" obrigatório' });
+
+        const sheets  = await getSheets();
+        const abas    = await listarAbas(sheets);
+        const abaAlvo = encontrarAba(abas, projeto);
+        if (!abaAlvo) return res.json({ ok:false, erro:`Aba "${projeto}" não encontrada` });
+
+        // Deleta a linha (rowIndex é 1-based no Sheets → startIndex = rowIndex-1)
+        await sheets.spreadsheets.batchUpdate({
+            spreadsheetId: SHEET_PROJETOS,
+            requestBody: {
+                requests: [{
+                    deleteDimension: {
+                        range: {
+                            sheetId:    abaAlvo.sheetId,
+                            dimension:  'ROWS',
+                            startIndex: rowIndex - 1,
+                            endIndex:   rowIndex,
+                        },
+                    },
+                }],
+            },
+        });
+
+        // Histórico de deleção
+        try {
+            await gravarHistorico(sheets, {
+                projeto, tarefa: `Linha ${rowIndex} — tarefa excluída`,
+                statusAnterior: '', novoStatus: 'Excluído',
+                responsavel: '', obs: '',
+            });
+        } catch(he) { console.warn('[Histórico deleção]', he.message); }
+
+        // Atualiza última mov.
+        const c = lerCache('projetos');
+        if (c?.projetos) {
+            const idx = c.projetos.findIndex(p => p.nome.toLowerCase() === projeto.toLowerCase());
+            if (idx >= 0) {
+                c.projetos[idx].ultimaMoviment = dataAtual();
+                salvarCache('projetos', c);
+                await sheets.spreadsheets.values.update({
+                    spreadsheetId: SHEET_PROJETOS,
+                    range: `${aba(ABA_STATUS)}!I${c.projetos[idx].rowIndex}`,
+                    valueInputOption: 'USER_ENTERED',
+                    requestBody: { values: [[dataAtual()]] },
+                }).catch(() => {});
+            }
+        }
+
+        res.json({ ok: true });
+    } catch(e) {
+        console.error('[Projetos/tarefa DELETE] Erro:', e.message);
+        res.json({ ok: false, erro: e.message });
+    }
+});
+
+// POST /novo
 router.post('/novo', async (req, res) => {
     try {
         const { nome, descricao, responsaveis=[], empresa='', categorias=[], dataInicio, dataFim } = req.body;
@@ -488,14 +569,12 @@ router.post('/novo', async (req, res) => {
         if (encontrarAba(abas, nomeLimpo))
             return res.json({ ok:false, erro:`Projeto "${nomeLimpo}" já existe` });
 
-        // 1. Cria aba
         const addSheet = await sheets.spreadsheets.batchUpdate({
             spreadsheetId: SHEET_PROJETOS,
             requestBody: { requests:[{ addSheet:{ properties:{ title:nomeLimpo, gridProperties:{ rowCount:200, columnCount:15 } } } }] },
         });
         const novoSheetId = addSheet.data.replies[0].addSheet.properties.sheetId;
 
-        // 2. Preenche template
         const template = gerarTemplateNovoProjeto({ nome:nomeLimpo, descricao, responsaveis, empresa, categorias, dataInicio, dataFim });
         await sheets.spreadsheets.values.update({
             spreadsheetId: SHEET_PROJETOS,
@@ -504,7 +583,6 @@ router.post('/novo', async (req, res) => {
             requestBody: { values: template },
         });
 
-        // 3. Linha na aba STATUS
         await sheets.spreadsheets.values.append({
             spreadsheetId: SHEET_PROJETOS,
             range: aba(ABA_STATUS),
@@ -518,7 +596,6 @@ router.post('/novo', async (req, res) => {
             ]] },
         });
 
-        // 4. Atualiza cache
         const c = lerCache('projetos');
         const proxIdx = c?.projetos?.length
             ? Math.max(...c.projetos.map(p=>p.rowIndex))+1 : 10;
@@ -532,7 +609,6 @@ router.post('/novo', async (req, res) => {
             salvarCache('projetos', c);
         }
 
-        // 5. Histórico — criação
         try {
             await gravarHistorico(sheets, {
                 projeto: nomeLimpo, tarefa:'— Projeto criado —',
@@ -557,8 +633,6 @@ router.post('/tarefa', async (req, res) => {
 
         const sheets = await getSheets();
         const abas   = await listarAbas(sheets);
-
-        // Usa encontrarAba para tolerar emojis
         const abaAlvo = encontrarAba(abas, projeto);
         if (!abaAlvo) return res.json({ ok:false, erro:`Aba "${projeto}" não encontrada` });
 
@@ -573,7 +647,6 @@ router.post('/tarefa', async (req, res) => {
         const rowMatch = (append.data.updates?.updatedRange||'').match(/!A(\d+)/);
         const rowIndex = rowMatch ? parseInt(rowMatch[1]) : null;
 
-        // Histórico
         try {
             await gravarHistorico(sheets, {
                 projeto, tarefa:item, statusAnterior:'', novoStatus: status||'Pendente',
@@ -581,7 +654,6 @@ router.post('/tarefa', async (req, res) => {
             });
         } catch(he){ console.warn('[Histórico] Erro:', he.message); }
 
-        // Atualiza última mov.
         const c = lerCache('projetos');
         if (c?.projetos) {
             const idx = c.projetos.findIndex(p => p.nome.toLowerCase()===projeto.toLowerCase());
@@ -604,7 +676,7 @@ router.post('/tarefa', async (req, res) => {
     }
 });
 
-// PATCH /tarefa — muda status e grava no histórico
+// PATCH /tarefa — muda status
 router.patch('/tarefa', async (req, res) => {
     try {
         const { projeto, rowIndex, status, observacoes, statusAnterior, tarefa, responsavel } = req.body;
@@ -613,8 +685,6 @@ router.patch('/tarefa', async (req, res) => {
 
         const sheets  = await getSheets();
         const abas    = await listarAbas(sheets);
-
-        // Usa encontrarAba para tolerar emojis
         const abaAlvo = encontrarAba(abas, projeto);
         if (!abaAlvo) return res.json({ ok:false, erro:`Aba "${projeto}" não encontrada` });
 
@@ -630,7 +700,6 @@ router.patch('/tarefa', async (req, res) => {
             });
         }
 
-        // Histórico
         if (status && statusAnterior !== status) {
             try {
                 await gravarHistorico(sheets, {
@@ -641,7 +710,6 @@ router.patch('/tarefa', async (req, res) => {
             } catch(he){ console.warn('[Histórico] Erro:', he.message); }
         }
 
-        // Atualiza cache
         const c = lerCache('projetos');
         if (c?.projetos) {
             const idx = c.projetos.findIndex(p=>p.nome.toLowerCase()===projeto.toLowerCase());
@@ -655,7 +723,7 @@ router.patch('/tarefa', async (req, res) => {
     }
 });
 
-// PATCH /:rowIndex — edita projeto (pausado, observacoes)
+// PATCH /:rowIndex — edita projeto (pausado, etc.)
 router.patch('/:rowIndex', async (req, res) => {
     try {
         const rowIndex = parseInt(req.params.rowIndex);
@@ -677,7 +745,6 @@ router.patch('/:rowIndex', async (req, res) => {
             });
         }
 
-        // Histórico de pausar/reativar
         if (pausado !== undefined) {
             const c = lerCache('projetos');
             const proj = c?.projetos?.find(p=>p.rowIndex===rowIndex);
@@ -693,7 +760,6 @@ router.patch('/:rowIndex', async (req, res) => {
             }
         }
 
-        // Atualiza cache
         const c = lerCache('projetos');
         if (c?.projetos) {
             const idx = c.projetos.findIndex(p=>p.rowIndex===rowIndex);
@@ -719,8 +785,6 @@ router.patch('/projeto/:rowIndex/info', async (req, res) => {
 
         const sheets  = await getSheets();
         const abas    = await listarAbas(sheets);
-
-        // Usa encontrarAba para tolerar emojis
         const abaAlvo = encontrarAba(abas, proj.nome);
         if (!abaAlvo) return res.json({ ok:false, erro:`Aba "${proj.nome}" não encontrada` });
 
