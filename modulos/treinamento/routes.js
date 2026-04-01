@@ -27,11 +27,15 @@ const { enviarEmailLembrete, enviarEmailLembreteSimples, enviarEmailAvaliacao, e
 const linksTreinamentoService = require('./services/linksTreinamentoService');
 const kpiAvaliacoesService = require('./services/kpiAvalicoesService');
 
-// ★ NOVO — busca separada com cache
+// ★ busca colaboradores — cache separado
 const buscaCache   = require('./services/buscaCache');
 const buscaService = require('./services/busca');
 
-// ★ NOVO — cache de lembretes de avaliação
+// ★ BUSCA-AVALIACOES — inserção 1/4: imports
+const buscaAvaliacoesCache   = require('./services/buscaAvaliacoesCache');
+const buscaAvaliacoesService = require('./services/buscaAvaliacoes');
+
+// ★ cache de lembretes de avaliação
 const avaliacaoLembretesCache = require('./services/avaliacaoLembretesCache');
 
 const {
@@ -79,7 +83,9 @@ turnoverCache.inicializar().catch(e => console.error('TURNOVER init falhou:', e.
 uploadsCache.inicializar().catch(e => console.error('UPLOADS init falhou:', e.message));
 lembretesCache.inicializar().catch(e => console.error('LEMBRETES init falhou:', e.message));
 buscaCache.inicializar().catch(e => console.error('BUSCA-CACHE init falhou:', e.message));
-// ★ NOVO
+// ★ BUSCA-AVALIACOES — inserção 2/4: inicializar cache
+buscaAvaliacoesCache.inicializar().catch(e => console.error('BUSCA-AVAL-CACHE init falhou:', e.message));
+// ★ cache de lembretes de avaliação
 avaliacaoLembretesCache.inicializar().catch(e => console.error('AVALIACAO-LEMBRETES init falhou:', e.message));
 
 const { router: avaliacaoRouter, gerarLinkAvaliacao } = require('./services/avaliacao');
@@ -99,17 +105,31 @@ router.get('/universidade', (req, res) => res.sendFile(path.join(PUBLIC, 'univer
 router.get('/valores',      (req, res) => res.sendFile(path.join(PUBLIC, 'valores.html')));
 router.get('/uploads',      (req, res) => res.sendFile(path.join(PUBLIC, 'uploads.html')));
 router.get('/cadastro',     (req, res) => res.sendFile(path.join(PUBLIC, 'cadastro.html')));
-router.get('/links', (req, res) => res.sendFile(path.join(PUBLIC, 'links.html')));
+router.get('/links',        (req, res) => res.sendFile(path.join(PUBLIC, 'links.html')));
 router.get('/kpi-avaliacoes', (req, res) =>
   res.sendFile(path.join(__dirname, 'public', 'avaliacoesKPI.html'))
 );
 router.get('/busca', (req, res) => res.sendFile(path.join(PUBLIC, 'busca.html')));
+// ★ BUSCA-AVALIACOES — inserção 3/4: rota da página HTML
+router.get('/buscaAvaliacoes', (req, res) => res.sendFile(path.join(PUBLIC, 'buscaAvaliacoes.html')));
+
+// ★ Rota explícita para o script de geração de PDF
+// DEVE ficar antes do express.static para garantir que seja servido corretamente
+router.get('/gerarPdfAvaliacao.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+  res.sendFile(path.join(__dirname, 'services', 'gerarPdfAvaliacao.js'));
+});
 
 router.use('/busca-api', buscaService);
 router.use('/links-api', linksTreinamentoService);
 router.use('/kpi-avaliacoes', kpiAvaliacoesService);
-router.use('/busca-api', buscaService);
+// ★ BUSCA-AVALIACOES — inserção 4/4: rota da API (ANTES do express.static)
+router.use('/busca-avaliacoes-api', buscaAvaliacoesService);
+
 // ─── Arquivos estáticos ───────────────────────────────────────────────────────
+// ATENÇÃO: express.static deve ficar DEPOIS de todas as rotas de API.
+// Qualquer router.use() registrado após esta linha não funcionará
+// para requisições que coincidam com arquivos existentes na pasta PUBLIC.
 router.use(express.static(PUBLIC, { index: false, extensions: false }));
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -354,7 +374,7 @@ router.get('/lembretes/historico', async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ★ POST /enviar-lembrete — ALTERADO: SEM link de avaliação
+// ★ POST /enviar-lembrete — SEM link de avaliação
 // ═══════════════════════════════════════════════════════════════════════════════
 router.post('/enviar-lembrete', async (req, res) => {
   try {
@@ -399,12 +419,6 @@ router.post('/enviar-lembrete', async (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 // ★ NOVAS ROTAS — LEMBRETES DE AVALIAÇÃO (fimTrein = hoje)
 // ═══════════════════════════════════════════════════════════════════════════════
-
-/**
- * GET /lembretes-avaliacao
- * Lista funcionários cujo fimTrein (col P) = hoje
- * e email de avaliação ainda não foi enviado (col AK vazia)
- */
 router.get('/lembretes-avaliacao', async (req, res) => {
   try {
     const lista = await getFuncionariosParaAvaliacaoLembrete();
@@ -416,17 +430,10 @@ router.get('/lembretes-avaliacao', async (req, res) => {
   }
 });
 
-/**
- * GET /lembretes-avaliacao/status
- */
 router.get('/lembretes-avaliacao/status', (req, res) => {
   res.json(avaliacaoLembretesCache.getStatus());
 });
 
-/**
- * GET /lembretes-avaliacao/historico
- * Histórico de emails de avaliação já enviados (col AK preenchida)
- */
 router.get('/lembretes-avaliacao/historico', async (req, res) => {
   try {
     const { mes, ano } = req.query;
@@ -467,11 +474,6 @@ router.get('/lembretes-avaliacao/historico', async (req, res) => {
   }
 });
 
-/**
- * POST /enviar-lembrete-avaliacao
- * Envia email COM link de avaliação para as lojas (dia final do treinamento)
- * Body: { rowIndex, nome, loja, funcao, email, emailLojaAvaliadora, inicioTrein, fimTrein, ... }
- */
 router.post('/enviar-lembrete-avaliacao', async (req, res) => {
   try {
     const f = req.body;
@@ -479,7 +481,6 @@ router.post('/enviar-lembrete-avaliacao', async (req, res) => {
       return res.status(400).json({ sucesso: false, erro: 'rowIndex obrigatório.' });
 
     const baseUrl = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
-
     const linkOrigem     = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'origem');
     const linkTreinadora = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'treinadora');
 
@@ -489,18 +490,12 @@ router.post('/enviar-lembrete-avaliacao', async (req, res) => {
 
     console.log(`✅ Email avaliação enviado: ${f.nome} (row ${f.rowIndex})`);
     res.json({ sucesso: true, linkOrigem, linkTreinadora });
-
   } catch (e) {
     console.error('[LEMBRETE-AVALIACAO] Erro:', e.message);
     res.status(500).json({ sucesso: false, erro: e.message });
   }
 });
 
-/**
- * POST /enviar-whatsapp-avaliacao-funcionario
- * Envia WhatsApp para o funcionário avaliar a loja (após ambas lojas avaliarem)
- * Body: { rowIndex, nome, telefone, loja, ... }
- */
 router.post('/enviar-whatsapp-avaliacao-funcionario', async (req, res) => {
   try {
     const f = req.body;
@@ -509,21 +504,15 @@ router.post('/enviar-whatsapp-avaliacao-funcionario', async (req, res) => {
     if (!f.telefone)
       return res.status(400).json({ sucesso: false, erro: 'Telefone obrigatório.' });
 
-    const baseUrl = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
-
+    const baseUrl         = (process.env.BASE_URL || 'http://localhost:3000') + '/treinamento';
     const linkFuncionario = gerarLinkAvaliacao(f.rowIndex, baseUrl, 'funcionario');
 
-    await enviarWhatsAppAvaliacaoFuncionario({
-      ...f,
-      linkAvaliacao: linkFuncionario,
-    });
-
+    await enviarWhatsAppAvaliacaoFuncionario({ ...f, linkAvaliacao: linkFuncionario });
     await marcarWhatsappAvaliacaoFunc(f.rowIndex);
     avaliacaoLembretesCache.marcarWhatsappFuncEnviado(f.rowIndex);
 
     console.log(`✅ WhatsApp avaliação funcionário: ${f.nome} (row ${f.rowIndex})`);
     res.json({ sucesso: true, linkFuncionario });
-
   } catch (e) {
     console.error('[WHATSAPP-AVALIACAO] Erro:', e.message);
     res.status(500).json({ sucesso: false, erro: e.message });
@@ -616,11 +605,11 @@ router.get('/turnover/resumo', (req, res) => {
   const dados = turnoverCache.getDados();
   if (!dados) return res.status(503).json({ erro: 'Cache ainda carregando...' });
   res.json({
-    ano:           dados.ano,
-    pctTurnover:   dados.pctTurnover,
-    totalAtivos:   dados.totalAtivos,
-    desligadosAno: dados.desligadosAno,
-    totalGeral:    dados.totalGeral,
+    ano:            dados.ano,
+    pctTurnover:    dados.pctTurnover,
+    totalAtivos:    dados.totalAtivos,
+    desligadosAno:  dados.desligadosAno,
+    totalGeral:     dados.totalGeral,
     sincronizadoEm: dados.sincronizadoEm,
   });
 });
@@ -922,12 +911,13 @@ router.post('/ia/turnover', async (req, res) => {
 
 // ─── Health ───────────────────────────────────────────────────────────────────
 router.get('/health', (req, res) => res.json({
-  modulo:    'treinamento',
-  status:    'online',
-  lembretes: lembretesCache.getStatus(),
+  modulo:             'treinamento',
+  status:             'online',
+  lembretes:          lembretesCache.getStatus(),
   avaliacaoLembretes: avaliacaoLembretesCache.getStatus(),
-  ia:        process.env.GEMINI_API_KEY ? 'configurada' : 'sem GEMINI_API_KEY',
-  model:     process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+  buscaAvaliacoes:    buscaAvaliacoesCache.getStatus(),
+  ia:                 process.env.GEMINI_API_KEY ? 'configurada' : 'sem GEMINI_API_KEY',
+  model:              process.env.GEMINI_MODEL || 'gemini-2.0-flash',
 }));
 
 module.exports = router;

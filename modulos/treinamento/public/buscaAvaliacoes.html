@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divino Fogão — Avaliações de Treinamento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/global.css">
+    <!-- jsPDF — geração de PDF no frontend -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="/treinamento/gerarPdfAvaliacao.js"></script>
+    <style>
+        /* ── Estilos exclusivos desta página (não cobertos pelo global.css) ── */
+        .filtro-aprov-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+        .filtro-aprov-lbl { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); white-space:nowrap; }
+
+        .aval-card         { background:var(--bg2); border:1.5px solid var(--border); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; transition:box-shadow .2s,border-color .2s; }
+        .aval-card:hover   { box-shadow:var(--shadow-lg); border-color:#d5cec4; }
+        .aval-card.editing { border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.1),var(--shadow-lg); }
+        .aval-card.deleting{ border-color:var(--red);    box-shadow:0 0 0 3px rgba(200,16,46,.12),var(--shadow-lg); }
+
+        .aval-header { display:flex; align-items:center; gap:14px; padding:16px 20px; cursor:pointer; user-select:none; }
+        .aval-avatar { width:40px; height:40px; border-radius:10px; background:var(--red-pale); border:1.5px solid rgba(200,16,46,.2); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; color:var(--red); flex-shrink:0; font-family:var(--font-mono); }
+        .aval-info  { flex:1; min-width:0; }
+        .aval-nome  { font-size:14px; font-weight:800; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .aval-sub   { font-size:12px; color:var(--muted); font-weight:600; margin-top:2px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+        .aval-body           { overflow:hidden; max-height:0; opacity:0; transition:max-height .32s ease,opacity .25s ease; }
+        .aval-body.open      { max-height:3000px; opacity:1; }
+        .aval-body-inner     { padding:0 20px 18px; border-top:1px solid var(--border); }
+
+        .aval-section       { margin-top:14px; }
+        .aval-section-title { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+        .aval-fields        { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:8px; }
+
+        @media(max-width:600px){
+            .aval-header     { gap:10px; padding:12px 14px; }
+            .aval-body-inner { padding:0 14px 14px; }
+            .aval-fields     { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════ TOAST ═══════ -->
+<div id="toast"></div>
+
+<!-- ═══════ MODAL CONFIRMAR EXCLUSÃO ═══════ -->
+<div class="modal-overlay" id="modalExcluir">
+    <div class="modal xs">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title" style="color:var(--red)">🗑️ Excluir Avaliação</div>
+                <div class="modal-sub" id="modalExcluirSub"></div>
+            </div>
+            <button class="modal-close" onclick="fecharModalExcluir()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div style="background:var(--red-pale);border:1.5px solid rgba(200,16,46,.2);border-radius:10px;padding:14px 16px;margin-bottom:14px;">
+                <div style="font-size:13px;font-weight:800;color:var(--red);margin-bottom:5px;">⚠️ Atenção — ação irreversível</div>
+                <div style="font-size:12px;color:var(--red);line-height:1.6;">
+                    Todos os dados desta linha serão <strong>apagados permanentemente</strong> da planilha.<br>
+                    A linha ficará <strong>em branco</strong> para ser reutilizada no futuro.
+                </div>
+            </div>
+            <div id="modalExcluirDados" style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:11px 14px;font-size:13px;"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="fecharModalExcluir()">Cancelar</button>
+            <button class="btn btn-red" id="btnConfirmarExcluir" onclick="confirmarExclusao()">🗑️ Excluir permanentemente</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════ NAV DRAWER MOBILE ═══════ -->
+<div class="nav-drawer-overlay" id="navOverlay" onclick="fecharDrawer()"></div>
+<div class="nav-drawer" id="navDrawer">
+    <div class="nav-drawer-head">
+        <span class="nav-drawer-title">🍽️ Divino Fogão</span>
+        <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
+    </div>
+    <div class="nav-drawer-body">
+        <a href="/treinamento/"                    class="nav-drawer-item">📊 Dashboard</a>
+        <a href="/treinamento/lembretes"           class="nav-drawer-item">🔔 Lembretes</a>
+        <a href="/treinamento/busca"               class="nav-drawer-item">🔍 Colaboradores</a>
+        <a href="/treinamento/kpi-avaliacoes"      class="nav-drawer-item">📊 KPI Avaliações</a>
+        <a href="/treinamento/buscaAvaliacoes"     class="nav-drawer-item active">⭐ Avaliações</a>
+        <a href="/treinamento/sults"               class="nav-drawer-item">🏪 Sults</a>
+        <a href="/treinamento/chamados"            class="nav-drawer-item">📞 Chamados T&amp;D</a>
+        <a href="/treinamento/universidade"        class="nav-drawer-item">🎓 Universidade</a>
+        <a href="/treinamento/turnover"            class="nav-drawer-item">🔄 Turnover</a>
+        <a href="/treinamento/cadastro"            class="nav-drawer-item">➕ Cadastro</a>
+        <a href="/treinamento/uploads"             class="nav-drawer-item">📁 Uploads</a>
+        <a href="/treinamento/links"               class="nav-drawer-item">🔗 Links</a>
+        <div class="nav-drawer-sep"></div>
+        <a href="javascript:history.back()"        class="nav-drawer-item">← Voltar</a>
+        <a href="/logout"                          class="nav-drawer-item" style="color:var(--red)">🚪 Sair</a>
+    </div>
+</div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header>
+    <div class="logo">
+        <img src="/treinamento/logo.png" alt="Divino Fogão"
+             onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
+        <span class="logo-fallback logo-fb">🍽️ DIVINO FOGÃO</span>
+    </div>
+    <div class="hd"></div>
+    <div class="h-title">Avaliações de Treinamento</div>
+    <nav>
+        <div class="nav-scroll">
+            <a href="/treinamento/"               class="nav-btn">📊 Dashboard</a>
+            <a href="/treinamento/lembretes"      class="nav-btn">🔔 Lembretes</a>
+            <a href="/treinamento/busca"          class="nav-btn">🔍 Colaboradores</a>
+            <a href="/treinamento/kpi-avaliacoes" class="nav-btn">📊 KPI</a>
+            <a href="/treinamento/buscaAvaliacoes" class="nav-btn" ctiveliações</a>
+            <a href="/treinamento/sults"          class="nav-btn">🏪 Sults</a>
+            <a href="/treinamento/chamados"       class="nav-btn">📞 Chamados</a>
+            <a href="/treinamento/universidade"   class="nav-btn">🎓 Universidade</a>
+            <a href="/treinamento/turnover"       class="nav-btn">🔄 Turnover</a>
+            <a href="/treinamento/cadastro"       class="nav-btn">➕ Cadastro</a>
+            <a href="/treinamento/uploads"        class="nav-btn">📁 Uploads</a>
+        </div>
+        <a href="javascript:history.back()" class="nav-btn" title="Voltar">← Voltar</a>
+        <a href="/logout" class="nav-btn" style="color:var(--red);border-left:1px solid var(--border)" title="Sair">🚪 Sair</a>
+    </nav>
+    <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
+</header>
+
+<!-- ═══════ STATUS BAR ═══════ -->
+<div id="statusBar">
+    <div class="sdot" id="statusDot"></div>
+    <span id="statusTxt">Verificando cache...</span>
+    <span id="cacheAge" style="color:var(--muted);font-size:10px;margin-left:4px;"></span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span id="syncTimer" style="font-size:10px;"></span>
+        <button class="btn btn-ghost btn-sm" onclick="sincronizar()" id="btnSync">↻ Sincronizar</button>
+    </span>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
+<main>
+
+    <div class="sync-bar">
+        <div class="sync-info" id="syncInfo">⏳ Carregando...</div>
+        <div style="font-size:11px;color:var(--muted);font-family:var(--font-mono)" id="proximaAtualizacao"></div>
+        <a href="https://docs.google.com/spreadsheets/d/1m2C0V1vYZ99prMs7g7CCaUOwWRah_7Sv0YtJoGLO-gw/edit?gid=336762125#gid=336762125"
+           target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;flex-shrink:0">
+           📊 Abrir Planilha
+        </a>
+    </div>
+
+    <!-- ── CAIXAS DE BUSCA ── -->
+    <div class="busca-grid">
+
+        <!-- Busca cache -->
+        <div class="busca-box">
+            <div class="busca-box-title">
+                🗄️ Busca no Cache
+                <span style="background:var(--accent);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:800;">RÁPIDA</span>
+            </div>
+            <div class="search-wrap">
+                <span style="font-size:16px">🔍</span>
+                <input type="text" class="search-input" id="inputCache"
+                    placeholder="Colaborador, avaliador, loja, função..."
+                    oninput="buscaCache()">
+                <button class="btn btn-ghost btn-sm" onclick="limparCache()" title="Limpar">✕</button>
+            </div>
+            <div class="filtros-group" style="margin-bottom:8px;">
+                <button class="filtro-tipo active" onclick="filtrarPeriodo(0,this)">Todos</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(7,this)">7 dias</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(20,this)">20 dias</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(30,this)">30 dias</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(60,this)">60 dias</button>
+                <button class="filtro-tipo" onclick="filtrarPeriodo(90,this)">90 dias</button>
+            </div>
+            <div class="filtro-aprov-row">
+                <span class="filtro-aprov-lbl">Resultado:</span>
+                <button class="filtro-tipo active" id="filtroAprov0" onclick="filtrarAprovado('todos',this)">Todos</button>
+                <button class="filtro-tipo" id="filtroAprov1" onclick="filtrarAprovado('sim',this)">✅ Aprovado</button>
+                <button class="filtro-tipo" id="filtroAprov2" onclick="filtrarAprovado('nao',this)">❌ Reprovado</button>
+            </div>
+            <div class="timer-txt" id="timerCache"></div>
+        </div>
+
+        <!-- Busca IA -->
+        <div class="busca-box">
+            <div class="busca-box-title">
+                🤖 Busca com IA
+                <span style="background:linear-gradient(135deg,var(--red),#8b0000);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:800;">GEMINI</span>
+            </div>
+            <div class="search-wrap">
+                <span style="font-size:16px">💬</span>
+                <input type="text" class="search-input" id="inputIA"
+                    placeholder="Ex: Quem teve nota abaixo de 7 em março?"
+                    onkeydown="if(event.key==='Enter')buscaIAPainel()">
+                <button class="btn btn-ghost btn-sm" onclick="limparIA()" title="Limpar">✕</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-red btn-sm" onclick="buscaIAPainel()" id="btnIA">🤖 Perguntar</button>
+                <span class="timer-txt" id="timerIA"></span>
+            </div>
+            <div class="ia-resultado" id="iaResultado"></div>
+        </div>
+
+    </div>
+
+    <!-- ── RESULTADOS ── -->
+    <div id="areaResultados">
+        <div class="resultados-header">
+            <div class="resultados-title" id="resultadosTitulo">⭐ Todas as Avaliações</div>
+            <div class="resultados-count" id="resultadosCount"></div>
+        </div>
+        <div class="cards-lista" id="listaCards">
+            <div class="loading-msg"><div class="spinner dark"></div> Carregando avaliações...</div>
+        </div>
+        <div class="paginacao" id="paginacao"></div>
+    </div>
+
+</main>
+
+<!-- ═══════ IA WIDGET FLUTUANTE ═══════ -->
+<div id="iaWidget" class="ia-red">
+    <div id="iaJanela">
+        <div class="ia-head">
+            <div class="ia-topo-esq">
+                <span style="font-size:20px">🤖</span>
+                <div>
+                    <div class="ia-title">Assistente T&amp;D</div>
+                    <div class="ia-topo-sub">Gemini · avaliações de treinamento</div>
+                </div>
+            </div>
+            <button class="ia-close" onclick="toggleIA()">✕</button>
+        </div>
+        <div class="ia-sugs">
+            <button class="ia-sug" onclick="enviarSugIA(this)">Notas mais baixas</button>
+            <button class="ia-sug" onclick="enviarSugIA(this)">Reprovados</button>
+            <button class="ia-sug" onclick="enviarSugIA(this)">Média de notas</button>
+            <button class="ia-sug" onclick="enviarSugIA(this)">Avaliações do mês</button>
+        </div>
+        <div id="iaMsgs" class="ia-msgs">
+            <div class="ia-msg bot">👋 Olá! Posso responder perguntas sobre as avaliações de treinamento. Use as sugestões acima ou escreva sua pergunta!</div>
+        </div>
+        <div class="ia-foot">
+            <input type="text" id="iaWidgetInput" class="ia-input"
+                placeholder="Faça uma pergunta..."
+                onkeydown="if(event.key==='Enter')enviarIAWidget()">
+            <button class="ia-enviar" id="iaWidgetBtn" onclick="enviarIAWidget()">➤</button>
+        </div>
+    </div>
+    <button id="iaToggle" onclick="toggleIA()" title="Assistente IA">🤖</button>
+</div>
+
+<script>
+// ─── API aponta para /busca-avaliacoes-api (registrado no routes.js) ──────────
+var API     = '/treinamento/busca-avaliacoes-api';
+var LC_DATA = 'buscaAvaliacoes_dados';
+var LC_TS   = 'buscaAvaliacoes_ts';
+var LC_TTL  = 7 * 24 * 60 * 60 * 1000;
+
+// Espelho do CAMPO_COLUNA_MAP do buscaAvaliacoes.js
+var CAMPO_COL = {
+    dataHora:0, avaliador:1, treinadorFuncao:2, unidade:3,
+    colaborador:4, funcaoColab:5, lojaTreinada:6,
+    inicioTrein:7, fimTrein:8, refeicoes:9, bebidas:10,
+    compreensao:11, habilidadesTec:12, atitudes:13, resolucaoProb:14,
+    trabalhoEquipe:15, adesaoPadroes:16, feedbackMelhoria:17, confiancaAutonomia:18,
+    destaque:19, comportamento:20, entendimentoConteudo:21, prontidaoFuncao:22,
+    multiplicador:23, fotoTecnica:24, aprovado:25, checkpointLoja:26, inseridoSistema:27
+};
+
+var _dados       = [];
+var _pagina      = 1;
+var _termo       = '';
+var _dias        = 0;
+var _filtroAprov = 'todos';
+var _debounce    = null;
+var _syncInt     = null;
+var _proxSync    = null;
+var _rowExcluir  = null;
+var _nomeExcluir = '';
+var _pendentes   = {};
+
+function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── TOAST ── */
+function toast(msg, erro) {
+    var t = document.getElementById('toast');
+    t.textContent = (erro?'❌ ':'✓ ') + msg;
+    t.className = 'show' + (erro?' error':'');
+    clearTimeout(t._t);
+    t._t = setTimeout(function(){ t.className=''; }, 3500);
+}
+
+/* ── NAV DRAWER ── */
+function abrirDrawer() {
+    document.getElementById('navDrawer').classList.add('open');
+    document.getElementById('navOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function fecharDrawer() {
+    document.getElementById('navDrawer').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+/* ── CACHE LOCAL ── */
+function lcLer() {
+    try {
+        var ts=localStorage.getItem(LC_TS), d=localStorage.getItem(LC_DATA);
+        if (!ts||!d) return null;
+        if (Date.now()-parseInt(ts) > LC_TTL) return null;
+        return { dados:JSON.parse(d), ts:parseInt(ts) };
+    } catch(e){ return null; }
+}
+function lcSalvar(dados) {
+    try { localStorage.setItem(LC_DATA,JSON.stringify(dados)); localStorage.setItem(LC_TS,String(Date.now())); } catch(e){}
+}
+function lcIdade(ts) {
+    if (!ts) return '';
+    var s=Math.floor((Date.now()-ts)/1000);
+    if (s<60)    return 'agora mesmo';
+    if (s<3600)  return Math.floor(s/60)+'min atrás';
+    if (s<86400) return Math.floor(s/3600)+'h atrás';
+    return Math.floor(s/86400)+'d atrás';
+}
+
+/* ── STATUS ── */
+async function atualizarStatus() {
+    try {
+        var r=await fetch(API+'/status'), d=await r.json();
+        var dot=document.getElementById('statusDot');
+        var txt=document.getElementById('statusTxt');
+        var inf=document.getElementById('syncInfo');
+        if (d.ok) {
+            dot.className='sdot ready';
+            txt.textContent='✓ Servidor — '+d.total+' avaliações';
+            _proxSync = d.proximaSync ? new Date(d.proximaSync).getTime() : null;
+            var ua=d.ultimaSync ? new Date(d.ultimaSync).toLocaleString('pt-BR') : '—';
+            inf.innerHTML='<strong>'+d.total+'</strong> avaliações · sync: '+ua;
+        } else if (d.sincronizando) {
+            dot.className='sdot syncing'; txt.textContent='⏳ Sincronizando...'; inf.innerHTML='⏳ Sincronizando...';
+        } else {
+            dot.className='sdot error'; txt.textContent='⚠️ '+(d.erro||'Erro'); inf.innerHTML='⚠️ '+(d.erro||'Erro no cache');
+        }
+    } catch(e) {
+        document.getElementById('statusDot').className='sdot error';
+        document.getElementById('statusTxt').textContent='⚠️ Servidor offline';
+    }
+}
+function iniciarCountdown() {
+    clearInterval(_syncInt);
+    _syncInt=setInterval(function(){
+        var el=document.getElementById('syncTimer');
+        if (!_proxSync){el.textContent='';return;}
+        var diff=Math.max(0,Math.round((_proxSync-Date.now())/1000));
+        if (!diff){el.textContent='';return;}
+        var h=Math.floor(diff/3600),m=Math.floor((diff%3600)/60);
+        el.textContent=h>0?'Próx. sync: '+h+'h '+m+'min':'Próx. sync: '+m+'min';
+    },30000);
+}
+async function sincronizar() {
+    var btn=document.getElementById('btnSync');
+    btn.disabled=true; btn.innerHTML='<div class="spinner dark"></div>';
+    try {
+        await fetch(API+'/sincronizar',{method:'POST'});
+        await atualizarStatus();
+        await carregarTodos(true);
+        toast('Cache sincronizado!');
+    } catch(e){ toast('Erro: '+e.message,true); }
+    finally { btn.disabled=false; btn.innerHTML='↻ Sincronizar'; }
+}
+
+/* ── CARREGAR TODOS ── */
+async function carregarTodos(forcar) {
+    if (!forcar) {
+        var lc=lcLer();
+        if (lc){ _dados=lc.dados; atualizarInfoCache(lc.ts); return; }
+    }
+    try {
+        var r=await fetch(API+'/cache?pagina=1&porPagina=9999');
+        var d=await r.json();
+        if (d.itens && d.itens.length){ _dados=d.itens; lcSalvar(_dados); atualizarInfoCache(Date.now()); }
+    } catch(e) {
+        var lc2=(function(){
+            try{ var ts=localStorage.getItem(LC_TS),dd=localStorage.getItem(LC_DATA); if(ts&&dd) return {dados:JSON.parse(dd),ts:parseInt(ts)}; }catch(x){}
+            return null;
+        })();
+        if (lc2){ _dados=lc2.dados; atualizarInfoCache(lc2.ts); }
+    }
+}
+function atualizarInfoCache(ts) {
+    document.getElementById('cacheAge').textContent='· local: '+lcIdade(ts);
+    document.getElementById('proximaAtualizacao').textContent='Cache até: '+new Date(ts+LC_TTL).toLocaleDateString('pt-BR');
+}
+
+/* ── FILTROS ── */
+function filtrarPeriodo(dias,btn) {
+    _dias=dias; _pagina=1;
+    btn.closest('.filtros-group').querySelectorAll('.filtro-tipo').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    renderPagina(1);
+}
+function filtrarAprovado(val,btn) {
+    _filtroAprov=val; _pagina=1;
+    ['filtroAprov0','filtroAprov1','filtroAprov2'].forEach(function(id){var b=document.getElementById(id);if(b)b.classList.remove('active');});
+    if(btn)btn.classList.add('active');
+    renderPagina(1);
+}
+function aplicarFiltros(dados) {
+    var res=dados;
+    if (_termo) {
+        var t=_termo.toLowerCase();
+        res=res.filter(function(a){
+            return (a.colaborador&&a.colaborador.toLowerCase().includes(t))||
+                   (a.avaliador&&a.avaliador.toLowerCase().includes(t))||
+                   (a.lojaTreinada&&a.lojaTreinada.toLowerCase().includes(t))||
+                   (a.funcaoColab&&a.funcaoColab.toLowerCase().includes(t))||
+                   (a.unidade&&a.unidade.toLowerCase().includes(t))||
+                   (a.treinadorFuncao&&a.treinadorFuncao.toLowerCase().includes(t));
+        });
+    }
+    if (_dias>0) {
+        var lim=new Date(); lim.setDate(lim.getDate()-_dias);
+        res=res.filter(function(a){
+            if(!a.dataHora)return false;
+            var p=a.dataHora.split(' ')[0].split('/');
+            return p.length===3?new Date(p[2],p[1]-1,p[0])>=lim:new Date(a.dataHora)>=lim;
+        });
+    }
+    if (_filtroAprov!=='todos') {
+        res=res.filter(function(a){
+            var v=(a.aprovado||'').toLowerCase().trim();
+            var ok=v==='sim'||v==='yes'||v==='aprovado'||v==='true';
+            return _filtroAprov==='sim'?ok:(!ok&&v!=='');
+        });
+    }
+    return res;
+}
+
+/* ── RENDER PAGINADO ── */
+function renderPagina(pagina) {
+    _pagina=pagina;
+    var t0=Date.now(),filtrado=aplicarFiltros(_dados),PP=20;
+    var total=filtrado.length,inicio=(pagina-1)*PP;
+    var itens=filtrado.slice(inicio,inicio+PP),totPag=Math.ceil(total/PP)||1;
+    document.getElementById('timerCache').textContent=((Date.now()-t0)/1000).toFixed(2)+'s · '+total+' resultado(s)';
+    document.getElementById('resultadosCount').textContent='Pág. '+pagina+'/'+totPag+' · '+total+' total';
+    var lista=document.getElementById('listaCards');
+    if (!itens.length) {
+        lista.innerHTML='<div class="empty"><div class="empty-state-icon">😕</div><p class="empty-state-text">Nenhuma avaliação encontrada'+(_termo?' para "'+_termo+'"':'')+'</p></div>';
+        document.getElementById('paginacao').innerHTML='';
+        return;
+    }
+    lista.innerHTML=itens.map(renderCard).join('');
+    renderPaginacao(pagina,totPag,total);
+}
+
+/* ── BUSCA INPUT ── */
+function buscaCache() {
+    clearTimeout(_debounce);
+    _debounce=setTimeout(function(){
+        _termo=document.getElementById('inputCache').value.trim(); _pagina=1;
+        document.getElementById('resultadosTitulo').textContent=_termo?'🔍 Resultado: "'+_termo+'"':'⭐ Todas as Avaliações';
+        renderPagina(1);
+    },280);
+}
+function limparCache() {
+    document.getElementById('inputCache').value='';
+    _termo='';_dias=0;_filtroAprov='todos';_pagina=1;
+    document.getElementById('resultadosTitulo').textContent='⭐ Todas as Avaliações';
+    document.getElementById('timerCache').textContent='';
+    document.querySelectorAll('.filtros-group .filtro-tipo').forEach(function(b,i){b.classList.toggle('active',i===0);});
+    ['filtroAprov0','filtroAprov1','filtroAprov2'].forEach(function(id,i){var b=document.getElementById(id);if(b)b.classList.toggle('active',i===0);});
+    renderPagina(1);
+}
+
+/* ── BUSCA IA PAINEL ── */
+async function buscaIAPainel() {
+    var q=document.getElementById('inputIA').value.trim();
+    var res=document.getElementById('iaResultado'),btn=document.getElementById('btnIA');
+    if(!q)return;
+    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Consultando...';
+    res.className='ia-resultado visivel'; res.textContent='⏳ Consultando Gemini...';
+    var t0=Date.now();
+    try {
+        var r=await fetch(API+'/ia',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q})});
+        var d=await r.json();
+        document.getElementById('timerIA').textContent=((Date.now()-t0)/1000).toFixed(2)+'s';
+        res.innerHTML=d.ok
+            ?d.resposta.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')
+            :'❌ '+esc(d.erro);
+    } catch(e){res.textContent='❌ '+e.message;}
+    finally{btn.disabled=false;btn.innerHTML='🤖 Perguntar';}
+}
+function limparIA() {
+    document.getElementById('inputIA').value='';
+    document.getElementById('iaResultado').className='ia-resultado';
+    document.getElementById('timerIA').textContent='';
+}
+
+/* ── IA WIDGET ── */
+function toggleIA() {
+    var j=document.getElementById('iaJanela'); j.classList.toggle('aberto');
+    if(j.classList.contains('aberto'))document.getElementById('iaWidgetInput').focus();
+}
+function enviarSugIA(btn){document.getElementById('iaWidgetInput').value=btn.textContent.trim();enviarIAWidget();}
+async function enviarIAWidget() {
+    var input=document.getElementById('iaWidgetInput');
+    var q=input.value.trim();if(!q)return;input.value='';
+    var msgs=document.getElementById('iaMsgs'),btn=document.getElementById('iaWidgetBtn');
+    var um=document.createElement('div');um.className='ia-msg user';um.textContent=q;msgs.appendChild(um);
+    var am=document.createElement('div');am.className='ia-msg bot';am.textContent='⏳ Consultando...';msgs.appendChild(am);
+    msgs.scrollTop=msgs.scrollHeight;btn.disabled=true;
+    try {
+        var r=await fetch(API+'/ia',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pergunta:q})});
+        var d=await r.json();
+        am.innerHTML=d.ok
+            ?d.resposta.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')
+            :'❌ '+esc(d.erro);
+    } catch(e){am.textContent='❌ '+e.message;}
+    finally{btn.disabled=false;msgs.scrollTop=msgs.scrollHeight;}
+}
+
+/* ── EXCLUSÃO ── */
+function abrirModalExcluir(rowIndex,nome,ev) {
+    if(ev)ev.stopPropagation();
+    _rowExcluir=rowIndex;_nomeExcluir=nome;
+    document.getElementById('modalExcluirSub').textContent='Linha '+(rowIndex+2)+' da aba "Respostas ao formulário 1"';
+    document.getElementById('modalExcluirDados').innerHTML='👤 <strong>'+esc(nome)+'</strong> <span style="font-size:11px;color:var(--muted);font-family:var(--font-mono)">· rowIndex '+rowIndex+'</span>';
+    document.getElementById('modalExcluir').classList.add('open');
+    var card=document.getElementById('aval-'+rowIndex);if(card)card.classList.add('deleting');
+}
+function fecharModalExcluir() {
+    document.getElementById('modalExcluir').classList.remove('open');
+    if(_rowExcluir!==null){var card=document.getElementById('aval-'+_rowExcluir);if(card)card.classList.remove('deleting');}
+    _rowExcluir=null;_nomeExcluir='';
+}
+async function confirmarExclusao() {
+    if(_rowExcluir===null)return;
+    var btn=document.getElementById('btnConfirmarExcluir');
+    btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Excluindo...';
+    try {
+        var r=await fetch(API+'/excluir',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rowIndex:_rowExcluir})});
+        var d=await r.json();
+        if(!d.ok)throw new Error(d.erro||'Erro ao excluir');
+        _dados=_dados.filter(function(a){return a.rowIndex!==_rowExcluir;});
+        lcSalvar(_dados);
+        var nome=_nomeExcluir;fecharModalExcluir();
+        toast(nome+' — avaliação removida com sucesso!');
+        renderPagina(_pagina);
+    } catch(e){toast(e.message,true);btn.disabled=false;btn.innerHTML='🗑️ Excluir permanentemente';}
+}
+
+/* ── EDIÇÃO INLINE ── */
+function onFieldClick(el,ri,campo,ev) {
+    if(ev)ev.stopPropagation();
+    if(el.classList.contains('active-edit'))return;
+    var valAtual=el.dataset.valor||'';
+    el.classList.add('active-edit');
+    el.querySelector('.field-edit-hint').style.display='none';
+    var valEl=el.querySelector('.field-value');valEl.style.display='none';
+    var inp=document.createElement('input');
+    inp.className='field-input';inp.value=valAtual==='—'?'':valAtual;
+    el.appendChild(inp);inp.focus();inp.select();
+    var card=el.closest('.aval-card');card.classList.add('editing');
+    var bar=card.querySelector('.edit-mode-bar');if(bar)bar.classList.add('visible');
+    inp.addEventListener('input',function(){
+        if(!_pendentes[ri])_pendentes[ri]={};_pendentes[ri][campo]=inp.value;
+        var st=card.querySelector('.edit-status');if(st){st.textContent='✏️ Não salvo';st.className='edit-status';}
+    });
+    inp.addEventListener('blur',function(){
+        valEl.textContent=inp.value||'—';
+        if(!inp.value)valEl.classList.add('muted');else valEl.classList.remove('muted');
+        valEl.style.display='';inp.remove();el.classList.remove('active-edit');
+        el.querySelector('.field-edit-hint').style.display='';el.dataset.valor=inp.value;
+    });
+    inp.addEventListener('keydown',function(e){
+        if(e.key==='Enter')inp.blur();
+        if(e.key==='Escape'){inp.value=valAtual==='—'?'':valAtual;inp.blur();if(_pendentes[ri])delete _pendentes[ri][campo];}
+    });
+}
+async function salvarCard(ri,btnEl) {
+    var pend=_pendentes[ri];
+    if(!pend||!Object.keys(pend).length){toast('Nenhuma alteração para salvar.');return;}
+    var card=btnEl.closest('.aval-card'),st=card.querySelector('.edit-status');
+    btnEl.disabled=true;btnEl.innerHTML='<div class="spinner"></div> Salvando...';
+    if(st){st.textContent='⏳ Salvando...';st.className='edit-status saving';}
+    var alts={};
+    Object.keys(pend).forEach(function(c){var col=CAMPO_COL[c];if(col!==undefined)alts[col]=pend[c];});
+    try {
+        var r=await fetch(API+'/editar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rowIndex:ri,alteracoes:alts})});
+        var d=await r.json();
+        if(!d.ok)throw new Error(d.erro||'Erro ao salvar');
+        delete _pendentes[ri];
+        var aval=_dados.find(function(a){return a.rowIndex===ri;});if(aval)Object.assign(aval,pend);
+        lcSalvar(_dados);
+        if(st){st.textContent='✓ Salvo';st.className='edit-status saved';}
+        card.classList.remove('editing');card.querySelector('.edit-mode-bar').classList.remove('visible');
+        toast('Avaliação atualizada na planilha!');
+    } catch(e){if(st){st.textContent='❌ '+e.message;st.className='edit-status error';}toast(e.message,true);}
+    finally{btnEl.disabled=false;btnEl.innerHTML='💾 Salvar';}
+}
+function cancelarEdicao(ri){delete _pendentes[ri];renderPagina(_pagina);}
+
+/* ── PDF ── */
+function baixarPdf(ri, ev) {
+    if (ev) ev.stopPropagation();
+    var aval = _dados.find(function(a){ return a.rowIndex === ri; });
+    if (!aval) { toast('Avaliação não encontrada no cache.', true); return; }
+    if (typeof gerarPdfAvaliacao !== 'function') {
+        toast('Módulo PDF não carregado.', true); return;
+    }
+    gerarPdfAvaliacao(aval);
+}
+
+/* ── HELPERS ── */
+function aprovadoBadge(v) {
+    if(!v)return'';
+    var u=v.toUpperCase().trim();
+    if(u==='SIM'||u==='YES'||u==='APROVADO')return'<span class="badge-sm badge-green">✅ Aprovado</span>';
+    return'<span class="badge-sm badge-red">❌ Reprovado</span>';
+}
+function notaCls(n){var v=parseFloat(String(n).replace(',','.'));if(isNaN(v))return'';return v>=8?'ok':v>=6?'':'nok';}
+
+/* ── RENDER CARD ── */
+function renderCard(a) {
+    var ini=(a.colaborador||'?').split(' ').slice(0,2).map(function(p){return p[0]||'';}).join('').toUpperCase();
+    var ri=a.rowIndex,nomeJS=(a.colaborador||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"');
+    var badges=aprovadoBadge(a.aprovado);
+    if(a.multiplicador)badges+='<span class="badge-sm badge-yellow">⭐ '+esc(a.multiplicador)+'/10</span>';
+    if(a.checkpointLoja&&a.checkpointLoja.trim())badges+='<span class="badge-sm badge-accent">📌 Check</span>';
+
+    return '<div class="aval-card" id="aval-'+ri+'">'+
+      '<div class="aval-header" onclick="toggleCard(this)">'+
+        '<div class="aval-avatar">'+ini+'</div>'+
+        '<div class="aval-info">'+
+          '<div class="aval-nome">'+esc(a.colaborador||'— sem nome —')+'</div>'+
+          '<div class="aval-sub">'+
+            (a.lojaTreinada?'<span>🏪 '+esc(a.lojaTreinada)+'</span>':'')+
+            (a.funcaoColab ?'<span>👔 '+esc(a.funcaoColab)+'</span>' :'')+
+            (a.avaliador   ?'<span>👁 '+esc(a.avaliador)+'</span>'   :'')+
+            (a.dataHora    ?'<span>📅 '+esc(a.dataHora.split(' ')[0])+'</span>':'')+
+          '</div>'+
+        '</div>'+
+        (badges?'<div class="colab-badges">'+badges+'</div>':'')+
+        '<div class="colab-acc-btn"><svg viewBox="0 0 12 12" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="2,3 6,9 10,3"/></svg></div>'+
+      '</div>'+
+      '<div class="aval-body"><div class="aval-body-inner">'+
+        '<div class="edit-mode-bar">✏️ Edição ativa · clique em qualquer campo<span class="edit-status"></span></div>'+
+        sec('📋 Identificação',ri,[
+            ['Data / Hora','dataHora',a.dataHora,0,''],
+            ['Colaborador','colaborador',a.colaborador,0,'wrap'],
+            ['Função','funcaoColab',a.funcaoColab,0,''],
+            ['Loja Treinada','lojaTreinada',a.lojaTreinada,0,''],
+            ['Avaliador','avaliador',a.avaliador,0,''],
+            ['Treinador/Função','treinadorFuncao',a.treinadorFuncao,0,'wrap'],
+            ['Unidade','unidade',a.unidade,0,''],
+        ])+
+        sec('🏫 Período',ri,[
+            ['Início','inicioTrein',a.inicioTrein,0,''],
+            ['Fim','fimTrein',a.fimTrein,0,''],
+            ['Refeições','refeicoes',a.refeicoes,1,''],
+            ['Bebidas','bebidas',a.bebidas,0,'wrap'],
+        ])+
+        sec('📊 Critérios',ri,[
+            ['Compreensão','compreensao',a.compreensao,0,''],
+            ['Habilidades Téc.','habilidadesTec',a.habilidadesTec,0,''],
+            ['Atitudes','atitudes',a.atitudes,0,''],
+            ['Resolução Prob.','resolucaoProb',a.resolucaoProb,0,''],
+            ['Trabalho Equipe','trabalhoEquipe',a.trabalhoEquipe,0,''],
+            ['Adesão Padrões','adesaoPadroes',a.adesaoPadroes,0,''],
+            ['Feedback/Melhoria','feedbackMelhoria',a.feedbackMelhoria,0,''],
+            ['Confiança/Auto.','confiancaAutonomia',a.confiancaAutonomia,0,''],
+        ])+
+        sec('💬 Qualitativa',ri,[
+            ['Destaque','destaque',a.destaque,0,'wrap'],
+            ['Comportamento','comportamento',a.comportamento,0,'wrap'],
+            ['Entend. Conteúdo','entendimentoConteudo',a.entendimentoConteudo,0,'wrap'],
+            ['Prontidão Função','prontidaoFuncao',a.prontidaoFuncao,0,'wrap'],
+        ])+
+        sec('✅ Resultado Final',ri,[
+            ['Multiplicador (0-10)','multiplicador',a.multiplicador,1,notaCls(a.multiplicador)],
+            ['Aprovado','aprovado',a.aprovado,0,(a.aprovado||'').toUpperCase()==='SIM'?'ok':'muted'],
+            ['Foto Técnica','fotoTecnica',a.fotoTecnica,0,''],
+            ['Checkpoint Loja','checkpointLoja',a.checkpointLoja,0,'wrap'],
+            ['Inserido Sistema','inseridoSistema',a.inseridoSistema,0,''],
+        ])+
+        '<div class="edit-actions">'+
+          '<button class="btn btn-green btn-sm" onclick="salvarCard('+ri+',this)">💾 Salvar</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="cancelarEdicao('+ri+')">↩ Descartar</button>'+
+          '<button class="btn btn-sm" style="background:#1e40af;color:#fff;border-color:#1e40af;" onclick="baixarPdf('+ri+',event)" title="Baixar PDF da avaliação">📄 PDF</button>'+
+          '<button class="btn btn-sm" style="margin-left:auto;background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.25);" onclick="abrirModalExcluir('+ri+',\''+nomeJS+'\',event)">🗑️ Excluir</button>'+
+        '</div>'+
+      '</div></div></div>';
+}
+
+function sec(titulo,ri,campos) {
+    return '<div class="aval-section"><div class="aval-section-title">'+titulo+'</div>'+
+        '<div class="aval-fields">'+
+        campos.map(function(f){
+            var label=f[0],campo=f[1],valor=f[2]||'',mono=f[3],cls=f[4]||'';
+            var dv=valor||'—';if(!valor)cls='muted';
+            return '<div class="field" data-campo="'+campo+'" data-valor="'+esc(valor)+'" onclick="onFieldClick(this,'+ri+',\''+campo+'\',event)">'+
+                '<div class="field-label">'+label+'</div>'+
+                '<div class="field-value'+(mono?' mono':'')+(cls?' '+cls:'')+'" title="'+esc(dv)+'">'+esc(dv)+'</div>'+
+                '<span class="field-edit-hint">✏️</span>'+
+            '</div>';
+        }).join('')+
+        '</div></div>';
+}
+
+function toggleCard(hdr) {
+    var body=hdr.nextElementSibling,btn=hdr.querySelector('.colab-acc-btn');
+    body.classList.toggle('open');btn.classList.toggle('open');
+    btn.querySelector('svg').setAttribute('stroke',body.classList.contains('open')?'var(--red)':'var(--muted)');
+}
+
+/* ── PAGINAÇÃO ── */
+function renderPaginacao(pg,tot,total) {
+    var el=document.getElementById('paginacao');
+    if(tot<=1){el.innerHTML='';return;}
+    var h='<button class="pag-btn" onclick="renderPagina('+(pg-1)+')" '+(pg<=1?'disabled':'')+'>‹</button>';
+    var ini=Math.max(1,pg-2),fim=Math.min(tot,pg+2);
+    if(ini>1){h+='<button class="pag-btn" onclick="renderPagina(1)">1</button>';if(ini>2)h+='<span class="pag-info">…</span>';}
+    for(var i=ini;i<=fim;i++)h+='<button class="pag-btn'+(i===pg?' active':'')+'" onclick="renderPagina('+i+')">'+i+'</button>';
+    if(fim<tot){if(fim<tot-1)h+='<span class="pag-info">…</span>';h+='<button class="pag-btn" onclick="renderPagina('+tot+')">'+tot+'</button>';}
+    h+='<button class="pag-btn" onclick="renderPagina('+(pg+1)+')" '+(pg>=tot?'disabled':'')+'>›</button>';
+    h+='<span class="pag-info" style="margin-left:8px">'+total+' resultados</span>';
+    el.innerHTML=h;
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',async function(){
+    atualizarStatus();
+    iniciarCountdown();
+    document.getElementById('listaCards').innerHTML='<div class="loading-msg"><div class="spinner dark"></div> Carregando avaliações...</div>';
+    await carregarTodos(false);
+    renderPagina(1);
+});
+</script>
+</body>
+</html>

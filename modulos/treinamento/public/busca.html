@@ -82,6 +82,7 @@
             <a href="/treinamento/lembretes"      class="nav-btn">🔔 Lembretes</a>
             <a href="/treinamento/busca"          class="nav-btn active-red">🔍 Colaboradores</a>
             <a href="/treinamento/kpi-avaliacoes" class="nav-btn">📊 KPI</a>
+            <a href="/treinamento/buscaAvaliacoes" class="nav-btn">⭐ Avaliações</a>
             <a href="/treinamento/sults"          class="nav-btn">🏪 Sults</a>
             <a href="/treinamento/chamados"       class="nav-btn">📞 Chamados</a>
             <a href="/treinamento/universidade"   class="nav-btn">🎓 Universidade</a>
@@ -595,6 +596,8 @@ function onFieldClick(el, ri, campo, ev) {
     card.classList.add('editing');
     var bar = card.querySelector('.edit-mode-bar');
     if (bar) bar.classList.add('visible');
+   
+   
     inp.addEventListener('input', function() {
         if (!_pendentes[ri]) _pendentes[ri] = {};
         _pendentes[ri][campo] = inp.value;
@@ -603,6 +606,28 @@ function onFieldClick(el, ri, campo, ev) {
         if (campo === 'nome') {
             var h = document.getElementById('nomehdr-' + ri);
             if (h) { var s = h.querySelector('span'); h.textContent = inp.value || '—'; if (s) h.appendChild(s); }
+        }
+        // ── Auto-calcular Total = Prêmio + Refeição ──
+        if (campo === 'valorPremio' || campo === 'valorRefeicao') {
+            var premioEl   = card.querySelector('[data-campo="valorPremio"]');
+            var refEl      = card.querySelector('[data-campo="valorRefeicao"]');
+            var premioVal  = campo === 'valorPremio'   ? inp.value : (premioEl  ? premioEl.dataset.valor  : '0');
+            var refVal     = campo === 'valorRefeicao' ? inp.value : (refEl     ? refEl.dataset.valor     : '0');
+            var p          = parseFloat(String(premioVal).replace(',', '.'))  || 0;
+            var r          = parseFloat(String(refVal).replace(',', '.'))     || 0;
+            var total      = (p + r).toFixed(2);
+            // Atualiza o campo Total visualmente no card
+            var totalEl = card.querySelector('[data-campo="valorTotal"]');
+            if (totalEl) {
+                totalEl.dataset.valor = total;
+                var tv = totalEl.querySelector('.field-value');
+                if (tv) {
+                    tv.textContent = total > 0 ? 'R$ ' + total.replace('.', ',') : '—';
+                    tv.classList.toggle('muted', total <= 0);
+                }
+            }
+            // Injeta o total nos pendentes para salvar junto
+            _pendentes[ri]['valorTotal'] = total;
         }
     });
     inp.addEventListener('blur', function() {
@@ -701,16 +726,17 @@ function renderCard(c) {
           '✏️ Edição ativa · clique em qualquer campo' +
           '<span class="edit-status"></span>' +
         '</div>' +
-
-        sec('👤 Dados Pessoais', ri, [
+   sec('👤 Dados Pessoais', ri, [
             ['Nome','nome',c.nome,0,'wrap'],
             ['Nº','numero',c.numero,1,''],
             ['CPF','cpf',c.cpf,1,''],
             ['RG','rg',c.rg,1,''],
             ['Turno','turno',c.turno,0,''],
+            ['Cargo / Função','funcao',c.funcao,0,''],
             ['Telefone','telefone',c.telefone,1,''],
             ['E-mail','email',c.email,0,''],
         ]) +
+        
         sec('🏫 Treinamento', ri, [
             ['Início','inicioTrein',c.inicioTrein,0,''],
             ['Fim','fimTrein',c.fimTrein,0,''],
@@ -759,7 +785,7 @@ function sec(titulo, ri, campos) {
             campos.map(function(f) {
                 var label=f[0], campo=f[1], valor=f[2]||'', mono=f[3], cls=f[4]||'';
                 var dv = valor||'—'; if (!valor) cls = 'muted';
-                return '<div class="field" data-valor="'+esc(valor)+'" onclick="onFieldClick(this,'+ri+',\''+campo+'\',event)">' +
+                return '<div class="field" data-campo="'+campo+'" data-valor="'+esc(valor)+'" onclick="onFieldClick(this,'+ri+',\''+campo+'\',event)">' +
                     '<div class="field-label">'+label+'</div>' +
                     '<div class="field-value'+(mono?' mono':'')+(cls?' '+cls:'')+'" title="'+esc(dv)+'">'+esc(dv)+'</div>' +
                     '<span class="field-edit-hint">✏️</span>' +

@@ -211,6 +211,27 @@ router.post('/editar', async (req, res) => {
             });
         }
 
+  // ── Auto-calcular valorTotal se prêmio ou refeição foram alterados ──
+        const temPremio   = alteracoes['valorPremio']   !== undefined || alteracoes[27] !== undefined;
+        const temRefeicao = alteracoes['valorRefeicao'] !== undefined || alteracoes[28] !== undefined;
+        if (temPremio || temRefeicao) {
+            const dadosCache = buscaCache.getDados();
+            const colab      = dadosCache.find(d => d.rowIndex === parseInt(rowIndex, 10));
+            const premioNovo   = alteracoes['valorPremio']   ?? alteracoes[27]  ?? colab?.valorPremio   ?? '0';
+            const refeicaoNovo = alteracoes['valorRefeicao'] ?? alteracoes[28]  ?? colab?.valorRefeicao ?? '0';
+            const p = parseFloat(String(premioNovo).replace(',', '.'))   || 0;
+            const r = parseFloat(String(refeicaoNovo).replace(',', '.')) || 0;
+            const totalCalculado = (p + r).toFixed(2);
+            // Injeta o total nas alterações (garante que vai para a planilha)
+            alteracoes['valorTotal'] = totalCalculado;
+            // Adiciona no array data para o batchUpdate
+            data.push({
+                range:  `'${ABA_CADASTRAL}'!${colIndexToLetter(CAMPO_COLUNA_MAP['valorTotal'])}${linhaReal}`,
+                values: [[totalCalculado]],
+            });
+            console.log(`[BUSCA/editar] 💰 Total calculado: ${premioNovo} + ${refeicaoNovo} = ${totalCalculado}`);
+        }
+
         if (data.length === 0) {
             return res.status(400).json({ ok: false, erro: 'Nenhum campo válido para atualizar' });
         }
