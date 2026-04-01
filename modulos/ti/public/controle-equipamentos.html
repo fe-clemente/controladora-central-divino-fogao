@@ -10,67 +10,86 @@
 <body>
 
 <header>
-  <div class="logo">
-    <img src="logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
-    <span class="logo-fb">🍽️</span>
-  </div>
-  <div class="hd"></div>
-  <div class="h-title">Central T.I.</div>
-
-  <nav>
-    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-     <button class="nav-btn acitve" onclick="location.href='/ti/controle-equipamentos.html'"> 🖥️ Gestão Ativos</button>
-    <button class="nav-btn " onclick="location.href='/ti/ativos.html'">📦 Comodato- Jurídico</button>
-    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-    <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
-    <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
-    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
-    <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
-    <div class="nav-dropdown" id="navRelatorios">
-      <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
-        📊 Relatórios <span class="nav-drop-arrow">▾</span>
-      </button>
-      <div class="nav-drop-menu">
-        <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
-          <span class="ndi-icon">📋</span>
-          <span class="ndi-info">
-            <span class="ndi-label">Check-in / Check-out</span>
-            <span class="ndi-desc">Presença e localização de consultores</span>
-          </span>
-        </a>
-      </div>
+    <div class="logo">
+        <img src="/logo.png" alt="Divino Fogão" onerror="this.style.display='none';document.querySelector('.logo-fb').style.display='block'">
+        <span class="logo-fb">🍽️</span>
     </div>
-    <button class="nav-btn" onclick="location.href='/'">🚪 Sair</button>
-  </nav>
+    <div class="hd"></div>
+    <div class="h-title">Central de T.I.</div>
 
-  <!-- Hamburger mobile -->
-  <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
+    <!-- Nav desktop -->
+    <nav id="navDesktop">      
+        <!-- ↓ Wrapper de scroll — NÃO envolve o dropdown ↓ -->
+   <div class="nav-scroll">
+            <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+            <button class="nav-btn active-ti active " onclick="location.href='/ti/controle-equipamentos.html'"> 🖥️ Gestão Ativos</button>
+            <button class="nav-btn  " onclick="location.href='/ti/ativos.html'">📦 Comodato- Jurídico</button>
+            <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+            <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+            <button class="nav-btn " onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+            <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+            <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+            <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
+        </div>
+        <!-- ↑ fim do nav-scroll ↑ -->
+
+        <!-- ↓ Dropdown FORA do nav-scroll — posição absoluta funciona ↓ -->
+        <div class="nav-dropdown" id="navRelatorios">
+            <button class="nav-btn nav-btn-drop" type="button"
+                onclick="event.stopPropagation(); toggleNavDrop('navRelatorios')">
+                📊 Relatórios <span class="nav-drop-arrow">▾</span>
+            </button>
+            <div class="nav-drop-menu">
+                <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
+                    <span class="ndi-icon">📋</span>
+                    <span class="ndi-info">
+                        <span class="ndi-label">Check-in / Check-out</span>
+                        <span class="ndi-desc">Presença e localização de consultores</span>
+                    </span>
+                </a>
+                <a class="nav-drop-item" href="/ti/relatorioControleAcessosSults.html">
+                    <span class="ndi-icon">🎛️</span>
+                    <span class="ndi-info">
+                        <span class="ndi-label">Controle SULTS</span>
+                        <span class="ndi-desc">Chamados abertos e atividade por setor</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+        <!-- ↑ fim do dropdown ↑ -->
+
+        <button class="nav-btn" onclick="sair()" style="color:var(--red)">🚪 Sair</button>
+    </nav>
+
+    <!-- Hamburger mobile -->
+    <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
 </header>
 
-<!-- Drawer mobile -->
-<div class="nav-drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
+<!-- ══ NAV DRAWER MOBILE ══ -->
+<div class="nav-drawer-overlay" id="navOverlay" onclick="fecharDrawer()"></div>
 <div class="nav-drawer" id="navDrawer">
-  <div class="nav-drawer-head">
-    <span class="nav-drawer-title">Central T.I.</span>
-    <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
-  </div>
-  <div class="nav-drawer-body">
-    <a class="nav-drawer-item" href="/ti/index.html">📊 Dashboard</a>
-    <a class="nav-drawer-item active active-ti" href="/ti/controle-equipamentos.html">🖥️ Gestão Ativos</a>
-    <a class="nav-drawer-item" href="/ti/ativos.html">🖥️ Comodato - Jurídico</a>
-    <a class="nav-drawer-item" href="/ti/migracao.html">🔄 Migração</a>
-    <a class="nav-drawer-item" href="/ti/projetos.html">📋 Projetos</a>
-    <a class="nav-drawer-item" href="/ti/chamados.html">📞 Chamados</a>
-    <a class="nav-drawer-item" href="/ti/pix.html">💳 Pix TEF</a>
-    <a class="nav-drawer-item" href="/ti/linkexterno.html">🔗 Links</a>
-    <a class="nav-drawer-item" href="/ti/uploads.html">📁 Uploads</a>
-    <div class="nav-drawer-sep"></div>
-    <span class="nav-drawer-item" style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);cursor:default;padding-bottom:4px">Relatórios</span>
-    <a class="nav-drawer-item nav-drawer-sub" href="/ti/relatorioCheckoutConsultores.html">📋 Check-in / Check-out</a>
-    <div class="nav-drawer-sep"></div>
-    <a class="nav-drawer-item" href="/" style="color:var(--red)">🚪 Sair</a>
-  </div>
+    <div class="nav-drawer-head">
+        <span class="nav-drawer-title">Central de T.I.</span>
+        <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
+    </div>
+    <div class="nav-drawer-body">
+        <a class="nav-drawer-item " href="/ti/index.html">📊 Dashboard</a>
+        <a class="nav-drawer-item active-ti " href="/ti/controle-equipamentos.html">  🖥️ Gestão Ativos </a>
+        <a class="nav-drawer-item  " href="/ti/ativos.html"> 📦 Comodato- Jurídico </a>
+        <a class="nav-drawer-item" href="/ti/migracao.html">🔄 Migração</a>
+        <a class="nav-drawer-item" href="/ti/projetos.html">📋 Projetos</a>
+        <a class="nav-drawer-item" href="/ti/chamados.html">📞 Chamados</a>
+        <a class="nav-drawer-item" href="/ti/pix.html">💳 Pix TEF</a>
+        <a class="nav-drawer-item" href="/ti/linkexterno.html">🔗 Links</a>
+        <a class="nav-drawer-item" href="/ti/uploads.html">📁 Uploads</a>
+        <div class="nav-drawer-sep"></div>
+        <span class="nav-drawer-title" style="padding:8px 14px;font-size:10px">📊 Relatórios</span>
+        <a class="nav-drawer-item nav-drawer-sub" href="/ti/relatorioCheckoutConsultores.html">📋 Check-in / Check-out</a>
+        <a class="nav-drawer-item nav-drawer-sub" href="/ti/relatorioControleAcessosSults.html">🎛️ Controle SULTS</a>
+        <div class="nav-drawer-sep"></div>
+        <a class="nav-drawer-item" href="/">🏠 Voltar ao início</a>
+        <button class="nav-drawer-item" onclick="sair()" style="color:var(--red);border:none;background:none;width:100%;text-align:left;cursor:pointer;font-family:var(--font-body)">🚪 Sair</button>
+    </div>
 </div>
 
 <div id="statusBar">

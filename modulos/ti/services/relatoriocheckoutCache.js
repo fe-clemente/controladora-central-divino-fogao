@@ -613,6 +613,7 @@ module.exports = {
     getDados,
     getStatus,
     sincronizarEAtualizar,
+    isSincronizando: () => !!_status.sincronizando,
     geocodificarPendentes,
     limparCache,
     limparGeoCache,

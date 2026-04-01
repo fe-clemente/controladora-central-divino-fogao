@@ -26,6 +26,7 @@ const tiUploadsCache = require('./services/uploadsCache');
 const { perguntarTI } = require('./services/iaTiService');
 const checkoutCache  = require('./services/relatoriocheckoutCache');
 const relatorioSultsCache = require('./services/relatorioControleAcessosSultsCache');
+const envioRelatorioService = require('./services/envioRelatorioConsultoresCheckinECheckout');
 
 const { listarPastas, criarPasta, uploadArquivo, listarArquivos, deletarArquivo, PASTA_RAIZ_ID } = require('./services/drive');
 
@@ -33,6 +34,7 @@ const { listarPastas, criarPasta, uploadArquivo, listarArquivos, deletarArquivo,
 tiUploadsCache.inicializar().catch(e => console.error('[TI-UPLOADS] Cache init falhou:', e.message));
 checkoutCache.inicializar().catch(e => console.error('[CHECKOUT-CACHE] Cache init falhou:', e.message));
 relatorioSultsCache.inicializar().catch(e => console.error('[SULTS-CTRL] Cache init falhou:', e.message));
+envioRelatorioService.iniciarAgendador();
 
 // ─── Autorização ─────────────────────────────────────────────
 const apenasAutorizado = (req, res, next) => {
@@ -78,6 +80,8 @@ router.get('/linkexterno',           servirHtml('linkexterno.html'));
 router.get('/uploads',               servirHtml('uploads.html'));
 router.get('/relatorio-checkout',    servirHtml('relatorioCheckoutConsultores.html'));
 router.get('/relatorio-sults',       servirHtml('relatorioControleAcessosSults.html'));
+router.get('/envio-relatorio-checkout', servirHtml('envioRelatorioConsultoresCheckinECheckout.html'));
+
 router.get('/ativos.html',                       servirHtml('ativos.html'));
 router.get('/controle-equipamentos.html',        servirHtml('controle-equipamentos.html'));
 router.get('/migracao.html',                     servirHtml('migracao.html'));
@@ -88,6 +92,7 @@ router.get('/linkexterno.html',                  servirHtml('linkexterno.html'))
 router.get('/uploads.html',                      servirHtml('uploads.html'));
 router.get('/relatorioCheckoutConsultores.html', servirHtml('relatorioCheckoutConsultores.html'));
 router.get('/relatorioControleAcessosSults.html', servirHtml('relatorioControleAcessosSults.html'));
+router.get('/envioRelatorioConsultoresCheckinECheckout.html', servirHtml('envioRelatorioConsultoresCheckinECheckout.html'));
 
 router.get('/relatorioControleAcessosSults.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'services', 'relatorioControleAcessosSults.js'));
@@ -189,7 +194,6 @@ router.delete('/api/relatorio-checkout/geo-cache', apenasAutorizado, (req, res) 
 // ═══════════════════════════════════════════════════════════════
 // RELATÓRIO CONTROLE ACESSOS SULTS
 // ═══════════════════════════════════════════════════════════════
-
 router.get('/api/relatorio-sults/dados', (req, res) => {
     try {
         const d = relatorioSultsCache.getDados();
@@ -197,19 +201,14 @@ router.get('/api/relatorio-sults/dados', (req, res) => {
         res.json({ ok: true, ...d });
     } catch (e) { res.json({ ok: false, erro: e.message, chamados: [] }); }
 });
-
 router.get('/api/relatorio-sults/status', (req, res) => {
     try { res.json(relatorioSultsCache.getStatus()); }
     catch (e) { res.json({ erro: e.message }); }
 });
-
-// ✅ NOVO — endpoint de progresso granular (para barra no frontend)
 router.get('/api/relatorio-sults/progresso', (req, res) => {
     try { res.json(relatorioSultsCache.getProgresso()); }
     catch (e) { res.json({ erro: e.message }); }
 });
-
-// Sync incremental (padrão) — busca só chamados alterados
 router.post('/api/relatorio-sults/sincronizar', apenasAutorizado, async (req, res) => {
     try {
         relatorioSultsCache.sincronizarEAtualizar('manual').catch(e =>
@@ -217,8 +216,6 @@ router.post('/api/relatorio-sults/sincronizar', apenasAutorizado, async (req, re
         res.json({ ok: true, mensagem: 'Sincronização incremental iniciada.' });
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
-
-// Sync completa — rebusca tudo do zero
 router.post('/api/relatorio-sults/sincronizar-completo', apenasAutorizado, async (req, res) => {
     try {
         relatorioSultsCache.sincronizarEAtualizar('completo').catch(e =>
@@ -226,18 +223,82 @@ router.post('/api/relatorio-sults/sincronizar-completo', apenasAutorizado, async
         res.json({ ok: true, mensagem: `Sync completa iniciada (${relatorioSultsCache.JANELA_MAX_DIAS} dias).` });
     } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
-
 router.get('/api/relatorio-sults/timeline/:chamadoId', async (req, res) => {
     try { res.json({ ok: true, ...await relatorioSultsCache.buscarTimeline(req.params.chamadoId) }); }
     catch (e) { res.json({ ok: false, erro: e.message }); }
 });
-
 router.delete('/api/relatorio-sults/cache', apenasAutorizado, (req, res) => {
     try { res.json(relatorioSultsCache.limparCache()); }
     catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
 console.log('\x1b[32m[TI]\x1b[0m relatorioControleAcessosSultsCache carregado');
+
+// ═══════════════════════════════════════════════════════════════
+// ENVIO AUTOMÁTICO — CHECK-IN / CHECK-OUT (dia 06 de cada mês)
+// ═══════════════════════════════════════════════════════════════
+
+// ── Status da rotina ─────────────────────────────────────────
+router.get('/api/envio-relatorio-checkout/status', (req, res) => {
+    try { res.json(envioRelatorioService.getStatus()); }
+    catch (e) { res.json({ ok: false, erro: e.message }); }
+});
+
+// ── Simular envio (botão "Simular Dia 06" do painel de teste) ─
+router.post('/api/envio-relatorio-checkout/simular', apenasAutorizado, async (req, res) => {
+    try {
+        const { emailsTeste, distanciaMinima } = req.body;
+        const resultado = await envioRelatorioService.executarEnvioRelatorio({
+            emailsDestino:   emailsTeste && emailsTeste.length ? emailsTeste : undefined,
+            distanciaMinima: distanciaMinima || 1000,
+        });
+        res.json({ ok: true, ...resultado });
+    } catch (e) {
+        res.json({ ok: false, erro: e.message });
+    }
+});
+
+// ── Preview HTML do e-mail (sem enviar) ──────────────────────
+router.get('/api/envio-relatorio-checkout/preview-email', async (req, res) => {
+    try {
+        const distanciaMinima = parseInt(req.query.distanciaMinima) || 1000;
+        const dados = checkoutCache.getDados();
+
+        if (!dados || !dados.avaliacoes) {
+            // Preview com dados fictícios para visualização do template
+            const dadosFicticios = [
+                { id: 1001, unidade: 'DF — Asa Norte',       consultor: 'João da Silva',   modelo: 'Auditoria Padrão',      data: '05/06/2025', distancia: 2340 },
+                { id: 1002, unidade: 'DF — Taguatinga',      consultor: 'Maria Oliveira',  modelo: 'Auditoria Padrão',      data: '05/06/2025', distancia: 5100 },
+                { id: 1003, unidade: 'GO — Goiânia Centro',  consultor: 'Carlos Mendes',   modelo: 'Auditoria Operacional', data: '04/06/2025', distancia: 1250 },
+            ];
+            const html = envioRelatorioService._gerarHtmlPreview(dadosFicticios, 3, true);
+            return res.json({ ok: true, html, aviso: 'Usando dados fictícios — sincronize primeiro para dados reais.' });
+        }
+
+        const filtrados = dados.avaliacoes.filter(r => {
+            if (!r.distancia || r.distancia <= distanciaMinima) return false;
+            const modelo = (r.modelo || '').toLowerCase();
+            return !envioRelatorioService.MODELOS_IGNORADOS.some(ig => modelo.includes(ig.toLowerCase()));
+        }).sort((a, b) => (b.distancia || 0) - (a.distancia || 0));
+
+        const html = envioRelatorioService._gerarHtmlPreview(filtrados, dados.avaliacoes.length, false);
+        res.json({ ok: true, html });
+    } catch (e) {
+        res.json({ ok: false, erro: e.message });
+    }
+});
+
+// ── Forçar execução com destinatários reais (sem modo teste) ──
+router.post('/api/envio-relatorio-checkout/executar-agora', apenasAutorizado, async (req, res) => {
+    try {
+        const resultado = await envioRelatorioService.executarEnvioRelatorio();
+        res.json({ ok: true, ...resultado });
+    } catch (e) {
+        res.json({ ok: false, erro: e.message });
+    }
+});
+
+console.log('\x1b[32m[TI]\x1b[0m envioRelatorioConsultoresCheckinECheckout carregado');
 
 // ═══════════════════════════════════════════════════════════════
 // UPLOADS — Google Drive
@@ -306,10 +367,12 @@ router.post('/ia-ti/perguntar', async (req, res) => {
 
 // ─── Health ──────────────────────────────────────────────────
 router.get('/health', (req, res) => res.json({
-    modulo: 'ti', status: 'online',
-    uploads: tiUploadsCache.getStatus(),
-    checkout: checkoutCache.getStatus(),
+    modulo:         'ti',
+    status:         'online',
+    uploads:        tiUploadsCache.getStatus(),
+    checkout:       checkoutCache.getStatus(),
     relatorioSults: relatorioSultsCache.getStatus(),
+    envioRelatorio: envioRelatorioService.getStatus(),
 }));
 
 module.exports = router;
