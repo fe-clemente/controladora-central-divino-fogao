@@ -4,6 +4,9 @@ minha-chave.json
 *secret*.json
 *credentials*.json
 
+# Arquivo específico com credenciais
+.txt
+
 # Ambiente
 .env
 .env.*
@@ -13,4 +16,4 @@ node_modules/
 
 # Cache
 **/cache/**
-!**/cache/**/*.js
+!**/cache/.gitkeep
