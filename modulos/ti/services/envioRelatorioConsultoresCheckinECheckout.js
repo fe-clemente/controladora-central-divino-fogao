@@ -2,80 +2,105 @@
 
 // ═══════════════════════════════════════════════════════════════
 //  envioRelatorioConsultoresCheckinECheckout.js
-//  Agendamento: Todo dia 06 de cada mês, às 06:00 BRT
-//  — Sincroniza últimos 30 dias da API SULTS
-//  — Filtra registros com distância > 1000 m
-//  — Exclui modelos de consultoria online / buffet etc.
-//  — Envia e-mail HTML (ID | Loja | Consultor | Distância)
-//  — Grava resultado em nova aba na planilha Google Sheets
+//
+//  FLUXO CORRETO:
+//  1. Sincroniza API SULTS UMA SÓ VEZ (cache compartilhado)
+//  2. Filtra dados para Grupo A (Qualidade) → envia e-mail A
+//  3. Filtra dados para Grupo B (Campo)     → envia e-mail B
+//
+//  GRUPO A — Qualidade & Gastronomia
+//    Destino : luciano.aquino | fernando.clemente | bruno.souza
+//
+//  GRUPO B — Campo & Delivery
+//    Destino : anderson.silva | fernando.clemente | bruno.souza
+//
+//  Agendamento : Todo dia 06 às 06:00 BRT
+//  Distância   : > 1.000 m
 // ═══════════════════════════════════════════════════════════════
 
 const path       = require('path');
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
-
-// ─── Referência ao cache já existente ────────────────────────
 const checkoutCache = require('./relatoriocheckoutCache');
 
-// ─── Configurações ───────────────────────────────────────────
+// ─── Configurações ────────────────────────────────────────────
 const DISTANCIA_MINIMA_METROS = 1000;
 const SPREADSHEET_ID = '1yYmceSQhnEESyfI8DjgnLLeags5THHHONeZMNyrXLuI';
+const EMAIL_FROM     = 'fernando.clemente@divinofogao.com.br';
 
-// Modelos ignorados (parcial, case-insensitive)
-const MODELOS_IGNORADOS = [
-    'consultoria online',
-    'buffet noite',
-    'consultoria online – q&s',
-    'consultoria online - q&s',
-    'q&s dos alimentos',
-    'q&s alimentos',
-];
-
-// Destinatários automáticos reais
-const EMAILS_DESTINO = [
-    'bruno.souza@divinofogao.com.br',
-    'anderson.silva@divinofogao.com.br',
-    'marcos.bonadias@divinofogao.com.br',
-    'fernando.clemente@divinofogao.com.br',
-];
-
-// Remetente
-const EMAIL_FROM = 'fernando.clemente@divinofogao.com.br';
-
-// ─── Estado ──────────────────────────────────────────────────
-let _ultimoEnvio  = null;
-let _ultimoStatus = null;   // 'ok' | 'erro' | null
-let _ultimoErro   = null;
-let _executando   = false;
-let _cronHandle   = null;
-
-// Progresso próprio do envio
-let _progresso = {
-    etapa:  'idle',
-    fase:   'idle',   // idle | sincronizando | filtrando | gravando | enviando | concluido | erro
-    atual:  0,
-    total:  0,
-    detalhe: '',
+const GRUPOS = {
+    qualidade: {
+        id:    'qualidade',
+        nome:  'Qualidade & Gastronomia',
+        emoji: '🧪',
+        modelosIncluidos: [
+            'qualidade e segurança dos alimentos',
+            'qualidade e segurança',
+            'gastronomia - consultoria presencial',
+            'gastronomia',
+        ],
+        destinatarios: [
+            'luciano.aquino@divinofogao.com.br',
+            'fernando.clemente@divinofogao.com.br',
+            'bruno.souza@divinofogao.com.br',
+        ],
+    },
+    campo: {
+        id:    'campo',
+        nome:  'Campo & Delivery',
+        emoji: '🚗',
+        modelosIncluidos: [
+            'consultoria em delivery',
+            'consultoria de campo - visita não avaliativa',
+            'consultoria de campo - pré inauguração',
+            'consultoria de campo - pré inauguracao',
+            'consultoria de campo - reabertura',
+            'consultoria de campo',
+        ],
+        destinatarios: [
+            'anderson.silva@divinofogao.com.br',
+            'fernando.clemente@divinofogao.com.br',
+            'bruno.souza@divinofogao.com.br',
+        ],
+    },
 };
 
-function _setProgresso(fase, etapa, atual, total, detalhe) {
-    _progresso = { fase, etapa: etapa || fase, atual: atual || 0, total: total || 0, detalhe: detalhe || '' };
+// ─── Estado global (1 estado só — não por grupo) ─────────────
+// Isso evita conflito: só uma execução por vez, compartilhada
+let _estado = {
+    executando:   false,
+    fase:         'idle',   // idle | sincronizando | filtrando | enviando | concluido | erro
+    etapa:        'Aguardando...',
+    sincAtual:    0,
+    sincTotal:    0,
+    grupos: {
+        qualidade: { status: 'idle', filtrados: 0, emailId: null, erro: null, ultimoEnvio: null },
+        campo:     { status: 'idle', filtrados: 0, emailId: null, erro: null, ultimoEnvio: null },
+    },
+    ultimoErro:   null,
+    ultimoCronDia: null,
+};
+
+let _cronHandle = null;
+
+function _log(msg) { console.log(`[ENVIO] ${msg}`); }
+
+function _setFase(fase, etapa) {
+    _estado.fase  = fase;
+    _estado.etapa = etapa || fase;
+    _log(etapa || fase);
 }
 
-// ─── Sheets Auth ─────────────────────────────────────────────
+// ─── Auth / Transporter ───────────────────────────────────────
 function getSheetAuth() {
     const keyFile = process.env.GOOGLE_KEY_FILE || './minha-chave.json';
     const keyPath = path.isAbsolute(keyFile) ? keyFile : path.join(process.cwd(), keyFile);
     return new google.auth.GoogleAuth({
         keyFile: keyPath,
-        scopes: [
-            'https://www.googleapis.com/auth/spreadsheets',
-            'https://www.googleapis.com/auth/drive',
-        ],
+        scopes: ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive'],
     });
 }
 
-// ─── Nodemailer Transporter ──────────────────────────────────
 function _criarTransporter() {
     return nodemailer.createTransport({
         host:   process.env.SMTP_HOST   || 'smtp.gmail.com',
@@ -90,16 +115,10 @@ function _criarTransporter() {
 }
 
 // ─── Helpers ─────────────────────────────────────────────────
-function _modeloIgnorado(modelo) {
-    if (!modelo) return false;
-    const m = modelo.toLowerCase();
-    return MODELOS_IGNORADOS.some(ig => m.includes(ig.toLowerCase()));
-}
-
 function _pad(n) { return String(n).padStart(2, '0'); }
 
-function _nomeAba(dt) {
-    return `email_${dt.getFullYear()}-${_pad(dt.getMonth()+1)}-${_pad(dt.getDate())}_${_pad(dt.getHours())}${_pad(dt.getMinutes())}`;
+function _nomeAba(grupoId, dt) {
+    return `email_${grupoId}_${dt.getFullYear()}-${_pad(dt.getMonth()+1)}-${_pad(dt.getDate())}_${_pad(dt.getHours())}${_pad(dt.getMinutes())}`;
 }
 
 function _formatarDistancia(metros) {
@@ -110,276 +129,181 @@ function _formatarDistancia(metros) {
 
 function _esc(str) {
     if (str == null) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ─── Filtrar registros ───────────────────────────────────────
-function _filtrarRegistros(avaliacoes, distMinima) {
+// ─── Filtrar registros de um grupo ────────────────────────────
+function _filtrarGrupo(avaliacoes, grupo, distMinima) {
     const limite = distMinima != null ? distMinima : DISTANCIA_MINIMA_METROS;
     return (avaliacoes || []).filter(r => {
-        if (_modeloIgnorado(r.modelo)) return false;
-        if (r.distancia == null) return false;
-        if (r.distancia <= limite) return false;
+        if (!r.modelo) return false;
+        const m = r.modelo.toLowerCase();
+        if (!grupo.modelosIncluidos.some(inc => m.includes(inc.toLowerCase()))) return false;
+        if (r.distancia == null || r.distancia <= limite) return false;
         return true;
     }).sort((a, b) => (b.distancia || 0) - (a.distancia || 0));
 }
 
-// ─── Montar HTML do e-mail ───────────────────────────────────
-function _montarEmailHtml(registros, dataRef, totalSincronizado) {
-    const hoje = dataRef || new Date();
+// ─── HTML do e-mail ───────────────────────────────────────────
+function _montarHtml(registros, grupo, dataRef, totalSincronizado) {
+    const hoje          = dataRef || new Date();
     const dataFormatada = hoje.toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
     const horaFormatada = hoje.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
 
     const linhas = registros.map(r => {
-        const distKm = r.distancia >= 1000
+        const dist = r.distancia >= 1000
             ? `<strong style="color:#c8102e;">${(r.distancia/1000).toFixed(2).replace('.',',')} km</strong>`
             : `${r.distancia.toLocaleString('pt-BR')} m`;
-        const corLinha = r.distancia >= 5000 ? '#fff0f2' : '#ffffff';
-        return `
-        <tr style="background:${corLinha};">
-            <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-family:'Courier New',monospace;font-size:13px;color:#8a7f74;">${r.id}</td>
-            <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-size:13px;font-weight:600;color:#1e1a16;">${_esc(r.unidade || '—')}</td>
-            <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-size:13px;color:#1e1a16;">${_esc(r.consultor || '—')}</td>
-            <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-size:13px;text-align:right;">${distKm}</td>
-            <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-size:11px;color:#8a7f74;font-family:'Courier New',monospace;">${_esc(r.data || '—')}</td>
+        const bg = r.distancia >= 5000 ? '#fff0f2' : '#ffffff';
+        return `<tr style="background:${bg};">
+          <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-family:'Courier New',monospace;font-size:13px;color:#8a7f74;">${r.id}</td>
+          <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-size:13px;font-weight:600;">${_esc(r.unidade||'—')}</td>
+          <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-size:13px;">${_esc(r.consultor||'—')}</td>
+          <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-size:11px;color:#8a7f74;">${_esc(r.modelo||'—')}</td>
+          <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-size:13px;text-align:right;">${dist}</td>
+          <td style="padding:10px 14px;border-bottom:1px solid #e8e2d9;font-size:11px;color:#8a7f74;font-family:'Courier New',monospace;">${_esc(r.data||'—')}</td>
         </tr>`;
     }).join('');
 
-    return `<!DOCTYPE html>
-<html lang="pt-BR">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Relatório Check-in/Check-out — Consultores</title></head>
-<body style="margin:0;padding:0;background:#f5f3ef;font-family:'Nunito',Arial,sans-serif;">
+    return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+<title>Relatório Check-in/Check-out — ${_esc(grupo.nome)}</title></head>
+<body style="margin:0;padding:0;background:#f5f3ef;font-family:Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f3ef;padding:32px 16px;">
 <tr><td align="center">
-<table width="680" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.10);">
-  <tr>
-    <td style="background:linear-gradient(135deg,#c8102e,#a50d25);padding:28px 32px;">
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td>
-            <div style="font-size:22px;font-weight:900;color:#ffffff;">🍽️ Divino Fogão</div>
-            <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:4px;font-weight:600;">Central de T.I. — Relatório Automático</div>
-          </td>
-          <td align="right">
-            <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:8px 14px;display:inline-block;">
-              <div style="font-size:10px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:1px;font-weight:800;">Gerado em</div>
-              <div style="font-size:12px;color:#fff;font-weight:700;margin-top:2px;">${dataFormatada}</div>
-              <div style="font-size:12px;color:#fff;font-weight:700;">${horaFormatada}</div>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <!-- Título e descrição -->
-  <tr>
-    <td style="padding:24px 32px 0;">
-      <h2 style="margin:0;font-size:18px;font-weight:900;color:#1e1a16;">📋 Check-in / Check-out fora do local</h2>
-      <p style="margin:8px 0 0;font-size:13px;color:#8a7f74;line-height:1.6;">
-        Registros dos últimos <strong>30 dias</strong> onde a distância entre check-in e check-out
-        é <strong>superior a 1.000 metros</strong>.<br>
-        Modelos de consultoria online e buffet noturno foram excluídos desta análise.
-      </p>
-    </td>
-  </tr>
-  <!-- KPIs -->
-  <tr>
-    <td style="padding:20px 32px;">
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td width="33%" style="text-align:center;background:#fff0f2;border-radius:12px;padding:14px 8px;">
-            <div style="font-size:28px;font-weight:900;color:#c8102e;font-family:'Courier New',monospace;">${registros.length}</div>
-            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;margin-top:4px;">Registros &gt;1km</div>
-          </td>
-          <td width="4px"></td>
-          <td width="33%" style="text-align:center;background:#f0f9ff;border-radius:12px;padding:14px 8px;">
-            <div style="font-size:28px;font-weight:900;color:#0369a1;font-family:'Courier New',monospace;">${totalSincronizado}</div>
-            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;margin-top:4px;">Total Sincronizado</div>
-          </td>
-          <td width="4px"></td>
-          <td width="33%" style="text-align:center;background:#fef9c3;border-radius:12px;padding:14px 8px;">
-            <div style="font-size:28px;font-weight:900;color:#d97706;font-family:'Courier New',monospace;">${totalSincronizado > 0 ? ((registros.length/totalSincronizado)*100).toFixed(1) : '0.0'}%</div>
-            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;margin-top:4px;">Taxa de Divergência</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <!-- Tabela -->
-  <tr>
-    <td style="padding:0 32px 24px;">
-      ${registros.length === 0 ? `
-        <div style="text-align:center;padding:40px 20px;color:#8a7f74;font-size:14px;">
-          ✅ Nenhum registro com distância superior a 1.000 m encontrado.
-        </div>
-      ` : `
-      <table width="100%" cellpadding="0" cellspacing="0" style="border:1.5px solid #e8e2d9;border-radius:12px;overflow:hidden;">
-        <thead>
-          <tr style="background:#faf8f5;">
+<table width="700" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.1);">
+  <tr><td style="background:linear-gradient(135deg,#c8102e,#a50d25);padding:28px 32px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td><div style="font-size:22px;font-weight:900;color:#fff;">🍽️ Divino Fogão — T.I.</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.75);margin-top:4px;font-weight:600;">Relatório Automático · ${grupo.emoji} ${_esc(grupo.nome)}</div></td>
+      <td align="right"><div style="background:rgba(255,255,255,.15);border-radius:10px;padding:8px 14px;display:inline-block;text-align:center;">
+        <div style="font-size:10px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:1px;font-weight:800;">Gerado em</div>
+        <div style="font-size:12px;color:#fff;font-weight:700;margin-top:2px;">${dataFormatada} · ${horaFormatada}</div>
+      </div></td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="padding:24px 32px 0;">
+    <h2 style="margin:0;font-size:18px;font-weight:900;color:#1e1a16;">📋 Check-in / Check-out fora do local</h2>
+    <p style="margin:8px 0 0;font-size:13px;color:#8a7f74;line-height:1.6;">
+      Registros dos últimos <strong>30 dias</strong> onde a distância entre check-in e check-out
+      é <strong>superior a 1.000 metros</strong>.<br>
+      Modelos de consultoria online e buffet noturno foram excluídos desta análise.
+    </p>
+  </td></tr>
+  <tr><td style="padding:20px 32px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td width="32%" style="text-align:center;background:#fff0f2;border-radius:12px;padding:14px 8px;">
+        <div style="font-size:28px;font-weight:900;color:#c8102e;font-family:'Courier New',monospace;">${registros.length}</div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;margin-top:4px;">Divergências &gt;1km</div>
+      </td><td width="4px"></td>
+      <td width="32%" style="text-align:center;background:#f0f9ff;border-radius:12px;padding:14px 8px;">
+        <div style="font-size:28px;font-weight:900;color:#0369a1;font-family:'Courier New',monospace;">${totalSincronizado}</div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;margin-top:4px;">Total Sincronizado</div>
+      </td><td width="4px"></td>
+      <td width="32%" style="text-align:center;background:#fef9c3;border-radius:12px;padding:14px 8px;">
+        <div style="font-size:28px;font-weight:900;color:#d97706;font-family:'Courier New',monospace;">${totalSincronizado > 0 ? ((registros.length/totalSincronizado)*100).toFixed(1) : '0.0'}%</div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;margin-top:4px;">Taxa Divergência</div>
+      </td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="padding:0 32px 24px;">
+    ${registros.length === 0
+      ? `<div style="text-align:center;padding:40px 20px;color:#8a7f74;font-size:14px;">✅ Nenhuma divergência encontrada neste grupo.</div>`
+      : `<table width="100%" cellpadding="0" cellspacing="0" style="border:1.5px solid #e8e2d9;border-radius:12px;overflow:hidden;">
+          <thead><tr style="background:#faf8f5;">
             <th style="padding:10px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;border-bottom:2px solid #e8e2d9;">ID</th>
-            <th style="padding:10px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;border-bottom:2px solid #e8e2d9;">Loja / Unidade</th>
+            <th style="padding:10px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;border-bottom:2px solid #e8e2d9;">Loja</th>
             <th style="padding:10px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;border-bottom:2px solid #e8e2d9;">Consultor</th>
+            <th style="padding:10px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;border-bottom:2px solid #e8e2d9;">Modelo</th>
             <th style="padding:10px 14px;text-align:right;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;border-bottom:2px solid #e8e2d9;">Distância</th>
             <th style="padding:10px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8a7f74;border-bottom:2px solid #e8e2d9;">Data</th>
-          </tr>
-        </thead>
-        <tbody>${linhas}</tbody>
-      </table>
-      `}
-    </td>
-  </tr>
-  <!-- Rodapé -->
-  <tr>
-    <td style="background:#faf8f5;padding:20px 32px;border-top:1px solid #e8e2d9;">
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td>
-            <p style="margin:0;font-size:11px;color:#8a7f74;line-height:1.6;">
-              📧 Este e-mail é gerado automaticamente todo dia <strong>06 de cada mês às 06:00</strong>.<br>
-              🔍 Registros com distância <strong>&gt; 1.000 m</strong> entre check-in e check-out.<br>
-              🚫 Modelos excluídos: Consultoria Online, Buffet Noite e variantes.
-            </p>
-          </td>
-          <td align="right" style="vertical-align:bottom;">
-            <span style="font-size:11px;color:#c0b9b0;font-weight:700;">Divino Fogão — T.I.</span>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
+          </tr></thead>
+          <tbody>${linhas}</tbody>
+         </table>`}
+  </td></tr>
+  <tr><td style="background:#faf8f5;padding:18px 32px;border-top:1px solid #e8e2d9;">
+    <p style="margin:0;font-size:11px;color:#8a7f74;line-height:1.6;">
+      📧 Enviado automaticamente todo dia <strong>06 de cada mês às 06:00</strong>.<br>
+      🔍 Registros com distância <strong>&gt; 1.000 m</strong> entre check-in e check-out.<br>
+      🚫 Modelos excluídos: Consultoria Online, Buffet Noite e variantes.<br>
+      📋 Grupo: <strong>${_esc(grupo.nome)}</strong>
+    </p>
+  </td></tr>
 </table>
 </td></tr>
 </table>
-</body>
-</html>`;
+</body></html>`;
 }
 
-// ─── Gravar aba no Sheets ────────────────────────────────────
-async function _gravarAbaSheets(registros, nomeAba, dataRef) {
+// ─── Gravar aba Sheets ────────────────────────────────────────
+async function _gravarAba(registros, nomeAba, grupo, dataRef) {
     try {
         const auth   = getSheetAuth();
         const sheets = google.sheets({ version: 'v4', auth });
-
         await sheets.spreadsheets.batchUpdate({
             spreadsheetId: SPREADSHEET_ID,
             requestBody: { requests: [{ addSheet: { properties: { title: nomeAba } } }] },
         });
-
-        const cabecalho = ['ID','Loja / Unidade','Consultor','Modelo','Data','Distância (m)','Distância Formatada','Gerado Em'];
+        const cab  = ['ID','Loja/Unidade','Consultor','Modelo','Data','Distância (m)','Distância Formatada','Grupo','Gerado Em'];
         const agora = dataRef ? dataRef.toISOString() : new Date().toISOString();
-        const linhas = registros.map(r => [
-            r.id, r.unidade||'', r.consultor||'', r.modelo||'', r.data||'',
-            r.distancia != null ? r.distancia : '',
-            _formatarDistancia(r.distancia), agora,
-        ]);
-
+        const rows  = registros.map(r => [r.id, r.unidade||'', r.consultor||'', r.modelo||'', r.data||'',
+            r.distancia != null ? r.distancia : '', _formatarDistancia(r.distancia), grupo.nome, agora]);
         await sheets.spreadsheets.values.update({
             spreadsheetId: SPREADSHEET_ID,
             range: `'${nomeAba}'!A1`,
             valueInputOption: 'RAW',
-            requestBody: { values: [cabecalho, ...linhas] },
+            requestBody: { values: [cab, ...rows] },
         });
-
-        // Negrito + freeze
-        const info    = await sheets.spreadsheets.get({ spreadsheetId: SPREADSHEET_ID });
-        const abaInfo = info.data.sheets.find(s => s.properties.title === nomeAba);
-        const sheetId = abaInfo ? abaInfo.properties.sheetId : null;
-        if (sheetId !== null) {
-            await sheets.spreadsheets.batchUpdate({
-                spreadsheetId: SPREADSHEET_ID,
-                requestBody: {
-                    requests: [
-                        {
-                            repeatCell: {
-                                range: { sheetId, startRowIndex: 0, endRowIndex: 1 },
-                                cell: { userEnteredFormat: { textFormat: { bold: true }, backgroundColor: { red:0.98, green:0.97, blue:0.96 } } },
-                                fields: 'userEnteredFormat(textFormat,backgroundColor)',
-                            },
-                        },
-                        {
-                            updateSheetProperties: {
-                                properties: { sheetId, gridProperties: { frozenRowCount: 1 } },
-                                fields: 'gridProperties.frozenRowCount',
-                            },
-                        },
-                    ],
-                },
-            });
-        }
-
-        console.log(`[ENVIO-RELATORIO] ✅ Aba "${nomeAba}" gravada com ${registros.length} registros.`);
-        return { ok: true, aba: nomeAba };
+        _log(`✅ Aba "${nomeAba}" gravada — ${registros.length} registros`);
+        return { ok: true };
     } catch (e) {
-        console.error(`[ENVIO-RELATORIO] ❌ Erro ao gravar Sheets: ${e.message}`);
+        _log(`❌ Sheets erro: ${e.message}`);
         return { ok: false, erro: e.message };
     }
 }
 
-// ─── Preview HTML (exportada para o endpoint /preview-email) ─
-function _gerarHtmlPreview(registros, totalSincronizado, ficticio) {
-    const aviso = ficticio
-        ? `<div style="background:#fef9c3;border:1.5px solid #d97706;border-radius:8px;padding:10px 16px;margin:0 32px 16px;font-size:12px;color:#92400e;font-weight:700;">
-            ⚠️ Preview com dados fictícios — sincronize primeiro para ver dados reais.
-           </div>`
-        : '';
-    const baseHtml = _montarEmailHtml(registros, new Date(), totalSincronizado);
-    return baseHtml.replace('<!-- Título e descrição -->', aviso + '<!-- Título e descrição -->');
-}
-
-// ─── Rotina Principal ────────────────────────────────────────
-async function executarEnvioRelatorio(opcoes) {
+// ─── EXECUÇÃO PRINCIPAL — Sync única + 2 e-mails ─────────────
+async function executarEnvio(opcoes) {
     opcoes = opcoes || {};
 
-    // ── Proteção: se _executando por mais de 30 min, reseta automaticamente ──
-    if (_executando) {
-        // Verifica se há um timeout de segurança em andamento — se não, força reset
-        console.warn('[ENVIO-RELATORIO] ⚠️ _executando=true, mas nova solicitação chegou. Forçando reset.');
-        _executando = false;
-        _setProgresso('idle', 'Resetado por nova solicitação', 0, 0);
+    if (_estado.executando) {
+        // Reset automático se travado
+        console.warn('[ENVIO] ⚠️ Estado travado — resetando.');
+        _estado.executando = false;
     }
 
-    _executando = true;
-    _ultimoErro = null;
-    _setProgresso('iniciando', 'Inicializando...', 0, 0);
+    _estado.executando = true;
+    _estado.fase       = 'iniciando';
+    _estado.etapa      = 'Inicializando...';
+    _estado.sincAtual  = 0;
+    _estado.sincTotal  = 0;
+    _estado.ultimoErro = null;
+    _estado.grupos     = {
+        qualidade: { status: 'aguardando', filtrados: 0, emailId: null, erro: null, ultimoEnvio: _estado.grupos.qualidade.ultimoEnvio },
+        campo:     { status: 'aguardando', filtrados: 0, emailId: null, erro: null, ultimoEnvio: _estado.grupos.campo.ultimoEnvio },
+    };
 
-    const agora      = opcoes.dataRef       || new Date();
-    const emailTo    = opcoes.emailsDestino || EMAILS_DESTINO;
+    const agora      = opcoes.dataRef        || new Date();
     const distMinima = opcoes.distanciaMinima != null ? opcoes.distanciaMinima : DISTANCIA_MINIMA_METROS;
 
-    // Timeout de segurança: força _executando=false após 60 minutos
-    const _timeout = setTimeout(() => {
-        if (_executando) {
-            console.warn('[ENVIO-RELATORIO] ⏰ Timeout de segurança — forçando _executando=false');
-            _executando = false;
-            _setProgresso('erro', 'Timeout de segurança (60min)', 0, 0);
-        }
-    }, 60 * 60 * 1000);
+    // Destinatários: por grupo ou override de teste
+    const emailQ = opcoes.emailsQualidade || GRUPOS.qualidade.destinatarios;
+    const emailC = opcoes.emailsCampo     || GRUPOS.campo.destinatarios;
 
-    console.log(`[ENVIO-RELATORIO] 🚀 Iniciando — ${agora.toLocaleString('pt-BR')}`);
+    // Timeout 90min
+    const _tmout = setTimeout(() => {
+        if (_estado.executando) {
+            _estado.executando = false;
+            _setFase('erro', 'Timeout de segurança (90min)');
+        }
+    }, 90 * 60 * 1000);
 
     try {
-        // 1. Sincronizar últimos 30 dias
-        _setProgresso('sincronizando', '🔄 Sincronizando últimos 30 dias da API SULTS...', 0, 0);
-        console.log('[ENVIO-RELATORIO] Sincronizando últimos 30 dias...');
+        // ── ETAPA 1: Sincronizar (UMA VEZ SÓ) ──────────────────
+        _setFase('sincronizando', '🔄 Sincronizando API SULTS (30 dias)...');
 
         const dtEnd   = new Date(agora);
         const dtStart = new Date(agora);
         dtStart.setDate(dtEnd.getDate() - 30);
-
-        const MAX_WAIT = 5 * 60 * 1000;
-        const INTERVALO = 5000;
-        let esperado = 0;
-        while (checkoutCache.isSincronizando() && esperado < MAX_WAIT) {
-            _setProgresso('sincronizando', '⏳ Aguardando sincronização em andamento...', 0, 0);
-            console.log('[ENVIO-RELATORIO] ⏳ Cache ocupado, aguardando... ' + (esperado/1000) + 's');
-            await new Promise(r => setTimeout(r, INTERVALO));
-            esperado += INTERVALO;
-        }
 
         const dados = await checkoutCache.sincronizarEAtualizar('auto', {
             dtStart: dtStart.toISOString().split('.')[0] + 'Z',
@@ -388,127 +312,149 @@ async function executarEnvioRelatorio(opcoes) {
 
         const avaliacoes        = dados.avaliacoes || [];
         const totalSincronizado = avaliacoes.length;
-        console.log(`[ENVIO-RELATORIO] ${totalSincronizado} registros sincronizados.`);
+        _estado.sincAtual       = totalSincronizado;
+        _estado.sincTotal       = totalSincronizado;
+        _setFase('sincronizando', `✅ ${totalSincronizado} registros sincronizados`);
 
-        _setProgresso('sincronizando', `✅ ${totalSincronizado} registros sincronizados`, totalSincronizado, totalSincronizado);
+        // ── ETAPA 2: Filtrar Grupo A (Qualidade) ────────────────
+        _setFase('filtrando', '🔍 Filtrando Qualidade & Gastronomia...');
+        const filtQ = _filtrarGrupo(avaliacoes, GRUPOS.qualidade, distMinima);
+        _estado.grupos.qualidade.filtrados = filtQ.length;
+        _log(`🧪 Qualidade: ${filtQ.length} divergências encontradas`);
 
-        // 2. Filtrar
-        _setProgresso('filtrando', `🔍 Filtrando divergências > ${distMinima} m...`, totalSincronizado, totalSincronizado);
-        const filtrados = _filtrarRegistros(avaliacoes, distMinima);
-        console.log(`[ENVIO-RELATORIO] ${filtrados.length} registros filtrados (>${distMinima}m).`);
+        // ── ETAPA 3: Filtrar Grupo B (Campo) ────────────────────
+        _setFase('filtrando', '🔍 Filtrando Campo & Delivery...');
+        const filtC = _filtrarGrupo(avaliacoes, GRUPOS.campo, distMinima);
+        _estado.grupos.campo.filtrados = filtC.length;
+        _log(`🚗 Campo: ${filtC.length} divergências encontradas`);
 
-        _setProgresso('filtrando', `🔍 ${filtrados.length} divergências encontradas`, totalSincronizado, totalSincronizado);
+        // ── ETAPA 4: Gravar Sheets (Qualidade) ──────────────────
+        _setFase('gravando', '📊 Gravando aba Qualidade na planilha...');
+        _estado.grupos.qualidade.status = 'gravando';
+        const nomeAbaQ = _nomeAba('qualidade', agora);
+        await _gravarAba(filtQ, nomeAbaQ, GRUPOS.qualidade, agora);
 
-        // 3. Gravar na planilha
-        const nomeAba = _nomeAba(agora);
-        _setProgresso('gravando', `📊 Gravando aba "${nomeAba}" na planilha...`, totalSincronizado, totalSincronizado);
-        const resSheets = await _gravarAbaSheets(filtrados, nomeAba, agora);
+        // ── ETAPA 5: Gravar Sheets (Campo) ──────────────────────
+        _setFase('gravando', '📊 Gravando aba Campo na planilha...');
+        _estado.grupos.campo.status = 'gravando';
+        const nomeAbaC = _nomeAba('campo', agora);
+        await _gravarAba(filtC, nomeAbaC, GRUPOS.campo, agora);
 
-        // 4. Enviar e-mail
-        _setProgresso('enviando', `📧 Enviando e-mail para ${emailTo.length} destinatário(s)...`, totalSincronizado, totalSincronizado);
-        const htmlEmail   = _montarEmailHtml(filtrados, agora, totalSincronizado);
+        // ── ETAPA 6: Enviar e-mail Qualidade ────────────────────
+        _setFase('enviando', `📧 Enviando e-mail Qualidade para ${emailQ.length} destinatário(s)...`);
+        _estado.grupos.qualidade.status = 'enviando';
         const transporter = _criarTransporter();
-        const mailOptions = {
-            from:    `"Divino Fogão — T.I." <${EMAIL_FROM}>`,
-            to:      emailTo.join(', '),
-            subject: `📋 Relatório Check-in/Check-out — ${agora.toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' })} | ${filtrados.length} divergências >1km`,
-            html:    htmlEmail,
-        };
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log(`[ENVIO-RELATORIO] ✅ E-mail enviado: ${info.messageId}`);
+        try {
+            const infoQ = await transporter.sendMail({
+                from:    `"Divino Fogão — T.I." <${EMAIL_FROM}>`,
+                to:      emailQ.join(', '),
+                subject: `🧪 Relatório Qualidade & Gastronomia — ${agora.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})} | ${filtQ.length} divergências >1km`,
+                html:    _montarHtml(filtQ, GRUPOS.qualidade, agora, totalSincronizado),
+            });
+            _estado.grupos.qualidade.status    = 'ok';
+            _estado.grupos.qualidade.emailId   = infoQ.messageId;
+            _estado.grupos.qualidade.ultimoEnvio = agora.toISOString();
+            _log(`✅ E-mail Qualidade enviado: ${infoQ.messageId}`);
+        } catch (e) {
+            _estado.grupos.qualidade.status = 'erro';
+            _estado.grupos.qualidade.erro   = e.message;
+            _log(`❌ Erro e-mail Qualidade: ${e.message}`);
+        }
 
-        _ultimoEnvio  = agora.toISOString();
-        _ultimoStatus = 'ok';
-        _setProgresso('concluido', `✅ Concluído! ${filtrados.length} divergências enviadas.`, totalSincronizado, totalSincronizado);
+        // ── ETAPA 7: Enviar e-mail Campo ─────────────────────────
+        _setFase('enviando', `📧 Enviando e-mail Campo para ${emailC.length} destinatário(s)...`);
+        _estado.grupos.campo.status = 'enviando';
+
+        try {
+            const infoC = await transporter.sendMail({
+                from:    `"Divino Fogão — T.I." <${EMAIL_FROM}>`,
+                to:      emailC.join(', '),
+                subject: `🚗 Relatório Campo & Delivery — ${agora.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})} | ${filtC.length} divergências >1km`,
+                html:    _montarHtml(filtC, GRUPOS.campo, agora, totalSincronizado),
+            });
+            _estado.grupos.campo.status    = 'ok';
+            _estado.grupos.campo.emailId   = infoC.messageId;
+            _estado.grupos.campo.ultimoEnvio = agora.toISOString();
+            _log(`✅ E-mail Campo enviado: ${infoC.messageId}`);
+        } catch (e) {
+            _estado.grupos.campo.status = 'erro';
+            _estado.grupos.campo.erro   = e.message;
+            _log(`❌ Erro e-mail Campo: ${e.message}`);
+        }
+
+        _setFase('concluido', `✅ Concluído — Q:${filtQ.length} C:${filtC.length} divergências`);
 
         return {
-            ok:              true,
+            ok:               true,
             totalSincronizado,
-            totalFiltrado:   filtrados.length,
-            nomeAba,
-            sheetsOk:        resSheets.ok,
-            emailId:         info.messageId,
-            dataEnvio:       agora.toISOString(),
+            qualidade:        { filtrados: filtQ.length, nomeAba: nomeAbaQ, emailId: _estado.grupos.qualidade.emailId },
+            campo:            { filtrados: filtC.length, nomeAba: nomeAbaC, emailId: _estado.grupos.campo.emailId },
         };
 
     } catch (e) {
-        console.error(`[ENVIO-RELATORIO] ❌ Erro: ${e.message}`);
-        _ultimoStatus = 'erro';
-        _ultimoErro   = e.message;
-        _setProgresso('erro', '❌ ' + e.message, 0, 0);
+        _log(`❌ Erro geral: ${e.message}`);
+        _estado.ultimoErro = e.message;
+        _setFase('erro', '❌ ' + e.message);
         throw e;
     } finally {
-        clearTimeout(_timeout);
-        _executando = false;
+        clearTimeout(_tmout);
+        _estado.executando = false;
     }
 }
 
-// ─── Agendador (Cron manual — sem dependência externa) ────────
+// ─── Agendador ────────────────────────────────────────────────
 function _verificarCron() {
     const agora = new Date();
     const brt   = new Date(agora.getTime() - 3 * 60 * 60 * 1000);
-    const dia   = brt.getUTCDate();
-    const hora  = brt.getUTCHours();
-    const min   = brt.getUTCMinutes();
-
-    if (dia !== 6)  return;
-    if (hora !== 6) return;
-    if (min  > 4)   return;
-
-    if (_ultimoEnvio) {
-        const ult    = new Date(_ultimoEnvio);
-        const ultBrt = new Date(ult.getTime() - 3 * 60 * 60 * 1000);
-        if (
-            ultBrt.getUTCFullYear() === brt.getUTCFullYear() &&
-            ultBrt.getUTCMonth()    === brt.getUTCMonth()    &&
-            ultBrt.getUTCDate()     === brt.getUTCDate()
-        ) return;
-    }
-
-    console.log('[ENVIO-RELATORIO] ⏰ Disparando envio automático — dia 06, 06:00 BRT');
-    executarEnvioRelatorio().catch(e =>
-        console.error('[ENVIO-RELATORIO] ❌ Erro no cron automático:', e.message));
+    if (brt.getUTCDate() !== 6 || brt.getUTCHours() !== 6 || brt.getUTCMinutes() > 4) return;
+    const chave = `${brt.getUTCFullYear()}-${brt.getUTCMonth()}-6`;
+    if (_estado.ultimoCronDia === chave) return;
+    _estado.ultimoCronDia = chave;
+    _log('⏰ Cron dia 06 06:00 BRT — disparando');
+    executarEnvio().catch(e => _log(`❌ Cron erro: ${e.message}`));
 }
 
 function iniciarAgendador() {
     if (_cronHandle) return;
     _cronHandle = setInterval(_verificarCron, 5 * 60 * 1000);
-    console.log('[ENVIO-RELATORIO] ✅ Agendador iniciado. Executa todo dia 06 às 06:00 BRT.');
+    _log('✅ Agendador iniciado. Executa todo dia 06 às 06:00 BRT.');
 }
 
 function pararAgendador() {
     if (_cronHandle) { clearInterval(_cronHandle); _cronHandle = null; }
 }
 
-// ─── Getters de status ────────────────────────────────────────
+// ─── Status (endpoint único — sem /status/:grupoId) ──────────
 function getStatus() {
     return {
-        executando:    _executando,
-        ultimoEnvio:   _ultimoEnvio,
-        ultimoStatus:  _ultimoStatus,
-        ultimoErro:    _ultimoErro,
+        executando:    _estado.executando,
+        fase:          _estado.fase,
+        etapa:         _estado.etapa,
+        sincAtual:     _estado.sincAtual,
+        sincTotal:     _estado.sincTotal,
+        ultimoErro:    _estado.ultimoErro,
         agendadorAtivo: !!_cronHandle,
-        progresso:     { ..._progresso },
-        configuracao: {
-            dia:              6,
-            hora:             '06:00 BRT',
-            distanciaMinima:  `${DISTANCIA_MINIMA_METROS} m`,
-            destinatarios:    EMAILS_DESTINO,
-            remetente:        EMAIL_FROM,
-            modelosIgnorados: MODELOS_IGNORADOS,
-        },
+        grupos:        _estado.grupos,
     };
+}
+
+// ─── Preview ─────────────────────────────────────────────────
+function _gerarHtmlPreview(grupoId, registros, totalSincronizado, ficticio) {
+    const grupo = GRUPOS[grupoId] || GRUPOS.qualidade;
+    const aviso = ficticio
+        ? `<div style="background:#fef9c3;border:1.5px solid #d97706;border-radius:8px;padding:10px 16px;margin:0 32px 8px;font-size:12px;color:#92400e;font-weight:700;">⚠️ Dados fictícios — sincronize primeiro.</div>`
+        : '';
+    return aviso + _montarHtml(registros, grupo, new Date(), totalSincronizado);
 }
 
 // ─── Exports ─────────────────────────────────────────────────
 module.exports = {
     iniciarAgendador,
     pararAgendador,
-    executarEnvioRelatorio,
+    executarEnvio,
     getStatus,
     _gerarHtmlPreview,
+    GRUPOS,
     DISTANCIA_MINIMA_METROS,
-    MODELOS_IGNORADOS,
-    EMAILS_DESTINO,
 };

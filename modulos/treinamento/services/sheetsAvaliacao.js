@@ -43,6 +43,8 @@ const ABA            = 'Respostas ao formulário 1';
 // Z  25 aprovado               — Para finalizar, considera que o colaborador está aprovado?
 // AA 26 checkpointLoja         — Check-point loja treinadora
 // AB 27 inseridoSistema        — Inserido pelo sistema
+ //   pagamentoEnviado:   AC' },
+   // pdfEnviado:         : 'AD' }
 
 const CAMPOS = {
     dataHora:             { col: 0,  letra: 'A' },
@@ -73,12 +75,14 @@ const CAMPOS = {
     aprovado:             { col: 25, letra: 'Z' },
     checkpointLoja:       { col: 26, letra: 'AA' },
     inseridoSistema:      { col: 27, letra: 'AB' },
+    pagamentoEnviado:     { col: 28, letra: 'AC' },
+    pdfEnviado:           { col: 29, letra: 'AD' },
 };
 
 // Linha 1 = cabeçalho → dados a partir da linha 2
 // rowIndex 0-based  →  linha real = rowIndex + 2
 const HEADER_OFFSET = 2;
-const TOTAL_COLUNAS = 28; // A → AB
+const TOTAL_COLUNAS = 30; // A → AD
 
 // ── Auth (mesmo padrão do sheets.js) ─────────────────────────────────────────
 async function getAuth() {
@@ -133,6 +137,8 @@ function montarAvaliacao(row, rowIndex) {
         aprovado:             row[25] || '',
         checkpointLoja:       row[26] || '',
         inseridoSistema:      row[27] || '',
+         pagamentoEnviado:     row[28] || '',
+        pdfEnviado:           row[29] || '',
     };
 }
 
@@ -147,7 +153,7 @@ async function getAvaliacoesData() {
 
     const resp = await sheets.spreadsheets.values.get({
         spreadsheetId: SPREADSHEET_ID,
-        range:         `'${ABA}'!A2:AB`, // pula linha 1 (cabeçalho)
+        range: `'${ABA}'!A2:AD`, // pula linha 1 (cabeçalho)
     });
 
     return resp.data.values || [];

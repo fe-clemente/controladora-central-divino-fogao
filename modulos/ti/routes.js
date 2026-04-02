@@ -48,14 +48,22 @@ const apenasAutorizado = (req, res, next) => {
     return next();
 };
 
-// ─── DEBUG ───────────────────────────────────────────────────
+// ─── DEBUG (silencia polling frequente) ──────────────────────
+const _rotasSilenciosas = [
+    '/api/envio-relatorio-checkout/status',
+    '/api/relatorio-checkout/status',
+];
 router.use((req, res, next) => {
-    console.log(`\x1b[34m[TI ROUTER]\x1b[0m ${req.method} ${req.originalUrl}`);
+    const url = req.originalUrl.replace(/^\/ti/, '');
+    if (!_rotasSilenciosas.some(s => url.includes(s))) {
+        console.log(`\x1b[34m[TI ROUTER]\x1b[0m ${req.method} ${req.originalUrl}`);
+    }
     next();
 });
 
 router.use(express.static(PUBLIC_DIR));
 
+// ─── servirHtml — DEVE ser definida ANTES de ser usada ───────
 function servirHtml(nomeArquivo) {
     return (req, res) => {
         const arquivo = pub(nomeArquivo);
@@ -235,70 +243,67 @@ router.delete('/api/relatorio-sults/cache', apenasAutorizado, (req, res) => {
 console.log('\x1b[32m[TI]\x1b[0m relatorioControleAcessosSultsCache carregado');
 
 // ═══════════════════════════════════════════════════════════════
-// ENVIO AUTOMÁTICO — CHECK-IN / CHECK-OUT (dia 06 de cada mês)
+// ENVIO AUTOMÁTICO — 1 sync, 2 grupos, 2 e-mails (dia 06)
 // ═══════════════════════════════════════════════════════════════
 
-// ── Status da rotina ─────────────────────────────────────────
+// ── Status unificado ─────────────────────────────────────────
 router.get('/api/envio-relatorio-checkout/status', (req, res) => {
     try { res.json(envioRelatorioService.getStatus()); }
     catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-// ── Simular envio (botão "Simular Dia 06" do painel de teste) ─
+// ── Simular (teste) — 1 request, 2 e-mails ───────────────────
 router.post('/api/envio-relatorio-checkout/simular', apenasAutorizado, async (req, res) => {
     try {
-        const { emailsTeste, distanciaMinima } = req.body;
-        const resultado = await envioRelatorioService.executarEnvioRelatorio({
-            emailsDestino:   emailsTeste && emailsTeste.length ? emailsTeste : undefined,
+        const { emailsQualidade, emailsCampo, distanciaMinima } = req.body;
+        const resultado = await envioRelatorioService.executarEnvio({
+            emailsQualidade: emailsQualidade && emailsQualidade.length ? emailsQualidade : undefined,
+            emailsCampo:     emailsCampo     && emailsCampo.length     ? emailsCampo     : undefined,
             distanciaMinima: distanciaMinima || 1000,
         });
         res.json({ ok: true, ...resultado });
-    } catch (e) {
-        res.json({ ok: false, erro: e.message });
-    }
+    } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-// ── Preview HTML do e-mail (sem enviar) ──────────────────────
+// ── Executar com destinatários reais (sem modo teste) ─────────
+router.post('/api/envio-relatorio-checkout/executar-agora', apenasAutorizado, async (req, res) => {
+    try {
+        const resultado = await envioRelatorioService.executarEnvio();
+        res.json({ ok: true, ...resultado });
+    } catch (e) { res.json({ ok: false, erro: e.message }); }
+});
+
+// ── Preview e-mail de um grupo (sem enviar) ───────────────────
 router.get('/api/envio-relatorio-checkout/preview-email', async (req, res) => {
     try {
+        const grupoId         = req.query.grupoId || 'qualidade';
         const distanciaMinima = parseInt(req.query.distanciaMinima) || 1000;
-        const dados = checkoutCache.getDados();
+        const dados           = checkoutCache.getDados();
+        const grupo           = envioRelatorioService.GRUPOS[grupoId];
+
+        if (!grupo) return res.json({ ok: false, erro: `Grupo inválido: ${grupoId}` });
 
         if (!dados || !dados.avaliacoes) {
-            // Preview com dados fictícios para visualização do template
-            const dadosFicticios = [
-                { id: 1001, unidade: 'DF — Asa Norte',       consultor: 'João da Silva',   modelo: 'Auditoria Padrão',      data: '05/06/2025', distancia: 2340 },
-                { id: 1002, unidade: 'DF — Taguatinga',      consultor: 'Maria Oliveira',  modelo: 'Auditoria Padrão',      data: '05/06/2025', distancia: 5100 },
-                { id: 1003, unidade: 'GO — Goiânia Centro',  consultor: 'Carlos Mendes',   modelo: 'Auditoria Operacional', data: '04/06/2025', distancia: 1250 },
+            const ficticios = [
+                { id: 1001, unidade: 'DF — Asa Norte',      consultor: 'João Silva',    modelo: grupoId === 'qualidade' ? 'Consultoria em Qualidade e Segurança dos Alimentos' : 'Consultoria de Campo', data: '05/06/2025', distancia: 2340 },
+                { id: 1002, unidade: 'GO — Goiânia Centro', consultor: 'Maria Oliveira', modelo: grupoId === 'qualidade' ? 'Gastronomia - Consultoria Presencial'               : 'Consultoria em Delivery', data: '04/06/2025', distancia: 5100 },
             ];
-            const html = envioRelatorioService._gerarHtmlPreview(dadosFicticios, 3, true);
-            return res.json({ ok: true, html, aviso: 'Usando dados fictícios — sincronize primeiro para dados reais.' });
+            const html = envioRelatorioService._gerarHtmlPreview(grupoId, ficticios, 2, true);
+            return res.json({ ok: true, html, aviso: 'Dados fictícios — sincronize primeiro.' });
         }
 
         const filtrados = dados.avaliacoes.filter(r => {
-            if (!r.distancia || r.distancia <= distanciaMinima) return false;
-            const modelo = (r.modelo || '').toLowerCase();
-            return !envioRelatorioService.MODELOS_IGNORADOS.some(ig => modelo.includes(ig.toLowerCase()));
+            if (!r.distancia || r.distancia <= distanciaMinima || !r.modelo) return false;
+            const m = r.modelo.toLowerCase();
+            return grupo.modelosIncluidos.some(inc => m.includes(inc.toLowerCase()));
         }).sort((a, b) => (b.distancia || 0) - (a.distancia || 0));
 
-        const html = envioRelatorioService._gerarHtmlPreview(filtrados, dados.avaliacoes.length, false);
+        const html = envioRelatorioService._gerarHtmlPreview(grupoId, filtrados, dados.avaliacoes.length, false);
         res.json({ ok: true, html });
-    } catch (e) {
-        res.json({ ok: false, erro: e.message });
-    }
+    } catch (e) { res.json({ ok: false, erro: e.message }); }
 });
 
-// ── Forçar execução com destinatários reais (sem modo teste) ──
-router.post('/api/envio-relatorio-checkout/executar-agora', apenasAutorizado, async (req, res) => {
-    try {
-        const resultado = await envioRelatorioService.executarEnvioRelatorio();
-        res.json({ ok: true, ...resultado });
-    } catch (e) {
-        res.json({ ok: false, erro: e.message });
-    }
-});
-
-console.log('\x1b[32m[TI]\x1b[0m envioRelatorioConsultoresCheckinECheckout carregado');
+console.log('\x1b[32m[TI]\x1b[0m envioRelatorioConsultoresCheckinECheckout carregado (sync única → 2 grupos)');
 
 // ═══════════════════════════════════════════════════════════════
 // UPLOADS — Google Drive

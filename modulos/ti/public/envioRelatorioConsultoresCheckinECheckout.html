@@ -7,115 +7,115 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/global.css">
     <style>
-        /* ── Layout wrapper ── */
-        .wrapper{max-width:1280px;margin:0 auto;padding:28px 24px;}
+        .wrapper{max-width:1400px;margin:0 auto;padding:24px 20px;}
         .page-hd{margin-bottom:20px;}
         .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
-        .page-sub{font-size:13px;color:var(--muted);margin-bottom:12px;}
-        .grid{display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:start;}
-        @media(max-width:900px){.grid{grid-template-columns:1fr;}}
-        .col-left{display:flex;flex-direction:column;gap:20px;}
-        .col-right{position:sticky;top:76px;}
+        .page-sub{font-size:13px;color:var(--muted);}
+        .next-badge{display:inline-flex;align-items:center;gap:8px;background:#f0f9ff;border:1.5px solid rgba(3,105,161,.2);color:var(--ti);padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;margin-top:10px;}
+        .pdot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pdp 1.5s infinite;}
+        @keyframes pdp{0%,100%{opacity:1}50%{opacity:.3}}
 
-        /* ── Botões extras ── */
-        .btn-red{background:var(--red);color:#fff;box-shadow:0 3px 14px rgba(200,16,46,.35);}
-        .btn-red:hover:not(:disabled){background:#a50d25;transform:translateY(-1px);}
-        .btn-red:disabled{opacity:.5;cursor:not-allowed;}
+        /* ── Grid 2 grupos ── */
+        .grupos-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+        @media(max-width:900px){.grupos-grid{grid-template-columns:1fr;}}
+        .grupo-card{border-radius:16px;overflow:hidden;box-shadow:0 3px 16px rgba(0,0,0,.08);}
+        .grupo-card.qualidade{border:2px solid #7c3aed;}
+        .grupo-card.campo    {border:2px solid #0369a1;}
+        .grupo-header{padding:14px 18px;display:flex;align-items:center;gap:10px;}
+        .grupo-card.qualidade .grupo-header{background:linear-gradient(135deg,#7c3aed,#5b21b6);}
+        .grupo-card.campo     .grupo-header{background:linear-gradient(135deg,#0369a1,#075985);}
+        .grupo-icon{font-size:24px;}
+        .grupo-titulo{font-size:14px;font-weight:900;color:#fff;}
+        .grupo-sub{font-size:11px;color:rgba(255,255,255,.7);margin-top:1px;}
+        .grupo-body{background:var(--bg2);padding:16px 18px;}
+        .sec-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px;}
+        .modelos-wrap{margin-bottom:12px;}
+        .modelo-tag{display:inline-block;padding:3px 9px;border-radius:12px;font-size:11px;font-weight:700;margin:2px;}
+        .qualidade .modelo-tag{background:#f5f3ff;color:#7c3aed;border:1.5px solid rgba(124,58,237,.18);}
+        .campo     .modelo-tag{background:#f0f9ff;color:#0369a1;border:1.5px solid rgba(3,105,161,.18);}
+        .dest-wrap{margin-bottom:14px;}
+        .dest-email{font-size:12px;font-weight:700;padding:2px 0;display:flex;align-items:center;gap:6px;}
+        .dest-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
 
-        /* ── Cards ── */
-        .card{background:var(--bg2);border:1.5px solid var(--border);border-radius:16px;padding:20px 24px;box-shadow:var(--shadow);}
-        .card h3{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:14px;}
+        /* ── Botões ── */
+        .btn{padding:9px 16px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+        .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
+        .btn-ghost:hover{background:var(--bg2);}
+        .btn-sm{font-size:11px;padding:5px 11px;}
+        .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
+        .btn-ambos{background:linear-gradient(135deg,#7c3aed,#0369a1);color:#fff;box-shadow:0 3px 14px rgba(90,40,200,.3);}
+        .btn-ambos:hover:not(:disabled){opacity:.9;transform:translateY(-1px);}
+        .btn-eu   {background:linear-gradient(135deg,#16a34a,#0369a1);color:#fff;box-shadow:0 3px 12px rgba(0,100,80,.25);}
+        .btn-eu:hover:not(:disabled){opacity:.9;transform:translateY(-1px);}
+        .spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg)}}
 
-        /* ── Simulação ── */
-        .sim-card{background:var(--bg2);border:2px solid var(--red);border-radius:18px;padding:24px;box-shadow:0 4px 24px rgba(200,16,46,.1);}
-        .sim-badge{display:inline-flex;align-items:center;gap:6px;background:var(--red-pale,#fff0f2);border:1.5px solid rgba(200,16,46,.2);color:var(--red);font-size:11px;font-weight:800;padding:4px 14px;border-radius:20px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.7px;}
-        .sim-title{font-size:18px;font-weight:900;margin-bottom:6px;}
-        .sim-desc{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.7;}
-        .sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
-        .sim-field{display:flex;flex-direction:column;gap:5px;}
-        .sim-field.full{grid-column:1/-1;}
-        .sim-field label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
-        .sim-field input{font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;background:var(--bg2);color:var(--text);outline:none;transition:border-color .2s;}
-        .sim-field input:focus{border-color:var(--red);}
-        .sim-actions{display:flex;gap:8px;flex-wrap:wrap;}
-        #resultadoBox{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;font-size:13px;line-height:1.75;font-weight:600;}
-        #resultadoBox.ok{background:#f0fdf4;border:1.5px solid rgba(22,163,74,.25);color:#15803d;}
-        #resultadoBox.erro{background:#fff0f2;border:1.5px solid rgba(200,16,46,.2);color:var(--red);}
+        /* ── Barra de ações ── */
+        .acao-bar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--shadow);}
+        .acao-info{flex:1;}
+        .acao-titulo{font-size:14px;font-weight:800;}
+        .acao-sub{font-size:12px;color:var(--muted);margin-top:2px;}
 
-        /* ── Status ── */
-        .st-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-        .si{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;}
-        .si-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px;}
-        .si-val{font-size:12px;font-weight:700;}
-        .si-val.ok{color:var(--green);}
-        .si-val.err{color:var(--red);}
-        .si-val.run{color:var(--yellow);}
+        /* ── MONITOR UNIFICADO ── */
+        .monitor-card{
+            background:#0d1117;border:1.5px solid #30363d;
+            border-radius:16px;overflow:hidden;
+            box-shadow:0 4px 20px rgba(0,0,0,.25);
+            margin-bottom:24px;
+        }
+        .mon-head{
+            background:#161b22;padding:12px 18px;
+            display:flex;align-items:center;justify-content:space-between;
+            border-bottom:1px solid #30363d;
+        }
+        .mon-head-left{display:flex;align-items:center;gap:8px;}
+        .mon-head-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8b949e;}
+        .mdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+        .mdot.idle   {background:#6e7681;}
+        .mdot.running{background:#f0883e;animation:pdp .7s infinite;}
+        .mdot.done   {background:#3fb950;}
+        .mdot.error  {background:#f85149;}
 
-        /* ── Tags config ── */
-        .tag{display:inline-block;padding:2px 9px;border-radius:14px;font-size:11px;font-weight:700;margin:2px;}
-        .tag-red   {background:#fff0f2;color:var(--red);border:1.5px solid rgba(200,16,46,.18);}
-        .tag-ti    {background:#f0f9ff;color:var(--ti);border:1.5px solid rgba(3,105,161,.18);}
-        .tag-green {background:#f0fdf4;color:var(--green);border:1.5px solid rgba(22,163,74,.2);}
-        .tag-yellow{background:#fffbeb;color:var(--yellow);border:1.5px solid rgba(217,119,6,.2);}
-        .tag-gray  {background:var(--bg3);color:var(--muted);border:1.5px solid var(--border);}
-        .cfg-table{width:100%;border-collapse:collapse;font-size:12px;}
-        .cfg-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
-        .cfg-table td:first-child{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);width:150px;}
-        .cfg-table tr:last-child td{border-bottom:none;}
+        /* Etapa */
+        .mon-etapa{
+            padding:9px 18px;background:#161b22;border-bottom:1px solid #21262d;
+            font-family:'JetBrains Mono',monospace;font-size:11px;color:#58a6ff;
+            min-height:32px;display:flex;align-items:center;gap:8px;word-break:break-word;
+        }
 
-        /* ── Preview ── */
-        #previewWrap{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;display:none;}
-        #previewWrap.show{display:block;}
-        .prev-bar{background:var(--bg3);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
-        .prev-bar span{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
-        #previewFrame{width:100%;border:none;min-height:520px;}
-
-        /* ── Badge próximo envio ── */
-        .next-badge{display:inline-flex;align-items:center;gap:8px;background:#f0f9ff;border:1.5px solid rgba(3,105,161,.2);color:var(--ti);padding:9px 16px;border-radius:10px;font-size:12px;font-weight:700;}
-        .pdot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pdotpulse 1.5s infinite;}
-        @keyframes pdotpulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-        /* ══════════════════════════════════════════
-           PAINEL DEBUG — SEMPRE VISÍVEL
-        ══════════════════════════════════════════ */
-        .debug-card{background:#0d1117;border:1.5px solid #30363d;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.3);}
-        .debug-head{background:#161b22;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #30363d;}
-        .debug-head-left{display:flex;align-items:center;gap:8px;}
-        .debug-head-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#8b949e;}
-        .ddot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:background .3s;}
-        .ddot.idle   {background:#6e7681;}
-        .ddot.running{background:#f0883e;animation:pdotpulse .7s infinite;}
-        .ddot.done   {background:#3fb950;}
-        .ddot.error  {background:#f85149;}
-
-        /* etapa */
-        .debug-etapa{padding:9px 16px;background:#161b22;border-bottom:1px solid #21262d;font-family:'JetBrains Mono',monospace;font-size:11px;color:#58a6ff;min-height:34px;display:flex;align-items:center;gap:8px;word-break:break-word;}
-
-        /* barra de progresso */
-        .debug-prog{padding:10px 16px;border-bottom:1px solid #21262d;}
-        .debug-prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-        .debug-prog-lbl{font-size:10px;font-weight:700;color:#6e7681;text-transform:uppercase;letter-spacing:.5px;}
-        .debug-prog-num{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:900;color:#f0f6fc;}
-        .debug-prog-num em{color:#58a6ff;font-style:normal;}
+        /* Barra progresso */
+        .mon-prog{padding:10px 18px;border-bottom:1px solid #21262d;}
+        .mon-prog-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+        .mon-prog-lbl{font-size:10px;font-weight:700;color:#6e7681;text-transform:uppercase;letter-spacing:.5px;}
+        .mon-prog-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900;color:#f0f6fc;}
+        .mon-prog-num em{font-style:normal;color:#58a6ff;}
         .prog-track{height:7px;background:#21262d;border-radius:4px;overflow:hidden;}
         .prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#1f6feb,#58a6ff);transition:width .4s ease;width:0%;}
-        .prog-fill.done {background:linear-gradient(90deg,#238636,#3fb950);}
-        .prog-fill.error{background:linear-gradient(90deg,#b91c1c,#f85149);}
+        .prog-fill.done {background:linear-gradient(90deg,#238636,#3fb950)!important;}
+        .prog-fill.error{background:linear-gradient(90deg,#b91c1c,#f85149)!important;}
 
-        /* KPIs */
-        .debug-kpis{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #21262d;}
-        .dkpi{padding:10px 8px;border-right:1px solid #21262d;text-align:center;}
-        .dkpi:last-child{border-right:none;}
-        .dkpi-v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:900;color:#f0f6fc;line-height:1;}
-        .dkpi-v.blue  {color:#58a6ff;}
-        .dkpi-v.orange{color:#f0883e;}
-        .dkpi-v.green {color:#3fb950;}
-        .dkpi-l{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#6e7681;margin-top:4px;}
+        /* Resultados 2 grupos lado a lado */
+        .mon-grupos{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #21262d;}
+        .mon-grupo{padding:12px 16px;border-right:1px solid #21262d;}
+        .mon-grupo:last-child{border-right:none;}
+        .mon-grupo-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;}
+        .mon-grupo.qualidade .mon-grupo-title{color:#a78bfa;}
+        .mon-grupo.campo     .mon-grupo-title{color:#60a5fa;}
+        .mon-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+        .mkpi{background:#161b22;border-radius:8px;padding:7px 6px;text-align:center;}
+        .mkpi-v{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:900;color:#8b949e;line-height:1;}
+        .mkpi-v.blue  {color:#58a6ff;}
+        .mkpi-v.orange{color:#f0883e;}
+        .mkpi-v.green {color:#3fb950;}
+        .mkpi-v.err   {color:#f85149;}
+        .mkpi-l{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#6e7681;margin-top:3px;}
+        .mon-grupo.qualidade .mkpi-v.blue{color:#a78bfa;}
+        .mon-grupo.campo     .mkpi-v.blue{color:#60a5fa;}
 
-        /* log */
-        .debug-log-bar{padding:7px 16px;background:#161b22;border-bottom:1px solid #21262d;display:flex;align-items:center;justify-content:space-between;}
-        .debug-log-bar span{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#6e7681;}
-        #debugLog{font-family:'JetBrains Mono',monospace;font-size:11px;padding:10px 14px;height:300px;overflow-y:auto;color:#c9d1d9;line-height:1.6;background:#0d1117;}
+        /* Log */
+        .mon-log-bar{padding:7px 18px;background:#161b22;border-bottom:1px solid #21262d;display:flex;align-items:center;justify-content:space-between;}
+        .mon-log-bar span{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#6e7681;}
+        #monLog{font-family:'JetBrains Mono',monospace;font-size:11px;padding:10px 16px;height:240px;overflow-y:auto;color:#c9d1d9;line-height:1.6;background:#0d1117;}
         .dl{display:flex;gap:8px;padding:1px 0;align-items:flex-start;}
         .dl-t{color:#484f58;flex-shrink:0;font-size:10px;padding-top:1px;white-space:nowrap;}
         .dl-m{flex:1;word-break:break-word;}
@@ -125,9 +125,9 @@
         .dl.info .dl-m{color:#58a6ff;}
         .dl.data .dl-m{color:#c9d1d9;}
         .dl.sep  .dl-m{color:#21262d;}
-        #debugLog::-webkit-scrollbar{width:4px;}
-        #debugLog::-webkit-scrollbar-track{background:#0d1117;}
-        #debugLog::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px;}
+        #monLog::-webkit-scrollbar{width:3px;}
+        #monLog::-webkit-scrollbar-track{background:#0d1117;}
+        #monLog::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px;}
     </style>
 </head>
 <body>
@@ -139,8 +139,6 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
-
-    <!-- Nav desktop -->
     <nav id="navDesktop">
         <div class="nav-scroll">
             <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
@@ -153,45 +151,30 @@
             <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
             <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
         </div>
-
-        <!-- Dropdown Relatórios -->
         <div class="nav-dropdown" id="navRelatorios">
-            <button class="nav-btn nav-btn-drop" type="button"
-                onclick="event.stopPropagation(); toggleNavDrop('navRelatorios')">
+            <button class="nav-btn nav-btn-drop" type="button" onclick="event.stopPropagation();toggleNavDrop('navRelatorios')">
                 📊 Relatórios <span class="nav-drop-arrow">▾</span>
             </button>
             <div class="nav-drop-menu">
                 <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
                     <span class="ndi-icon">📋</span>
-                    <span class="ndi-info">
-                        <span class="ndi-label">Check-in / Check-out</span>
-                        <span class="ndi-desc">Presença e localização de consultores</span>
-                    </span>
+                    <span class="ndi-info"><span class="ndi-label">Check-in / Check-out</span><span class="ndi-desc">Presença e localização de consultores</span></span>
                 </a>
                 <a class="nav-drop-item active" href="/ti/envioRelatorioConsultoresCheckinECheckout.html">
                     <span class="ndi-icon">📧</span>
-                    <span class="ndi-info">
-                        <span class="ndi-label">Envio Automático</span>
-                        <span class="ndi-desc">Divergências mensais &gt;1km — dia 06</span>
-                    </span>
+                    <span class="ndi-info"><span class="ndi-label">Envio Automático</span><span class="ndi-desc">Divergências mensais &gt;1km — dia 06</span></span>
                 </a>
                 <a class="nav-drop-item" href="/ti/relatorioControleAcessosSults.html">
                     <span class="ndi-icon">🎛️</span>
-                    <span class="ndi-info">
-                        <span class="ndi-label">Controle SULTS</span>
-                        <span class="ndi-desc">Chamados abertos e atividade por setor</span>
-                    </span>
+                    <span class="ndi-info"><span class="ndi-label">Controle SULTS</span><span class="ndi-desc">Chamados abertos e atividade por setor</span></span>
                 </a>
             </div>
         </div>
-
         <button class="nav-btn" onclick="sair()" style="color:var(--red)">🚪 Sair</button>
     </nav>
-
     <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
 </header>
 
-<!-- ══ NAV DRAWER MOBILE ══ -->
 <div class="nav-drawer-overlay" id="navOverlay" onclick="fecharDrawer()"></div>
 <div class="nav-drawer" id="navDrawer">
     <div class="nav-drawer-head">
@@ -214,7 +197,6 @@
         <a class="nav-drawer-item nav-drawer-sub active" href="/ti/envioRelatorioConsultoresCheckinECheckout.html">📧 Envio Automático</a>
         <a class="nav-drawer-item nav-drawer-sub" href="/ti/relatorioControleAcessosSults.html">🎛️ Controle SULTS</a>
         <div class="nav-drawer-sep"></div>
-        <a class="nav-drawer-item" href="/">🏠 Voltar ao início</a>
         <button class="nav-drawer-item" onclick="sair()" style="color:var(--red);border:none;background:none;width:100%;text-align:left;cursor:pointer;font-family:var(--font-body)">🚪 Sair</button>
     </div>
 </div>
@@ -222,192 +204,178 @@
 <div id="statusBar">
     <div class="sdot" id="sdot"></div>
     <span id="statusText">Pronto</span>
-    <span style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-        <span id="lastSync" style="font-size:11px;color:var(--muted);"></span>
-    </span>
+    <span style="margin-left:auto;font-size:11px;color:var(--muted)" id="lastSync"></span>
 </div>
 
 <div class="wrapper">
 
     <div class="page-hd">
         <div class="page-title">📧 Envio Automático — Check-in / Check-out</div>
-        <div class="page-sub">Rotina mensal: divergências &gt; 1.000 m enviadas por e-mail todo dia 06</div>
-        <div class="next-badge" style="margin-top:12px;">
-            <div class="pdot"></div>
-            <span id="proximoTxt">Calculando...</span>
+        <div class="page-sub">1 sincronização · 2 grupos · 2 e-mails distintos · Todo dia 06 às 06:00</div>
+        <div class="next-badge"><div class="pdot"></div><span id="proximoTxt">Calculando...</span></div>
+    </div>
+
+    <!-- ══ Ações ══ -->
+    <div class="acao-bar">
+        <div class="acao-info">
+            <div class="acao-titulo">🚀 Simulação de teste</div>
+            <div class="acao-sub">A API SULTS é sincronizada <strong>uma vez</strong> — os dados são filtrados e enviados separadamente para cada grupo</div>
         </div>
+        <button class="btn btn-ambos" id="btnAmbos" onclick="simularAmbos()">
+            📧 Simular Ambos os Grupos
+        </button>
+        <button class="btn btn-eu" id="btnEu" onclick="simularParaMim()">
+            🎯 Receber os 2 E-mails
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="limparMonitor()">🗑️ Limpar Log</button>
     </div>
 
-    <div class="grid">
+    <!-- ══ Cards dos grupos (info only) ══ -->
+    <div class="grupos-grid">
 
-        <!-- ════ COLUNA ESQUERDA ════ -->
-        <div class="col-left">
-
-            <!-- Simulação -->
-            <div class="sim-card">
-                <div class="sim-badge">🧪 Modo de Teste</div>
-                <div class="sim-title">Simular Envio do Dia 06</div>
-                <div class="sim-desc">
-                    Executa como se fosse o dia 06 do mês. Acompanhe o progresso no monitor ao lado →<br>
-                    <strong>1.</strong> Sincroniza 30 dias da API SULTS &nbsp;→&nbsp;
-                    <strong>2.</strong> Filtra &gt;1.000 m &nbsp;→&nbsp;
-                    <strong>3.</strong> Exclui Consultoria Online / Buffet &nbsp;→&nbsp;
-                    <strong>4.</strong> Grava aba &nbsp;→&nbsp;
-                    <strong>5.</strong> Envia e-mail
-                </div>
-                <div class="sim-grid">
-                    <div class="sim-field">
-                        <label>E-mail de Teste</label>
-                        <input type="email" id="emailTeste" value="fernando.clemente@divinofogao.com.br">
-                    </div>
-                    <div class="sim-field">
-                        <label>Distância mínima (m)</label>
-                        <input type="number" id="distMin" value="1000" min="0" step="100">
-                    </div>
-                    <div class="sim-field full">
-                        <label>Enviar também para (vírgula, opcional)</label>
-                        <input type="text" id="emailsExtras" placeholder="outro@dominio.com, mais@dominio.com">
-                    </div>
-                </div>
-                <div class="sim-actions">
-                    <button class="btn btn-red" id="btnSim" onclick="simularEnvio()">
-                        📧 Simular Dia 06 — Enviar Agora
-                    </button>
-                    <button class="btn btn-ti" onclick="verPreview()">👁️ Preview</button>
-                    <button class="btn btn-ghost" onclick="limparDebug()">🗑️ Limpar Log</button>
-                </div>
-                <div id="resultadoBox"></div>
+        <div class="grupo-card qualidade">
+            <div class="grupo-header">
+                <div class="grupo-icon">🧪</div>
+                <div><div class="grupo-titulo">Qualidade &amp; Gastronomia</div>
+                    <div class="grupo-sub">Consultoria em Qualidade · Gastronomia Presencial</div></div>
             </div>
-
-            <!-- Status -->
-            <div class="card">
-                <h3>⚙️ Status da Rotina</h3>
-                <div class="st-grid">
-                    <div class="si"><div class="si-lbl">Agendador</div><div class="si-val" id="stAg">—</div></div>
-                    <div class="si"><div class="si-lbl">Em Execução</div><div class="si-val" id="stEx">—</div></div>
-                    <div class="si"><div class="si-lbl">Último Envio</div><div class="si-val" id="stUlt">—</div></div>
-                    <div class="si"><div class="si-lbl">Último Status</div><div class="si-val" id="stSt">—</div></div>
+            <div class="grupo-body">
+                <div class="modelos-wrap">
+                    <div class="sec-lbl">Modelos incluídos</div>
+                    <span class="modelo-tag qualidade">Consultoria em Qualidade e Segurança dos Alimentos</span>
+                    <span class="modelo-tag qualidade">Gastronomia - Consultoria Presencial</span>
                 </div>
-                <button class="btn btn-ghost btn-sm" onclick="carregarStatus()">🔄 Atualizar</button>
+                <div class="dest-wrap">
+                    <div class="sec-lbl">Destinatários automáticos</div>
+                    <div class="dest-email"><div class="dest-dot"></div>luciano.aquino@divinofogao.com.br</div>
+                    <div class="dest-email"><div class="dest-dot"></div>fernando.clemente@divinofogao.com.br</div>
+                    <div class="dest-email"><div class="dest-dot"></div>bruno.souza@divinofogao.com.br</div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                    <div style="flex:1;">
+                        <div class="sec-lbl">E-mail de teste</div>
+                        <input type="text" id="emailQ" value="fernando.clemente@divinofogao.com.br"
+                            style="width:100%;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;padding:7px 11px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg2);color:var(--text);outline:none;" placeholder="email1@dominio.com, email2@dominio.com">
+                    </div>
+                    <div style="width:110px;">
+                        <div class="sec-lbl">Distância (m)</div>
+                        <input type="number" id="distQ" value="1000"
+                            style="width:100%;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;padding:7px 11px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg2);color:var(--text);outline:none;" placeholder="email1@dominio.com, email2@dominio.com">
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <!-- Configuração -->
-            <div class="card">
-                <h3>⚙️ Configuração</h3>
-                <table class="cfg-table">
-                    <tr><td>Agendamento</td><td><span class="tag tag-ti">Dia 06</span> <span class="tag tag-ti">06:00 BRT</span></td></tr>
-                    <tr><td>Período</td><td><span class="tag tag-gray">Últimos 30 dias</span></td></tr>
-                    <tr><td>Distância mín.</td><td><span class="tag tag-red">&gt; 1.000 m</span></td></tr>
-                    <tr><td>Destinatários reais</td><td>
-                        <span class="tag tag-gray">bruno.souza@</span>
-                        <span class="tag tag-gray">anderson.silva@</span>
-                        <span class="tag tag-gray">marcos.bonadias@</span>
-                        <span class="tag tag-gray">fernando.clemente@</span>
-                    </td></tr>
-                    <tr><td>Remetente</td><td><span class="tag tag-green">fernando.clemente@</span></td></tr>
-                    <tr><td>Excluídos</td><td>
-                        <span class="tag tag-yellow">Consultoria Online</span>
-                        <span class="tag tag-yellow">Buffet Noite</span>
-                        <span class="tag tag-yellow">Q&amp;S dos Alimentos</span>
-                    </td></tr>
-                    <tr><td>Aba Sheets</td><td><span class="tag tag-green">email_AAAA-MM-DD_HHmm</span></td></tr>
-                </table>
+        <div class="grupo-card campo">
+            <div class="grupo-header">
+                <div class="grupo-icon">🚗</div>
+                <div><div class="grupo-titulo">Campo &amp; Delivery</div>
+                    <div class="grupo-sub">Consultoria de Campo · Delivery · Pré-Inauguração</div></div>
             </div>
-
-            <!-- Preview -->
-            <div id="previewWrap">
-                <div class="prev-bar">
-                    <span>👁️ Preview do E-mail HTML</span>
-                    <button class="btn btn-ghost btn-sm" onclick="fecharPreview()">✕ Fechar</button>
+            <div class="grupo-body">
+                <div class="modelos-wrap">
+                    <div class="sec-lbl">Modelos incluídos</div>
+                    <span class="modelo-tag campo">Consultoria em Delivery</span>
+                    <span class="modelo-tag campo">Consultoria de Campo</span>
+                    <span class="modelo-tag campo">Consultoria de Campo - Visita Não Avaliativa</span>
+                    <span class="modelo-tag campo">Consultoria de Campo - Pré Inauguração/Reabertura</span>
                 </div>
-                <iframe id="previewFrame" title="Preview e-mail"></iframe>
+                <div class="dest-wrap">
+                    <div class="sec-lbl">Destinatários automáticos</div>
+                    <div class="dest-email"><div class="dest-dot"></div>anderson.silva@divinofogao.com.br</div>
+                    <div class="dest-email"><div class="dest-dot"></div>fernando.clemente@divinofogao.com.br</div>
+                    <div class="dest-email"><div class="dest-dot"></div>bruno.souza@divinofogao.com.br</div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                    <div style="flex:1;">
+                        <div class="sec-lbl">E-mail de teste</div>
+                        <input type="text" id="emailC" value="fernando.clemente@divinofogao.com.br"
+                            style="width:100%;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;padding:7px 11px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg2);color:var(--text);outline:none;" placeholder="email1@dominio.com, email2@dominio.com">
+                    </div>
+                    <div style="width:110px;">
+                        <div class="sec-lbl">Distância (m)</div>
+                        <input type="number" id="distC" value="1000"
+                            style="width:100%;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;padding:7px 11px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg2);color:var(--text);outline:none;" placeholder="email1@dominio.com, email2@dominio.com">
+                    </div>
+                </div>
             </div>
-
-        </div><!-- /col-left -->
-
-        <!-- ════ COLUNA DIREITA — DEBUG SEMPRE VISÍVEL ════ -->
-        <div class="col-right">
-            <div class="debug-card">
-
-                <div class="debug-head">
-                    <div class="debug-head-left">
-                        <div class="ddot idle" id="ddot"></div>
-                        <span class="debug-head-title">Monitor de Execução</span>
-                    </div>
-                    <button class="btn btn-ghost btn-sm"
-                        style="font-size:10px;padding:3px 9px;background:#21262d;border-color:#30363d;color:#8b949e;"
-                        onclick="limparDebug()">limpar</button>
-                </div>
-
-                <!-- Etapa atual -->
-                <div class="debug-etapa" id="debugEtapa">
-                    <span id="debugEtapaIco">💤</span>
-                    <span id="debugEtapaTxt">Aguardando execução...</span>
-                </div>
-
-                <!-- Barra de progresso -->
-                <div class="debug-prog">
-                    <div class="debug-prog-top">
-                        <span class="debug-prog-lbl">Progresso da Sincronização</span>
-                        <span class="debug-prog-num">
-                            Processados <em id="dbAtual">0</em> / <span id="dbTotal" style="color:#8b949e;">—</span>
-                        </span>
-                    </div>
-                    <div class="prog-track">
-                        <div class="prog-fill" id="progFill"></div>
-                    </div>
-                </div>
-
-                <!-- KPIs -->
-                <div class="debug-kpis">
-                    <div class="dkpi">
-                        <div class="dkpi-v blue" id="dkSinc">—</div>
-                        <div class="dkpi-l">Sincronizados</div>
-                    </div>
-                    <div class="dkpi">
-                        <div class="dkpi-v orange" id="dkFilt">—</div>
-                        <div class="dkpi-l">&gt;1km Filtrados</div>
-                    </div>
-                    <div class="dkpi">
-                        <div class="dkpi-v green" id="dkEmail">—</div>
-                        <div class="dkpi-l">E-mail</div>
-                    </div>
-                </div>
-
-                <!-- Log -->
-                <div class="debug-log-bar">
-                    <span>📟 Log ao vivo</span>
-                    <span id="dbLinhas" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#484f58;">0 linhas</span>
-                </div>
-                <div id="debugLog">
-                    <div class="dl info"><span class="dl-t">--:--:--</span><span class="dl-m">Monitor pronto. Clique em Simular para iniciar.</span></div>
-                </div>
-
-            </div>
-        </div><!-- /col-right -->
+        </div>
 
     </div>
+
+    <!-- ══ MONITOR UNIFICADO ══ -->
+    <div class="monitor-card">
+
+        <div class="mon-head">
+            <div class="mon-head-left">
+                <div class="mdot idle" id="mdot"></div>
+                <span class="mon-head-title">📡 Monitor de Execução — Sincronização Unificada</span>
+            </div>
+            <span id="monLinhas" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#484f58;">0 linhas</span>
+        </div>
+
+        <!-- Etapa atual -->
+        <div class="mon-etapa">
+            <span id="monIco">💤</span>
+            <span id="monTxt">Aguardando execução...</span>
+        </div>
+
+        <!-- Barra de progresso única -->
+        <div class="mon-prog">
+            <div class="mon-prog-top">
+                <span class="mon-prog-lbl">Progresso da Sincronização</span>
+                <span class="mon-prog-num">Processados <em id="monAt">0</em> / <span id="monTot" style="color:#8b949e;">—</span></span>
+            </div>
+            <div class="prog-track"><div class="prog-fill" id="monBar"></div></div>
+        </div>
+
+        <!-- Resultados por grupo -->
+        <div class="mon-grupos">
+            <div class="mon-grupo qualidade">
+                <div class="mon-grupo-title">🧪 Qualidade &amp; Gastronomia</div>
+                <div class="mon-kpis">
+                    <div class="mkpi"><div class="mkpi-v blue" id="qSinc">—</div><div class="mkpi-l">Sinc.</div></div>
+                    <div class="mkpi"><div class="mkpi-v orange" id="qFilt">—</div><div class="mkpi-l">&gt;1km</div></div>
+                    <div class="mkpi"><div class="mkpi-v green" id="qEmail">—</div><div class="mkpi-l">E-mail</div></div>
+                </div>
+            </div>
+            <div class="mon-grupo campo">
+                <div class="mon-grupo-title">🚗 Campo &amp; Delivery</div>
+                <div class="mon-kpis">
+                    <div class="mkpi"><div class="mkpi-v blue" id="cSinc">—</div><div class="mkpi-l">Sinc.</div></div>
+                    <div class="mkpi"><div class="mkpi-v orange" id="cFilt">—</div><div class="mkpi-l">&gt;1km</div></div>
+                    <div class="mkpi"><div class="mkpi-v green" id="cEmail">—</div><div class="mkpi-l">E-mail</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log unificado -->
+        <div class="mon-log-bar"><span>📟 Log unificado</span></div>
+        <div id="monLog">
+            <div class="dl info"><span class="dl-t">--:--:--</span><span class="dl-m">Monitor pronto. Sincronização única → 2 e-mails separados.</span></div>
+        </div>
+
+    </div>
+
 </div><!-- /wrapper -->
 
 <script>
 // ════════════════════════════════════════════════════════════
 const API    = '/ti/api/envio-relatorio-checkout';
 const API_CO = '/ti/api/relatorio-checkout';
+const MEU_EMAIL = 'fernando.clemente@divinofogao.com.br';
 
-var _pollTimer   = null;
-var _logCount    = 0;
-var _executando  = false;
-var _ultimaEtapa = '';
-var _ultimoAtual  = -1;
-var _ultimaEtapa2 = '';
+var _poll       = null;
+var _logCount   = 0;
+var _ultimaEtapa= '';
+var _ultimoAt   = -1;
 
-// ── Escape ───────────────────────────────────────────────────
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ── Debug log ────────────────────────────────────────────────
-function dlog(msg, tipo) {
+// ── Log unificado ─────────────────────────────────────────────
+function mlog(msg, tipo) {
     tipo = tipo || 'data';
-    var box  = document.getElementById('debugLog');
+    var box  = document.getElementById('monLog');
     var hora = new Date().toLocaleTimeString('pt-BR');
     var div  = document.createElement('div');
     div.className = 'dl ' + tipo;
@@ -415,296 +383,226 @@ function dlog(msg, tipo) {
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
     _logCount++;
-    document.getElementById('dbLinhas').textContent = _logCount + ' linhas';
+    document.getElementById('monLinhas').textContent = _logCount + ' linhas';
 }
-function dsep(){ dlog('────────────────────────────────────────', 'sep'); }
+function msep(){ mlog('────────────────────────────────────','sep'); }
 
-function limparDebug() {
-    document.getElementById('debugLog').innerHTML = '';
+function limparMonitor() {
+    document.getElementById('monLog').innerHTML = '';
     _logCount = 0;
-    document.getElementById('dbLinhas').textContent = '0 linhas';
-    setEstado('idle', 'Aguardando execução...', '💤');
-    document.getElementById('dbAtual').textContent = '0';
-    document.getElementById('dbTotal').textContent = '—';
-    document.getElementById('dkSinc').textContent  = '—';
-    document.getElementById('dkFilt').textContent  = '—';
-    document.getElementById('dkEmail').textContent = '—';
-    setBar(0, '');
-    dlog('Log limpo.', 'info');
+    document.getElementById('monLinhas').textContent = '0 linhas';
+    setEstado('idle','Aguardando...','💤');
+    setBar(0,'');
+    document.getElementById('monAt').textContent  = '0';
+    document.getElementById('monTot').textContent = '—';
+    ['qSinc','qFilt','qEmail','cSinc','cFilt','cEmail'].forEach(function(id){
+        document.getElementById(id).textContent = '—';
+        document.getElementById(id).className = 'mkpi-v ' +
+            (id.includes('Sinc')?'blue':id.includes('Filt')?'orange':'green');
+    });
+    mlog('Log limpo.','info');
 }
 
-// ── Estado visual ────────────────────────────────────────────
+// ── Estado visual ─────────────────────────────────────────────
 function setEstado(cls, txt, ico) {
-    document.getElementById('ddot').className = 'ddot ' + cls;
-    document.getElementById('debugEtapaTxt').textContent = txt || '';
-    document.getElementById('debugEtapaIco').textContent = ico || '⚙️';
+    document.getElementById('mdot').className    = 'mdot ' + cls;
+    document.getElementById('monTxt').textContent = txt || '';
+    document.getElementById('monIco').textContent = ico || '⚙️';
 }
 function setBar(pct, cls) {
-    var f = document.getElementById('progFill');
-    f.style.width = Math.min(100, Math.max(0, pct)) + '%';
-    f.className = 'prog-fill' + (cls ? ' ' + cls : '');
+    var f = document.getElementById('monBar');
+    f.style.width = Math.min(100,Math.max(0,pct)) + '%';
+    f.className   = 'prog-fill' + (cls?' '+cls:'');
 }
 
-// ── Polling duplo: progresso do envio + progresso da sync ────
-function iniciarPolling() {
-    if (_pollTimer) return;
-    _pollTimer = setInterval(pollProgresso, 1500);
-}
-function pararPolling() {
-    if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
+// ── Fetch rápido para status (respostas em ms) ───────────────
+function _fetchStatus(url) {
+    var ctrl = new AbortController();
+    var tid  = setTimeout(function(){ ctrl.abort(); }, 8000);
+    return fetch(url, { signal: ctrl.signal })
+        .then(function(r){ clearTimeout(tid); return r.json(); })
+        .catch(function(){ clearTimeout(tid); return null; });
 }
 
-async function pollProgresso() {
-    try {
-        // 1. Progresso do próprio service de envio (fase, etapa)
-        var r1 = await fetch(API + '/status');
-        var s1 = await r1.json();
+// ── Polling — só lê status, nunca bloqueia ────────────────────
+var _pollAtivo = false;
 
-        if (s1.progresso && s1.progresso.fase && s1.progresso.fase !== 'idle') {
-            var p = s1.progresso;
-            if (p.etapa && p.etapa !== _ultimaEtapa) {
-                _ultimaEtapa = p.etapa;
-                var ico = p.fase === 'sincronizando' ? '🔄'
-                    : p.fase === 'filtrando'  ? '🔍'
-                    : p.fase === 'gravando'   ? '📊'
-                    : p.fase === 'enviando'   ? '📧'
-                    : p.fase === 'concluido'  ? '✅'
-                    : p.fase === 'erro'       ? '❌' : '⚙️';
-                setEstado(
-                    p.fase === 'concluido' ? 'done' : p.fase === 'erro' ? 'error' : 'running',
-                    p.etapa, ico
-                );
-                dlog(p.etapa, p.fase === 'erro' ? 'err' : p.fase === 'concluido' ? 'ok' : 'info');
-            }
+function iniciarPoll() {
+    if (_poll) return;
+    _pollAtivo = true;
+    _poll = setInterval(function(){ if (_pollAtivo) pollStatus(); }, 2000);
+}
+function pararPoll() {
+    _pollAtivo = false;
+    if (_poll) { clearInterval(_poll); _poll = null; }
+}
+
+async function pollStatus() {
+    // ── Status do service de envio ──
+    var s = await _fetchStatus(API + '/status');
+    if (s) {
+        if (s.etapa && s.etapa !== _ultimaEtapa) {
+            _ultimaEtapa = s.etapa;
+            var icoMap = {sincronizando:'🔄',filtrando:'🔍',gravando:'📊',enviando:'📧',concluido:'✅',erro:'❌',iniciando:'⚙️'};
+            var cls = s.fase==='concluido'?'done':s.fase==='erro'?'error':'running';
+            setEstado(cls, s.etapa, icoMap[s.fase]||'⚙️');
+            mlog(s.etapa, s.fase==='erro'?'err':s.fase==='concluido'?'ok':'info');
         }
-
-        // 2. Progresso granular da sincronização (Processados N/Total)
-        var r2 = await fetch(API_CO + '/status');
-        var s2 = await r2.json();
-
-        if (s2.sincronizando && s2.progresso) {
-            var p2  = s2.progresso;
-            var pct = p2.total > 0 ? Math.round((p2.atual / p2.total) * 100) : 0;
-
-            setBar(pct, '');
-            document.getElementById('dbAtual').textContent = p2.atual || 0;
-            document.getElementById('dbTotal').textContent = p2.total || '?';
-            document.getElementById('dkSinc').textContent  = p2.atual || 0;
-
-            // Loga a cada 25 processados
-            if (p2.atual > 0 && p2.atual !== _ultimoAtual && p2.atual % 25 === 0) {
-                _ultimoAtual = p2.atual;
-                dlog('Processados ' + p2.atual + ' / ' + p2.total + ' — ' + pct + '%', 'data');
-            }
-
-            // Exibe etapa da sync se não houver etapa do envio
-          if (p2.etapa && (!s1.progresso || s1.progresso.fase === 'sincronizando')) {
-            if (p2.etapa !== _ultimaEtapa2) {
-                _ultimaEtapa2 = p2.etapa;
-                setEstado('running', 'Processados ' + p2.atual + '/' + p2.total + ' — ' + p2.etapa, '🔄');
-            }
-            }
+        var g = s.grupos || {}, q = g.qualidade || {}, c = g.campo || {};
+        if (s.sincAtual) {
+            document.getElementById('qSinc').textContent = s.sincAtual;
+            document.getElementById('cSinc').textContent = s.sincAtual;
         }
+        if (q.filtrados > 0) document.getElementById('qFilt').textContent = q.filtrados;
+        if (c.filtrados > 0) document.getElementById('cFilt').textContent = c.filtrados;
+        if (q.emailId)       { document.getElementById('qEmail').textContent='✓'; document.getElementById('qEmail').className='mkpi-v green'; }
+        if (q.status==='erro'){ document.getElementById('qEmail').textContent='✗'; document.getElementById('qEmail').className='mkpi-v err'; }
+        if (c.emailId)       { document.getElementById('cEmail').textContent='✓'; document.getElementById('cEmail').className='mkpi-v green'; }
+        if (c.status==='erro'){ document.getElementById('cEmail').textContent='✗'; document.getElementById('cEmail').className='mkpi-v err'; }
 
-    } catch(e) { /* silencioso */ }
+        // Concluído: para poll, atualiza tudo, libera botões
+        if (s.fase === 'concluido') {
+            pararPoll();
+            var tot = s.sincAtual || 0;
+            document.getElementById('monAt').textContent  = tot;
+            document.getElementById('monTot').textContent = tot;
+            document.getElementById('qSinc').textContent  = tot;
+            document.getElementById('cSinc').textContent  = tot;
+            if (q.filtrados >= 0) document.getElementById('qFilt').textContent = q.filtrados;
+            if (c.filtrados >= 0) document.getElementById('cFilt').textContent = c.filtrados;
+            setBar(100, 'done');
+            msep();
+            mlog('✅ Concluído! Q:' + (q.filtrados||0) + ' · C:' + (c.filtrados||0) + ' divergências', 'ok');
+            msep();
+            _liberarBotoes();
+        }
+        if (s.fase === 'erro') {
+            pararPoll();
+            setBar(100, 'error');
+            _liberarBotoes();
+        }
+    }
+
+    // ── Progresso granular da sync (Processados N/Total) ──
+    var s2 = await _fetchStatus(API_CO + '/status');
+    if (s2 && s2.sincronizando && s2.progresso) {
+        var p = s2.progresso;
+        var pct = p.total > 0 ? Math.round((p.atual/p.total)*100) : 0;
+        setBar(pct, '');
+        document.getElementById('monAt').textContent  = p.atual || 0;
+        document.getElementById('monTot').textContent = p.total || '?';
+        document.getElementById('qSinc').textContent  = p.atual || 0;
+        document.getElementById('cSinc').textContent  = p.atual || 0;
+        if (p.atual > 0 && p.atual !== _ultimoAt && p.atual % 25 === 0) {
+            _ultimoAt = p.atual;
+            mlog('Processados ' + p.atual + ' / ' + p.total + ' — ' + pct + '%', 'data');
+        }
+    }
 }
 
-// ── Status da rotina ─────────────────────────────────────────
-async function carregarStatus() {
-    try {
-        var r = await fetch(API + '/status');
-        var s = await r.json();
-        var ag = document.getElementById('stAg');
-        var ex = document.getElementById('stEx');
-        var ul = document.getElementById('stUlt');
-        var st = document.getElementById('stSt');
-        ag.textContent = s.agendadorAtivo ? '✅ Ativo' : '⏸️ Parado';
-        ag.className   = 'si-val ' + (s.agendadorAtivo ? 'ok' : '');
-        ex.textContent = s.executando ? '⏳ Executando' : '💤 Ocioso';
-        ex.className   = 'si-val ' + (s.executando ? 'run' : '');
-        ul.textContent = s.ultimoEnvio ? new Date(s.ultimoEnvio).toLocaleString('pt-BR') : '—';
-        st.textContent = s.ultimoStatus === 'ok' ? '✅ Sucesso' : s.ultimoStatus === 'erro' ? '❌ Erro' : '—';
-        st.className   = 'si-val ' + (s.ultimoStatus === 'ok' ? 'ok' : s.ultimoStatus === 'erro' ? 'err' : '');
+function _liberarBotoes() {
+    var ba = document.getElementById('btnAmbos');
+    var be = document.getElementById('btnEu');
+    if (ba) { ba.disabled = false; ba.innerHTML = '📧 Simular Ambos os Grupos'; }
+    if (be) { be.disabled = false; be.innerHTML = '🎯 Receber os 2 E-mails'; }
+}
 
-        // Atualiza statusBar
-        document.getElementById('statusText').textContent =
-            s.executando ? '⏳ Executando envio...' : s.ultimoStatus === 'ok' ? '✅ Último envio concluído' : 'Pronto';
-        document.getElementById('sdot').className =
-            'sdot' + (s.executando ? ' syncing' : s.ultimoStatus === 'ok' ? ' ready' : '');
+// ── _executar — dispara em background, monitor acompanha via poll ──
+// O browser cancela requests longos (~2min timeout interno).
+// Solução: fire-and-forget no /simular, o poll acompanha o /status.
+async function _executar(emailQ, emailC, dist) {
+    limparMonitor();
+    _ultimaEtapa = '';
+    _ultimoAt    = -1;
 
-        if (s.ultimoEnvio) {
-            document.getElementById('lastSync').textContent =
-                'Último envio: ' + new Date(s.ultimoEnvio).toLocaleString('pt-BR');
-        }
-    } catch(e) { dlog('Erro ao carregar status: ' + e.message, 'err'); }
+    msep();
+    mlog('🚀 Simulação iniciada — 1 sync → 2 e-mails', 'info');
+    mlog('🧪 Qualidade para: ' + (Array.isArray(emailQ)?emailQ:emailQ).toString(), 'data');
+    mlog('🚗 Campo para: ' + (Array.isArray(emailC)?emailC:emailC).toString(), 'data');
+    mlog('📏 Distância mín.: ' + dist + ' m', 'data');
+    mlog('⏳ Sync leva ~10 min — acompanhe o progresso abaixo', 'warn');
+    dsep();
+
+    setEstado('running', 'Servidor iniciando...', '🔄');
+
+    // Fire-and-forget: dispara sem await, não importa se o browser cancelar
+    fetch(API + '/simular', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ emailsQualidade:Array.isArray(emailQ)?emailQ:[emailQ], emailsCampo:Array.isArray(emailC)?emailC:[emailC], distanciaMinima:dist||1000 }),
+    }).catch(function(){}); // ignora erro de conexão — o poll cuida do resto
+
+    // Poll começa imediatamente e é a fonte única de verdade
+    iniciarPoll();
+}
+
+function dsep(){ mlog('────────────────────────────────────','sep'); }
+
+
+// ── Botões ────────────────────────────────────────────────────
+function _parseMails(val, fallback) {
+    var mails = (val || '').split(',').map(function(m){ return m.trim(); }).filter(Boolean);
+    return mails.length ? mails : [fallback];
+}
+
+async function simularAmbos() {
+    var btn  = document.getElementById('btnAmbos');
+    var btn2 = document.getElementById('btnEu');
+    var mailsQ = _parseMails(document.getElementById('emailQ').value, MEU_EMAIL);
+    var mailsC = _parseMails(document.getElementById('emailC').value, MEU_EMAIL);
+    var dist   = parseInt(document.getElementById('distQ').value) || 1000;
+
+    btn.disabled = btn2.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Executando...';
+
+    await _executar(mailsQ, mailsC, dist);
+
+    btn.disabled = btn2.disabled = false;
+    btn.innerHTML = '📧 Simular Ambos os Grupos';
+}
+
+async function simularParaMim() {
+    var btn  = document.getElementById('btnEu');
+    var btn2 = document.getElementById('btnAmbos');
+    var dist = parseInt(document.getElementById('distQ').value) || 1000;
+
+    btn.disabled = btn2.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Enviando para você...';
+
+    await _executar([MEU_EMAIL], [MEU_EMAIL], dist);
+
+    btn.disabled = btn2.disabled = false;
+    btn.innerHTML = '🎯 Receber os 2 E-mails';
 }
 
 // ── Próximo envio ─────────────────────────────────────────────
 function calcularProximo() {
     var agora = new Date();
     var ano = agora.getFullYear(), mes = agora.getMonth();
-    var alvo = new Date(Date.UTC(ano, mes, 6, 9, 0, 0));
-    if (agora >= alvo) { mes++; if (mes > 11) { mes = 0; ano++; } alvo = new Date(Date.UTC(ano, mes, 6, 9, 0, 0)); }
-    var diff = alvo - agora;
-    var dias  = Math.floor(diff / 86400000);
-    var horas = Math.floor((diff % 86400000) / 3600000);
-    var mins  = Math.floor((diff % 3600000) / 60000);
-    var dtFmt = alvo.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric',timeZone:'America/Sao_Paulo'});
-    document.getElementById('proximoTxt').textContent =
-        'Próximo: ' + dtFmt + ' às 06:00 · faltam ' + dias + 'd ' + horas + 'h ' + mins + 'min';
+    var alvo = new Date(Date.UTC(ano,mes,6,9,0,0));
+    if(agora>=alvo){mes++;if(mes>11){mes=0;ano++;}alvo=new Date(Date.UTC(ano,mes,6,9,0,0));}
+    var diff=alvo-agora;
+    var dias=Math.floor(diff/86400000), horas=Math.floor((diff%86400000)/3600000), mins=Math.floor((diff%3600000)/60000);
+    var dtFmt=alvo.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric',timeZone:'America/Sao_Paulo'});
+    document.getElementById('proximoTxt').textContent='Próximo: '+dtFmt+' às 06:00 · faltam '+dias+'d '+horas+'h '+mins+'min';
 }
 
-// ── SIMULAR ───────────────────────────────────────────────────
-async function simularEnvio() {
-    var btn    = document.getElementById('btnSim');
-    var mail   = document.getElementById('emailTeste').value.trim();
-    var dist   = parseInt(document.getElementById('distMin').value) || 1000;
-    var extras = document.getElementById('emailsExtras').value.trim();
-
-    if (!mail) { alert('Informe o e-mail de teste.'); return; }
-
-    var lista = [mail];
-    if (extras) extras.split(',').forEach(function(e){ var t=e.trim(); if(t) lista.push(t); });
-    lista = lista.filter(function(v,i,a){ return a.indexOf(v)===i; });
-
-    btn.disabled = true;
-    btn.innerHTML = '<span style="display:inline-block;width:14px;height:14px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;"></span> Executando...';
-    document.getElementById('resultadoBox').style.display = 'none';
-
-    limparDebug();
-    _ultimaEtapa = '';
-    _ultimoAtual = -1;
-    _ultimaEtapa2 = '';
-    _executando  = true;
-
-    dsep();
-    dlog('🚀 Simulação do Dia 06 iniciada', 'info');
-    dlog('📧 Para: ' + lista.join(', '), 'data');
-    dlog('📏 Distância mín.: ' + dist + ' m', 'data');
-    dlog('🔄 Aguardando resposta da API SULTS...', 'warn');
-    dsep();
-
-    setEstado('running', 'Iniciando...', '🔄');
-    iniciarPolling();
-
-    try {
-        var resp = await fetch(API + '/simular', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ emailsTeste: lista, distanciaMinima: dist })
-        });
-        var json = await resp.json();
-
-        pararPolling();
-        _executando = false;
-
-        if (json.ok) {
-            dsep();
-            dlog('✅ Sincronizados: ' + json.totalSincronizado + ' registros', 'ok');
-            dlog('🔍 Filtrados >' + dist + 'm: ' + json.totalFiltrado + ' registros', 'ok');
-            dlog('🚫 Excluídos (modelos): ' + (json.totalSincronizado - json.totalFiltrado) + ' registros', 'data');
-            dlog('📊 Aba gravada: "' + json.nomeAba + '"', 'ok');
-            dlog('📧 E-mail enviado! ID: ' + json.emailId, 'ok');
-            dsep();
-
-            document.getElementById('dkSinc').textContent  = json.totalSincronizado;
-            document.getElementById('dkFilt').textContent  = json.totalFiltrado;
-            document.getElementById('dkEmail').textContent = '✓';
-            document.getElementById('dbAtual').textContent = json.totalSincronizado;
-            document.getElementById('dbTotal').textContent = json.totalSincronizado;
-            setBar(100, 'done');
-            setEstado('done', 'Concluído com sucesso!', '✅');
-
-            var box = document.getElementById('resultadoBox');
-            box.className = 'ok';
-            box.innerHTML =
-                '✅ <strong>Simulação concluída!</strong><br>' +
-                '📋 ' + json.totalSincronizado + ' sincronizados &nbsp;·&nbsp; ⚠️ ' + json.totalFiltrado + ' divergências &gt;' + dist + 'm<br>' +
-                '📊 Aba criada: <strong>' + esc(json.nomeAba) + '</strong><br>' +
-                '📧 Enviado para: <strong>' + esc(lista.join(', ')) + '</strong>';
-            box.style.display = 'block';
-        } else {
-            dsep();
-            dlog('❌ Erro: ' + json.erro, 'err');
-            setEstado('error', json.erro, '❌');
-            setBar(100, 'error');
-            var box = document.getElementById('resultadoBox');
-            box.className = 'erro';
-            box.innerHTML = '❌ <strong>Erro:</strong> ' + esc(json.erro);
-            box.style.display = 'block';
-        }
-    } catch(e) {
-        pararPolling();
-        _executando = false;
-        dsep();
-        dlog('❌ Erro de conexão: ' + e.message, 'err');
-        setEstado('error', 'Erro de conexão', '❌');
-        setBar(100, 'error');
-        var box = document.getElementById('resultadoBox');
-        box.className = 'erro';
-        box.innerHTML = '❌ <strong>Erro de conexão:</strong> ' + esc(e.message);
-        box.style.display = 'block';
-    }
-
-    btn.disabled = false;
-    btn.innerHTML = '📧 Simular Dia 06 — Enviar Agora';
-    carregarStatus();
-}
-
-// ── Preview ──────────────────────────────────────────────────
-async function verPreview() {
-    dlog('👁️ Carregando preview do e-mail...', 'info');
-    try {
-        var dist = parseInt(document.getElementById('distMin').value) || 1000;
-        var r    = await fetch(API + '/preview-email?distanciaMinima=' + dist);
-        var j    = await r.json();
-        if (!j.ok) { dlog('Erro no preview: ' + j.erro, 'err'); return; }
-        if (j.aviso) dlog('⚠️ ' + j.aviso, 'warn');
-        var frame = document.getElementById('previewFrame');
-        frame.srcdoc = j.html;
-        frame.onload = function() {
-            try { frame.style.height = (frame.contentDocument.body.scrollHeight + 32) + 'px'; } catch(e) {}
-        };
-        document.getElementById('previewWrap').classList.add('show');
-        document.getElementById('previewWrap').scrollIntoView({ behavior:'smooth' });
-        dlog('✅ Preview carregado.', 'ok');
-    } catch(e) { dlog('Erro: ' + e.message, 'err'); }
-}
-function fecharPreview() { document.getElementById('previewWrap').classList.remove('show'); }
-
-// ── Nav helpers (mesmo padrão das outras páginas) ─────────────
-function toggleNavDrop(id) {
-    var el = document.getElementById(id);
-    if (el) el.classList.toggle('open');
-}
-document.addEventListener('click', function(e) {
-    document.querySelectorAll('.nav-dropdown.open').forEach(function(d) {
-        if (!d.contains(e.target)) d.classList.remove('open');
-    });
-});
-function abrirDrawer() {
-    document.getElementById('navDrawer').classList.add('open');
-    document.getElementById('navOverlay').classList.add('show');
-}
-function fecharDrawer() {
-    document.getElementById('navDrawer').classList.remove('open');
-    document.getElementById('navOverlay').classList.remove('show');
-}
-function sair() { window.location.href = '/auth/logout'; }
+// ── Nav ───────────────────────────────────────────────────────
+function toggleNavDrop(id){var el=document.getElementById(id);if(el)el.classList.toggle('open');}
+document.addEventListener('click',function(e){document.querySelectorAll('.nav-dropdown.open').forEach(function(d){if(!d.contains(e.target))d.classList.remove('open');});});
+function abrirDrawer(){document.getElementById('navDrawer').classList.add('open');document.getElementById('navOverlay').classList.add('show');}
+function fecharDrawer(){document.getElementById('navDrawer').classList.remove('open');document.getElementById('navOverlay').classList.remove('show');}
+function sair(){window.location.href='/auth/logout';}
 
 // ── Init ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
-    carregarStatus();
+document.addEventListener('DOMContentLoaded',function(){
     calcularProximo();
-    setInterval(calcularProximo, 60000);
-    setInterval(carregarStatus, 30000);
-    dlog('Monitor pronto. Clique em "Simular Dia 06" para iniciar.', 'info');
+    setInterval(calcularProximo,60000);
 });
 
-// CSS da animação do spinner inline
-var st = document.createElement('style');
-st.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
-document.head.appendChild(st);
+var _st=document.createElement('style');
+_st.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+document.head.appendChild(_st);
 </script>
 </body>
 </html>

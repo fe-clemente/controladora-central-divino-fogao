@@ -114,7 +114,7 @@
             <a href="/treinamento/lembretes"      class="nav-btn">🔔 Lembretes</a>
             <a href="/treinamento/busca"          class="nav-btn">🔍 Colaboradores</a>
             <a href="/treinamento/kpi-avaliacoes" class="nav-btn">📊 KPI</a>
-            <a href="/treinamento/buscaAvaliacoes" class="nav-btn" ctiveliações</a>
+            <a href="/treinamento/buscaAvaliacoes" class="nav-btn">⭐ Avaliações</a>
             <a href="/treinamento/sults"          class="nav-btn">🏪 Sults</a>
             <a href="/treinamento/chamados"       class="nav-btn">📞 Chamados</a>
             <a href="/treinamento/universidade"   class="nav-btn">🎓 Universidade</a>
@@ -267,7 +267,8 @@ var CAMPO_COL = {
     compreensao:11, habilidadesTec:12, atitudes:13, resolucaoProb:14,
     trabalhoEquipe:15, adesaoPadroes:16, feedbackMelhoria:17, confiancaAutonomia:18,
     destaque:19, comportamento:20, entendimentoConteudo:21, prontidaoFuncao:22,
-    multiplicador:23, fotoTecnica:24, aprovado:25, checkpointLoja:26, inseridoSistema:27
+    multiplicador:23, fotoTecnica:24, aprovado:25, checkpointLoja:26,
+    inseridoSistema:27, pagamentoEnviado:28, pdfEnviado:29
 };
 
 var _dados       = [];
@@ -626,6 +627,29 @@ function aprovadoBadge(v) {
 }
 function notaCls(n){var v=parseFloat(String(n).replace(',','.'));if(isNaN(v))return'';return v>=8?'ok':v>=6?'':'nok';}
 
+/* ── SALVAR CAMPO SIMPLES (pagamentoEnviado / pdfEnviado) ── */
+async function salvarCampoSimples(ri, campo, valor, el) {
+    el.disabled = true;
+    var colMap = { pagamentoEnviado: 28, pdfEnviado: 29 };
+    var col = colMap[campo];
+    if (col === undefined) { el.disabled = false; return; }
+    try {
+        var alts = {}; alts[col] = valor;
+        var r = await fetch(API+'/editar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rowIndex: ri, alteracoes: alts })
+        });
+        var d = await r.json();
+        if (!d.ok) throw new Error(d.erro || 'Erro');
+        var aval = _dados.find(function(a){ return a.rowIndex === ri; });
+        if (aval) aval[campo] = valor;
+        lcSalvar(_dados);
+        toast(campo === 'pdfEnviado' ? 'PDF enviado atualizado!' : 'Pagamento atualizado!');
+    } catch(e) { toast(e.message, true); }
+    finally { el.disabled = false; }
+}
+
 /* ── RENDER CARD ── */
 function renderCard(a) {
     var ini=(a.colaborador||'?').split(' ').slice(0,2).map(function(p){return p[0]||'';}).join('').toUpperCase();
@@ -638,17 +662,29 @@ function renderCard(a) {
       '<div class="aval-header" onclick="toggleCard(this)">'+
         '<div class="aval-avatar">'+ini+'</div>'+
         '<div class="aval-info">'+
-          '<div class="aval-nome">'+esc(a.colaborador||'— sem nome —')+'</div>'+
+
+          /* ── linha do nome + seletor pagamento ── */
+          '<div class="aval-nome" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;white-space:normal;">'+
+            '<span>'+esc(a.colaborador||'— sem nome —')+'</span>'+
+            '<select title="Pagamento enviado?" onchange="salvarCampoSimples('+ri+',\'pagamentoEnviado\',this.value,this)" onclick="event.stopPropagation()" style="font-size:11px;font-weight:700;border-radius:7px;padding:2px 7px;border:1.5px solid var(--border);background:var(--bg3);cursor:pointer;color:var(--text);flex-shrink:0;">'+
+              '<option value="Não" '+(!a.pagamentoEnviado||a.pagamentoEnviado==='Não'?'selected':'')+'>💳 Pgto: Não</option>'+
+              '<option value="Sim" '+(a.pagamentoEnviado==='Sim'?'selected':'')+'>✅ Pgto: Sim</option>'+
+            '</select>'+
+          '</div>'+
+
+          /* ── linha sub (loja / função / avaliador / data) ── */
           '<div class="aval-sub">'+
             (a.lojaTreinada?'<span>🏪 '+esc(a.lojaTreinada)+'</span>':'')+
             (a.funcaoColab ?'<span>👔 '+esc(a.funcaoColab)+'</span>' :'')+
             (a.avaliador   ?'<span>👁 '+esc(a.avaliador)+'</span>'   :'')+
             (a.dataHora    ?'<span>📅 '+esc(a.dataHora.split(' ')[0])+'</span>':'')+
           '</div>'+
-        '</div>'+
+
+        '</div>'+ /* fecha aval-info */
         (badges?'<div class="colab-badges">'+badges+'</div>':'')+
         '<div class="colab-acc-btn"><svg viewBox="0 0 12 12" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="2,3 6,9 10,3"/></svg></div>'+
-      '</div>'+
+      '</div>'+ /* fecha aval-header */
+
       '<div class="aval-body"><div class="aval-body-inner">'+
         '<div class="edit-mode-bar">✏️ Edição ativa · clique em qualquer campo<span class="edit-status"></span></div>'+
         sec('📋 Identificação',ri,[
@@ -689,13 +725,21 @@ function renderCard(a) {
             ['Checkpoint Loja','checkpointLoja',a.checkpointLoja,0,'wrap'],
             ['Inserido Sistema','inseridoSistema',a.inseridoSistema,0,''],
         ])+
+
+        /* ── barra de ações ── */
         '<div class="edit-actions">'+
           '<button class="btn btn-green btn-sm" onclick="salvarCard('+ri+',this)">💾 Salvar</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="cancelarEdicao('+ri+')">↩ Descartar</button>'+
           '<button class="btn btn-sm" style="background:#1e40af;color:#fff;border-color:#1e40af;" onclick="baixarPdf('+ri+',event)" title="Baixar PDF da avaliação">📄 PDF</button>'+
+          '<select title="PDF enviado?" onchange="salvarCampoSimples('+ri+',\'pdfEnviado\',this.value,this)" style="font-size:11px;font-weight:700;border-radius:7px;padding:2px 8px;border:1.5px solid #1e40af;background:#eff6ff;color:#1e40af;cursor:pointer;">'+
+            '<option value="Não" '+(!a.pdfEnviado||a.pdfEnviado==='Não'?'selected':'')+'>📤 PDF: Não</option>'+
+            '<option value="Sim" '+(a.pdfEnviado==='Sim'?'selected':'')+'>✅ PDF: Sim</option>'+
+          '</select>'+
           '<button class="btn btn-sm" style="margin-left:auto;background:var(--red-pale);color:var(--red);border:1.5px solid rgba(200,16,46,.25);" onclick="abrirModalExcluir('+ri+',\''+nomeJS+'\',event)">🗑️ Excluir</button>'+
         '</div>'+
-      '</div></div></div>';
+
+      '</div></div>'+ /* fecha aval-body-inner + aval-body */
+    '</div>'; /* fecha aval-card */
 }
 
 function sec(titulo,ri,campos) {
