@@ -6,123 +6,6 @@
     <title>Controle SULTS — T.I.</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/global.css">
-    <style>
-        /* ── Overlay do drawer (global.css não define position/inset) ── */
-        .nav-drawer-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.45);
-            z-index: 300;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .28s;
-        }
-        .nav-drawer-overlay.open {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        /* ── Barra de progresso de sincronização ── */
-        #syncProgressBar {
-            display: none;
-            background: var(--bg2);
-            border: 1.5px solid var(--border);
-            border-radius: 14px;
-            padding: 16px 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
-        #syncProgressBar.visible { display: block; }
-
-        .prog-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 12px; flex-wrap: wrap; }
-        .prog-title  { font-size: 13px; font-weight: 800; color: var(--ti); display: flex; align-items: center; gap: 8px; }
-        .prog-pct    { font-family: var(--font-mono); font-size: 13px; font-weight: 800; color: var(--ti); }
-        .prog-track  { height: 10px; background: var(--bg); border-radius: 5px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 8px; }
-        .prog-fill   { height: 100%; background: linear-gradient(90deg, var(--ti), #0ea5e9); border-radius: 5px; transition: width .4s ease; }
-        .prog-detail { display: flex; gap: 16px; flex-wrap: wrap; }
-        .prog-stat   { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: var(--muted); }
-        .prog-stat strong { color: var(--text); font-family: var(--font-mono); }
-        .prog-msg    { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 6px; font-family: var(--font-mono); }
-
-        /* ── Abas da página ── */
-        .sults-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
-        .sults-tab  { padding: 11px 24px; border: none; background: none; cursor: pointer; font-family: var(--font-body); font-size: 13px; font-weight: 700; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all .2s; }
-        .sults-tab:hover  { color: var(--text); }
-        .sults-tab.active { color: var(--ti); border-bottom-color: var(--ti); }
-        .sults-pane        { display: none; }
-        .sults-pane.active { display: block; }
-
-        /* ── Grupos de departamento (accordion) ── */
-        .grupo-dept  { margin-bottom: 10px; background: var(--bg2); border-radius: 14px; border: 1.5px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
-        .grupo-head  { display: flex; justify-content: space-between; align-items: center; padding: 13px 16px; cursor: pointer; background: var(--bg3); user-select: none; transition: background .15s; }
-        .grupo-head:hover { background: #e0f2fe; }
-        .grupo-titulo { font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-        .grupo-seta  { font-size: 11px; color: var(--muted); transition: transform .2s; }
-        .grupo-seta.aberto { transform: rotate(90deg); }
-        .grupo-badge { background: var(--ti); color: #fff; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; font-family: var(--font-mono); }
-        .grupo-body        { display: none; }
-        .grupo-body.aberto { display: block; }
-
-        /* ── Badges de situação ── */
-        .sit-badge { padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
-        .sit-4 { background: #fef3c7; color: #92400e; }
-        .sit-5 { background: #fce7f3; color: #9d174d; }
-        .sit-6 { background: #ede9fe; color: #5b21b6; }
-
-        /* ── Dias em aberto ── */
-        .dias-critico { color: var(--red); font-weight: 800; }
-        .dias-alerta  { color: var(--orange); font-weight: 700; }
-        .dias-atencao { color: var(--yellow); font-weight: 600; }
-
-        /* ── Etiquetas ── */
-        .etiqueta { padding: 2px 7px; border-radius: 4px; font-size: 10px; color: #fff; margin-left: 3px; font-weight: 700; }
-
-        /* ── Gráficos ── */
-        .chart-grid     { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-        .mini-bar-row   { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .mini-bar-lbl   { font-size: 12px; font-weight: 600; width: 180px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .mini-bar-track { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
-        .mini-bar-fill  { height: 100%; border-radius: 4px; transition: width .7s ease; }
-        .mini-bar-num   { font-size: 11px; font-family: var(--font-mono); color: var(--muted); width: 30px; text-align: right; flex-shrink: 0; }
-
-        /* ── Aba Acessos ── */
-        .acesso-pessoa { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--border); transition: background .12s; }
-        .acesso-pessoa:hover { background: var(--bg3); }
-        .acesso-pessoa:last-child { border-bottom: none; }
-        .ap-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--jur2-pale); border: 2px solid #bfdbfe; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: var(--ti); flex-shrink: 0; font-family: var(--font-mono); }
-        .ap-avatar.alerta { background: #fef2f2; border-color: #fecaca; color: var(--red); }
-        .ap-info  { flex: 1; min-width: 0; }
-        .ap-nome  { font-size: 13px; font-weight: 800; }
-        .ap-dept  { font-size: 11px; color: var(--muted); font-weight: 600; }
-        .ap-stats { display: flex; gap: 16px; flex-shrink: 0; flex-wrap: wrap; }
-        .ap-stat  { text-align: center; }
-        .ap-stat-val { font-size: 16px; font-weight: 900; font-family: var(--font-mono); line-height: 1; }
-        .ap-stat-lbl { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-top: 2px; }
-        .ap-ult      { text-align: right; flex-shrink: 0; min-width: 110px; }
-        .ap-ult-data { font-size: 12px; font-weight: 700; font-family: var(--font-mono); }
-        .ap-ult-dias { font-size: 10px; font-weight: 700; margin-top: 2px; }
-        .ap-ult-dias.ok     { color: var(--green); }
-        .ap-ult-dias.warn   { color: var(--orange); }
-        .ap-ult-dias.alerta { color: var(--red); }
-        .badge-inativo { background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 800; }
-        .badge-ativo   { background: var(--green-pale); color: #166534; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 800; }
-
-        /* ── Filtro de dias (pill buttons) ── */
-        .filtro-dias-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
-        .filtro-dias-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); white-space: nowrap; }
-        .filtro-dias-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--bg3); font-family: var(--font-body); font-size: 12px; font-weight: 800; color: var(--muted); cursor: pointer; transition: all .15s; }
-        .filtro-dias-btn:hover  { border-color: var(--ti); color: var(--ti); }
-        .filtro-dias-btn.active { background: var(--ti); color: #fff; border-color: var(--ti); }
-
-        /* ── Responsivo extras ── */
-        @media (max-width: 768px) {
-            .chart-grid   { grid-template-columns: 1fr; }
-            .ap-stats     { display: none; }
-            .mini-bar-lbl { width: 120px; }
-            .sults-tab    { padding: 10px 14px; font-size: 12px; }
-            .filtro-dias-btn { padding: 5px 10px; font-size: 11px; }
-        }
-    </style>
 </head>
 <body>
 
@@ -139,15 +22,17 @@
     <div class="h-title">Central de T.I.</div>
 
     <nav>
-        <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-        <button class="nav-btn " onclick="location.href='/ti/controle-equipamentos.html'"> 🖥️ Gestão Ativos</button>
-        <button class="nav-btn " onclick="location.href='/ti/ativos.html'">📦 Comodato- Jurídico</button>
-        <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-        <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-        <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
-        <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
-        <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
-        <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
+        <div class="nav-scroll">
+            <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+            <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos</button>
+            <button class="nav-btn" onclick="location.href='/ti/ativos.html'">📦 Comodato - Jurídico</button>
+            <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+            <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+            <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+            <button class="nav-btn" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+            <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+            <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
+        </div>
 
         <div class="nav-dropdown" id="navRelatorios">
             <button class="nav-btn nav-btn-drop active active-ti"
@@ -162,7 +47,7 @@
                         <span class="ndi-desc">Presença e localização de consultores</span>
                     </span>
                 </a>
-                         <a class="nav-drop-item active" href="/ti/envioRelatorioConsultoresCheckinECheckout.html">
+                <a class="nav-drop-item" href="/ti/envioRelatorioConsultoresCheckinECheckout.html">
                     <span class="ndi-icon">📧</span>
                     <span class="ndi-info">
                         <span class="ndi-label">Envio Automático</span>
@@ -195,7 +80,7 @@
     <div class="nav-drawer-body">
         <a class="nav-drawer-item" href="/ti/index.html">📊 Dashboard</a>
         <a class="nav-drawer-item" href="/ti/controle-equipamentos.html">🖥️ Gestão Ativos</a>
-        <a class="nav-drawer-item" href="/ti/ativos.html">🖥️ Comodato - Jurídico</a>
+        <a class="nav-drawer-item" href="/ti/ativos.html">📦 Comodato - Jurídico</a>
         <a class="nav-drawer-item" href="/ti/migracao.html">🔄 Migração</a>
         <a class="nav-drawer-item" href="/ti/projetos.html">📋 Projetos</a>
         <a class="nav-drawer-item" href="/ti/chamados.html">📞 Chamados</a>
@@ -203,12 +88,12 @@
         <a class="nav-drawer-item" href="/ti/linkexterno.html">🔗 Links</a>
         <a class="nav-drawer-item" href="/ti/uploads.html">📁 Uploads</a>
         <div class="nav-drawer-sep"></div>
-        <span class="nav-drawer-item"
-              style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);cursor:default">
-            Relatórios
-        </span>
-        <a class="nav-drawer-item nav-drawer-sub" href="/ti/relatorioCheckoutConsultores.html">📋 Check-in / Check-out</a>
-        <a class="nav-drawer-item nav-drawer-sub active active-ti" href="/ti/relatorioControleAcessosSults.html">🎛️ Controle SULTS</a>
+        <div style="padding:4px 6px 2px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)">Relatórios</div>
+        <div class="nav-drawer-sub">
+            <a class="nav-drawer-item" href="/ti/relatorioCheckoutConsultores.html">📋 Check-in / Check-out</a>
+            <a class="nav-drawer-item" href="/ti/envioRelatorioConsultoresCheckinECheckout.html">📧 Envio Automático</a>
+            <a class="nav-drawer-item active active-ti" href="/ti/relatorioControleAcessosSults.html">🎛️ Controle SULTS</a>
+        </div>
         <div class="nav-drawer-sep"></div>
         <a class="nav-drawer-item" href="/" style="color:var(--red)">🚪 Sair</a>
     </div>
@@ -376,19 +261,16 @@ function toggleNavDrop(id) {
     if (!el) return;
     el.classList.toggle('open');
 }
-
 document.addEventListener('click', function(e) {
     document.querySelectorAll('.nav-dropdown.open').forEach(function(d) {
         if (!d.contains(e.target)) d.classList.remove('open');
     });
 });
-
 function abrirDrawer() {
     document.getElementById('navDrawer').classList.add('open');
     document.getElementById('drawerOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
-
 function fecharDrawer() {
     document.getElementById('navDrawer').classList.remove('open');
     document.getElementById('drawerOverlay').classList.remove('open');

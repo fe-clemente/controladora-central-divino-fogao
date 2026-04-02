@@ -5,180 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pix TEF — Divino Fogão</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --red:#c8102e;--red-pale:#fff0f2;
-            --bg:#f5f3ef;--bg2:#ffffff;--bg3:#faf8f5;
-            --border:#e8e2d9;--text:#1e1a16;--muted:#8a7f74;
-            --green:#16a34a;--green-pale:#f0fdf4;
-            --yellow:#d97706;--yellow-pale:#fffbeb;
-            --orange:#ea580c;--orange-pale:#fff7ed;
-            --red2:#dc2626;--red2-pale:#fef2f2;
-            --ti:#0369a1;--ti-light:#0ea5e9;--ti-pale:#f0f9ff;
-            --ti2:#7c3aed;--ti2-pale:#f5f3ff;
-            --pix:#16a34a;
-            --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12);
-        }
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-        header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
-        .logo{padding:10px 0;}.logo img{height:48px;display:block;}
-        .logo-fb{font-size:18px;font-weight:900;color:var(--red);display:none;}
-        .hd{width:1px;height:32px;background:var(--border);}
-        .h-title{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;}
-        nav{display:flex;gap:2px;margin-left:auto;}
-        .nav-btn{background:none;border:none;padding:18px 13px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
-        .nav-btn:hover{color:var(--text);background:var(--bg3);}
-        .nav-btn.active{color:var(--pix);border-bottom-color:var(--pix);background:var(--green-pale);}
-        #statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
-        .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
-        .sdot.ready{background:var(--green);animation:none;}
-        .sdot.error{background:var(--red);animation:none;}
-        .sdot.syncing{background:var(--ti-light);animation:pulse .8s infinite;}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-        main{max-width:1260px;margin:0 auto;padding:28px 24px;}
-        .page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
-        .page-sub{font-size:13px;color:var(--muted);margin-bottom:24px;}
-        .metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:24px;}
-        .mc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:15px 18px;box-shadow:var(--shadow);}
-        .mc-icon{font-size:20px;margin-bottom:6px;}
-        .mc-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;}
-        .mc-val{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
-        .mc-sub{font-size:10px;color:var(--muted);margin-top:4px;font-weight:600;}
-        .prog-section{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:24px;box-shadow:var(--shadow);}
-        .prog-row{margin-bottom:14px;}
-        .prog-row:last-child{margin-bottom:0;}
-        .prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-        .prog-label{font-size:12px;font-weight:700;}
-        .prog-pct{font-size:12px;font-weight:900;font-family:'JetBrains Mono',monospace;}
-        .prog-track{height:10px;background:var(--bg);border-radius:5px;overflow:hidden;border:1px solid var(--border);}
-        .prog-fill{height:100%;border-radius:5px;transition:width 1s cubic-bezier(.23,1,.32,1);}
-        .prog-sub{font-size:11px;color:var(--muted);margin-top:4px;}
-        .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
-        @media(max-width:900px){.g2{grid-template-columns:1fr;}}
-        .cc{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);}
-        .cc-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:3px;}
-        .cc-sub{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:12px;}
-        .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-        .bar-label{font-size:12px;font-weight:600;color:var(--text);width:140px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        .bar-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
-        .bar-fill{height:100%;border-radius:4px;transition:width .8s ease;}
-        .bar-count{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);width:28px;text-align:right;flex-shrink:0;}
-        .filters{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow);display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
-        .fg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px;}
-        .fg label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
-        .fc{padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;-webkit-appearance:none;}
-        .fc:focus{border-color:var(--pix);}
-        select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-        .btn{padding:8px 16px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
-        .btn-pix{background:var(--pix);color:#fff;box-shadow:0 2px 8px rgba(22,163,74,.3);}
-        .btn-pix:hover{background:#15803d;}
-        .btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
-        .btn-ghost:hover{background:var(--bg2);}
-        .btn-sm{padding:6px 12px;font-size:12px;}
-        .btn:disabled{opacity:.5;cursor:not-allowed;}
-        .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-        .spinner.dark{border:2px solid var(--border);border-top-color:var(--pix);}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
-        .table-head{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-        .tbl-title{font-size:13px;font-weight:800;}
-        .tbl-count{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-        .tbl-scroll{overflow-x:auto;}
-        table{width:100%;border-collapse:collapse;min-width:900px;}
-        thead th{padding:9px 13px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
-        tbody tr{transition:background .12s;cursor:pointer;}
-        tbody tr:hover td{background:var(--bg3);}
-        tbody td{padding:10px 13px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
-        tbody tr:last-child td{border-bottom:none;}
-        .mono{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
-        .sb{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;border:1.5px solid transparent;}
-        .sb-concluido{background:var(--green-pale);color:var(--green);border-color:rgba(22,163,74,.2);}
-        .sb-pendente{background:#f1f5f9;color:#475569;border-color:#e2e8f0;}
-        .sb-impedido{background:var(--red2-pale);color:var(--red2);border-color:rgba(220,38,38,.2);}
-        .sb-aguardar{background:var(--yellow-pale);color:var(--yellow);border-color:rgba(217,119,6,.2);}
-        .sb-andamento{background:var(--ti-pale);color:var(--ti);border-color:rgba(3,105,161,.2);}
-        .sb-outros{background:#f3f4f6;color:#6b7280;border-color:#e5e7eb;}
-        tr.row-impedido td{background:rgba(254,202,202,.2);}
-        tr.row-impedido:hover td{background:rgba(254,202,202,.4)!important;}
-        tr.row-concluido td{background:rgba(220,252,231,.15);}
-        tr.row-aguardar td{background:rgba(254,249,195,.2);}
-        .pagination{display:flex;align-items:center;justify-content:center;gap:5px;padding:12px;flex-wrap:wrap;border-top:1px solid var(--border);}
-        .pagination button{background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;color:var(--muted);padding:5px 11px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;transition:all .15s;}
-        .pagination button.active,.pagination button:hover{background:var(--pix);color:#fff;border-color:var(--pix);}
-        .pagination button:disabled{opacity:.4;cursor:not-allowed;}
-        .pg-info{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
-        .modal-overlay.open{display:flex;}
-        .modal-box{background:var(--bg2);border-radius:18px;padding:26px 28px;max-width:560px;width:100%;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;}
-        .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;}
-        .modal-title{font-size:15px;font-weight:800;line-height:1.4;}
-        .modal-close{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:5px 11px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);}
-        .modal-close:hover{background:var(--red-pale);color:var(--red);}
-        .df-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-        .df{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px 13px;}
-        .df.full{grid-column:1/-1;}
-        .dfl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:3px;}
-        .dfv{font-size:13px;font-weight:600;}
-        .edit-box{background:#f0fdf4;border:1.5px solid rgba(22,163,74,.25);border-radius:12px;padding:16px;margin-top:2px;}
-        .edit-box-title{font-size:12px;font-weight:800;color:var(--pix);margin-bottom:12px;}
-        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-        .form-group{display:flex;flex-direction:column;gap:4px;}
-        .form-group.full{grid-column:1/-1;}
-        .form-group label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
-        .form-control{padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;-webkit-appearance:none;transition:border-color .2s;}
-        .form-control:focus{border-color:var(--pix);}
-        select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-        textarea.form-control{resize:vertical;min-height:70px;}
-        .empty{text-align:center;padding:50px;color:var(--muted);}
-        .loading-msg{text-align:center;padding:36px;color:var(--muted);font-size:13px;display:flex;align-items:center;justify-content:center;gap:10px;}
-        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
-        .toast.show{display:block;animation:fadeUp .3s ease;}
-        @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-        #iaWidget{position:fixed;right:24px;bottom:24px;z-index:4000;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
-        #iaToggle{width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;color:#fff;font-size:26px;background:linear-gradient(135deg,#0369a1,#075985);box-shadow:0 6px 24px rgba(3,105,161,.35);}
-        #iaJanela{width:390px;max-width:calc(100vw - 32px);height:560px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;}
-        #iaJanela.aberto{display:flex}
-        .ia-topo{background:linear-gradient(135deg,#0369a1,#075985);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
-        .ia-topo-titulo{font-size:14px;font-weight:800}
-        .ia-topo-sub{font-size:11px;opacity:.85}
-        .ia-fechar{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;}
-        .ia-sugs{padding:10px 12px;display:flex;flex-wrap:wrap;gap:6px;background:#faf8f5;border-bottom:1px solid var(--border);}
-        .ia-sug{border:1px solid var(--border);background:#fff;color:#6b7280;border-radius:16px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;}
-        .ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
-        .msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;}
-        .msg.user{align-self:flex-end;background:#0369a1;color:#fff;border-bottom-right-radius:4px;}
-        .msg.ai{align-self:flex-start;background:#faf8f5;color:#1f2937;border:1px solid var(--border);border-bottom-left-radius:4px;}
-        .msg.ai.carregando{color:#6b7280;font-style:italic;}
-        .ia-rodape{display:flex;gap:8px;padding:12px;background:#faf8f5;border-top:1px solid var(--border);}
-        .ia-input{flex:1;border:1px solid var(--border);border-radius:10px;padding:10px 12px;outline:none;font-size:13px;font-family:'Nunito',sans-serif;}
-        .ia-enviar{width:38px;height:38px;border:none;border-radius:10px;background:#0369a1;color:#fff;cursor:pointer;font-size:18px;}
-        @media(max-width:760px){nav{overflow:auto}#iaJanela{width:calc(100vw - 20px);height:70vh;}}
-
-        /* ── Nav Dropdown ── */
-.nav-dropdown{position:relative;}
-.nav-btn-drop{display:inline-flex;align-items:center;gap:4px;}
-.nav-drop-arrow{font-size:10px;transition:transform .2s;}
-.nav-dropdown.open .nav-drop-arrow{transform:rotate(180deg);}
-.nav-drop-menu{
-    display:none;position:absolute;top:100%;right:0;
-    background:var(--bg2);border:1.5px solid var(--border);
-    border-radius:12px;padding:6px;min-width:260px;
-    box-shadow:var(--shadow-lg);z-index:200;margin-top:2px;
-}
-.nav-dropdown.open .nav-drop-menu{display:block;}
-.nav-drop-item{
-    display:flex;align-items:center;gap:10px;
-    padding:10px 12px;border-radius:9px;
-    text-decoration:none;color:var(--text);
-    transition:background .15s;
-}
-.nav-drop-item:hover{background:var(--bg3);}
-.ndi-icon{font-size:18px;flex-shrink:0;}
-.ndi-info{display:flex;flex-direction:column;gap:1px;}
-.ndi-label{font-size:13px;font-weight:700;}
-.ndi-desc{font-size:11px;color:var(--muted);font-weight:600;}
-    </style>
+    <link rel="stylesheet" href="/global.css">
 </head>
 <body>
 
@@ -189,30 +16,33 @@
     </div>
     <div class="hd"></div>
     <div class="h-title">Central de T.I.</div>
-<nav>
-    <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
-    <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos(Funcionários)</button>
-    <button class="nav-btn" onclick="location.href='/ti/ativos.html'"> 🖥️ Comodato - Jurídico</button>
-    <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
-    <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
-    <button class="nav-btn " onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
-    <button class="nav-btn active" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
-    <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
-    <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
 
+    <!-- Nav desktop -->
+    <nav>
+        <div class="nav-scroll">
+            <button class="nav-btn" onclick="location.href='/ti/index.html'">📊 Dashboard</button>
+            <button class="nav-btn" onclick="location.href='/ti/controle-equipamentos.html'">🖥️ Gestão Ativos</button>
+            <button class="nav-btn" onclick="location.href='/ti/ativos.html'">🖥️ Comodato</button>
+            <button class="nav-btn" onclick="location.href='/ti/migracao.html'">🔄 Migração</button>
+            <button class="nav-btn" onclick="location.href='/ti/projetos.html'">📋 Projetos</button>
+            <button class="nav-btn" onclick="location.href='/ti/chamados.html'">📞 Chamados</button>
+            <button class="nav-btn active-pix" onclick="location.href='/ti/pix.html'">💳 Pix TEF</button>
+            <button class="nav-btn" onclick="location.href='/ti/linkexterno.html'">🔗 Links</button>
+            <button class="nav-btn" onclick="location.href='/ti/uploads.html'">📁 Uploads</button>
+        </div>
         <div class="nav-dropdown" id="navRelatorios">
-        <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
-            📊 Relatórios <span class="nav-drop-arrow">▾</span>
-        </button>
-        <div class="nav-drop-menu">
-            <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
-                <span class="ndi-icon">📋</span>
-                <span class="ndi-info">
-                    <span class="ndi-label">Check-in / Check-out</span>
-                    <span class="ndi-desc">Presença e localização de consultores</span>
-                </span>
-            </a>
-                   <a class="nav-drop-item active" href="/ti/envioRelatorioConsultoresCheckinECheckout.html">
+            <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
+                📊 Relatórios <span class="nav-drop-arrow">▾</span>
+            </button>
+            <div class="nav-drop-menu">
+                <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
+                    <span class="ndi-icon">📋</span>
+                    <span class="ndi-info">
+                        <span class="ndi-label">Check-in / Check-out</span>
+                        <span class="ndi-desc">Presença e localização de consultores</span>
+                    </span>
+                </a>
+                <a class="nav-drop-item" href="/ti/envioRelatorioConsultoresCheckinECheckout.html">
                     <span class="ndi-icon">📧</span>
                     <span class="ndi-info">
                         <span class="ndi-label">Envio Automático</span>
@@ -226,16 +56,47 @@
                         <span class="ndi-desc">Chamados abertos e atividade por setor</span>
                     </span>
                 </a>
+            </div>
         </div>
-    </div>
-    
-</nav>
+        <button class="nav-btn" onclick="sair()" title="Sair">🚪 Sair</button>
+    </nav>
+
+    <!-- Hamburger mobile -->
+    <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
 </header>
+
+<!-- Drawer mobile -->
+<div class="nav-drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
+<div class="nav-drawer" id="navDrawer">
+    <div class="nav-drawer-head">
+        <span class="nav-drawer-title">Central de T.I.</span>
+        <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
+    </div>
+    <div class="nav-drawer-body">
+        <button class="nav-drawer-item" onclick="location.href='/ti/index.html';fecharDrawer()">📊 Dashboard</button>
+        <button class="nav-drawer-item" onclick="location.href='/ti/controle-equipamentos.html';fecharDrawer()">🖥️ Gestão Ativos</button>
+        <button class="nav-drawer-item" onclick="location.href='/ti/ativos.html';fecharDrawer()">🖥️ Comodato - Jurídico</button>
+        <button class="nav-drawer-item" onclick="location.href='/ti/migracao.html';fecharDrawer()">🔄 Migração</button>
+        <button class="nav-drawer-item" onclick="location.href='/ti/projetos.html';fecharDrawer()">📋 Projetos</button>
+        <button class="nav-drawer-item" onclick="location.href='/ti/chamados.html';fecharDrawer()">📞 Chamados</button>
+        <button class="nav-drawer-item active-pix" onclick="location.href='/ti/pix.html';fecharDrawer()">💳 Pix TEF</button>
+        <button class="nav-drawer-item" onclick="location.href='/ti/linkexterno.html';fecharDrawer()">🔗 Links</button>
+        <button class="nav-drawer-item" onclick="location.href='/ti/uploads.html';fecharDrawer()">📁 Uploads</button>
+        <div class="nav-drawer-sep"></div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);padding:6px 14px 4px;">📊 Relatórios</div>
+        <button class="nav-drawer-item" onclick="location.href='/ti/relatorioCheckoutConsultores.html';fecharDrawer()">📋 Check-in / Check-out</button>
+        <button class="nav-drawer-item" onclick="location.href='/ti/envioRelatorioConsultoresCheckinECheckout.html';fecharDrawer()">📧 Envio Automático</button>
+        <button class="nav-drawer-item" onclick="location.href='/ti/relatorioControleAcessosSults.html';fecharDrawer()">🎛️ Controle SULTS</button>
+        <div class="nav-drawer-sep"></div>
+        <button class="nav-drawer-item" onclick="history.back()">← Voltar</button>
+        <button class="nav-drawer-item" onclick="sair()" style="color:var(--red)">🚪 Sair</button>
+    </div>
+</div>
 
 <div id="statusBar">
     <div class="sdot" id="sdot"></div>
     <span id="statusText">Carregando...</span>
-    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <span id="lastSync" style="font-size:11px;color:var(--muted)"></span>
         <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ CSV</button>
         <button class="btn btn-pix" id="btnSync" onclick="sincronizar()">🔄 Sincronizar</button>
@@ -243,31 +104,62 @@
 </div>
 
 <main>
-    <div class="page-title">💳 Controle de Implantação — Pix TEF</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <button class="btn btn-ghost btn-sm" onclick="history.back()" style="flex-shrink:0;">← Voltar</button>
+        <div class="page-title" style="margin-bottom:0;">💳 Controle de Implantação — Pix TEF</div>
+    </div>
     <div class="page-sub" id="pageSub">Carregando dados da planilha...</div>
 
+    <!-- KPIs -->
     <div class="metrics">
-        <div class="mc"><div class="mc-icon">🏪</div><div class="mc-label">Total Lojas</div>
-            <div class="mc-val" style="color:var(--ti)" id="m-total">—</div><div class="mc-sub">no controle</div></div>
-        <div class="mc"><div class="mc-icon">✅</div><div class="mc-label">Concluídas</div>
-            <div class="mc-val" style="color:var(--green)" id="m-conc">—</div><div class="mc-sub">Pix TEF ativo</div></div>
-        <div class="mc"><div class="mc-icon">⏳</div><div class="mc-label">Pendentes</div>
-            <div class="mc-val" style="color:var(--muted)" id="m-pend">—</div><div class="mc-sub">aguardando implantação</div></div>
-        <div class="mc"><div class="mc-icon">🚫</div><div class="mc-label">Impedidas</div>
-            <div class="mc-val" style="color:var(--red2)" id="m-imped">—</div><div class="mc-sub">bloqueadas</div></div>
-        <div class="mc"><div class="mc-icon">⏸</div><div class="mc-label">Aguardar</div>
-            <div class="mc-val" style="color:var(--yellow)" id="m-agua">—</div><div class="mc-sub">em espera</div></div>
-        <div class="mc"><div class="mc-icon">📊</div><div class="mc-label">Progresso</div>
-            <div class="mc-val" style="color:var(--green)" id="m-pct">—%</div><div class="mc-sub">concluídas</div></div>
+        <div class="mc">
+            <div class="mc-icon">🏪</div>
+            <div class="mc-label">Total Lojas</div>
+            <div class="mc-val" style="color:var(--ti)" id="m-total">—</div>
+            <div class="mc-sub">no controle</div>
+        </div>
+        <div class="mc">
+            <div class="mc-icon">✅</div>
+            <div class="mc-label">Concluídas</div>
+            <div class="mc-val" style="color:var(--green)" id="m-conc">—</div>
+            <div class="mc-sub">Pix TEF ativo</div>
+        </div>
+        <div class="mc">
+            <div class="mc-icon">⏳</div>
+            <div class="mc-label">Pendentes</div>
+            <div class="mc-val" style="color:var(--muted)" id="m-pend">—</div>
+            <div class="mc-sub">aguardando implantação</div>
+        </div>
+        <div class="mc">
+            <div class="mc-icon">🚫</div>
+            <div class="mc-label">Impedidas</div>
+            <div class="mc-val" style="color:var(--red2)" id="m-imped">—</div>
+            <div class="mc-sub">bloqueadas</div>
+        </div>
+        <div class="mc">
+            <div class="mc-icon">⏸</div>
+            <div class="mc-label">Aguardar</div>
+            <div class="mc-val" style="color:var(--yellow)" id="m-agua">—</div>
+            <div class="mc-sub">em espera</div>
+        </div>
+        <div class="mc">
+            <div class="mc-icon">📊</div>
+            <div class="mc-label">Progresso</div>
+            <div class="mc-val" style="color:var(--green)" id="m-pct">—%</div>
+            <div class="mc-sub">concluídas</div>
+        </div>
     </div>
 
+    <!-- Barras de progresso -->
     <div class="prog-section">
         <div class="prog-row">
             <div class="prog-header">
                 <span class="prog-label">✅ Lojas com Pix TEF concluído</span>
                 <span class="prog-pct" style="color:var(--green)" id="pct-conc">0%</span>
             </div>
-            <div class="prog-track"><div class="prog-fill" id="bar-conc" style="width:0%;background:linear-gradient(90deg,var(--green),#4ade80)"></div></div>
+            <div class="prog-track">
+                <div class="prog-fill" id="bar-conc" style="width:0%;background:linear-gradient(90deg,var(--green),#4ade80)"></div>
+            </div>
             <div class="prog-sub" id="bar-conc-sub"></div>
         </div>
         <div class="prog-row">
@@ -275,17 +167,22 @@
                 <span class="prog-label">🚫 Impedidas (sistema paralelo / bloqueio)</span>
                 <span class="prog-pct" style="color:var(--red2)" id="pct-imped">0%</span>
             </div>
-            <div class="prog-track"><div class="prog-fill" id="bar-imped" style="width:0%;background:linear-gradient(90deg,var(--red2),#f87171)"></div></div>
+            <div class="prog-track">
+                <div class="prog-fill" id="bar-imped" style="width:0%;background:linear-gradient(90deg,var(--red2),#f87171)"></div>
+            </div>
         </div>
         <div class="prog-row">
             <div class="prog-header">
                 <span class="prog-label">⏸ Aguardar</span>
                 <span class="prog-pct" style="color:var(--yellow)" id="pct-agua">0%</span>
             </div>
-            <div class="prog-track"><div class="prog-fill" id="bar-agua" style="width:0%;background:linear-gradient(90deg,var(--yellow),#fbbf24)"></div></div>
+            <div class="prog-track">
+                <div class="prog-fill" id="bar-agua" style="width:0%;background:linear-gradient(90deg,var(--yellow),#fbbf24)"></div>
+            </div>
         </div>
     </div>
 
+    <!-- Gráficos por UF e Responsável -->
     <div class="g2">
         <div class="cc">
             <div class="cc-title">Por Estado (UF)</div>
@@ -299,6 +196,7 @@
         </div>
     </div>
 
+    <!-- Filtros -->
     <div class="filters">
         <div class="fg">
             <label>🔍 Buscar</label>
@@ -327,6 +225,7 @@
         <button class="btn btn-ghost btn-sm" onclick="limpar()">✕ Limpar</button>
     </div>
 
+    <!-- Tabela -->
     <div class="table-wrap">
         <div class="table-head">
             <div>
@@ -336,11 +235,19 @@
         </div>
         <div class="tbl-scroll">
             <table>
-                <thead><tr>
-                    <th>UF</th><th>Cidade</th><th>Unidade / Shopping</th><th>Razão Social</th>
-                    <th>Status Atual</th><th>Responsável TI</th><th>Dt. Conclusão</th>
-                    <th>Observações</th><th style="text-align:center">Editar</th>
-                </tr></thead>
+                <thead>
+                    <tr>
+                        <th>UF</th>
+                        <th>Cidade</th>
+                        <th>Unidade / Shopping</th>
+                        <th>Razão Social</th>
+                        <th>Status Atual</th>
+                        <th>Responsável TI</th>
+                        <th>Dt. Conclusão</th>
+                        <th>Observações</th>
+                        <th style="text-align:center">Editar</th>
+                    </tr>
+                </thead>
                 <tbody id="tblBody">
                     <tr><td colspan="9"><div class="loading-msg"><div class="spinner dark"></div> Carregando...</div></td></tr>
                 </tbody>
@@ -350,6 +257,7 @@
     </div>
 </main>
 
+<!-- Modal edição -->
 <div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
     <div class="modal-box">
         <div class="modal-header">
@@ -360,6 +268,7 @@
     </div>
 </div>
 
+<!-- IA Widget -->
 <div id="iaWidget">
     <div id="iaJanela">
         <div class="ia-topo">
@@ -389,18 +298,18 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ══ Estado ══════════════════════════════════════════════════════════════════ */
+/* ══ Estado ════════════════════════════════════════════════════ */
 let LOJAS     = [];
 let FILTRADOS = [];
 let pagAtual  = 1;
-const PER  = 30;
+const PER   = 30;
 const CORES = ['var(--ti)','var(--ti2)','var(--orange)','var(--green)','var(--yellow)','#0891b2','#db2777','#65a30d'];
 
-/* ── Helpers ─────────────────────────────────────────────────────────────── */
-const $        = id => document.getElementById(id);
-const toast    = (msg, ms=2500) => { const el=$('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),ms); };
-const setStatus = (cls, msg)   => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
-const pct      = (v, t)        => (!t ? 0 : Math.min(100, +((v/t)*100).toFixed(1)));
+/* ── Helpers ───────────────────────────────────────────────── */
+const $         = id => document.getElementById(id);
+const toast     = (msg, ms=2500) => { const el=$('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),ms); };
+const setStatus = (cls, msg)    => { $('sdot').className='sdot '+cls; $('statusText').textContent=msg; };
+const pct       = (v, t)        => (!t ? 0 : Math.min(100, +((v/t)*100).toFixed(1)));
 
 function normStatus(s) {
     const n = (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
@@ -414,14 +323,14 @@ function normStatus(s) {
 function statusBadge(s) {
     const norm = normStatus(s);
     const MAP = {
-        'Concluído':    ['sb-concluido','✅'],
-        'Pendente':     ['sb-pendente', '⏳'],
-        'Impedido':     ['sb-impedido', '🚫'],
-        'Aguardar':     ['sb-aguardar', '⏸'],
-        'Em Andamento': ['sb-andamento','🔵'],
+        'Concluído':    ['sb sb-concluido','✅'],
+        'Pendente':     ['sb sb-pendente', '⏳'],
+        'Impedido':     ['sb sb-impedido', '🚫'],
+        'Aguardar':     ['sb sb-aguardar', '⏸'],
+        'Em Andamento': ['sb sb-andamento','🔵'],
     };
-    const [cls, emoji] = MAP[norm] || ['sb-outros','•'];
-    return `<span class="sb ${cls}">${emoji} ${s||'Pendente'}</span>`;
+    const [cls, emoji] = MAP[norm] || ['sb sb-outros','•'];
+    return `<span class="${cls}">${emoji} ${s||'Pendente'}</span>`;
 }
 
 function rowClass(s) {
@@ -438,7 +347,7 @@ function setBar(idPct, idBar, v, t) {
     $(idBar).style.width = p+'%';
 }
 
-/* ── Carregar dados ──────────────────────────────────────────────────────── */
+/* ── Carregar ──────────────────────────────────────────────── */
 function carregar() {
     setStatus('syncing','Carregando...');
     fetch('/ti/api/pix/dados').then(r=>r.json()).then(d => {
@@ -459,7 +368,7 @@ function carregar() {
     }).catch(e => setStatus('error','❌ '+e.message));
 }
 
-/* ── Sincronizar — busca planilha e atualiza cache ───────────────────────── */
+/* ── Sincronizar ───────────────────────────────────────────── */
 function sincronizar() {
     const btn = $('btnSync');
     btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Sincronizando...';
@@ -479,7 +388,7 @@ function sincronizar() {
     });
 }
 
-/* ── Render ──────────────────────────────────────────────────────────────── */
+/* ── Render ────────────────────────────────────────────────── */
 function renderTudo(st) {
     const total = st.total || LOJAS.length;
     $('m-total').textContent = total;
@@ -493,12 +402,15 @@ function renderTudo(st) {
     setBar('pct-agua',  'bar-agua',  st.aguardar  ||0, total);
     $('bar-conc-sub').textContent = `${st.concluidos||0} de ${total} lojas com Pix TEF implantado`;
     $('pageSub').textContent = `${total} lojas · ${st.concluidos||0} concluídas · ${st.impedidos||0} impedidas`;
+
     const porUF = st.porEstado || [];
     $('ufSub').textContent = porUF.length+' estados';
     renderBarras('chartUF', porUF.slice(0,10), 'estado', 'qtd', ['var(--ti)','var(--ti2)','var(--orange)','var(--green)']);
+
     const porResp = st.porResponsavel || [];
     $('respSub').textContent = porResp.length ? porResp.length+' responsáveis' : 'Nenhum atribuído';
-    renderBarras('chartResp', porResp.slice(0,8), 'nome', 'qtd', ['var(--pix)','#4ade80','#86efac']);
+    renderBarras('chartResp', porResp.slice(0,8), 'nome', 'qtd', ['var(--green)','#4ade80','#86efac']);
+
     const ufs = [...new Set(LOJAS.map(l=>l.estado||'').filter(Boolean))].sort();
     $('fUF').innerHTML = '<option value="">Todos</option>'+ufs.map(u=>`<option value="${u}">${u}</option>`).join('');
     const resps = [...new Set(LOJAS.map(l=>l.responsavel||'').filter(Boolean))].sort();
@@ -518,16 +430,16 @@ function renderBarras(id, items, kL, kV, cores) {
         </div>`).join('');
 }
 
-/* ── Filtrar ─────────────────────────────────────────────────────────────── */
+/* ── Filtrar ───────────────────────────────────────────────── */
 function filtrar() {
     const q     = ($('fBusca').value||'').toLowerCase();
     const fst   = $('fStatus').value;
     const fuf   = $('fUF').value;
     const fresp = $('fResp').value;
     FILTRADOS = LOJAS.filter(l => {
-        if (fst && normStatus(l.status) !== fst) return false;
-        if (fuf  && l.estado     !== fuf)        return false;
-        if (fresp && l.responsavel !== fresp)     return false;
+        if (fst  && normStatus(l.status) !== fst) return false;
+        if (fuf  && l.estado      !== fuf)        return false;
+        if (fresp && l.responsavel !== fresp)      return false;
         if (q) {
             const txt = `${l.unidade} ${l.cidade} ${l.razaoSocial} ${l.estado} ${l.observacoes}`.toLowerCase();
             if (!txt.includes(q)) return false;
@@ -544,7 +456,7 @@ function limpar() {
     filtrar();
 }
 
-/* ── Tabela ──────────────────────────────────────────────────────────────── */
+/* ── Tabela ────────────────────────────────────────────────── */
 function renderTabela() {
     const totalPag = Math.ceil(FILTRADOS.length / PER);
     const page     = FILTRADOS.slice((pagAtual-1)*PER, pagAtual*PER);
@@ -558,17 +470,20 @@ function renderTabela() {
         const enc = encodeURIComponent(JSON.stringify(l));
         const obs = (l.observacoes||'').trim();
         return `<tr class="${rowClass(l.status)}" onclick="abrirModal('${enc}')">
-            <td><span style="background:var(--bg3);border:1px solid var(--border);padding:2px 7px;border-radius:5px;font-size:11px;font-weight:800">${l.estado||'—'}</span></td>
+            <td><span class="td-uf">${l.estado||'—'}</span></td>
             <td style="font-weight:600">${l.cidade||'—'}</td>
             <td style="font-weight:700">${l.unidade||'—'}</td>
-            <td style="font-size:12px;font-weight:700">${l.razaoSocial||'—'}</td>
+            <td class="td-nome">${l.razaoSocial||'—'}</td>
             <td>${statusBadge(l.status)}</td>
             <td style="font-size:12px;color:var(--muted)">${l.responsavel||'—'}</td>
             <td class="mono">${l.dataConclusaoOriginal||'—'}</td>
             <td style="font-size:11px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${obs}">${obs||'—'}</td>
-            <td style="text-align:center"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();abrirModal('${enc}')">✏️</button></td>
+            <td style="text-align:center">
+                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();abrirModal('${enc}')">✏️</button>
+            </td>
         </tr>`;
     }).join('');
+
     if (totalPag <= 1) { $('paginacao').innerHTML=''; return; }
     let h = `<button ${pagAtual===1?'disabled':''} onclick="irPag(${pagAtual-1})">‹</button>`;
     for (let i=1;i<=totalPag;i++) {
@@ -584,7 +499,7 @@ function renderTabela() {
 
 function irPag(p) { pagAtual=p; renderTabela(); window.scrollTo({top:0,behavior:'smooth'}); }
 
-/* ── Modal ───────────────────────────────────────────────────────────────── */
+/* ── Modal ─────────────────────────────────────────────────── */
 function abrirModal(enc) {
     const l = JSON.parse(decodeURIComponent(enc));
     $('modalTitulo').textContent = `💳 ${l.unidade||l.razaoSocial||'Loja'}`;
@@ -653,9 +568,9 @@ function salvar(rowIndex) {
     });
 }
 
-/* ── Exportar CSV ────────────────────────────────────────────────────────── */
+/* ── Exportar CSV ──────────────────────────────────────────── */
 function exportCSV() {
-    if (!FILTRADOS.length){toast('Sem dados');return;}
+    if (!FILTRADOS.length){ toast('Sem dados'); return; }
     const h = 'UF,Cidade,Unidade,Razão Social,Status,Responsável TI,Dt.Conclusão,Observações';
     const r = FILTRADOS.map(l =>
         [l.estado,l.cidade,l.unidade,l.razaoSocial,l.status,
@@ -669,11 +584,38 @@ function exportCSV() {
     toast(`📥 ${FILTRADOS.length} registros exportados`);
 }
 
-/* ── IA ──────────────────────────────────────────────────────────────────── */
+/* ── Nav Drawer Mobile ─────────────────────────────────────── */
+function abrirDrawer() {
+    document.getElementById('navDrawer').classList.add('open');
+    document.getElementById('drawerOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function fecharDrawer() {
+    document.getElementById('navDrawer').classList.remove('open');
+    document.getElementById('drawerOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+/* ── Nav Dropdown ──────────────────────────────────────────── */
+function toggleNavDrop(id) {
+    document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(d) {
+        if (!d.contains(e.target)) d.classList.remove('open');
+    });
+});
+
+/* ── Sair ──────────────────────────────────────────────────── */
+function sair() {
+    if (confirm('Deseja sair?')) window.location.href = '/logout';
+}
+
+/* ── IA ────────────────────────────────────────────────────── */
 const $ia = id => document.getElementById(id);
 
-function toggleIA() { $ia('iaJanela').classList.toggle('aberto'); }
-function usarSugestao(txt) { $ia('inputIA').value=txt; $ia('inputIA').focus(); }
+function toggleIA()         { $ia('iaJanela').classList.toggle('aberto'); }
+function usarSugestao(txt)  { $ia('inputIA').value=txt; $ia('inputIA').focus(); }
 
 function addMsgIA(tipo, texto) {
     const box = $ia('iaMsgs');
@@ -724,18 +666,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 carregar();
 </script>
-<script>
-function toggleNavDrop(id){
-    var el=document.getElementById(id);
-    el.classList.toggle('open');
-}
-// Fecha dropdown ao clicar fora
-document.addEventListener('click',function(e){
-    document.querySelectorAll('.nav-dropdown.open').forEach(function(d){
-        if(!d.contains(e.target)) d.classList.remove('open');
-    });
-});
-</script>
-
 </body>
 </html>

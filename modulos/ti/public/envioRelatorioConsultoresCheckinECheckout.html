@@ -363,7 +363,7 @@
 // ════════════════════════════════════════════════════════════
 const API    = '/ti/api/envio-relatorio-checkout';
 const API_CO = '/ti/api/relatorio-checkout';
-const MEU_EMAIL = 'fernando.clemente@divinofogao.com.br';
+// e-mails de teste lidos sempre dos campos do formulário
 
 var _poll       = null;
 var _logCount   = 0;
@@ -548,9 +548,12 @@ function _parseMails(val, fallback) {
 async function simularAmbos() {
     var btn  = document.getElementById('btnAmbos');
     var btn2 = document.getElementById('btnEu');
-    var mailsQ = _parseMails(document.getElementById('emailQ').value, MEU_EMAIL);
-    var mailsC = _parseMails(document.getElementById('emailC').value, MEU_EMAIL);
+    var mailsQ = _parseMails(document.getElementById('emailQ').value, '');
+    var mailsC = _parseMails(document.getElementById('emailC').value, '');
     var dist   = parseInt(document.getElementById('distQ').value) || 1000;
+
+    if (!mailsQ.length || !mailsQ[0]) { alert('Informe o e-mail de teste do grupo Qualidade.'); return; }
+    if (!mailsC.length || !mailsC[0]) { alert('Informe o e-mail de teste do grupo Campo.'); return; }
 
     btn.disabled = btn2.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Executando...';
@@ -564,12 +567,17 @@ async function simularAmbos() {
 async function simularParaMim() {
     var btn  = document.getElementById('btnEu');
     var btn2 = document.getElementById('btnAmbos');
-    var dist = parseInt(document.getElementById('distQ').value) || 1000;
+    var mailsQ = _parseMails(document.getElementById('emailQ').value, '');
+    var mailsC = _parseMails(document.getElementById('emailC').value, '');
+    var dist   = parseInt(document.getElementById('distQ').value) || 1000;
+
+    if (!mailsQ.length || !mailsQ[0]) { alert('Informe o e-mail de teste do grupo Qualidade.'); return; }
+    if (!mailsC.length || !mailsC[0]) { alert('Informe o e-mail de teste do grupo Campo.'); return; }
 
     btn.disabled = btn2.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Enviando para você...';
+    btn.innerHTML = '<span class="spinner"></span> Executando...';
 
-    await _executar([MEU_EMAIL], [MEU_EMAIL], dist);
+    await _executar(mailsQ, mailsC, dist);
 
     btn.disabled = btn2.disabled = false;
     btn.innerHTML = '🎯 Receber os 2 E-mails';

@@ -6,190 +6,7 @@
 <title>Uploads — TI · Divino Fogão</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
-<style>
-:root {
-    --red:#c8102e; --red-light:#e8192e; --red-pale:#fff0f2;
-    --bg:#f5f3ef; --bg2:#ffffff; --bg3:#faf8f5;
-    --border:#e8e2d9; --text:#1e1a16; --muted:#8a7f74;
-    --accent:#2563eb; --accent-pale:#eff6ff;
-    --green:#16a34a; --green-pale:#f0fdf4;
-    --yellow:#d97706; --yellow-pale:#fffbeb;
-    --blue:#0ea5e9; --blue-pale:#f0f9ff;
-    --shadow:0 2px 12px rgba(0,0,0,0.08);
-    --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
-/* ── Header ─────────────────────────────────────────── */
-header{background:var(--bg2);border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);overflow-x:auto;}
-.logo{padding:10px 0;flex-shrink:0;}
-.logo img{height:48px;width:auto;display:block;}
-.logo-fallback{font-size:18px;font-weight:900;color:var(--red);display:none;}
-.hd{width:1px;height:32px;background:var(--border);flex-shrink:0;}
-.header-title{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;}
-nav{display:flex;gap:2px;margin-left:auto;}
-.tab-btn{background:none;border:none;color:var(--muted);padding:18px 14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s;border-bottom:3px solid transparent;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;text-decoration:none;}
-.tab-btn:hover{color:var(--text);background:var(--bg3);}
-.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--blue-pale);}
-
-/* ── Status bar ─────────────────────────────────────── */
-#statusBar{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;}
-.sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.5s infinite;flex-shrink:0;}
-.sdot.ready{background:var(--green);animation:none;}
-.sdot.syncing{background:var(--accent);animation:pulse .8s infinite;}
-.sdot.error{background:var(--red);animation:none;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* ── Layout ─────────────────────────────────────────── */
-.page{display:flex;min-height:calc(100vh - 88px);}
-
-/* ── Sidebar ─────────────────────────────────────────── */
-.sidebar{width:240px;flex-shrink:0;background:var(--bg2);border-right:2px solid var(--border);display:flex;flex-direction:column;padding:20px 0;}
-.sidebar-header{padding:0 18px 16px;border-bottom:1px solid var(--border);}
-.sidebar-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:4px;}
-.sidebar-sub{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-.sidebar-section{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);padding:16px 18px 8px;}
-.folder-list{flex:1;overflow-y:auto;padding:0 8px;}
-.folder-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);transition:all .15s;user-select:none;}
-.folder-item:hover{background:var(--bg3);color:var(--text);}
-.folder-item.active{background:var(--blue-pale);color:var(--blue);}
-.folder-item-root{font-weight:800;}
-.folder-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sidebar-actions{padding:12px 8px;border-top:1px solid var(--border);}
-.btn-nova-pasta{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px;background:transparent;border:1.5px dashed var(--border);border-radius:9px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;}
-.btn-nova-pasta:hover{border-color:var(--blue);color:var(--blue);}
-
-/* ── Main ────────────────────────────────────────────── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0;}
-.breadcrumb{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--muted);}
-.breadcrumb span{color:var(--text);}
-.topbar-right{display:flex;align-items:center;gap:10px;}
-
-/* ── Botões ──────────────────────────────────────────── */
-.btn{padding:9px 18px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
-.btn-blue{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(14,165,233,.3);}
-.btn-blue:hover{background:#0284c7;transform:translateY(-1px);}
-.btn-ghost{background:var(--bg3);color:var(--text);border:1.5px solid var(--border);}
-.btn-ghost:hover{background:var(--bg2);}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-.spinner.dark{border:2px solid var(--border);border-top-color:var(--blue);}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── Drop zone ───────────────────────────────────────── */
-.drop-zone-wrapper{padding:20px 28px 0;flex-shrink:0;}
-.drop-zone{border:2px dashed var(--border);border-radius:14px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .2s;background:var(--bg3);position:relative;}
-.drop-zone:hover,.drop-zone.over{border-color:var(--blue);background:var(--blue-pale);}
-.drop-zone-icon{font-size:32px;transition:transform .2s;}
-.drop-zone:hover .drop-zone-icon,.drop-zone.over .drop-zone-icon{transform:translateY(-3px);}
-.drop-zone-text{font-size:14px;font-weight:700;color:var(--text);}
-.drop-zone-text span{color:var(--blue);}
-.drop-zone-sub{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
-
-/* ── Queue ───────────────────────────────────────────── */
-.queue-wrapper{padding:0 28px;flex-shrink:0;}
-.queue{display:flex;flex-direction:column;gap:6px;margin-top:10px;max-height:180px;overflow-y:auto;}
-.queue-item{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:9px;padding:8px 12px;font-size:12px;animation:slideIn .2s ease;}
-@keyframes slideIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
-.queue-icon{font-size:16px;flex-shrink:0;}
-.queue-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;}
-.queue-size{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:11px;}
-.queue-remove{background:none;border:none;color:var(--muted);cursor:pointer;padding:3px 6px;border-radius:5px;font-size:13px;}
-.queue-remove:hover{color:var(--red);background:var(--red-pale);}
-.queue-ok{color:var(--green);font-weight:800;}
-.queue-err{color:var(--red);font-weight:800;}
-.progress-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:3px;}
-.progress-fill{height:100%;background:var(--blue);border-radius:2px;animation:prog 1.5s ease infinite;}
-@keyframes prog{0%{width:10%}50%{width:80%}100%{width:95%}}
-
-/* ── Files section ───────────────────────────────────── */
-.files-section{flex:1;overflow:hidden;display:flex;flex-direction:column;padding:20px 28px 28px;}
-.section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
-.files-count{font-size:11px;font-family:'JetBrains Mono',monospace;background:var(--bg3);border:1px solid var(--border);padding:2px 9px;border-radius:20px;color:var(--muted);}
-
-/* ── Tabela ───────────────────────────────────────────── */
-.table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);flex:1;}
-.tbl-scroll{overflow-y:auto;max-height:calc(100vh - 520px);}
-table{width:100%;border-collapse:collapse;}
-thead th{padding:10px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg3);white-space:nowrap;text-align:left;}
-tbody tr{transition:background .15s;}
-tbody tr:hover td{background:var(--bg3);}
-tbody td{padding:11px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
-tbody tr:last-child td{border-bottom:none;}
-.file-icon{font-size:18px;}
-.file-name{font-weight:700;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.file-size,.file-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
-.file-actions{display:flex;gap:6px;opacity:0;transition:opacity .15s;}
-tbody tr:hover .file-actions{opacity:1;}
-.file-action-btn{background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;padding:5px 9px;cursor:pointer;font-size:12px;font-weight:700;transition:all .15s;}
-.file-action-btn:hover{border-color:var(--blue);color:var(--blue);}
-.file-action-btn.del{color:var(--red);}
-.file-action-btn.del:hover{border-color:var(--red);background:var(--red-pale);}
-
-/* ── Estados ─────────────────────────────────────────── */
-.empty{text-align:center;padding:60px 20px;color:var(--muted);}
-.empty .icon{font-size:48px;margin-bottom:12px;}
-.empty p{font-size:14px;font-weight:600;}
-.loading-msg{text-align:center;padding:40px;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;}
-
-/* ── Confirm delete overlay ──────────────────────────── */
-.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
-.confirm-overlay.open{display:flex;}
-.confirm-box{background:var(--bg2);border-radius:14px;padding:28px 30px;width:min(420px,96vw);box-shadow:var(--shadow-lg);}
-.confirm-title{font-size:16px;font-weight:800;margin-bottom:8px;}
-.confirm-sub{font-size:13px;color:var(--muted);margin-bottom:20px;word-break:break-all;}
-.confirm-actions{display:flex;gap:8px;justify-content:flex-end;}
-.btn-red{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(200,16,46,.3);}
-.btn-red:hover{background:var(--red-light);}
-
-/* ── Modal nova pasta ──────────────────────────────────── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
-.modal-overlay.open{display:flex;}
-.modal-box{background:var(--bg2);border-radius:14px;padding:28px 30px;width:min(420px,96vw);box-shadow:var(--shadow-lg);}
-.modal-title{font-size:16px;font-weight:800;margin-bottom:16px;}
-.modal-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--bg2);outline:none;transition:border-color .2s;margin-bottom:16px;}
-.modal-input:focus{border-color:var(--blue);}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end;}
-
-/* ── Toast ───────────────────────────────────────────── */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a16;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:var(--shadow-lg);display:none;}
-.toast.show{display:block;animation:fadeInUp .3s ease;}
-@keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-
-@media(max-width:768px){
-    .sidebar{width:200px;}
-    .file-date{display:none;}
-}
-
-/* ── Nav Dropdown ── */
-.nav-dropdown{position:relative;}
-.nav-btn-drop{display:inline-flex;align-items:center;gap:4px;}
-.nav-drop-arrow{font-size:10px;transition:transform .2s;}
-.nav-dropdown.open .nav-drop-arrow{transform:rotate(180deg);}
-.nav-drop-menu{
-    display:none;position:absolute;top:100%;right:0;
-    background:var(--bg2);border:1.5px solid var(--border);
-    border-radius:12px;padding:6px;min-width:260px;
-    box-shadow:var(--shadow-lg);z-index:200;margin-top:2px;
-}
-.nav-dropdown.open .nav-drop-menu{display:block;}
-.nav-drop-item{
-    display:flex;align-items:center;gap:10px;
-    padding:10px 12px;border-radius:9px;
-    text-decoration:none;color:var(--text);
-    transition:background .15s;
-}
-.nav-drop-item:hover{background:var(--bg3);}
-.ndi-icon{font-size:18px;flex-shrink:0;}
-.ndi-info{display:flex;flex-direction:column;gap:1px;}
-.ndi-label{font-size:13px;font-weight:700;}
-.ndi-desc{font-size:11px;color:var(--muted);font-weight:600;}
-
-</style>
+<link rel="stylesheet" href="/global.css"/>
 </head>
 <body>
 
@@ -202,97 +19,143 @@ tbody tr:hover .file-actions{opacity:1;}
     </div>
     <div class="hd"></div>
     <div class="header-title">TI — Divino Fogão</div>
+
     <nav>
-        <a href="/ti/"          class="tab-btn">📊 Dashboard</a>
-         <a href="/ti/controle-equipamentos"          class="tab-btn">🖥️ Gestão Ativos (Funcionários)</a>
-        <a href="/ti/ativos"    class="tab-btn">🖥️ Ativos</a>
-        <a href="/ti/ativos"    class="tab-btn">🖥️ Ativos</a>
-        <a href="/ti/chamados"  class="tab-btn">📞 Chamados</a>
-        <a href="/ti/projetos"  class="tab-btn">📋 Projetos</a>
-        <a href="/ti/migracao"  class="tab-btn">🔄 Migração</a>
-        <a href="/ti/pix"       class="tab-btn">💳 Pix TEF</a>
-        <a href="/ti/linkexterno"   class="tab-btn">🔗 Links</a>
-        <a href="/ti/uploads"   class="tab-btn active">📁 Uploads</a>
-
-            <div class="nav-dropdown" id="navRelatorios">
-        <button class="nav-btn nav-btn-drop" onclick="toggleNavDrop('navRelatorios')">
-            📊 Relatórios <span class="nav-drop-arrow">▾</span>
-        </button>
-        <div class="nav-drop-menu">
-            <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
-                <span class="ndi-icon">📋</span>
-                <span class="ndi-info">
-                    <span class="ndi-label">Check-in / Check-out</span>
-                    <span class="ndi-desc">Presença e localização de consultores</span>
-                </span>
-            </a>
+        <div class="nav-scroll">
+            <a href="/ti/"                       class="nav-btn">📊 Dashboard</a>
+            <a href="/ti/controle-equipamentos"  class="nav-btn">🖥️ Gestão Ativos</a>
+            <a href="/ti/ativos"                 class="nav-btn">📦 Comodato - Jurídico</a>
+            <a href="/ti/chamados"               class="nav-btn">📞 Chamados</a>
+            <a href="/ti/projetos"               class="nav-btn">📋 Projetos</a>
+            <a href="/ti/migracao"               class="nav-btn">🔄 Migração</a>
+            <a href="/ti/pix"                    class="nav-btn">💳 Pix TEF</a>
+            <a href="/ti/linkexterno"            class="nav-btn">🔗 Links</a>
+            <a href="/ti/uploads"                class="nav-btn active-ti">📁 Uploads</a>
         </div>
-    </div>
-
+        <div class="nav-dropdown" id="navRelatorios">
+            <button class="nav-btn nav-btn-drop" onclick="event.stopPropagation();toggleNavDrop('navRelatorios')">
+                📊 Relatórios <span class="nav-drop-arrow">▾</span>
+            </button>
+            <div class="nav-drop-menu">
+                <a class="nav-drop-item" href="/ti/relatorioCheckoutConsultores.html">
+                    <span class="ndi-icon">📋</span>
+                    <span class="ndi-info">
+                        <span class="ndi-label">Check-in / Check-out</span>
+                        <span class="ndi-desc">Presença e localização de consultores</span>
+                    </span>
+                </a>
+                <a class="nav-drop-item" href="/ti/envioRelatorioConsultoresCheckinECheckout.html">
+                    <span class="ndi-icon">📧</span>
+                    <span class="ndi-info">
+                        <span class="ndi-label">Envio Automático</span>
+                        <span class="ndi-desc">Divergências mensais &gt;1km — dia 06</span>
+                    </span>
+                </a>
+                <a class="nav-drop-item" href="/ti/relatorioControleAcessosSults.html">
+                    <span class="ndi-icon">🎛️</span>
+                    <span class="ndi-info">
+                        <span class="ndi-label">Controle SULTS</span>
+                        <span class="ndi-desc">Chamados abertos e atividade por setor</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+        <a href="/logout" class="nav-btn" style="color:var(--red)">🚪 Sair</a>
     </nav>
+
+    <button id="navHamburger" onclick="abrirDrawer()" aria-label="Menu">☰</button>
 </header>
+
+<!-- DRAWER MOBILE -->
+<div class="nav-drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
+<div class="nav-drawer" id="navDrawer">
+    <div class="nav-drawer-head">
+        <span class="nav-drawer-title">TI — Divino Fogão</span>
+        <button class="nav-drawer-close" onclick="fecharDrawer()">✕</button>
+    </div>
+    <div class="nav-drawer-body">
+        <a href="/ti/"                       class="nav-drawer-item">📊 Dashboard</a>
+        <a href="/ti/controle-equipamentos"  class="nav-drawer-item">🖥️ Gestão Ativos</a>
+        <a href="/ti/ativos"                 class="nav-drawer-item">📦 Comodato - Jurídico</a>
+        <a href="/ti/chamados"               class="nav-drawer-item">📞 Chamados</a>
+        <a href="/ti/projetos"               class="nav-drawer-item">📋 Projetos</a>
+        <a href="/ti/migracao"               class="nav-drawer-item">🔄 Migração</a>
+        <a href="/ti/pix"                    class="nav-drawer-item">💳 Pix TEF</a>
+        <a href="/ti/linkexterno"            class="nav-drawer-item">🔗 Links</a>
+        <a href="/ti/uploads"                class="nav-drawer-item active-ti">📁 Uploads</a>
+        <div class="nav-drawer-sep"></div>
+        <div style="padding:4px 6px 2px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)">Relatórios</div>
+        <div class="nav-drawer-sub">
+            <a href="/ti/relatorioCheckoutConsultores.html"             class="nav-drawer-item">📋 Check-in / Check-out</a>
+            <a href="/ti/envioRelatorioConsultoresCheckinECheckout.html" class="nav-drawer-item">📧 Envio Automático</a>
+            <a href="/ti/relatorioControleAcessosSults.html"            class="nav-drawer-item">🎛️ Controle SULTS</a>
+        </div>
+        <div class="nav-drawer-sep"></div>
+        <a href="/logout" class="nav-drawer-item" style="color:var(--red)">🚪 Sair</a>
+    </div>
+</div>
 
 <!-- ═══ STATUS BAR ═══════════════════════════════════════════ -->
 <div id="statusBar">
     <div class="sdot" id="sdot"></div>
     <span id="statusText">Carregando...</span>
-    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <span id="lastSync" style="font-size:11px;color:var(--muted)"></span>
         <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="recarregar()">🔄 Atualizar</button>
-        <button class="btn btn-blue" id="btnEnviar" disabled onclick="enviarArquivos()">⬆ Enviar arquivos</button>
+        <button class="btn btn-ti" id="btnEnviar" disabled onclick="enviarArquivos()">⬆ Enviar arquivos</button>
     </span>
 </div>
 
 <!-- ═══ PAGE ═════════════════════════════════════════════════ -->
-<div class="page">
+<div class="up-page">
 
-    <!-- ═══ SIDEBAR ═════════════════════════════════════════ -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-title">📁 Uploads</div>
-            <div class="sidebar-sub">Google Drive — TI</div>
+    <!-- SIDEBAR -->
+    <aside class="up-sidebar">
+        <div class="up-sidebar-header">
+            <div class="up-sidebar-title">📁 Uploads</div>
+            <div class="up-sidebar-sub">Google Drive — TI</div>
         </div>
-        <p class="sidebar-section">Pastas</p>
-        <div class="folder-list" id="folderList">
-            <div class="folder-item folder-item-root active" data-id="ROOT" data-name="Raiz">
-                📂 <span class="folder-name">Raiz</span>
+        <p class="up-sidebar-section">Pastas</p>
+        <div class="up-folder-list" id="folderList">
+            <div class="up-folder-item up-folder-root active" data-id="ROOT" data-name="Raiz">
+                📂 <span class="up-folder-name">Raiz</span>
             </div>
         </div>
-        <div class="sidebar-actions">
-            <button class="btn-nova-pasta" id="btnNovaPasta">＋ Nova pasta</button>
+        <div class="up-sidebar-actions">
+            <button class="up-btn-nova-pasta" id="btnNovaPasta">＋ Nova pasta</button>
         </div>
     </aside>
 
-    <!-- ═══ MAIN ════════════════════════════════════════════ -->
-    <div class="main">
+    <!-- MAIN -->
+    <div class="up-main">
 
-        <div class="topbar">
-            <div class="breadcrumb">📁 <span>/</span> <span id="breadcrumbName">Raiz</span></div>
+        <div class="up-topbar">
+            <div class="up-breadcrumb">📁 <span>/</span> <span id="breadcrumbName">Raiz</span></div>
         </div>
 
         <!-- Drop zone -->
-        <div class="drop-zone-wrapper">
-            <div class="drop-zone" id="dropZone">
-                <div class="drop-zone-icon">☁️</div>
-                <div class="drop-zone-text"><span>Clique para selecionar</span> ou arraste arquivos aqui</div>
-                <div class="drop-zone-sub">Máximo 50 MB por arquivo · Múltiplos arquivos permitidos</div>
+        <div class="up-drop-wrapper">
+            <div class="up-drop-zone" id="dropZone">
+                <div class="up-drop-icon">☁️</div>
+                <div class="up-drop-text"><span>Clique para selecionar</span> ou arraste arquivos aqui</div>
+                <div class="up-drop-sub">Máximo 50 MB por arquivo · Múltiplos arquivos permitidos</div>
                 <input type="file" id="fileInput" multiple>
             </div>
         </div>
 
         <!-- Queue -->
-        <div class="queue-wrapper">
-            <div class="queue" id="queue"></div>
+        <div class="up-queue-wrapper">
+            <div class="up-queue" id="queue"></div>
         </div>
 
         <!-- Files -->
-        <div class="files-section">
-            <div class="section-title">
+        <div class="up-files-section">
+            <div class="up-section-title">
                 Arquivos na pasta
-                <span class="files-count" id="filesCount">0 arquivos</span>
+                <span class="up-files-count" id="filesCount">0 arquivos</span>
             </div>
             <div class="table-wrap">
-                <div class="tbl-scroll">
+                <div class="tbl-scroll" style="max-height:calc(100vh - 520px)">
                     <table>
                         <thead>
                             <tr>
@@ -316,26 +179,67 @@ tbody tr:hover .file-actions{opacity:1;}
 
 <!-- Modal nova pasta -->
 <div class="modal-overlay" id="modalNovaPasta" onclick="if(event.target===this)fecharModal()">
-    <div class="modal-box">
-        <div class="modal-title">📁 Nova pasta</div>
-        <input class="modal-input" id="inputNomePasta" type="text" placeholder="Nome da pasta..." maxlength="80" autocomplete="off">
-        <div class="modal-actions">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">📁 Nova pasta</div>
+            <button class="modal-close" onclick="fecharModal()">✕</button>
+        </div>
+        <input class="form-control" id="inputNomePasta" type="text"
+               placeholder="Nome da pasta..." maxlength="80" autocomplete="off"
+               style="margin-bottom:16px">
+        <div class="modal-footer">
             <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
-            <button class="btn btn-blue" id="btnConfirmarPasta" onclick="confirmarNovaPasta()">Criar pasta</button>
+            <button class="btn btn-ti" id="btnConfirmarPasta" onclick="confirmarNovaPasta()">Criar pasta</button>
         </div>
     </div>
 </div>
 
 <!-- Confirm excluir -->
-<div class="confirm-overlay" id="confirmExcluir" onclick="if(event.target===this)fecharConfirm()">
-    <div class="confirm-box">
-        <div class="confirm-title">🗑 Excluir arquivo?</div>
-        <div class="confirm-sub" id="confirmNome"></div>
-        <div class="confirm-actions">
+<div class="modal-overlay" id="confirmExcluir" onclick="if(event.target===this)fecharConfirm()">
+    <div class="modal modal-md">
+        <div class="modal-header">
+            <div class="modal-title">🗑 Excluir arquivo?</div>
+            <button class="modal-close" onclick="fecharConfirm()">✕</button>
+        </div>
+        <div style="font-size:13px;color:var(--muted);word-break:break-all;margin-bottom:20px" id="confirmNome"></div>
+        <div class="modal-footer">
             <button class="btn btn-ghost" onclick="fecharConfirm()">Cancelar</button>
             <button class="btn btn-red" id="btnConfirmarExcluir">Excluir</button>
         </div>
     </div>
+</div>
+
+<!-- IA Widget -->
+<div id="iaTiWidget">
+    <div id="iaTiJanela">
+        <div class="iati-topo">
+            <div class="iati-topo-esq">
+                <span style="font-size:22px">🤖</span>
+                <div>
+                    <div class="iati-topo-titulo">Assistente TI</div>
+                    <div class="iati-topo-sub">Uploads · Divino Fogão</div>
+                </div>
+            </div>
+            <button class="iati-fechar" onclick="toggleIaTi()">✕</button>
+        </div>
+        <div class="iati-sugs">
+            <button class="iati-sug" onclick="enviarSug(this)">📁 Listar pastas</button>
+            <button class="iati-sug" onclick="enviarSug(this)">📎 Como enviar arquivos?</button>
+            <button class="iati-sug" onclick="enviarSug(this)">🗑 Como excluir?</button>
+        </div>
+        <div class="iati-msgs" id="iaTiMsgs">
+            <div class="iati-msg ai">Olá! Posso ajudar com dúvidas sobre o módulo de Uploads. Como posso ajudar?</div>
+        </div>
+        <div class="iati-rodape">
+            <input class="iati-input" id="iaTiInput" placeholder="Digite sua dúvida..."
+                   onkeydown="if(event.key==='Enter')enviarIaTi()">
+            <button class="iati-enviar" id="iaTiBtn" onclick="enviarIaTi()">➤</button>
+        </div>
+    </div>
+    <button id="iaTiToggle" onclick="toggleIaTi()" title="Assistente IA">
+        <span class="iati-unread" id="iatiUnread"></span>
+        🤖
+    </button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -347,7 +251,6 @@ let pastaSelecionadaNome = 'Raiz';
 let filasUpload = [];
 let _pendingDeleteId = null;
 
-// ── Helpers ────────────────────────────────────────────────────────────────────
 function pastaIdReal() { return pastaSelecionadaId === 'ROOT' ? '' : pastaSelecionadaId; }
 
 function setStatus(cls, msg) {
@@ -371,20 +274,40 @@ function formatBytes(b) {
 
 function formatDate(iso) {
     if (!iso) return '—';
-    try { return new Date(iso).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+    try { return new Date(iso).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}); }
     catch { return '—'; }
 }
 
 function fileIcon(mime = '') {
-    if (mime.startsWith('image/'))   return '🖼️';
-    if (mime.includes('pdf'))        return '📄';
+    if (mime.startsWith('image/'))  return '🖼️';
+    if (mime.includes('pdf'))       return '📄';
     if (mime.includes('sheet') || mime.includes('excel') || mime.includes('csv')) return '📊';
     if (mime.includes('word') || mime.includes('document')) return '📝';
     if (mime.includes('zip') || mime.includes('rar'))       return '🗜️';
-    if (mime.startsWith('video/'))   return '🎬';
-    if (mime.startsWith('audio/'))   return '🎵';
+    if (mime.startsWith('video/'))  return '🎬';
+    if (mime.startsWith('audio/'))  return '🎵';
     return '📎';
 }
+
+// ── Nav ────────────────────────────────────────────────────────────────────────
+function abrirDrawer() {
+    document.getElementById('navDrawer').classList.add('open');
+    document.getElementById('drawerOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function fecharDrawer() {
+    document.getElementById('navDrawer').classList.remove('open');
+    document.getElementById('drawerOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function toggleNavDrop(id) {
+    document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(d) {
+        if (!d.contains(e.target)) d.classList.remove('open');
+    });
+});
 
 // ── Pastas ─────────────────────────────────────────────────────────────────────
 async function carregarPastas() {
@@ -394,19 +317,19 @@ async function carregarPastas() {
         if (!d.ok) throw new Error(d.erro);
 
         const list = document.getElementById('folderList');
-        list.innerHTML = `<div class="folder-item folder-item-root${pastaSelecionadaId==='ROOT'?' active':''}" data-id="ROOT" data-name="Raiz">
-            📂 <span class="folder-name">Raiz</span></div>`;
+        list.innerHTML = `<div class="up-folder-item up-folder-root${pastaSelecionadaId==='ROOT'?' active':''}" data-id="ROOT" data-name="Raiz">
+            📂 <span class="up-folder-name">Raiz</span></div>`;
 
         (d.pastas || []).forEach(p => {
             const el = document.createElement('div');
-            el.className = 'folder-item' + (p.id === pastaSelecionadaId ? ' active' : '');
+            el.className = 'up-folder-item' + (p.id === pastaSelecionadaId ? ' active' : '');
             el.dataset.id   = p.id;
             el.dataset.name = p.nome;
-            el.innerHTML    = `📁 <span class="folder-name">${p.nome}</span>`;
+            el.innerHTML    = `📁 <span class="up-folder-name">${p.nome}</span>`;
             list.appendChild(el);
         });
 
-        list.querySelectorAll('.folder-item').forEach(el =>
+        list.querySelectorAll('.up-folder-item').forEach(el =>
             el.addEventListener('click', () => selecionarPasta(el.dataset.id, el.dataset.name))
         );
     } catch(e) { toast('Erro ao carregar pastas: ' + e.message); }
@@ -416,7 +339,7 @@ function selecionarPasta(id, nome) {
     pastaSelecionadaId   = id;
     pastaSelecionadaNome = nome;
     document.getElementById('breadcrumbName').textContent = nome;
-    document.querySelectorAll('.folder-item').forEach(el =>
+    document.querySelectorAll('.up-folder-item').forEach(el =>
         el.classList.toggle('active', el.dataset.id === id)
     );
     carregarArquivos();
@@ -428,12 +351,10 @@ document.getElementById('btnNovaPasta').addEventListener('click', () => {
     document.getElementById('modalNovaPasta').classList.add('open');
     setTimeout(() => document.getElementById('inputNomePasta').focus(), 100);
 });
-
 document.getElementById('inputNomePasta').addEventListener('keydown', e => {
     if (e.key === 'Enter')  confirmarNovaPasta();
     if (e.key === 'Escape') fecharModal();
 });
-
 function fecharModal() { document.getElementById('modalNovaPasta').classList.remove('open'); }
 
 async function confirmarNovaPasta() {
@@ -471,50 +392,50 @@ async function carregarArquivos() {
         setStatus('ready', `✓ ${d.arquivos.length} arquivo(s) carregado(s)`);
         document.getElementById('lastSync').textContent = 'Atualizado: ' + new Date().toLocaleTimeString('pt-BR');
     } catch(e) {
-        tbody.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="icon">⚠️</div><p>${e.message}</p></div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5"><div class="empty">
+            <div style="font-size:48px;margin-bottom:12px">⚠️</div>
+            <p>${e.message}</p></div></td></tr>`;
         setStatus('error', '❌ ' + e.message);
     }
 }
 
 function renderArquivos(arquivos) {
     const tbody = document.getElementById('filesList');
-    document.getElementById('filesCount').textContent = `${arquivos.length} arquivo${arquivos.length!==1?'s':''}`;
+    document.getElementById('filesCount').textContent =
+        `${arquivos.length} arquivo${arquivos.length !== 1 ? 's' : ''}`;
 
     if (!arquivos.length) {
         tbody.innerHTML = `<tr><td colspan="5"><div class="empty">
-            <div class="icon">📂</div>
-            <p>Nenhum arquivo nesta pasta</p>
-        </div></td></tr>`;
+            <div style="font-size:48px;margin-bottom:12px">📂</div>
+            <p>Nenhum arquivo nesta pasta</p></div></td></tr>`;
         return;
     }
 
     tbody.innerHTML = arquivos.map(f => `
         <tr>
-            <td class="file-icon">${fileIcon(f.tipo)}</td>
-            <td class="file-name" title="${f.nome}">${f.nome}</td>
-            <td class="file-size">${formatBytes(f.tamanho)}</td>
-            <td class="file-date">${formatDate(f.criadoEm)}</td>
+            <td style="font-size:18px">${fileIcon(f.tipo)}</td>
+            <td class="up-file-name" title="${f.nome}">${f.nome}</td>
+            <td class="up-file-meta">${formatBytes(f.tamanho)}</td>
+            <td class="up-file-meta up-file-date">${formatDate(f.criadoEm)}</td>
             <td>
-                <div class="file-actions">
-                    <button class="file-action-btn" onclick="window.open('${f.link}','_blank')">🔗 Abrir</button>
-                    <button class="file-action-btn del" onclick="pedirExcluir('${f.id}','${f.nome.replace(/'/g,"\\'")}')">🗑 Excluir</button>
+                <div class="up-file-actions">
+                    <button class="up-file-btn" onclick="window.open('${f.link}','_blank')">🔗 Abrir</button>
+                    <button class="up-file-btn del" onclick="pedirExcluir('${f.id}','${f.nome.replace(/'/g,"\\'")}')">🗑 Excluir</button>
                 </div>
             </td>
         </tr>`).join('');
 }
 
-// ── Excluir com confirmação ────────────────────────────────────────────────────
+// ── Excluir ────────────────────────────────────────────────────────────────────
 function pedirExcluir(id, nome) {
     _pendingDeleteId = id;
     document.getElementById('confirmNome').textContent = nome;
     document.getElementById('confirmExcluir').classList.add('open');
 }
-
 function fecharConfirm() {
     _pendingDeleteId = null;
     document.getElementById('confirmExcluir').classList.remove('open');
 }
-
 document.getElementById('btnConfirmarExcluir').addEventListener('click', async () => {
     if (!_pendingDeleteId) return;
     const id   = _pendingDeleteId;
@@ -550,11 +471,11 @@ dropZone.addEventListener('drop', e => {
 
 function adicionarFilas(files) {
     files.forEach(f => {
-        if (filasUpload.find(x => x.file.name===f.name && x.file.size===f.size)) return;
-        filasUpload.push({ file: f, id: Date.now()+Math.random(), status: 'pending' });
+        if (filasUpload.find(x => x.file.name === f.name && x.file.size === f.size)) return;
+        filasUpload.push({ file: f, id: Date.now() + Math.random(), status: 'pending' });
     });
     renderQueue();
-    btnEnviar.disabled = !filasUpload.filter(x=>x.status==='pending').length;
+    btnEnviar.disabled = !filasUpload.filter(x => x.status === 'pending').length;
     fileInput.value = '';
 }
 
@@ -563,17 +484,17 @@ function renderQueue() {
     if (!filasUpload.length) { el.innerHTML = ''; return; }
     el.innerHTML = filasUpload.map(item => {
         const statusHtml =
-            item.status==='ok'      ? `<span class="queue-ok">✓</span>` :
-            item.status==='erro'    ? `<span class="queue-err">✕</span>` :
-            item.status==='sending' ? `<div class="spinner dark"></div>` :
-            `<button class="queue-remove" onclick="removerDaFila('${item.id}')">✕</button>`;
-        return `<div class="queue-item">
-            <span class="queue-icon">${fileIcon(item.file.type)}</span>
+            item.status === 'ok'      ? `<span style="color:var(--green);font-weight:800">✓</span>` :
+            item.status === 'erro'    ? `<span style="color:var(--red);font-weight:800">✕</span>` :
+            item.status === 'sending' ? `<div class="spinner dark"></div>` :
+            `<button class="up-queue-remove" onclick="removerDaFila('${item.id}')">✕</button>`;
+        return `<div class="up-queue-item">
+            <span style="font-size:16px;flex-shrink:0">${fileIcon(item.file.type)}</span>
             <div style="flex:1;min-width:0">
-                <div class="queue-name">${item.file.name}</div>
-                ${item.status==='sending'?'<div class="progress-bar"><div class="progress-fill"></div></div>':''}
+                <div class="up-queue-name">${item.file.name}</div>
+                ${item.status === 'sending' ? '<div class="up-progress-bar"><div class="up-progress-fill"></div></div>' : ''}
             </div>
-            <span class="queue-size">${formatBytes(item.file.size)}</span>
+            <span class="up-queue-size">${formatBytes(item.file.size)}</span>
             ${statusHtml}
         </div>`;
     }).join('');
@@ -582,44 +503,37 @@ function renderQueue() {
 function removerDaFila(id) {
     filasUpload = filasUpload.filter(x => x.id.toString() !== id.toString());
     renderQueue();
-    btnEnviar.disabled = !filasUpload.filter(x=>x.status==='pending').length;
+    btnEnviar.disabled = !filasUpload.filter(x => x.status === 'pending').length;
 }
 
 async function enviarArquivos() {
-    const pendentes = filasUpload.filter(x => x.status==='pending');
+    const pendentes = filasUpload.filter(x => x.status === 'pending');
     if (!pendentes.length) return;
     btnEnviar.disabled = true;
 
     const form = new FormData();
-    pendentes.forEach(item => { item.status='sending'; form.append('arquivos', item.file); });
+    pendentes.forEach(item => { item.status = 'sending'; form.append('arquivos', item.file); });
     const pid = pastaIdReal();
     if (pid) form.append('pastaId', pid);
     renderQueue();
 
     try {
-        const r = await fetch(`${API}/arquivo`, { method:'POST', body:form });
+        const r = await fetch(`${API}/arquivo`, { method: 'POST', body: form });
         const d = await r.json();
-
         pendentes.forEach(item => {
-            const err = (d.erros||[]).find(e=>e.nome===item.file.name);
+            const err = (d.erros || []).find(e => e.nome === item.file.name);
             item.status = err ? 'erro' : 'ok';
         });
         renderQueue();
-
-        if (d.enviados > 0) {
-            toast(`✅ ${d.enviados} arquivo(s) enviado(s) com sucesso`);
-            carregarArquivos();
-        }
+        if (d.enviados > 0) { toast(`✅ ${d.enviados} arquivo(s) enviado(s) com sucesso`); carregarArquivos(); }
         if (d.erros?.length) toast(`❌ ${d.erros.length} arquivo(s) falharam`, 4000);
-
         setTimeout(() => {
-            filasUpload = filasUpload.filter(x => x.status!=='ok');
+            filasUpload = filasUpload.filter(x => x.status !== 'ok');
             renderQueue();
-            btnEnviar.disabled = !filasUpload.filter(x=>x.status==='pending').length;
+            btnEnviar.disabled = !filasUpload.filter(x => x.status === 'pending').length;
         }, 2000);
-
     } catch(e) {
-        pendentes.forEach(item => item.status='erro');
+        pendentes.forEach(item => item.status = 'erro');
         renderQueue();
         toast('❌ Erro no upload: ' + e.message, 4000);
         btnEnviar.disabled = false;
@@ -628,25 +542,55 @@ async function enviarArquivos() {
 
 function recarregar() { carregarPastas(); carregarArquivos(); }
 
-// ── Init ───────────────────────────────────────────────────────────────────────
+// ── IA ─────────────────────────────────────────────────────────────────────────
+function toggleIaTi() {
+    document.getElementById('iaTiJanela').classList.toggle('aberto');
+    document.getElementById('iaTiToggle').classList.toggle('aberto');
+}
+function enviarSug(btn) {
+    document.getElementById('iaTiInput').value = btn.textContent.trim();
+    enviarIaTi();
+}
+async function enviarIaTi() {
+    const input = document.getElementById('iaTiInput');
+    const msgs  = document.getElementById('iaTiMsgs');
+    const btn   = document.getElementById('iaTiBtn');
+    const texto = input.value.trim();
+    if (!texto) return;
+    msgs.innerHTML += `<div class="iati-msg user">${texto}</div>`;
+    input.value = ''; btn.disabled = true;
+    const loading = document.createElement('div');
+    loading.className = 'iati-msg ai carregando';
+    loading.textContent = 'Digitando...';
+    msgs.appendChild(loading);
+    msgs.scrollTop = msgs.scrollHeight;
+    try {
+        const r = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-20250514', max_tokens: 1000,
+                system: 'Você é um assistente de TI do Divino Fogão. Ajude com dúvidas sobre o módulo de Uploads (Google Drive). Seja breve e direto.',
+                messages: [{ role: 'user', content: texto }]
+            })
+        });
+        const d = await r.json();
+        loading.classList.remove('carregando');
+        loading.textContent = d.content?.[0]?.text || 'Sem resposta.';
+    } catch(e) {
+        loading.classList.remove('carregando');
+        loading.textContent = '❌ Erro ao conectar.';
+    } finally {
+        btn.disabled = false;
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+}
+
 (async () => {
     setStatus('syncing', 'Conectando ao Drive...');
     await carregarPastas();
     await carregarArquivos();
 })();
 </script>
-<script>
-function toggleNavDrop(id){
-    var el=document.getElementById(id);
-    el.classList.toggle('open');
-}
-// Fecha dropdown ao clicar fora
-document.addEventListener('click',function(e){
-    document.querySelectorAll('.nav-dropdown.open').forEach(function(d){
-        if(!d.contains(e.target)) d.classList.remove('open');
-    });
-});
-</script>
-
 </body>
 </html>
